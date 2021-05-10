@@ -1,130 +1,131 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br />
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener"
-        >vue-cli documentation</a
-      >.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel"
-          target="_blank"
-          rel="noopener"
-          >babel</a
+  <div class="login">
+    <v-row class="text-center mt-10">
+      <v-img
+        :src="require('../assets/logo.svg')"
+        class="my-3"
+        contain
+        height="100"
+      />
+    </v-row>
+
+    <v-row class="center-row">
+      <v-col cols="10" lg="3" md="4" sm="5">
+        <v-text-field label="Email" type="email" hide-details> </v-text-field>
+      </v-col>
+    </v-row>
+
+    <v-row class="center-row mt-0">
+      <v-col cols="10" lg="3" md="4" sm="5" class="p-0 m-0">
+        <v-text-field label="Password" type="password" hide-details>
+        </v-text-field>
+      </v-col>
+    </v-row>
+
+    <v-row class="d-flex justify-center mt-0">
+      <v-col cols="10" lg="3" md="4" sm="5">
+        <span>Forgot Password?</span>
+      </v-col>
+    </v-row>
+
+    <v-row class="center-row mt-11">
+      <v-col cols="10" lg="3" md="4" sm="5">
+        <v-btn
+          :color="this.$vuetify.theme.themes.light.primary"
+          depressed
+          dark
+          block
         >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router"
-          target="_blank"
-          rel="noopener"
-          >router</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex"
-          target="_blank"
-          rel="noopener"
-          >vuex</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint"
-          target="_blank"
-          rel="noopener"
-          >eslint</a
-        >
-      </li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li>
-        <a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a>
-      </li>
-      <li>
-        <a href="https://forum.vuejs.org" target="_blank" rel="noopener"
-          >Forum</a
-        >
-      </li>
-      <li>
-        <a href="https://chat.vuejs.org" target="_blank" rel="noopener"
-          >Community Chat</a
-        >
-      </li>
-      <li>
-        <a href="https://twitter.com/vuejs" target="_blank" rel="noopener"
-          >Twitter</a
-        >
-      </li>
-      <li>
-        <a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a>
-      </li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li>
-        <a href="https://router.vuejs.org" target="_blank" rel="noopener"
-          >vue-router</a
-        >
-      </li>
-      <li>
-        <a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-devtools#vue-devtools"
-          target="_blank"
-          rel="noopener"
-          >vue-devtools</a
-        >
-      </li>
-      <li>
-        <a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener"
-          >vue-loader</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-          rel="noopener"
-          >awesome-vue</a
-        >
-      </li>
-    </ul>
+          Sign in
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-row class="center-row mt-10">or</v-row>
+    <v-row class="center-row mt-10">
+      <v-col cols="10" lg="3" md="4" sm="5">
+        <v-btn depressed block outlined>
+          <v-spacer></v-spacer>
+          <v-img
+            :src="require('../assets/Google.svg')"
+            class="my-3"
+            height="18"
+            contain
+          />
+          <span>Sign in with Google</span>
+          <v-spacer></v-spacer>
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-row class="center-row mt-0">
+      <v-col cols="10" lg="3" md="4" sm="5">
+        <v-btn depressed block outlined>
+          <v-spacer></v-spacer>
+          <v-img
+            :src="require('../assets/Microsoft.svg')"
+            class="my-3"
+            height="18"
+            contain
+          />
+          <span>Sign in with Microsoft</span>
+          <v-spacer></v-spacer>
+        </v-btn>
+      </v-col>
+    </v-row>
+
+    <v-row class="center-row mt-16">
+      <!-- <p :style="cssProps"> -->
+      <p>No account yet? Get started<strong> here!</strong></p>
+    </v-row>
+
+    <v-row class="center-row mt-16">
+      <label>DARK MODE</label>
+      <v-switch v-model="$vuetify.theme.dark" />
+      <v-color-picker
+        v-model="$vuetify.theme.themes.light.primary"
+      ></v-color-picker>
+
+      <!-- <v-btn @click="setTheme"> set </v-btn> -->
+      <!-- {{ this.primary }}
+      {{ this.$vuetify.theme.themes.light.primary }} -->
+    </v-row>
+
+    <v-row class="center-row mt-16">
+      <span>Version 2.0</span>
+      <v-spacer></v-spacer>
+      <span>
+        <v-icon dense>mdi-help-circle-outline</v-icon>
+        Help
+      </span>
+    </v-row>
   </div>
 </template>
 
 <script>
 export default {
   name: "HelloWorld",
-  props: {
-    msg: String,
+
+  data: () => ({
+    text: "",
+    primary: "",
+  }),
+  watch: {
+    primary: "setTheme",
+  },
+  methods: {
+    setTheme() {
+      this.$vuetify.theme.themes.light.primary = this.primary;
+    },
   },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
+<style lang="scss" scoped>
+p {
+  color: var(--v-primary);
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+.center-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px !important;
 }
 </style>

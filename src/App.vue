@@ -1,32 +1,41 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
-  </div>
+  <v-app :style="cssProps">
+    <v-main class="main">
+      <router-view />
+    </v-main>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+export default {
+  name: "App",
+
+  data: () => ({}),
+  computed: {
+    cssProps() {
+      var themeColors = {};
+      Object.keys(this.$vuetify.theme.themes.light).forEach((color) => {
+        themeColors[`--v-${color}`] = this.$vuetify.theme.themes.light[color];
+      });
+      return themeColors;
+    },
+  },
+};
+</script>
+
+<style lang="scss">
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600;700;800&display=swap");
+
+* {
+  font-family: "Montserrat", Tahoma, Geneva, Verdana, sans-serif;
+}
+.v-btn {
+  text-transform: none !important;
 }
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+// @media only screen and (min-width: 600px) {
+//   body {
+//     margin: 200px;
+//   }
+// }
 </style>

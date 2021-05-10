@@ -1,0 +1,242 @@
+<template>
+  <div class="signin">
+    <v-row class="wrap">
+      <v-col lg="3" md="4" sm="6" cols="8">
+        <v-row>
+          <ImageLogo height="150px" width="200px" />
+        </v-row>
+        <v-row>
+          <h2 class="title-signup">{{ header }}</h2>
+        </v-row>
+        <v-window v-model="step">
+          <v-window-item :value="1" class="pa-4">
+            <v-row>
+              <InputField
+                label="First Name"
+                placeholder="First Name"
+                type="text"
+                :required="true"
+              />
+            </v-row>
+            <v-row>
+              <InputField
+                label="Middle Name"
+                placeholder="Middle Name"
+                type="text"
+                :required="false"
+              />
+            </v-row>
+            <v-row>
+              <InputField
+                label="Last Name"
+                placeholder="Last Name"
+                type="text"
+                :required="true"
+              />
+            </v-row>
+          </v-window-item>
+          <v-window-item :value="2" class="pa-4">
+            <v-row>
+              <InputField
+                label="ID Number"
+                placeholder="12-3456-789"
+                type="text"
+                :required="true"
+              />
+            </v-row>
+            <v-row>
+              <InputField
+                label="College"
+                placeholder="College"
+                type="text"
+                :required="true"
+              />
+            </v-row>
+            <v-row>
+              <v-col class="pl-0 py-0">
+                <InputField
+                  label="Program"
+                  placeholder="Program"
+                  type="text"
+                  :required="true"
+                />
+              </v-col>
+              <v-col class="pr-0 py-0">
+                <InputField
+                  label="Year"
+                  placeholder="Year"
+                  type="text"
+                  :required="true"
+                />
+              </v-col>
+            </v-row>
+          </v-window-item>
+          <v-window-item :value="3" class="pa-4">
+            <v-row>
+              <InputField
+                label="Institutional Email"
+                placeholder="firstname.lastname@cit.edu"
+                type="text"
+                :required="true"
+              />
+            </v-row>
+            <v-row>
+              <InputField
+                label="Password"
+                placeholder="••••••••••••"
+                type="text"
+                :required="true"
+              />
+            </v-row>
+            <v-row>
+              <InputField
+                label="Confirm Password"
+                placeholder="••••••••••••"
+                type="text"
+                :required="true"
+              />
+            </v-row>
+          </v-window-item>
+        </v-window>
+        <v-row class="px-1">
+          <v-col>
+            <v-btn
+              v-show="step !== 1"
+              class="btn-back"
+              block
+              text
+              @click="step--"
+            >
+              Back
+            </v-btn>
+          </v-col>
+          <v-spacer></v-spacer>
+          <v-col>
+            <v-btn
+              v-show="step !== 3"
+              class="btn-next"
+              depressed
+              block
+              dark
+              @click="step++"
+            >
+              Next
+            </v-btn>
+            <v-btn
+              v-show="step === 3"
+              class="btn-next"
+              depressed
+              block
+              dark
+              @click="register"
+            >
+              Register
+            </v-btn>
+          </v-col>
+        </v-row>
+
+        <v-row class="or"> or </v-row>
+
+        <v-row class="px-4">
+          <v-btn class="btn-signinwith" depressed block outlined>
+            <v-img :src="require('@/assets/Google.svg')" height="18" contain />
+            <span>Sign in with Google</span>
+            <v-spacer />
+          </v-btn>
+        </v-row>
+
+        <v-row class="px-4">
+          <v-btn class="btn-signinwith" depressed block outlined>
+            <v-img
+              :src="require('@/assets/Microsoft.svg')"
+              height="18"
+              contain
+            />
+            <span>Sign in with Microsoft</span>
+            <v-spacer />
+          </v-btn>
+        </v-row>
+
+        <v-row class="mt-10" justify="center">
+          <a href="/">I already have an account</a>
+        </v-row>
+      </v-col>
+    </v-row>
+  </div>
+</template>
+
+<script>
+import ImageLogo from "@/components/ImageLogo.vue";
+import InputField from "@/components/InputField.vue";
+
+export default {
+  name: "Signin",
+  components: {
+    ImageLogo,
+    InputField,
+  },
+  data: function () {
+    return {
+      step: 1,
+    };
+  },
+  computed: {
+    header() {
+      switch (this.step) {
+        case 1:
+          return "Sign Up";
+        case 2:
+          return "School Credentials";
+        default:
+          return "Sign In Credentials";
+      }
+    },
+  },
+  created() {
+    console.time("rendering");
+  },
+  mounted() {
+    console.timeEnd("rendering");
+  },
+  methods: {
+    register() {
+      alert("register");
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.wrap {
+  justify-content: center;
+}
+.signin {
+  margin: 50px 0px;
+}
+.title-signup {
+  text-align: left;
+  color: var(--v-primary);
+}
+.btn-next {
+  margin-top: 20px;
+  background-color: var(--v-primary) !important;
+}
+.btn-back {
+  margin-top: 20px;
+  color: var(--v-primary) !important;
+}
+.btn-signinwith {
+  margin-bottom: 20px;
+}
+.or {
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+}
+a {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+</style>
