@@ -7,6 +7,7 @@ import { createHttpLink } from 'apollo-link-http'
 import { ApolloLink, concat } from 'apollo-link';
 
 const ACCESS_TOKEN = localStorage.getItem("access-token") || "No Token"
+const TOKEN_NAME = "JWT"
 
 // HTTP connection to the API, replace with bud grapqhl server url
 const httpLink = createHttpLink({
@@ -17,7 +18,7 @@ const httpLink = createHttpLink({
 const authLink = new ApolloLink((operation, forward) => {
     operation.setContext({
       headers: {
-        Authorization: ACCESS_TOKEN,
+        Authorization: `${TOKEN_NAME} ${ACCESS_TOKEN}`,
       }
     });
     return forward(operation);
