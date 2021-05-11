@@ -3,27 +3,27 @@
  *  [2] https://blog.logrocket.com/handling-authentication-in-your-graphql-powered-vue-app/
  *  [3] https://vuex.vuejs.org/guide/mutations.html
  *  [4] https://vuex.vuejs.org/guide/getters.html
- * 
+ *
  *  Notes:
  *      Ways to access the store
- *      
+ *
  *      import { mapActions, mapGetters } from "vuex"
- *      computed: 
+ *      computed:
  *        ...mapGetters({getUserType: "user/getUserType"})
  *      actions:
  *      ...mapActions({onLogin: "user/login",})
- * 
+ *
  */
 
-import Vue from 'vue'
-import Vuex from 'vuex'
-import user from './modules/user'
+import Vue from "vue";
+import Vuex from "vuex";
+import user from "./modules/user";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
     user,
   },
-  strict: true
-})
+  strict: true,
+});

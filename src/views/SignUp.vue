@@ -2,140 +2,205 @@
   <div class="signin">
     <v-row class="wrap">
       <v-col lg="3" md="4" sm="6" cols="8">
-        <v-row>
-          <ImageLogo height="150px" width="200px" />
-        </v-row>
-        <v-row>
-          <h2 class="title-signup">{{ header }}</h2>
-        </v-row>
-        <v-window v-model="step">
-          <v-window-item :value="1" class="pa-4">
-            <v-row>
-              <InputField
-                label="First Name"
-                placeholder="First Name"
-                type="text"
-                :required="true"
-              />
-            </v-row>
-            <v-row>
-              <InputField
-                label="Middle Name"
-                placeholder="Middle Name"
-                type="text"
-                :required="false"
-              />
-            </v-row>
-            <v-row>
-              <InputField
-                label="Last Name"
-                placeholder="Last Name"
-                type="text"
-                :required="true"
-              />
-            </v-row>
-          </v-window-item>
-          <v-window-item :value="2" class="pa-4">
-            <v-row>
-              <InputField
-                label="ID Number"
-                placeholder="12-3456-789"
-                type="text"
-                :required="true"
-              />
-            </v-row>
-            <v-row>
-              <InputField
-                label="College"
-                placeholder="College"
-                type="text"
-                :required="true"
-              />
-            </v-row>
-            <v-row>
-              <v-col class="pl-0 py-0">
+        <v-form ref="form" lazy-validation @submit.prevent="signup">
+          <v-row>
+            <ImageLogo height="150px" width="200px" />
+          </v-row>
+          <v-row>
+            <h2 class="title-signup">{{ header }}</h2>
+          </v-row>
+          <v-window v-model="step">
+            <v-window-item :value="1" class="pa-4">
+              <v-row>
                 <InputField
-                  label="Program"
-                  placeholder="Program"
+                  label="First Name"
+                  placeholder="First Name"
                   type="text"
                   :required="true"
+                  @output="
+                    ($event) => {
+                      this.user.firstname = $event;
+                    }
+                  "
                 />
-              </v-col>
-              <v-col class="pr-0 py-0">
+              </v-row>
+              <v-row>
                 <InputField
-                  label="Year"
-                  placeholder="Year"
+                  label="Middle Name"
+                  placeholder="Middle Name"
+                  type="text"
+                  :required="false"
+                  @output="
+                    ($event) => {
+                      this.user.middlename = $event;
+                    }
+                  "
+                />
+              </v-row>
+              <v-row>
+                <InputField
+                  label="Last Name"
+                  placeholder="Last Name"
                   type="text"
                   :required="true"
+                  @output="
+                    ($event) => {
+                      this.user.lastname = $event;
+                    }
+                  "
                 />
-              </v-col>
-            </v-row>
-          </v-window-item>
-          <v-window-item :value="3" class="pa-4">
-            <v-row>
-              <InputField
-                label="Institutional Email"
-                placeholder="firstname.lastname@cit.edu"
-                type="text"
-                :required="true"
-              />
-            </v-row>
-            <v-row>
-              <InputField
-                label="Password"
-                placeholder="••••••••••••"
-                type="text"
-                :required="true"
-              />
-            </v-row>
-            <v-row>
-              <InputField
-                label="Confirm Password"
-                placeholder="••••••••••••"
-                type="text"
-                :required="true"
-              />
-            </v-row>
-          </v-window-item>
-        </v-window>
-        <v-row class="px-1">
-          <v-col>
-            <v-btn
-              v-show="step !== 1"
-              class="btn-back"
-              block
-              text
-              @click="step--"
-            >
-              Back
-            </v-btn>
-          </v-col>
-          <v-spacer></v-spacer>
-          <v-col>
-            <v-btn
-              v-show="step !== 3"
-              class="btn-next"
-              depressed
-              block
-              dark
-              @click="step++"
-            >
-              Next
-            </v-btn>
-            <v-btn
-              v-show="step === 3"
-              class="btn-next"
-              depressed
-              block
-              dark
-              @click="register"
-            >
-              Register
-            </v-btn>
-          </v-col>
-        </v-row>
+              </v-row>
+            </v-window-item>
+            <v-window-item :value="2" class="pa-4">
+              <v-row>
+                <InputField
+                  label="School"
+                  placeholder="School"
+                  type="text"
+                  :required="true"
+                  @output="
+                    ($event) => {
+                      this.user.school = $event;
+                    }
+                  "
+                />
+              </v-row>
+              <v-row>
+                <InputField
+                  label="ID Number"
+                  placeholder="12-3456-789"
+                  type="text"
+                  :required="true"
+                  @output="
+                    ($event) => {
+                      this.user.idnumber = $event;
+                    }
+                  "
+                />
+              </v-row>
+              <v-row>
+                <InputField
+                  label="College"
+                  placeholder="College"
+                  type="text"
+                  :required="true"
+                  @output="
+                    ($event) => {
+                      this.user.college = $event;
+                    }
+                  "
+                />
+              </v-row>
+              <v-row>
+                <v-col class="pl-0 py-0">
+                  <InputField
+                    label="Program"
+                    placeholder="Program"
+                    type="text"
+                    :required="true"
+                    @output="
+                      ($event) => {
+                        this.user.program = $event;
+                      }
+                    "
+                  />
+                </v-col>
+                <v-col class="pr-0 py-0">
+                  <InputField
+                    label="Year"
+                    placeholder="Year"
+                    type="text"
+                    :required="true"
+                    @output="
+                      ($event) => {
+                        this.user.year = $event;
+                      }
+                    "
+                  />
+                </v-col>
+              </v-row>
+            </v-window-item>
+            <v-window-item :value="3" class="pa-4">
+              <v-row>
+                <InputField
+                  label="Institutional Email"
+                  placeholder="firstname.lastname@cit.edu"
+                  type="text"
+                  :required="true"
+                  @output="
+                    ($event) => {
+                      this.user.email = $event;
+                    }
+                  "
+                />
+              </v-row>
+              <v-row>
+                <InputField
+                  label="Password"
+                  placeholder="••••••••••••"
+                  type="password"
+                  :required="true"
+                  @output="
+                    ($event) => {
+                      this.user.password = $event;
+                    }
+                  "
+                />
+              </v-row>
+              <v-row>
+                <InputField
+                  label="Confirm Password"
+                  placeholder="••••••••••••"
+                  type="password"
+                  :required="true"
+                  @output="
+                    ($event) => {
+                      this.user.password2 = $event;
+                    }
+                  "
+                />
+              </v-row>
+            </v-window-item>
+          </v-window>
+          <v-row class="px-1">
+            <v-col>
+              <v-btn
+                v-show="step !== 1"
+                class="btn-back"
+                block
+                text
+                @click="step--"
+              >
+                Back
+              </v-btn>
+            </v-col>
+            <v-spacer></v-spacer>
+            <v-col>
+              <v-btn
+                v-show="step !== 3"
+                class="btn-next"
+                depressed
+                block
+                dark
+                @click="step++"
+              >
+                Next
+              </v-btn>
+              <v-btn
+                v-show="step === 3"
+                class="btn-next"
+                depressed
+                block
+                dark
+                @click="signup"
+              >
+                Sign Up
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-form>
 
-        <v-row class="or"> or </v-row>
+        <!-- <v-row class="or"> or </v-row>
 
         <v-row class="px-4">
           <v-btn class="btn-signinwith" depressed block outlined>
@@ -155,7 +220,7 @@
             <span>Sign in with Microsoft</span>
             <v-spacer />
           </v-btn>
-        </v-row>
+        </v-row> -->
 
         <v-row class="mt-10" justify="center">
           <a href="/">I already have an account</a>
@@ -178,6 +243,7 @@ export default {
   data: function () {
     return {
       step: 1,
+      user: {},
     };
   },
   computed: {
@@ -192,15 +258,10 @@ export default {
       }
     },
   },
-  created() {
-    console.time("rendering");
-  },
-  mounted() {
-    console.timeEnd("rendering");
-  },
   methods: {
-    register() {
-      alert("register");
+    signup() {
+      console.log("signup");
+      console.log(this.user);
     },
   },
 };

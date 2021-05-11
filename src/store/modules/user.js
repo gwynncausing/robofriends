@@ -1,15 +1,15 @@
 /* References:
  *  [1] https://vuex.vuejs.org/
  *  [2] https://blog.logrocket.com/handling-authentication-in-your-graphql-powered-vue-app/
- * 
+ *
  */
 
 import { apolloProvider } from "@/vue-apollo";
 // import REGISTER_USER from "@/graphql/mutations/register-user.gql";
 // import LOGIN_USER from "@/graphql/mutations/login-user.gql";
 
-const REGISTER_USER = ''
-const LOGIN_USER = ''
+const REGISTER_USER = "";
+const LOGIN_USER = "";
 
 const state = () => ({
   accessToken: localStorage.getItem("access-token") || null,
@@ -67,7 +67,7 @@ const actions = {
       });
       return data.register;
     } catch (error) {
-      return error
+      return error;
     }
   },
   async login({ commit }, credentials) {
@@ -96,7 +96,7 @@ const actions = {
       }
       return data.tokenAuth;
     } catch (error) {
-      return error
+      return error;
     }
   },
   async logout({ commit }) {
