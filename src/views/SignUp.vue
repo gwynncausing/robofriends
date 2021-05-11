@@ -261,6 +261,7 @@ export default {
   methods: {
     signup() {
       console.log("signup");
+      // remove password 2 on POST
       console.log(this.user);
     },
   },
