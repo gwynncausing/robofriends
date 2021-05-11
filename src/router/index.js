@@ -18,9 +18,16 @@ const routes = [
   },
   {
     path: "/student",
-    name: "StudentHome",
+    name: "",
     meta: { name: "Home" },
     component: () => import("@/views/Student.vue"),
+    children: [
+      {
+        path: "",
+        name: "Dashboard",
+        component: () => import("@/views/student/Dashboard.vue"),
+      },
+    ],
   },
   {
     path: "/about",
