@@ -297,7 +297,7 @@ export default {
           id: currentSchool.id,
           name: currentSchool.name,
         }
-        this.schools.push(tempSchool)
+        this.schools.push(tempSchool.name)
       }) 
       // console.log(this.schools)
     }
