@@ -67,7 +67,7 @@
                 <v-select
                   v-model="user.school"
                   :items="schools"
-                  :rules="[(v) => !!v || 'Gender is required']"
+                  :rules="[(v) => !!v || 'School is required']"
                   label="School"
                   required
                 ></v-select>
@@ -242,6 +242,9 @@ import ImageLogo from "@/components/ImageLogo.vue";
 import InputField from "@/components/InputField.vue";
 import { mapActions } from "vuex";
 
+import GET_SCHOOLS from "@/graphql/queries/get-schools.gql";
+
+
 export default {
   name: "Signin",
   components: {
@@ -253,6 +256,7 @@ export default {
       step: 1,
       user: {},
       schools: [],
+      schoolsFromServer: null,
     };
   },
   computed: {
@@ -265,6 +269,17 @@ export default {
         default:
           return "Sign In Credentials";
       }
+    },
+  },
+  watch: {
+    schoolsFromServer: function () {
+      this.initialize()
+    }
+  },
+  apollo: {
+    schoolsFromServer: {
+      query: GET_SCHOOLS,
+      update: data => data.schools,
     },
   },
   methods: {
