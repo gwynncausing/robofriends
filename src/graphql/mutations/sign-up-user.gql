@@ -1,0 +1,39 @@
+# for user sign up
+
+mutation register (
+        $email: String!
+        $username: String!
+        $userType: String!
+        $gender: String!
+        $firstName: String!
+        $middleInitial: String!
+        $lastName: String!
+        $college: String!
+        $program: String!
+        $school: ID!
+        $year: String!
+        $isAdmin: Boolean!
+        $password1: String!
+        $password2: String!) {
+  register(
+    email: $email
+    username: $username
+    userType: $userType
+    gender: $gender
+    firstName: $firstName
+    middleInitial: $middleInitial
+    lastName: $lastName
+    college: $college
+    program: $program
+    school: $school
+    year: $year
+    isAdmin: $isAdmin
+    password1: $password1
+    password2: $password2
+  ){
+    success
+    refreshToken
+    token
+    errors
+  }
+}

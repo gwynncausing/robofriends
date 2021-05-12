@@ -1,0 +1,21 @@
+# for user sign in 
+
+mutation tokenAuth ($email: String!, $password: String!) {
+    tokenAuth (email: $email,password: $password) {
+        success,
+        errors,
+        token,
+        refreshToken,
+        unarchiving,
+        user {
+            id,
+            username,
+            firstName,
+            lastName,
+            middleInitial,
+            email,
+            userType
+            year
+        }
+    }
+}
