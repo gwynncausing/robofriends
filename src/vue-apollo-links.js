@@ -11,7 +11,7 @@ const TOKEN_NAME = "JWT";
 
 // HTTP connection to the API, replace with bud grapqhl server url
 const httpLink = createHttpLink({
-  uri: "https://api.spacex.land/graphql/",
+  uri: "http://127.0.0.1:8000/graphql/",
 });
 
 // add the authorization to the request header
