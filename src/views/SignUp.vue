@@ -7,7 +7,7 @@
             <ImageLogo height="150px" width="200px" />
           </v-row>
           <v-row>
-            <h2 class="title-signup">{{ header }}</h2>
+            <h2 class="title-signup mb-8">{{ header }}</h2>
           </v-row>
           <v-window v-model="step">
             <v-window-item :value="1" class="pa-4">
@@ -19,7 +19,7 @@
                   :required="true"
                   @output="
                     ($event) => {
-                      this.user.firstname = $event;
+                      user.firstname = $event;
                     }
                   "
                 />
@@ -32,7 +32,7 @@
                   :required="false"
                   @output="
                     ($event) => {
-                      this.user.middlename = $event;
+                      user.middlename = $event;
                     }
                   "
                 />
@@ -45,7 +45,7 @@
                   :required="true"
                   @output="
                     ($event) => {
-                      this.user.lastname = $event;
+                      user.lastname = $event;
                     }
                   "
                 />
@@ -53,25 +53,21 @@
             </v-window-item>
             <v-window-item :value="2" class="pa-4">
               <v-row>
-                <!-- <InputField
-                  label="School"
-                  placeholder="School"
-                  type="text"
-                  :required="true"
-                  @output="
-                    ($event) => {
-                      this.user.school = $event;
-                    }
-                  "
-                /> -->
-                <v-select
+                <!-- <v-select
                   v-model="user.school"
                   :items="schoolNames"
                   :rules="[(v) => !!v || 'School is required']"
                   label="School"
                   required
                   @change="getSelectedSchoolId($event)"
-                ></v-select>
+                ></v-select> -->
+                <SelectField
+                  label="School"
+                  placeholder="School"
+                  :items="schoolNames"
+                  :rules="[(v) => !!v || 'School is required']"
+                  @change="getSelectedSchoolId($event)"
+                />
               </v-row>
               <v-row>
                 <InputField
@@ -81,47 +77,47 @@
                   :required="true"
                   @output="
                     ($event) => {
-                      this.user.idnumber = $event;
+                      user.idnumber = $event;
                     }
                   "
                 />
               </v-row>
               <v-row>
-                <InputField
+                <SelectField
                   label="College"
                   placeholder="College"
-                  type="text"
-                  :required="true"
-                  @output="
+                  :items="college"
+                  :rules="[(v) => !!v || 'Collge is required']"
+                  @change="
                     ($event) => {
-                      this.user.college = $event;
+                      user.college = $event;
                     }
                   "
                 />
               </v-row>
               <v-row>
                 <v-col class="pl-0 py-0">
-                  <InputField
+                  <SelectField
                     label="Program"
                     placeholder="Program"
-                    type="text"
-                    :required="true"
-                    @output="
+                    :items="program"
+                    :rules="[(v) => !!v || 'Program is required']"
+                    @change="
                       ($event) => {
-                        this.user.program = $event;
+                        user.program = $event;
                       }
                     "
                   />
                 </v-col>
                 <v-col class="pr-0 py-0">
-                  <InputField
+                  <SelectField
                     label="Year"
                     placeholder="Year"
-                    type="text"
-                    :required="true"
-                    @output="
+                    :items="year"
+                    :rules="[(v) => !!v || 'Year is required']"
+                    @change="
                       ($event) => {
-                        this.user.year = $event;
+                        user.year = $event;
                       }
                     "
                   />
@@ -137,7 +133,7 @@
                   :required="true"
                   @output="
                     ($event) => {
-                      this.user.email = $event;
+                      user.email = $event;
                     }
                   "
                 />
@@ -150,7 +146,7 @@
                   :required="true"
                   @output="
                     ($event) => {
-                      this.user.password = $event;
+                      user.password = $event;
                     }
                   "
                 />
@@ -163,7 +159,7 @@
                   :required="true"
                   @output="
                     ($event) => {
-                      this.user.password2 = $event;
+                      user.password2 = $event;
                     }
                   "
                 />
@@ -241,24 +237,28 @@
 <script>
 import ImageLogo from "@/components/ImageLogo.vue";
 import InputField from "@/components/InputField.vue";
+import SelectField from "@/components/SelectField.vue";
 import { mapActions } from "vuex";
 
 import GET_SCHOOLS from "@/graphql/queries/get-schools-for-registration.gql";
-
 
 export default {
   name: "Signin",
   components: {
     ImageLogo,
     InputField,
+    SelectField,
   },
   data: function () {
     return {
       step: 1,
       user: {},
       schools: [],
-      schoolNames: [],
+      schoolNames: ["1", "2"],
       schoolsFromServer: null,
+      college: ["a", "b", "c", "d"],
+      program: ["e", "f", "g", "h"],
+      year: ["1", "2", "3", "4", "5"],
     };
   },
   computed: {
@@ -275,13 +275,13 @@ export default {
   },
   watch: {
     schoolsFromServer: function () {
-      this.initialize()
-    }
+      this.initialize();
+    },
   },
   apollo: {
     schoolsFromServer: {
       query: GET_SCHOOLS,
-      update: data => data.schools,
+      update: (data) => data.schools,
     },
   },
   methods: {
@@ -290,27 +290,27 @@ export default {
       // remove password 2 on POST
       console.log(this.user);
     },
-    initialize(){
-      this.schools = []
+    initialize() {
+      this.schools = [];
       let schools = this.schoolsFromServer.edges;
       schools.forEach((value) => {
-        var currentSchool = value.node
+        var currentSchool = value.node;
         var tempSchool = {
           id: currentSchool.id,
           name: currentSchool.name,
-        }
+        };
         this.schools.push(tempSchool);
         this.schoolNames.push(tempSchool.name);
-      })
+      });
     },
-    getSelectedSchoolId(input){
+    getSelectedSchoolId(input) {
       let index = this.schools.findIndex((school) => school.name === input);
-      this.user.school = this.schools[index].id
+      this.user.school = this.schools[index].id;
     },
   },
   ...mapActions({
-    onRegister: 'user/register'
-  })
+    onRegister: "user/register",
+  }),
 };
 </script>
 

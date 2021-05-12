@@ -14,7 +14,7 @@
               :required="true"
               @output="
                 ($event) => {
-                  this.user.email = $event;
+                  user.email = $event;
                 }
               "
             />
@@ -27,7 +27,7 @@
               :required="true"
               @output="
                 ($event) => {
-                  this.user.password = $event;
+                  user.password = $event;
                 }
               "
             />

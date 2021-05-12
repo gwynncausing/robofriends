@@ -1,14 +1,15 @@
 <template>
-  <v-text-field
+  <v-select
     v-model="input"
     :label="label"
     :placeholder="placeholder"
-    :type="type"
     :required="required"
-    :hide-details="hidedetails"
+    :items="items"
+    :rules="rules"
     outlined
     dense
-  ></v-text-field>
+    @change="$emit('change', input)"
+  ></v-select>
 </template>
 
 <script>
@@ -31,13 +32,13 @@ export default {
       type: Boolean,
       default: false,
     },
-    rules: {
+    items: {
       type: Array,
       default: null,
     },
-    hidedetails: {
-      type: Boolean,
-      default: false,
+    rules: {
+      type: Array,
+      default: null,
     },
   },
   data: function () {
@@ -46,6 +47,12 @@ export default {
     };
   },
   watch: {
+    rules: {
+      handler() {
+        console.log(this.rules);
+      },
+      immediate: true,
+    },
     input: {
       handler() {
         this.$emit("output", this.input);
