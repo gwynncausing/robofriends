@@ -53,7 +53,7 @@
             </v-window-item>
             <v-window-item :value="2" class="pa-4">
               <v-row>
-                <InputField
+                <!-- <InputField
                   label="School"
                   placeholder="School"
                   type="text"
@@ -63,7 +63,14 @@
                       this.user.school = $event;
                     }
                   "
-                />
+                /> -->
+                <v-select
+                  v-model="user.school"
+                  :items="schools"
+                  :rules="[(v) => !!v || 'Gender is required']"
+                  label="School"
+                  required
+                ></v-select>
               </v-row>
               <v-row>
                 <InputField
@@ -233,6 +240,7 @@
 <script>
 import ImageLogo from "@/components/ImageLogo.vue";
 import InputField from "@/components/InputField.vue";
+import { mapActions } from "vuex";
 
 export default {
   name: "Signin",
@@ -244,6 +252,7 @@ export default {
     return {
       step: 1,
       user: {},
+      schools: [],
     };
   },
   computed: {
@@ -265,6 +274,9 @@ export default {
       console.log(this.user);
     },
   },
+  ...mapActions({
+    onRegister: 'user/register'
+  })
 };
 </script>
 
