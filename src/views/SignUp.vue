@@ -26,13 +26,13 @@
               </v-row>
               <v-row>
                 <InputField
-                  label="Middle Name"
-                  placeholder="Middle Name"
+                  label="Middle Initial"
+                  placeholder="Middle Initial"
                   type="text"
                   :required="false"
                   @output="
                     ($event) => {
-                      this.user.middlename = $event;
+                      this.user.middleInitial = $event;
                     }
                   "
                 />
@@ -81,7 +81,7 @@
                   :required="true"
                   @output="
                     ($event) => {
-                      this.user.idnumber = $event;
+                      this.user.idNumber = $event;
                     }
                   "
                 />
@@ -285,10 +285,30 @@ export default {
     },
   },
   methods: {
-    signup() {
+    async signup() {
       console.log("signup");
-      // remove password 2 on POST
       console.log(this.user);
+      this.errors = [];
+      if (this.$refs.form.validate()) {
+        this.user.username = this.user.email;
+        const credentials = {
+          ...this.user
+        };
+        console.log({ credentials : credentials})
+        const data = await this.onRegister(credentials);
+        if (data.success == false) {
+          console.log(data.errors);
+          // if ("username" in data.errors) {
+          //   console.log("Email already exists");
+          //   // data.errors.username[0].message = "Email already exists";
+          // }
+          // if ("schoolId" in data.errors) {
+          //   console.log("Id already exists");
+          //   // data.errors.schoolId[0].message = "ID Number already exists";
+          // }
+          // this.errors = data.errors;
+        } else this.$router.push("/");
+      } else console.log("Validation raised");
     },
     initialize(){
       this.schools = []
@@ -296,7 +316,7 @@ export default {
       schools.forEach((value) => {
         var currentSchool = value.node
         var tempSchool = {
-          id: currentSchool.id,
+          pk: currentSchool.pk,
           name: currentSchool.name,
         }
         this.schools.push(tempSchool);
@@ -305,7 +325,7 @@ export default {
     },
     getSelectedSchoolId(input){
       let index = this.schools.findIndex((school) => school.name === input);
-      this.user.school = this.schools[index].id
+      this.user.school = this.schools[index].pk
     },
   },
   ...mapActions({

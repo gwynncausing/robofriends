@@ -11,6 +11,7 @@ mutation register (
         $college: String!
         $program: String!
         $school: ID!
+        $idNumber: String!
         $year: String!
         $isAdmin: Boolean!
         $password1: String!
@@ -26,6 +27,7 @@ mutation register (
     college: $college
     program: $program
     school: $school
+    idNumber: $idNumber
     year: $year
     isAdmin: $isAdmin
     password1: $password1
