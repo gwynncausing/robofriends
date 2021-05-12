@@ -242,7 +242,7 @@ import ImageLogo from "@/components/ImageLogo.vue";
 import InputField from "@/components/InputField.vue";
 import { mapActions } from "vuex";
 
-import GET_SCHOOLS from "@/graphql/queries/get-schools.gql";
+import GET_SCHOOLS from "@/graphql/queries/get-schools-for-registration.gql";
 
 
 export default {
@@ -288,6 +288,19 @@ export default {
       // remove password 2 on POST
       console.log(this.user);
     },
+    initialize(){
+      this.schools = []
+      let schools = this.schoolsFromServer.edges;
+      schools.forEach((value) => {
+        var currentSchool = value.node
+        var tempSchool = {
+          id: currentSchool.id,
+          name: currentSchool.name,
+        }
+        this.schools.push(tempSchool)
+      }) 
+      // console.log(this.schools)
+    }
   },
   ...mapActions({
     onRegister: 'user/register'
