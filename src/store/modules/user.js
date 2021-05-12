@@ -58,7 +58,7 @@ const mutations = {
 const actions = {
   async register(context, credentials) {
     try {
-      const { data } = await apolloProvider.mutate({
+      const { data } = await apolloProvider.defaultClient.mutate({
         mutation: SIGN_UP_USER,
         variables: { ...credentials },
       });
@@ -69,7 +69,8 @@ const actions = {
   },
   async login({ commit }, credentials) {
     try {
-      const { data } = await apolloProvider.mutate({
+      console.log(apolloProvider);
+      const { data } = await apolloProvider.defaultClient.mutate({
         mutation: SIGN_IN_USER,
         variables: { ...credentials },
       });
