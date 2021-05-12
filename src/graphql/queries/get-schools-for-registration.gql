@@ -2,7 +2,7 @@ query schools{
   schools{
     edges{
       node{
-        id
+        pk
         name
       }
     }
