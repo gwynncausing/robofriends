@@ -5,11 +5,8 @@
  */
 
 import { apolloProvider } from "@/vue-apollo";
-// import REGISTER_USER from "@/graphql/mutations/register-user.gql";
-// import LOGIN_USER from "@/graphql/mutations/login-user.gql";
-
-const REGISTER_USER = "";
-const LOGIN_USER = "";
+import SIGN_UP_USER from "@/graphql/mutations/sign-up-user.gql";
+import SIGN_IN_USER from "@/graphql/mutations/sign-in-user.gql";
 
 const state = () => ({
   accessToken: localStorage.getItem("access-token") || null,
@@ -62,7 +59,7 @@ const actions = {
   async register(context, credentials) {
     try {
       const { data } = await apolloProvider.mutate({
-        mutation: REGISTER_USER,
+        mutation: SIGN_UP_USER,
         variables: { ...credentials },
       });
       return data.register;
@@ -73,7 +70,7 @@ const actions = {
   async login({ commit }, credentials) {
     try {
       const { data } = await apolloProvider.mutate({
-        mutation: LOGIN_USER,
+        mutation: SIGN_IN_USER,
         variables: { ...credentials },
       });
       const output = data.tokenAuth;
