@@ -19,7 +19,7 @@
                   :required="true"
                   @output="
                     ($event) => {
-                      this.user.firstname = $event;
+                      this.user.firstName = $event;
                     }
                   "
                 />
@@ -45,7 +45,7 @@
                   :required="true"
                   @output="
                     ($event) => {
-                      this.user.lastname = $event;
+                      this.user.lastName = $event;
                     }
                   "
                 />
@@ -292,7 +292,9 @@ export default {
       if (this.$refs.form.validate()) {
         this.user.username = this.user.email;
         const credentials = {
-          ...this.user
+          ...this.user,
+          userType: "student",
+          isAdmin: false
         };
         console.log({ credentials : credentials})
         const data = await this.onRegister(credentials);
@@ -327,10 +329,11 @@ export default {
       let index = this.schools.findIndex((school) => school.name === input);
       this.user.school = this.schools[index].pk
     },
-  },
-  ...mapActions({
+    ...mapActions({
     onRegister: 'user/register'
   })
+  },
+
 };
 </script>
 

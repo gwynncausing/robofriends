@@ -4,7 +4,6 @@ mutation register (
         $email: String!
         $username: String!
         $userType: String!
-        $gender: String!
         $firstName: String!
         $middleInitial: String!
         $lastName: String!
@@ -20,7 +19,6 @@ mutation register (
     email: $email
     username: $username
     userType: $userType
-    gender: $gender
     firstName: $firstName
     middleInitial: $middleInitial
     lastName: $lastName
