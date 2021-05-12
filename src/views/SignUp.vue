@@ -66,10 +66,11 @@
                 /> -->
                 <v-select
                   v-model="user.school"
-                  :items="schools"
+                  :items="schoolNames"
                   :rules="[(v) => !!v || 'School is required']"
                   label="School"
                   required
+                  @change="getSelectedSchoolId($event)"
                 ></v-select>
               </v-row>
               <v-row>
@@ -256,6 +257,7 @@ export default {
       step: 1,
       user: {},
       schools: [],
+      schoolNames: [],
       schoolsFromServer: null,
     };
   },
@@ -297,10 +299,14 @@ export default {
           id: currentSchool.id,
           name: currentSchool.name,
         }
-        this.schools.push(tempSchool.name)
-      }) 
-      // console.log(this.schools)
-    }
+        this.schools.push(tempSchool);
+        this.schoolNames.push(tempSchool.name);
+      })
+    },
+    getSelectedSchoolId(input){
+      let index = this.schools.findIndex((school) => school.name === input);
+      this.user.school = this.schools[index].id
+    },
   },
   ...mapActions({
     onRegister: 'user/register'
