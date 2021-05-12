@@ -33,6 +33,10 @@
             />
           </v-row>
           <v-row class="forgot-password"><span>Forgot Password</span></v-row>
+          <!-- Error Tags -->
+          <v-row class="mb-5" v-if="error">
+            {{ error }}
+          </v-row>
           <v-row>
             <v-btn class="btn-signin" type="submit" large depressed block dark>
               Sign in
@@ -72,6 +76,7 @@
 <script>
 import ImageLogo from "@/components/ImageLogo.vue";
 import InputField from "@/components/InputField.vue";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Signin",
@@ -82,15 +87,44 @@ export default {
   data: function () {
     return {
       user: {},
+      error: "",
     };
   },
+  computed: {
+    ...mapGetters({
+      getUserType: "user/getUserType",
+    }),
+  },
   methods: {
-    signin() {
+    async signin() {
       console.log("user: ", this.user);
+      if (this.$refs.form.validate()) {
+        const credentials = { ...this.user };
+        const data = await this.onLogin(credentials);
+        // console.log(data)
+        if (data.success) {
+          this.error = "";
+          if (this.getUserType == "STUDENT") 
+            this.$router.push("/student");
+          else 
+            this.$router.push("/adviser");
+        } 
+        else if (data.success == false) {
+          data.errors.nonFieldErrors[0].message = "Please enter your valid credentials";
+          this.error = data.errors.nonFieldErrors[0].message;
+        } 
+        else 
+          this.error = "Please check your internet connection";
+      } 
+      else 
+        console.log("Validation raised");
     },
     getOutput(e) {
       console.log(e);
     },
+    ...mapActions({
+      onLogin: "user/login",
+    }),
   },
 };
 </script>
