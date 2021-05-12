@@ -4,13 +4,13 @@ mutation register (
         $email: String!
         $username: String!
         $userType: String!
-        $gender: String!
         $firstName: String!
         $middleInitial: String!
         $lastName: String!
         $college: String!
         $program: String!
         $school: ID!
+        $idNumber: String!
         $year: String!
         $isAdmin: Boolean!
         $password1: String!
@@ -19,13 +19,13 @@ mutation register (
     email: $email
     username: $username
     userType: $userType
-    gender: $gender
     firstName: $firstName
     middleInitial: $middleInitial
     lastName: $lastName
     college: $college
     program: $program
     school: $school
+    idNumber: $idNumber
     year: $year
     isAdmin: $isAdmin
     password1: $password1

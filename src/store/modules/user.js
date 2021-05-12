@@ -97,7 +97,7 @@ const actions = {
       return error;
     }
   },
-  async logout({ commit }) {
+  logout({ commit }) {
     commit("setAuthStatus", null);
     commit("setAccessToken", null);
     commit("setRefreshToken", null);

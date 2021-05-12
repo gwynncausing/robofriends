@@ -97,11 +97,11 @@ export default {
   },
   methods: {
     logout() {
-      // this.onLogout();
+      this.onLogout();
       this.$router.push("/");
     },
     ...mapActions({
-      // onLogout: "user/logout",
+      onLogout: "user/logout",
     }),
   },
   computed: {
