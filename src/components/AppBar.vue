@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar>
+    <v-app-bar elevation="2">
       <v-btn text>
         <v-img :src="require('@/assets/logo.svg')" width="30" contain dense />
       </v-btn>
@@ -48,7 +48,7 @@
 
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" text>
+          <v-btn v-bind="attrs" text v-on="on">
             <v-icon left medium>mdi-account</v-icon>
             Legaspi
             <v-icon right>mdi-chevron-down</v-icon>
@@ -95,6 +95,11 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapGetters({
+      // getUserType: "user/getUserType",
+    }),
+  },
   methods: {
     logout() {
       this.onLogout();
@@ -102,11 +107,6 @@ export default {
     },
     ...mapActions({
       onLogout: "user/logout",
-    }),
-  },
-  computed: {
-    ...mapGetters({
-      // getUserType: "user/getUserType",
     }),
   },
 };

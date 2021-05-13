@@ -12,8 +12,8 @@ const vuetify = new Vuetify({
       },
       light: {
         primary: "#34C387",
-        secondary: "#34C387",
-        accent: "#F16F82",
+        secondary: "#F16F82",
+        accent: "#1F724F",
         lightgrey: "#E4E4E4",
         lightgrey2: "#FBFBFB",
         midgrey: "#5E5E5E",

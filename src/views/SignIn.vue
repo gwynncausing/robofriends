@@ -11,7 +11,7 @@
               label="Email"
               placeholder="firstname.lastname@cit.edu"
               type="email"
-              :required="true"
+              required
               @output="
                 ($event) => {
                   user.email = $event;
@@ -24,7 +24,7 @@
               label="Password"
               placeholder="••••••••••••"
               type="password"
-              :required="true"
+              required
               @output="
                 ($event) => {
                   user.password = $event;
@@ -34,13 +34,16 @@
           </v-row>
           <v-row class="forgot-password"><span>Forgot Password</span></v-row>
           <!-- Error Tags -->
-          <v-row class="mb-5" v-if="error">
+          <v-row v-if="error" class="mb-5">
             {{ error }}
           </v-row>
           <v-row>
-            <v-btn class="btn-signin" type="submit" large depressed block dark>
+            <!-- <v-btn class="btn-signin" type="submit" large depressed block dark>
               Sign in
-            </v-btn>
+            </v-btn> -->
+            <Button class="btn-signin" type="submit" large dark block>
+              Sign In
+            </Button>
           </v-row>
         </v-form>
 
@@ -76,6 +79,7 @@
 <script>
 import ImageLogo from "@/components/ImageLogo.vue";
 import InputField from "@/components/InputField.vue";
+import Button from "@/components/Button.vue";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
@@ -83,6 +87,7 @@ export default {
   components: {
     ImageLogo,
     InputField,
+    Button,
   },
   data: function () {
     return {
@@ -104,20 +109,14 @@ export default {
         // console.log(data)
         if (data.success) {
           this.error = "";
-          if (this.getUserType == "STUDENT") 
-            this.$router.push("/student");
-          else 
-            this.$router.push("/adviser");
-        } 
-        else if (data.success == false) {
-          data.errors.nonFieldErrors[0].message = "Please enter your valid credentials";
+          if (this.getUserType == "STUDENT") this.$router.push("/student");
+          else this.$router.push("/adviser");
+        } else if (data.success == false) {
+          data.errors.nonFieldErrors[0].message =
+            "Please enter your valid credentials";
           this.error = data.errors.nonFieldErrors[0].message;
-        } 
-        else 
-          this.error = "Please check your internet connection";
-      } 
-      else 
-        console.log("Validation raised");
+        } else this.error = "Please check your internet connection";
+      } else console.log("Validation raised");
     },
     getOutput(e) {
       console.log(e);

@@ -2,8 +2,8 @@
   <div class="student">
     <AppBar />
     <v-container>
-      <Breadcrumbs :items="route" />
-      <router-view />
+      <Breadcrumbs class="mt-1" :items="route" />
+      <router-view class="mt-2" />
     </v-container>
   </div>
 </template>

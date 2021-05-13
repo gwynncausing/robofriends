@@ -1,7 +1,7 @@
 <template>
-  <v-row>
+  <div id="breadcrumbs">
     <v-breadcrumbs :items="items" large> </v-breadcrumbs>
-  </v-row>
+  </div>
 </template>
 
 <script>
@@ -17,8 +17,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.row {
-  background-color: gray;
+#breadcrumbs {
+  background-color: var(--v-lightgrey2);
+  // background-color: black;
   height: 50px;
+  border-radius: 4px;
+}
+.v-application a {
+  color: red !important;
 }
 </style>

@@ -6,6 +6,7 @@
     :type="type"
     :required="required"
     :hide-details="hidedetails"
+    :rules="rules"
     outlined
     dense
   ></v-text-field>
@@ -33,11 +34,17 @@ export default {
     },
     rules: {
       type: Array,
-      default: null,
+      default: function () {
+        return [];
+      },
     },
     hidedetails: {
       type: Boolean,
       default: false,
+    },
+    text: {
+      type: String,
+      default: "",
     },
   },
   data: function () {
@@ -56,6 +63,12 @@ export default {
         );
       },
       immediate: false,
+    },
+    text: {
+      handler() {
+        this.input = this.text;
+      },
+      immediate: true,
     },
   },
 };

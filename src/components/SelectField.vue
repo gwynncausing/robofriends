@@ -6,9 +6,9 @@
     :required="required"
     :items="items"
     :rules="rules"
+    :hide-details="hidedetails"
     outlined
     dense
-    @change="$emit('change', input)"
   ></v-select>
 </template>
 
@@ -32,13 +32,23 @@ export default {
       type: Boolean,
       default: false,
     },
+    hidedetails: {
+      type: Boolean,
+      default: false,
+    },
+    rules: {
+      type: Array,
+      default: function () {
+        return [];
+      },
+    },
     items: {
       type: Array,
       default: null,
     },
-    rules: {
-      type: Array,
-      default: null,
+    itemSelected: {
+      type: String,
+      default: "",
     },
   },
   data: function () {
@@ -63,6 +73,12 @@ export default {
         );
       },
       immediate: false,
+    },
+    itemSelected: {
+      handler() {
+        this.input = this.itemSelected;
+      },
+      immediate: true,
     },
   },
 };
