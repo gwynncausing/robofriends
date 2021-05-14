@@ -1,12 +1,16 @@
 <template>
   <v-responsive class="first-login-stepper">
-    <v-stepper v-model="e1" alt-labels class="elevation-0">
+    <v-stepper v-model="currentStep" alt-labels class="elevation-0">
       <v-stepper-header>
-        <v-stepper-step step="1"> Create Team </v-stepper-step>
+        <v-stepper-step step="1" :complete="currentStep > 1">
+          Create Team
+        </v-stepper-step>
 
         <v-divider></v-divider>
 
-        <v-stepper-step step="2"> Invite Team </v-stepper-step>
+        <v-stepper-step step="2" :complete="currentStep > 2">
+          Invite Team
+        </v-stepper-step>
 
         <v-divider></v-divider>
 
@@ -14,6 +18,7 @@
       </v-stepper-header>
 
       <v-stepper-items>
+        <!-- STEP 1 -->
         <v-stepper-content step="1">
           <div class="mb-12">
             <div class="d-flex">
@@ -22,20 +27,20 @@
                 placeholder="Team Name"
                 @output="
                   ($event) => {
-                    proejct.teamname = $event;
+                    project.teamname = $event;
                   }
                 "
               />
             </div>
             <div
-              v-for="(item, i) in project.color"
-              :key="i"
+              v-for="(item, colorIndex) in project.theme"
+              :key="colorIndex"
               class="color-wrapper d-flex"
             >
               <span class="text">Primary</span>
-              <Button class="mr-4" :color="item.hex" />
-              <InputField class="mr-4" :text="item.rgb" />
-              <InputField :text="item.hex" />
+              <Button class="mr-4" :color="item" />
+              <InputField class="mr-4" :text="item" />
+              <InputField :text="item" />
             </div>
             <div class="recommended-colors-wrapper">
               <span class="text">Recommended Colors:</span>
@@ -46,63 +51,127 @@
           </div>
 
           <div class="d-flex">
-            <Button color="primary" class="ml-auto" @click="e1 = 2">
+            <Button color="primary" class="ml-auto" @click="currentStep = 2">
               Continue
             </Button>
           </div>
         </v-stepper-content>
 
+        <!-- STEP 2 -->
         <v-stepper-content step="2">
           <div class="mb-12">
             <div class="d-flex">
-              <span class="text">Adviser</span>
-              <InputField
+              <span class="text start-project-text">Adviser:</span>
+              <SelectField
+                class="mr-4"
+                :items="advisers"
+                multiple
+                chips
                 placeholder="Adviser"
-                @output="
-                  ($event) => {
-                    proejct.adviser = $event;
-                  }
-                "
+                @output="inputAdviserDetails($event, '0')"
               />
             </div>
-
-            <div v-for="(member, n) in project.members" :key="n" class="d-flex">
-              <span class="text">Member {{ n + 1 }}:</span>
-              <InputField
+            <div class="d-flex">
+              <span class="text start-project-text"> Member 1: </span>
+              <v-text-field
+                v-model="project.members[0]"
                 class="mr-4"
-                placeholder="lastname.firstname@cit.edu"
-                @output="
-                  ($event) => {
-                    member.name = $event;
-                  }
-                "
-              />
-              <div style="width: 200px"><InputField placeholder="Roles" /></div>
+                outlined
+                dense
+                @change="isMemberEmpty(0)"
+              ></v-text-field>
+            </div>
+            <div
+              v-for="(member, memberIndex) in project.members"
+              :key="memberIndex"
+              class="d-flex"
+            >
+              <span class="text start-project-text">
+                Member {{ memberIndex + 2 }}:
+              </span>
+              <v-text-field
+                v-model="project.members[memberIndex + 1]"
+                class="mr-4"
+                outlined
+                dense
+                @change="isMemberEmpty(memberIndex + 1)"
+              ></v-text-field>
             </div>
           </div>
 
           <div class="d-flex">
-            <Button text @click="e1 = 1"> Back </Button>
+            <Button text @click="currentStep = 1"> Back </Button>
 
-            <Button color="primary" class="ml-auto" @click="e1 = 3">
+            <Button color="primary" class="ml-auto" @click="invite">
               Invite
             </Button>
           </div>
         </v-stepper-content>
 
+        <!-- STEP 3 -->
         <v-stepper-content step="3">
           <div class="mb-12">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illum,
-            assumenda ipsum quia velit blanditiis modi autem veritatis facilis
-            hic ut molestiae totam nihil inventore ipsa libero accusamus quos
-            amet deleniti.
+            <div class="d-flex">
+              <span class="text">Title</span>
+              <InputField
+                placeholder="Title"
+                @output="
+                  ($event) => {
+                    project.title = $event;
+                  }
+                "
+              />
+            </div>
+            <div>
+              <div class="text mb-2">Brief Description</div>
+              <v-textarea outlined rows="4"> </v-textarea>
+            </div>
+            <div class="mb-8">
+              <span class="text mb-2">Objectives</span>
+              <div class="d-flex mt-3">
+                <v-text-field
+                  v-model="project.objectives[0]"
+                  placeholder="Objective"
+                  outlined
+                  dense
+                  hide-details
+                  @change="isObjectiveEmpty(0)"
+                ></v-text-field>
+              </div>
+              <div
+                v-for="(proj, projectIndex) in project.objectives"
+                :key="projectIndex + 50"
+                class="d-flex mt-3"
+              >
+                <v-text-field
+                  v-model="project.objectives[projectIndex + 1]"
+                  placeholder="Objective"
+                  outlined
+                  dense
+                  hide-details
+                  @change="isObjectiveEmpty(projectIndex + 1)"
+                ></v-text-field>
+              </div>
+            </div>
+            <div>
+              <span class="text mb-2">Category</span>
+              <v-combobox
+                outlined
+                :v-model="project.category"
+                :items="category"
+                label="Category"
+                multiple
+                dense
+                chips
+                deletable-chips
+              ></v-combobox>
+            </div>
           </div>
 
           <div class="d-flex">
-            <!-- <Button text @click="e1 = 1"> Back </Button> -->
-
-            <Button color="primary" class="ml-auto" @click="start">
-              Start
+            <Button text> Guidelines</Button>
+            <Button color="primary" class="ml-auto" @click="submit">
+              Submit
             </Button>
           </div>
         </v-stepper-content>
@@ -112,68 +181,76 @@
 </template>
 
 <script>
+import SelectField from "@/components/SelectField.vue";
 import InputField from "@/components/InputField.vue";
 import Button from "@/components/Button.vue";
 
 export default {
   name: "DashboardFirstLoginStepper",
-  components: { InputField, Button },
+  components: { SelectField, InputField, Button },
   data() {
     return {
-      e1: 1,
+      currentStep: 2,
+      // TODO: Check if the there is a team created, then make currentStep value to 3
       steps: 3,
       project: {
-        color: {
-          primary: {
-            rgb: "rgb(52, 195, 135)",
-            hex: "#34C387",
-          },
-          secondary: {
-            rgb: "rgb(241, 111, 130)",
-            hex: "#F16F82",
-          },
-          tertiary: {
-            rgb: "rgb(0, 106, 62)",
-            hex: "#006A3E",
-          },
+        theme: {
+          primaryColor: "#34C387",
+          secondaryColor: "#34C387",
+          tertiaryColor: "#34C387",
         },
-        members: [
-          {
-            name: "",
-            roles: [],
-          },
-          {
-            name: "",
-            roles: [],
-          },
-          {
-            name: "",
-            roles: [],
-          },
-        ],
+        advisers: [],
+        members: [],
+        objectives: [],
       },
+      advisers: ["Leah Barbaso", "Mang Juan", "Mang Tooh", "Mang Teii"],
+      category: [
+        "Project Manager",
+        "Frontend Dev",
+        "Backend Dev",
+        "UI/UX Designer",
+      ],
     };
   },
 
   watch: {
     steps(val) {
-      if (this.e1 > val) {
-        this.e1 = val;
+      if (this.currentStep > val) {
+        this.currentStep = val;
       }
     },
   },
 
   methods: {
+    isObjectiveEmpty(index) {
+      console.log(this.project.objectives);
+      if (this.project.objectives[index] == "")
+        this.project.objectives.splice(index, 1);
+    },
+    isMemberEmpty(index) {
+      console.log(this.project.members);
+      if (this.project.members[index] == "")
+        this.project.members.splice(index, 1);
+    },
+    inputAdviserDetails(event, index) {
+      this.project.advisers[index]
+        ? (this.project.advisers[index] = event)
+        : this.project.advisers.push(event);
+    },
     nextStep(n) {
       console.log("next step", n, this.steps);
       if (n === this.steps) {
-        this.e1 = 1;
+        this.currentStep = 1;
       } else {
-        this.e1 = n + 1;
+        this.currentStep = n + 1;
       }
     },
-    start() {
-      console.log("Start");
+    invite() {
+      this.currentStep = 3;
+      console.log("invite");
+    },
+    submit() {
+      console.log("submit");
     },
   },
 };
@@ -204,6 +281,9 @@ export default {
 .text {
   margin-top: 8px;
   margin-right: 20px;
+}
+.start-project-text {
+  min-width: 90px;
 }
 .color-wrapper {
   max-width: 500px;
