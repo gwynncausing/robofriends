@@ -1,0 +1,91 @@
+[
+    { "text": "College of Arts, Sciences and Education", "id": 1, "abbr": "case", 
+        "departments": [
+            { "text": "Department of Mathematics and Natural Sciences", "id": 1 }, 
+            { "text": "Department of Languages, Literature, and Communication", "id": 2 }, 
+            { "text": "Department of Humanities and Behavioral Sciences", "id": 3 },
+            { "text": "Department of Teacher Education", "id": 4 }
+        ],
+        "programs": [
+            { "text": "BS Biology", "id": 1 }, 
+            { "text": "BS Math", "id": 2 }, 
+            { "text": "BS Psychology", "id": 3 },
+            { "text": "AB English", "id": 4 },
+            { "text": "AB Communication", "id": 5 },
+            { "text": "Bachelor of Multimedia Arts", "id": 6 },
+            { "text": "Bachelor of Secondary Education", "id": 7 },
+            { "text": "Bachelor of Elementary Education", "id": 8 }
+        ]
+    },
+
+    { "text": "College of Computer Studies", "id": 2, "abbr": "ccs",
+        "departments": [
+            { "text": "Computer Science Department", "id": 5 }, 
+            { "text": "Information Technology Department", "id": 6 }
+        ],
+        "programs": [
+            { "text": "BS Computer Science", "id": 9 }, 
+            { "text": "BS Information Technology", "id": 10 }
+        ]
+    },
+
+    { "text": "College of Management, Business and Accountancy", "id": 3, "abbr": "cmba",
+        "departments": [
+            { "text": "Hospitality Management Department", "id": 7 }, 
+            { "text": "Business Administration Department", "id": 8 }, 
+            { "text": "Accountancy Department", "id": 9 },
+            { "text": "Office Administration Department", "id": 10 }
+        ],
+        "programs": [
+            { "text": "BS Hospitality Management", "id": 11 }, 
+            { "text": "BS Tourism Management", "id": 12 }, 
+            { "text": "BS Accountancy", "id": 13 },
+            { "text": "BS Accounting Information Systems", "id": 14 },
+            { "text": "BS Management Accounting", "id": 15 },
+            { "text": "Bachelor in Public Administration", "id": 16 },
+            { "text": "BS Business Administration", "id": 17 },
+            { "text": "BS Office Administration", "id": 18 }
+        ]
+    },
+
+    { "text": "College of Nursing and Allied Health Sciences", "id": 4, "abbr": "cnahs",
+        "departments": [
+            { "text": "Nursing Department", "id": 11 }, 
+            { "text": "Pharmacy Department", "id": 12 }
+        ],
+        "programs": [
+            { "text": "BS Nursing", "id": 19 }, 
+            { "text": "BS Pharmacy", "id": 20 }
+        ] 
+    },
+
+    { "text": "College of Engineering and Architecture", "id": 5, "abbr": "cea",
+        "departments": [
+            { "text": "Architecture Department", "id": 13 }, 
+            { "text": "Civil Engineering Department", "id": 14 }, 
+            { "text": "Computer Engineering Department", "id": 15 },
+            { "text": "Chemical Engineering Department", "id": 16 },
+            { "text": "Industrial Engineering Department", "id": 17 },
+            { "text": "Electronics Engineering Department", "id": 18 },
+            { "text": "Electrical Engineering Department", "id": 19 },
+            { "text": "Mechanical Engineering Department", "id": 20 },
+            { "text": "Mining Engineering Department", "id": 21 }
+        ],
+        "programs": [
+            { "text": "BS Architecture", "id": 21 }, 
+            { "text": "BS Civil Engineering", "id": 22 }, 
+            { "text": "BS Computer Engineering", "id": 23 },
+            { "text": "BS Chemical Engineering", "id": 24 },
+            { "text": "BS Industrial Engineering", "id": 25 },
+            { "text": "BS Electronics Engineering", "id": 26 },
+            { "text": "BS Electrical Engineering", "id": 27 },
+            { "text": "BS Mechanical Engineering", "id": 28 },
+            { "text": "BS Mining Engineering", "id": 29 }
+        ]
+    },
+
+    { "text": "College of Criminal Justice", "id": 6, "abbr": "ccj",
+        "departments": [{ "text": "Criminology Department", "id": 22 }],
+        "programs": [{ "text": "BS Criminology", "id": 30 }]
+    }
+]

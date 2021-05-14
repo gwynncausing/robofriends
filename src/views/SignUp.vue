@@ -11,6 +11,62 @@
           </v-row>
           <v-window v-model="step">
             <v-window-item :value="1" class="pa-4">
+              <v-item-group>
+                <v-row>
+                  <v-col cols="6" class="pa-0">
+                    <v-item v-slot="{ active, toggle }" class="m-0">
+                      <v-card
+                        flat
+                        :color="active ? 'lightgrey2' : ''"
+                        @click="[toggle, setUserType('student')]"
+                      >
+                        <v-img
+                          contain
+                          max-height="300"
+                          src="@/assets/student.png"
+                        ></v-img>
+                        <v-btn
+                          block
+                          depressed
+                          :color="active ? 'secondary' : 'primary'"
+                          class="mt-4"
+                          id="selectStudent"
+                          @click="toggle"
+                        >
+                          Student
+                        </v-btn>
+                      </v-card>
+                    </v-item>
+                  </v-col>
+                  <v-col cols="6" class="pa-0">
+                    <v-item v-slot="{ active, toggle }" class="m-0">
+                      <v-card
+                        flat
+                        :color="active ? 'lightgrey2' : ''"
+                        @click="[toggle, setUserType('teacher')]"
+                      >
+                        <v-img
+                          contain
+                          max-height="300"
+                          src="@/assets/teacher.png"
+                        ></v-img>
+                        <v-btn
+                          block
+                          depressed
+                          :color="active ? 'secondary' : 'primary'"
+                          class="mt-4"
+                          id="selectTeacher"
+                          @click="toggle"
+                        >
+                          Teacher
+                        </v-btn>
+                      </v-card>
+                    </v-item>
+                  </v-col>
+                </v-row>
+              </v-item-group>
+            </v-window-item>
+            <v-window-item :value="2" class="pa-4">
               <v-row>
                 <InputField
                   label="First Name"
@@ -51,7 +107,7 @@
                 />
               </v-row>
             </v-window-item>
-            <v-window-item :value="2" class="pa-4">
+            <v-window-item :value="3" class="pa-4">
               <v-row>
                 <!-- <v-select
                   v-model="user.school"
@@ -83,24 +139,31 @@
                 />
               </v-row>
               <v-row>
-                <SelectField
+                <v-select
                   label="College"
                   placeholder="College"
-                  :items="college"
-                  :rules="[(v) => !!v || 'Collge is required']"
+                  outlined
+                  dense
+                  :items="collegeList"
+                  :rules="[(v) => !!v || 'College is required']"
                   @change="
                     ($event) => {
                       user.college = $event;
+                      let x = collegeList.findIndex((c) => c.text === $event);
+                      programList = collegeList[x].programs;
                     }
                   "
                 />
               </v-row>
               <v-row>
                 <v-col class="pl-0 py-0">
-                  <SelectField
+                  <v-select
+                    v-show="user.userType === 'student'"
                     label="Program"
                     placeholder="Program"
-                    :items="program"
+                    outlined
+                    dense
+                    :items="programList"
                     :rules="[(v) => !!v || 'Program is required']"
                     @change="
                       ($event) => {
@@ -110,9 +173,12 @@
                   />
                 </v-col>
                 <v-col class="pr-0 py-0">
-                  <SelectField
+                  <v-select
+                    v-show="user.userType === 'student'"
                     label="Year"
                     placeholder="Year"
+                    outlined
+                    dense
                     :items="year"
                     :rules="[(v) => !!v || 'Year is required']"
                     @change="
@@ -124,7 +190,7 @@
                 </v-col>
               </v-row>
             </v-window-item>
-            <v-window-item :value="3" class="pa-4">
+            <v-window-item :value="4" class="pa-4">
               <v-row>
                 <InputField
                   label="Institutional Email"
@@ -181,7 +247,7 @@
             <v-spacer></v-spacer>
             <v-col>
               <v-btn
-                v-show="step !== 3"
+                v-show="step !== 4"
                 class="btn-next"
                 depressed
                 block
@@ -191,7 +257,7 @@
                 Next
               </v-btn>
               <v-btn
-                v-show="step === 3"
+                v-show="step === 4"
                 class="btn-next"
                 depressed
                 block
@@ -235,6 +301,7 @@
 </template>
 
 <script>
+import colleges from "@/assets/colleges.json";
 import ImageLogo from "@/components/ImageLogo.vue";
 import InputField from "@/components/InputField.vue";
 import SelectField from "@/components/SelectField.vue";
@@ -253,11 +320,11 @@ export default {
     return {
       step: 1,
       user: {},
-      schools: [],
-      schoolNames: ["1", "2"],
+      userType: "",
+      schoolNames: ["Cebu Institute of Technology - University", "2"],
       schoolsFromServer: null,
-      college: ["a", "b", "c", "d"],
-      program: ["e", "f", "g", "h"],
+      collegeList: colleges,
+      programList: [],
       year: ["1", "2", "3", "4", "5"],
     };
   },
@@ -265,8 +332,10 @@ export default {
     header() {
       switch (this.step) {
         case 1:
-          return "Sign Up";
+          return "I want to sign up as a...";
         case 2:
+          return "Sign Up";
+        case 3:
           return "School Credentials";
         default:
           return "Sign In Credentials";
@@ -332,6 +401,13 @@ export default {
     ...mapActions({
       onRegister: "user/register",
     }),
+    setUserType(userType) {
+      this.user.userType = userType;
+      if (userType === "student")
+        document.getElementById("selectStudent").click();
+      else document.getElementById("selectTeacher").click();
+      console.log(this.user.userType);
+    }
   },
 };
 </script>
@@ -346,6 +422,9 @@ export default {
 .title-signup {
   text-align: left;
   color: var(--v-primary);
+}
+.v-card {
+  margin: 4px;
 }
 .btn-next {
   margin-top: 20px;
