@@ -7,6 +7,8 @@
     :items="items"
     :rules="rules"
     :hide-details="hidedetails"
+    :multiple="multiple"
+    :chips="chips"
     outlined
     dense
   ></v-select>
@@ -33,6 +35,14 @@ export default {
       default: false,
     },
     hidedetails: {
+      type: Boolean,
+      default: false,
+    },
+    multiple: {
+      type: Boolean,
+      default: false,
+    },
+    chips: {
       type: Boolean,
       default: false,
     },
