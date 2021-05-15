@@ -1,13 +1,12 @@
 <template>
-  <div class="test">
-  </div>
+  <div class="test"></div>
 </template>
 
 <script>
 export default {
   name: "Test",
   components: {},
-  data: function () {}
+  data: function () {},
 };
 </script>
 

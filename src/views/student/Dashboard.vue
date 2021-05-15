@@ -1,10 +1,10 @@
 <template>
   <div id="dashboard">
     <div id="dashboard-first-login">
-      <DashboardFirstLoginStepper class="d-none" />
+      <DashboardFirstLoginStepper />
     </div>
     <!-- remove the hidden for the main Dashboard -->
-    <DashboardProjectAnalysis />
+    <DashboardProjectAnalysis class="d-none" />
   </div>
 </template>
 

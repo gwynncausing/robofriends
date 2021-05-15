@@ -115,7 +115,9 @@
                   :items="schoolNames"
                   :rules="[(v) => !!v || 'School is required']"
                   @output="
-                    ($event) => {getSelectedSchoolId($event);}
+                    ($event) => {
+                      getSelectedSchoolId($event);
+                    }
                   "
                 />
               </v-row>
@@ -352,18 +354,18 @@ export default {
       console.log("signup");
       console.log(this.user);
       this.errors = [];
-      if (this.user.userType == "student"){
+      if (this.user.userType == "student") {
         this.user.year = this.user.year.toLowerCase();
-      }else{
-        this.user.year = ""
-        this.user.program = ""
+      } else {
+        this.user.year = "";
+        this.user.program = "";
       }
       if (this.$refs.form.validate()) {
         this.user.username = this.user.email;
         const credentials = {
           ...this.user,
           isAdmin: false,
-          school: this.selectedSchoolPk
+          school: this.selectedSchoolPk,
         };
         console.log({ credentials: credentials });
         const data = await this.onRegister(credentials);
@@ -394,12 +396,12 @@ export default {
         this.schools.push(tempSchool);
         this.schoolNames.push(tempSchool.name);
       });
-      console.log({schools: this.schools})
+      console.log({ schools: this.schools });
     },
     getSelectedSchoolId(input) {
       let index = this.schools.findIndex((school) => school.name == input);
       this.selectedSchoolPk = this.schools[index].pk;
-      console.log(this.selectedSchoolPk)
+      console.log(this.selectedSchoolPk);
     },
     ...mapActions({
       onRegister: "user/register",
