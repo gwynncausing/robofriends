@@ -137,7 +137,7 @@
                   :required="true"
                   @output="
                     ($event) => {
-                      user.idnumber = $event;
+                      user.idNumber = $event;
                     }
                   "
                 />
