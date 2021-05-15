@@ -19,7 +19,7 @@ const routes = [
   {
     path: "/student",
     name: "",
-    meta: { name: "Home" },
+    meta: { name: "Student" },
     component: () => import("@/views/Student.vue"),
     children: [
       {
@@ -27,12 +27,35 @@ const routes = [
         name: "Dashboard",
         component: () => import("@/views/student/Dashboard.vue"),
       },
+      {
+        path: "invite",
+        name: "StudentInvitation",
+        component: () => import("@/views/student/StudentInvitation.vue"),
+      },
+    ],
+  },
+  {
+    path: "/adviser",
+    name: "",
+    meta: { name: "Adviser" },
+    component: () => import("@/views/Adviser.vue"),
+    children: [
+      {
+        path: "invite",
+        name: "AdviserInvitation",
+        component: () => import("@/views/adviser/AdviserInvitation.vue"),
+      },
     ],
   },
   {
     path: "/about",
     name: "About",
     component: () => import("@/views/About.vue"),
+  },
+  {
+    path: "/test",
+    name: "Test",
+    component: () => import("@/views/Test.vue"),
   },
 ];
 
