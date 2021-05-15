@@ -324,7 +324,7 @@ export default {
       schoolsFromServer: null,
       collegeList: colleges,
       programList: [],
-      year: ["1", "2", "3", "4", "5"],
+      year: ["First", "Second", "Third", "Fourth", "Fifth"],
     };
   },
   computed: {
@@ -359,6 +359,7 @@ export default {
       this.errors = [];
       if (this.$refs.form.validate()) {
         this.user.username = this.user.email;
+        this.user.year = this.user.year.toLowerCase();
         const credentials = {
           ...this.user,
           isAdmin: false,

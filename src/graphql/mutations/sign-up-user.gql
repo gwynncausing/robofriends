@@ -8,7 +8,8 @@ mutation register (
         $middleInitial: String!
         $lastName: String!
         $college: String!
-        $program: String!
+        $program: String
+        $department: String
         $school: ID!
         $idNumber: String!
         $year: String!
@@ -25,6 +26,7 @@ mutation register (
     college: $college
     program: $program
     school: $school
+    department: $department
     idNumber: $idNumber
     year: $year
     isAdmin: $isAdmin
