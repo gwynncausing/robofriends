@@ -26,11 +26,11 @@
                           src="@/assets/student.png"
                         ></v-img>
                         <v-btn
+                          id="selectStudent"
                           block
                           depressed
                           :color="active ? 'secondary' : 'primary'"
                           class="mt-4"
-                          id="selectStudent"
                           @click="toggle"
                         >
                           Student
@@ -51,11 +51,11 @@
                           src="@/assets/teacher.png"
                         ></v-img>
                         <v-btn
+                          id="selectTeacher"
                           block
                           depressed
                           :color="active ? 'secondary' : 'primary'"
                           class="mt-4"
-                          id="selectTeacher"
                           @click="toggle"
                         >
                           Teacher
@@ -407,7 +407,7 @@ export default {
         document.getElementById("selectStudent").click();
       else document.getElementById("selectTeacher").click();
       console.log(this.user.userType);
-    }
+    },
   },
 };
 </script>
