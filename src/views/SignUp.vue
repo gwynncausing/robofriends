@@ -364,7 +364,9 @@ export default {
       this.errors = [];
       if (this.$refs.form.validate()) {
         this.user.username = this.user.email;
-        this.user.year = this.user.year.toLowerCase();
+        if (this.user.userType == "student"){
+          this.user.year = this.user.year.toLowerCase();
+        }
         const credentials = {
           ...this.user,
           isAdmin: false,
