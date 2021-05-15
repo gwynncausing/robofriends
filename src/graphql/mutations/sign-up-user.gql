@@ -6,10 +6,11 @@ mutation register (
         $userType: String!
         $firstName: String!
         $middleInitial: String = ""
+        $department: String = ""
         $lastName: String!
         $college: String!
         $program: String = ""
-        $school: Int!
+        $school: ID!
         $idNumber: String!
         $year: String = ""
         $isAdmin: Boolean!
@@ -22,6 +23,7 @@ mutation register (
     firstName: $firstName
     middleInitial: $middleInitial
     lastName: $lastName
+    department: $department
     college: $college
     program: $program
     school: $school

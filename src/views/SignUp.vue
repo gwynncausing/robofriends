@@ -160,7 +160,7 @@
                     outlined
                     dense
                     :items="programList"
-                    :rules="[(v) => !!v || 'Program is required']"
+                    :rules="user.userType === 'student' ? [(v) => !!v || 'Program is required'] : []"
                     @change="
                       ($event) => {
                         user.program = $event;
@@ -176,7 +176,7 @@
                     outlined
                     dense
                     :items="year"
-                    :rules="[(v) => !!v || 'Year is required']"
+                    :rules="user.userType === 'student' ? [(v) => !!v || 'Year is required'] : []" 
                     @change="
                       ($event) => {
                         user.year = $event;
@@ -228,6 +228,18 @@
               </v-row>
             </v-window-item>
           </v-window>
+          <!-- Start: Error Display -->
+          <v-row>
+            <v-col v-if="errors != null" class="text-center">
+              <v-label
+                v-for="error in this.errors"
+                :key="error.message"
+              >
+                {{error[0].message}} <br />
+              </v-label> 
+            </v-col>
+          </v-row>
+          <!-- End: Error Display -->
           <v-row class="px-1">
             <v-col>
               <v-btn
@@ -297,6 +309,9 @@
 </template>
 
 <script>
+
+// TODO: Handle if school id already exists in the backend
+
 import colleges from "@/assets/colleges.json";
 import ImageLogo from "@/components/ImageLogo.vue";
 import InputField from "@/components/InputField.vue";
@@ -322,6 +337,7 @@ export default {
       collegeList: colleges,
       programList: [],
       year: ["First", "Second", "Third", "Fourth", "Fifth"],
+      errors: []
     };
   },
   computed: {
@@ -354,12 +370,6 @@ export default {
       console.log("signup");
       console.log(this.user);
       this.errors = [];
-      if (this.user.userType == "student") {
-        this.user.year = this.user.year.toLowerCase();
-      } else {
-        this.user.year = "";
-        this.user.program = "";
-      }
       if (this.$refs.form.validate()) {
         this.user.username = this.user.email;
         const credentials = {
@@ -371,14 +381,10 @@ export default {
         const data = await this.onRegister(credentials);
         if (data.success == false) {
           console.log(data.errors);
-          if ("username" in data.errors) {
-            console.log("Email already exists");
-            // data.errors.username[0].message = "Email already exists";
-          }
-          if ("schoolId" in data.errors) {
-            console.log("Id already exists");
-            // data.errors.schoolId[0].message = "ID Number already exists";
-          }
+          if ("username" in data.errors) 
+            data.errors.username[0].message = "Email already exists.";
+          if ("idNumber" in data.errors) 
+            data.errors.schoolId[0].message = "ID Number already exists.";
           this.errors = data.errors;
         } else this.$router.push("/");
       } else console.log("Validation raised");
