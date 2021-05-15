@@ -109,23 +109,13 @@
             </v-window-item>
             <v-window-item :value="3" class="pa-4">
               <v-row>
-                <!-- <v-select
-                  v-model="user.school"
-                  :items="schoolNames"
-                  :rules="[(v) => !!v || 'School is required']"
-                  label="School"
-                  required
-                  @change="getSelectedSchoolId($event)"
-                ></v-select> -->
                 <SelectField
                   label="School"
                   placeholder="School"
                   :items="schoolNames"
                   :rules="[(v) => !!v || 'School is required']"
                   @output="
-                    ($event) => {
-                      user.school = getSelectedSchoolId($event);
-                    }
+                    ($event) => {getSelectedSchoolId($event);}
                   "
                 />
               </v-row>
@@ -362,7 +352,7 @@ export default {
       console.log("signup");
       console.log(this.user);
       this.errors = [];
-      if (this.$refs.form.validate()) {
+      // if (this.$refs.form.validate()) {
         this.user.username = this.user.email;
         if (this.user.userType == "student"){
           this.user.year = this.user.year.toLowerCase();
@@ -386,7 +376,7 @@ export default {
           }
           this.errors = data.errors;
         } else this.$router.push("/");
-      } else console.log("Validation raised");
+      // } else console.log("Validation raised");
     },
     initialize() {
       this.schoolNames = [];
