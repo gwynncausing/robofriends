@@ -3,6 +3,7 @@
     <AppBar />
     <v-container>
       <Breadcrumbs class="mt-1" :items="route" />
+      // Comment: This breadcrumb will only show if the user has a team
       <router-view class="mt-2" />
     </v-container>
   </div>

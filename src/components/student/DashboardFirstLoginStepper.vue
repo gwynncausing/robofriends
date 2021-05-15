@@ -63,7 +63,6 @@
             <div class="d-flex">
               <span class="text start-project-text">Adviser:</span>
               <SelectField
-                class="mr-4"
                 :items="advisers"
                 multiple
                 chips
@@ -75,9 +74,9 @@
               <span class="text start-project-text"> Member 1: </span>
               <v-text-field
                 v-model="project.members[0]"
-                class="mr-4"
                 outlined
                 dense
+                type="email"
                 @change="isMemberEmpty(0)"
               ></v-text-field>
             </div>
@@ -91,9 +90,9 @@
               </span>
               <v-text-field
                 v-model="project.members[memberIndex + 1]"
-                class="mr-4"
                 outlined
                 dense
+                type="email"
                 @change="isMemberEmpty(memberIndex + 1)"
               ></v-text-field>
             </div>
@@ -102,9 +101,58 @@
           <div class="d-flex">
             <Button text @click="currentStep = 1"> Back </Button>
 
-            <Button color="primary" class="ml-auto" @click="invite">
+            <v-dialog v-model="inviteDialog" width="500">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  color="primary"
+                  class="ml-auto"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  Invite
+                </v-btn>
+              </template>
+
+              <v-card>
+                <v-card-title class="headline secondary lighten-4">
+                  Team Invitation
+                </v-card-title>
+
+                <v-card-text>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+                  irure dolor in reprehenderit in voluptate velit esse cillum
+                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                  cupidatat non proident, sunt in culpa qui officia deserunt
+                  mollit anim id est laborum.
+                  <div class="mt-4">
+                    When you accept you will not be able to go back in this
+                    step, although you can invite or change your settings after
+                    step 3.
+                  </div>
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="primary"
+                    text
+                    type="submit"
+                    @click="[(inviteDialog = false), invite()]"
+                  >
+                    I accept
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <!-- <Button color="primary" class="ml-auto" @click="invite">
               Invite
-            </Button>
+            </Button> -->
           </div>
         </v-stepper-content>
 
@@ -190,6 +238,7 @@ export default {
   components: { SelectField, InputField, Button },
   data() {
     return {
+      inviteDialog: false,
       currentStep: 2,
       // TODO: Check if the there is a team created, then make currentStep value to 3
       steps: 3,
