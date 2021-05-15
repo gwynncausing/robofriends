@@ -320,7 +320,6 @@ export default {
     return {
       step: 1,
       user: {},
-      userType: "",
       schoolNames: ["Cebu Institute of Technology - University", "2"],
       schoolsFromServer: null,
       collegeList: colleges,
@@ -362,26 +361,26 @@ export default {
         this.user.username = this.user.email;
         const credentials = {
           ...this.user,
-          userType: "student",
           isAdmin: false,
         };
         console.log({ credentials: credentials });
         const data = await this.onRegister(credentials);
         if (data.success == false) {
           console.log(data.errors);
-          // if ("username" in data.errors) {
-          //   console.log("Email already exists");
-          //   // data.errors.username[0].message = "Email already exists";
-          // }
-          // if ("schoolId" in data.errors) {
-          //   console.log("Id already exists");
-          //   // data.errors.schoolId[0].message = "ID Number already exists";
-          // }
-          // this.errors = data.errors;
+        //   if ("username" in data.errors) {
+        //     console.log("Email already exists");
+        //     // data.errors.username[0].message = "Email already exists";
+        //   }
+        //   if ("schoolId" in data.errors) {
+        //     console.log("Id already exists");
+        //     // data.errors.schoolId[0].message = "ID Number already exists";
+        //   }
+        //   this.errors = data.errors;
         } else this.$router.push("/");
       } else console.log("Validation raised");
     },
     initialize() {
+      this.schoolNames = [];
       this.schools = [];
       let schools = this.schoolsFromServer.edges;
       schools.forEach((value) => {
