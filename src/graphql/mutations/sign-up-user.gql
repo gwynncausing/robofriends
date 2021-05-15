@@ -5,10 +5,10 @@ mutation register (
         $username: String!
         $userType: String!
         $firstName: String!
-        $middleInitial: String
+        $middleInitial: String!
         $lastName: String!
         $college: String!
-        $program: String
+        $program: String!
         $school: ID!
         $idNumber: String!
         $year: String!
