@@ -216,7 +216,7 @@
                   :required="true"
                   @output="
                     ($event) => {
-                      user.password = $event;
+                      user.password1 = $event;
                     }
                   "
                 />
