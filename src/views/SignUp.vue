@@ -352,11 +352,14 @@ export default {
       console.log("signup");
       console.log(this.user);
       this.errors = [];
-      // if (this.$refs.form.validate()) {
+      if (this.user.userType == "student"){
+        this.user.year = this.user.year.toLowerCase();
+      }else{
+        this.user.year = ""
+        this.user.program = ""
+      }
+      if (this.$refs.form.validate()) {
         this.user.username = this.user.email;
-        if (this.user.userType == "student"){
-          this.user.year = this.user.year.toLowerCase();
-        }
         const credentials = {
           ...this.user,
           isAdmin: false,
@@ -376,7 +379,7 @@ export default {
           }
           this.errors = data.errors;
         } else this.$router.push("/");
-      // } else console.log("Validation raised");
+      } else console.log("Validation raised");
     },
     initialize() {
       this.schoolNames = [];
