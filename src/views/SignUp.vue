@@ -43,7 +43,7 @@
                       <v-card
                         flat
                         :color="active ? 'lightgrey2' : ''"
-                        @click="[toggle, setUserType('teacher')]"
+                        @click="[toggle, setUserType('adviser')]"
                       >
                         <v-img
                           contain
