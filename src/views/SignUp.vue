@@ -122,7 +122,11 @@
                   placeholder="School"
                   :items="schoolNames"
                   :rules="[(v) => !!v || 'School is required']"
-                  @change="getSelectedSchoolId($event)"
+                  @output="
+                    ($event) => {
+                      user.school = getSelectedSchoolId($event);
+                    }
+                  "
                 />
               </v-row>
               <v-row>
@@ -320,6 +324,7 @@ export default {
     return {
       step: 1,
       user: {},
+      selectedSchoolPk: null,
       schoolNames: [],
       schoolsFromServer: null,
       collegeList: colleges,
@@ -363,6 +368,7 @@ export default {
         const credentials = {
           ...this.user,
           isAdmin: false,
+          school: this.selectedSchoolPk
         };
         console.log({ credentials: credentials });
         const data = await this.onRegister(credentials);
@@ -393,10 +399,12 @@ export default {
         this.schools.push(tempSchool);
         this.schoolNames.push(tempSchool.name);
       });
+      console.log({schools: this.schools})
     },
     getSelectedSchoolId(input) {
-      let index = this.schools.findIndex((school) => school.name === input);
-      this.user.school = this.schools[index].pk;
+      let index = this.schools.findIndex((school) => school.name == input);
+      this.selectedSchoolPk = this.schools[index].pk;
+      console.log(this.selectedSchoolPk)
     },
     ...mapActions({
       onRegister: "user/register",
