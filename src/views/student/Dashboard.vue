@@ -1,10 +1,10 @@
 <template>
   <div id="dashboard">
     <div id="dashboard-first-login">
-      <DashboardFirstLoginStepper />
+      <DashboardFirstLoginStepper class="d-none" />
     </div>
     <!-- remove the hidden for the main Dashboard -->
-    <DashboardProjectAnalysis hidden />
+    <DashboardProjectAnalysis />
   </div>
 </template>
 
@@ -19,13 +19,6 @@ export default {
 </script>
 
 <style>
-#dashboard {
-  /* background-color: var(--v-lightgrey2);
-  border-radius: 4px;
-  padding: 10px; */
-  /* display: flex; */
-  /* justify-content: center; */
-}
 #dashboard-first-login {
   max-width: 1000px;
   margin-right: auto;

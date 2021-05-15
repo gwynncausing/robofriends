@@ -2,7 +2,7 @@
   <div>
     <v-app-bar elevation="2">
       <v-btn text>
-        <v-img :src="require('@/assets/logo.svg')" width="30" contain dense />
+        <v-img :src="require('@/assets/logo.png')" width="30" contain dense />
       </v-btn>
 
       <v-menu offset-y open-on-hover>

@@ -239,7 +239,7 @@ export default {
   data() {
     return {
       inviteDialog: false,
-      currentStep: 2,
+      currentStep: 1,
       // TODO: Check if the there is a team created, then make currentStep value to 3
       steps: 3,
       project: {
@@ -309,18 +309,18 @@ export default {
 .first-login-stepper {
   // background-color: var(--v-lightgrey2);
   background-color: white;
-  border-radius: 4px;
+  border-radius: 10px;
   padding: 10px;
 }
 .v-stepper__header {
   box-shadow: none;
   background-color: var(--v-lightgrey2);
-  border-radius: 4px;
+  border-radius: 10px;
   padding: 10px;
 }
 .v-stepper__items {
   background-color: var(--v-lightgrey2);
-  border-radius: 4px;
+  border-radius: 10px;
   padding: 20px;
   margin-top: 18px;
 }
