@@ -20,8 +20,8 @@
 import { mapGetters } from "vuex";
 import InvitationMessage from "@/components/InvitationMessage.vue";
 import InvitationRow from "@/components/InvitationRow.vue";
-import USER_INVITATIONS from "@/graphql/queries/user-invitations.gql"
-import UPDATE_INVITATION from "@/graphql/mutations/update-invitation.gql"
+import USER_INVITATIONS from "@/graphql/queries/user-invitations.gql";
+import UPDATE_INVITATION from "@/graphql/mutations/update-invitation.gql";
 export default {
   name: "StudentInvitation",
   components: {
@@ -41,20 +41,20 @@ export default {
       ],
     };
   },
-  watch: {
-    invitationsFromServer() {
-      this.initialize()
-    },
-  },
   computed: {
     ...mapGetters({
-      getUser: 'user/getUser'
-    })
+      getUser: "user/getUser",
+    }),
+  },
+  watch: {
+    invitationsFromServer() {
+      this.initialize();
+    },
   },
   methods: {
     initialize() {
-      this.invitations = []
-      this.invitationsFromServer.edges.forEach(edge => {
+      this.invitations = [];
+      this.invitationsFromServer.edges.forEach((edge) => {
         this.invitations.push({
           id: edge.node.id,
           projectId: edge.node.project.id,
@@ -62,36 +62,38 @@ export default {
           description: edge.node.project.description,
           status: edge.node.status,
           createdAt: edge.node.createdAt,
-        })
-      })
+        });
+      });
     },
-    async updateInvitation({invitationId, isAccepted, projectId}) {
-      const input = {invitationId, isAccepted, projectId}
+    async updateInvitation({ invitationId, isAccepted, projectId }) {
+      const input = { invitationId, isAccepted, projectId };
       try {
-        const result = await this.$apollo.mutate({ mutation: UPDATE_INVITATION, variables: {input}})
-        const invitation = result.data.updateInvitation.invitation
-        if(invitation.status === "ACCEPTED")
-          this.$router.push('/student')
-        else if(invitation.status === "DECLINED"){
+        const result = await this.$apollo.mutate({
+          mutation: UPDATE_INVITATION,
+          variables: { input },
+        });
+        const invitation = result.data.updateInvitation.invitation;
+        if (invitation.status === "ACCEPTED") this.$router.push("/student");
+        else if (invitation.status === "DECLINED") {
           // handle decline
         }
-      } catch (error){
-        console.log(error)
+      } catch (error) {
+        console.log(error);
       }
-    }
+    },
   },
-  apollo: { 
+  apollo: {
     invitationsFromServer: {
       query: USER_INVITATIONS,
-      update: data => data.invitations,
+      update: (data) => data.invitations,
       variables() {
         return {
-          user: this.getUser.id
-        }
+          user: this.getUser.id,
+        };
       },
       pollInterval: 10000,
-    }
-  }
+    },
+  },
 };
 </script>
 

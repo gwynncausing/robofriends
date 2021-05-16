@@ -81,14 +81,16 @@
           <div class="mb-12">
             <div class="d-flex">
               <span class="text start-project-text">Adviser:</span>
-              <SelectField
+              <!-- <SelectField
                 :items="advisers"
                 itemText="fullName"
                 itemValue="email"
                 multiple
                 chips
                 @output="inputAdviserDetails($event, '0')"
-              />
+              /> -->
+              <v-select :items="advisers"> </v-select>
+              {{ advisers }}
             </div>
             <div class="d-flex">
               <span class="text start-project-text"> Member 1: </span>
@@ -142,7 +144,8 @@
             </div>
             <div>
               <div class="text mb-2">Brief Description</div>
-              <v-textarea outlined rows="4" v-model="project.description"> </v-textarea>
+              <v-textarea v-model="project.description" outlined rows="4">
+              </v-textarea>
             </div>
             <div class="mb-8">
               <span class="text mb-2">Objectives</span>
@@ -172,8 +175,8 @@
             <div>
               <span class="text mb-2">Category</span>
               <v-combobox
-                outlined
                 v-model="project.categories"
+                outlined
                 :items="category"
                 multiple
                 dense
@@ -196,7 +199,6 @@
 </template>
 
 <script>
-import SelectField from "@/components/SelectField.vue";
 import InputField from "@/components/InputField.vue";
 import Button from "@/components/Button.vue";
 
@@ -205,7 +207,7 @@ import CREATE_PROJECT from "@/graphql/mutations/create-project.gql";
 
 export default {
   name: "DashboardFirstLoginStepper",
-  components: { SelectField, InputField, Button },
+  components: { InputField, Button },
   data() {
     return {
       inviteDialog: false,
@@ -221,12 +223,12 @@ export default {
           secondaryColor: "#F16F82",
           tertiaryColor: "#1F724F",
         },
-        // TODO: to be removed, will now use invited emails 
+        // TODO: to be removed, will now use invited emails
         advisers: [],
         // members: [],
         invitedEmails: [],
         objectives: [],
-        categories: []
+        categories: [],
       },
       // TODO: query for adviser's name and email
       advisers: null,
@@ -251,7 +253,7 @@ export default {
   apollo: {
     advisers: {
       query: GET_ADVISERS,
-      update: (data) => data.users.edges.map(edge=>edge.node)
+      update: (data) => data.users.edges.map((edge) => edge.node),
     },
   },
 
@@ -271,7 +273,7 @@ export default {
         this.project.invitedEmails.splice(index, 1);
     },
     inputAdviserDetails(event) {
-      this.project.advisers = event
+      this.project.advisers = event;
     },
     nextStep(n) {
       console.log("next step", n, this.steps);

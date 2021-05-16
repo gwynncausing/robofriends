@@ -26,8 +26,11 @@ export default {
       default: "",
     },
     invitation: {
-      type: Object
-    }
+      type: Object,
+      default: function () {
+        return {};
+      },
+    },
   },
   methods: {
     view() {
@@ -39,18 +42,18 @@ export default {
         invitationId: this.invitation.id,
         projectId: this.invitation.projectId,
         isAccepted: false,
-      }
-      this.$emit("updateInvitation", params)
+      };
+      this.$emit("updateInvitation", params);
     },
     join() {
       console.log("join " + this.teamName);
-      console.log(this.invitation.id)
+      console.log(this.invitation.id);
       const params = {
         invitationId: this.invitation.id,
         projectId: this.invitation.projectId,
         isAccepted: true,
-      }
-      this.$emit("updateInvitation", params)
+      };
+      this.$emit("updateInvitation", params);
     },
   },
 };

@@ -31,7 +31,7 @@ const routes = [
     path: "/",
     name: "SignIn",
     meta: { name: "Sign In" },
-    // beforeEnter: authGuard,
+    beforeEnter: authGuard,
     component: () => import("@/views/SignIn.vue"),
   },
   {

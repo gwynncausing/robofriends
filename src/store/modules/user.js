@@ -18,6 +18,7 @@ const state = () => ({
 
 const getters = {
   getAuthStatus(state) {
+    console.log(state.authStatus);
     return state.authStatus;
   },
   getAccessToken(state) {
