@@ -25,16 +25,32 @@ export default {
       type: String,
       default: "",
     },
+    invitation: {
+      type: Object
+    }
   },
   methods: {
     view() {
-      console.log("view" + this.teamName);
+      console.log("view " + this.teamName);
     },
     deny() {
-      console.log("deny" + this.teamName);
+      console.log("deny " + this.teamName);
+      const params = {
+        invitationId: this.invitation.id,
+        projectId: this.invitation.projectId,
+        isAccepted: false,
+      }
+      this.$emit("updateInvitation", params)
     },
     join() {
-      console.log("join" + this.teamName);
+      console.log("join " + this.teamName);
+      console.log(this.invitation.id)
+      const params = {
+        invitationId: this.invitation.id,
+        projectId: this.invitation.projectId,
+        isAccepted: true,
+      }
+      this.$emit("updateInvitation", params)
     },
   },
 };
