@@ -10,7 +10,7 @@ mutation register (
         $lastName: String!
         $college: String!
         $program: String = ""
-        $school: ID!
+        $school: Int!
         $idNumber: String!
         $year: String = ""
         $isAdmin: Boolean!
