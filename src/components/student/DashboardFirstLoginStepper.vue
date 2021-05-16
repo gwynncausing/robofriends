@@ -89,8 +89,10 @@
                 chips
                 @output="inputAdviserDetails($event, '0')"
               /> -->
-              <v-select :items="advisers"> </v-select>
-              {{ advisers }}
+              <v-select :items="advisersNames"> 
+              </v-select>
+
+              <!-- {{ advisers }} -->
             </div>
             <div class="d-flex">
               <span class="text start-project-text"> Member 1: </span>
@@ -225,6 +227,7 @@ export default {
         },
         // TODO: to be removed, will now use invited emails
         advisers: [],
+        advisersNames: [],
         // members: [],
         invitedEmails: [],
         objectives: [],
@@ -248,6 +251,9 @@ export default {
         this.currentStep = val;
       }
     },
+    advisers: function () {
+      this.setAdviserNames();
+    },
   },
 
   apollo: {
@@ -258,6 +264,13 @@ export default {
   },
 
   methods: {
+    setAdviserNames(){
+      this.advisersNames = []
+      let advisers = this.advisers
+      advisers.forEach((adviser) => {
+        this.advisersNames.push(adviser.fullName)
+      })
+    },
     colorPick(hex, index) {
       console.log(hex, index);
       this.project.theme[index] = hex;
