@@ -27,7 +27,7 @@
                 placeholder="Team Name"
                 @output="
                   ($event) => {
-                    project.teamname = $event;
+                    project.teamName = $event;
                   }
                 "
               />
@@ -64,6 +64,8 @@
               <span class="text start-project-text">Adviser:</span>
               <SelectField
                 :items="advisers"
+                itemText="fullName"
+                itemValue="email"
                 multiple
                 chips
                 placeholder="Adviser"
@@ -73,7 +75,7 @@
             <div class="d-flex">
               <span class="text start-project-text"> Member 1: </span>
               <v-text-field
-                v-model="project.members[0]"
+                v-model="project.invitedEmails[0]"
                 outlined
                 dense
                 type="email"
@@ -81,19 +83,19 @@
               ></v-text-field>
             </div>
             <div
-              v-for="(member, memberIndex) in project.members"
-              :key="memberIndex"
+              v-for="(email, emailIndex) in project.invitedEmails"
+              :key="emailIndex"
               class="d-flex"
             >
               <span class="text start-project-text">
-                Member {{ memberIndex + 2 }}:
+                Member {{ emailIndex + 2 }}:
               </span>
               <v-text-field
-                v-model="project.members[memberIndex + 1]"
+                v-model="project.invitedEmails[emailIndex + 1]"
                 outlined
                 dense
                 type="email"
-                @change="isMemberEmpty(memberIndex + 1)"
+                @change="isMemberEmpty(emailIndex + 1)"
               ></v-text-field>
             </div>
           </div>
@@ -172,7 +174,7 @@
             </div>
             <div>
               <div class="text mb-2">Brief Description</div>
-              <v-textarea outlined rows="4"> </v-textarea>
+              <v-textarea outlined rows="4" v-model="project.description"> </v-textarea>
             </div>
             <div class="mb-8">
               <span class="text mb-2">Objectives</span>
@@ -205,7 +207,7 @@
               <span class="text mb-2">Category</span>
               <v-combobox
                 outlined
-                :v-model="project.category"
+                v-model="project.categories"
                 :items="category"
                 label="Category"
                 multiple
@@ -233,6 +235,9 @@ import SelectField from "@/components/SelectField.vue";
 import InputField from "@/components/InputField.vue";
 import Button from "@/components/Button.vue";
 
+import GET_ADVISERS from "@/graphql/queries/get-advisers.gql";
+import CREATE_PROJECT from "@/graphql/mutations/create-project.gql";
+
 export default {
   name: "DashboardFirstLoginStepper",
   components: { SelectField, InputField, Button },
@@ -243,16 +248,23 @@ export default {
       // TODO: Check if the there is a team created, then make currentStep value to 3
       steps: 3,
       project: {
+        title: "",
+        description: "",
+        teamName: "",
         theme: {
           primaryColor: "#34C387",
           secondaryColor: "#34C387",
           tertiaryColor: "#34C387",
         },
+        // TODO: to be removed, will now use invited emails 
         advisers: [],
-        members: [],
+        // members: [],
+        invitedEmails: [],
         objectives: [],
+        categories: []
       },
-      advisers: ["Leah Barbaso", "Mang Juan", "Mang Tooh", "Mang Teii"],
+      // TODO: query for adviser's name and email
+      advisers: null,
       category: [
         "Project Manager",
         "Frontend Dev",
@@ -270,6 +282,13 @@ export default {
     },
   },
 
+  apollo: {
+    advisers: {
+      query: GET_ADVISERS,
+      update: (data) => data.users.edges.map(edge=>edge.node)
+    },
+  },
+
   methods: {
     isObjectiveEmpty(index) {
       console.log(this.project.objectives);
@@ -277,14 +296,12 @@ export default {
         this.project.objectives.splice(index, 1);
     },
     isMemberEmpty(index) {
-      console.log(this.project.members);
-      if (this.project.members[index] == "")
-        this.project.members.splice(index, 1);
+      console.log(this.project.invitedEmails);
+      if (this.project.invitedEmails[index] == "")
+        this.project.invitedEmails.splice(index, 1);
     },
-    inputAdviserDetails(event, index) {
-      this.project.advisers[index]
-        ? (this.project.advisers[index] = event)
-        : this.project.advisers.push(event);
+    inputAdviserDetails(event) {
+      this.project.advisers = event
     },
     nextStep(n) {
       console.log("next step", n, this.steps);
@@ -300,6 +317,11 @@ export default {
     },
     submit() {
       console.log("submit");
+      //TODO: call create project mutation
+      this.$apollo.mutate({
+        mutation: CREATE_PROJECT,
+        variables: { input: this.project },
+      });
     },
   },
 };
