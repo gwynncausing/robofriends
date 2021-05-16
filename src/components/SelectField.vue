@@ -9,6 +9,8 @@
     :hide-details="hidedetails"
     :multiple="multiple"
     :chips="chips"
+    :item-text="itemText"
+    :item-value="itemValue"
     outlined
     dense
   ></v-select>
@@ -57,6 +59,14 @@ export default {
       default: null,
     },
     itemSelected: {
+      type: String,
+      default: "",
+    },
+    itemText: {
+      type: String,
+      default: "",
+    },
+    itemValue: {
       type: String,
       default: "",
     },

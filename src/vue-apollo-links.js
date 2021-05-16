@@ -7,7 +7,7 @@ import { createHttpLink } from "apollo-link-http";
 import { ApolloLink, concat } from "apollo-link";
 
 const ACCESS_TOKEN = localStorage.getItem("access-token") || "No Token";
-const TOKEN_NAME = "JWT";
+const TOKEN_NAME = "jwt";
 
 // HTTP connection to the API, replace with bud grapqhl server url
 const httpLink = createHttpLink({
