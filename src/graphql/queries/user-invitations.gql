@@ -1,5 +1,5 @@
-query invitations ($user: ID!) {
-  invitations (user: $user ) {
+query invitations ($invitedEmail: String!) {
+  invitations (invitedEmail: $invitedEmail ) {
     edges {
       node {
         id
