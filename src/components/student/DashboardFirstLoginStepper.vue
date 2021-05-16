@@ -89,7 +89,14 @@
                 chips
                 @output="inputAdviserDetails($event, '0')"
               /> -->
-              <v-select :items="advisersNames"> 
+              <v-select 
+              :items="advisersNames"
+              @change="
+                ($event) => {
+                  getSelectedAdviser($event)
+                }
+              "> 
+                
               </v-select>
 
               <!-- {{ advisers }} -->
@@ -216,6 +223,7 @@ export default {
       currentStep: 1,
       // TODO: Check if the there is a team created, then make currentStep value to 3
       steps: 3,
+      advisersNames: [],
       project: {
         title: "",
         description: "",
@@ -227,7 +235,6 @@ export default {
         },
         // TODO: to be removed, will now use invited emails
         advisers: [],
-        advisersNames: [],
         // members: [],
         invitedEmails: [],
         objectives: [],
@@ -270,6 +277,11 @@ export default {
       advisers.forEach((adviser) => {
         this.advisersNames.push(adviser.fullName)
       })
+    },
+    getSelectedAdviser(input){
+      // let index = this.advisers.findIndex((adviser) => adviser.fullName == input);
+      this.project.advisers = input
+      console.log({input:input})
     },
     colorPick(hex, index) {
       console.log(hex, index);
