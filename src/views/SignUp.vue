@@ -239,7 +239,7 @@
           <!-- Start: Error Display -->
           <v-row>
             <v-col v-if="errors != null" class="text-center">
-              <v-label v-for="error in this.errors" :key="error.message">
+              <v-label v-for="(error, errorKey) in errors" :key="errorKey">
                 {{ error[0].message }} <br />
               </v-label>
             </v-col>
