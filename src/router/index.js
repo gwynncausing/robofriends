@@ -1,25 +1,51 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import store from "@/store/index";
 
 Vue.use(VueRouter);
+
+const authGuard = (to, from, next) => {
+  if (store.getters["user/getAuthStatus"]) {
+    if (store.getters["user/getUserType"] == "STUDENT") next("/student");
+    else next("/adviser");
+  } else next();
+};
+
+const studentGuard = (to, from, next) => {
+  if (store.getters["user/getAuthStatus"]) {
+    if (store.getters["user/getUserType"] == "STUDENT") {
+      next();
+    } else next("/");
+  }
+};
+
+const adviserGuard = (to, from, next) => {
+  if (store.getters["user/getAuthStatus"]) {
+    if (store.getters["user/getUserType"] == "ADVISER") next();
+    else next("/");
+  }
+};
 
 const routes = [
   {
     path: "/",
     name: "SignIn",
     meta: { name: "Sign In" },
+    // beforeEnter: authGuard,
     component: () => import("@/views/SignIn.vue"),
   },
   {
     path: "/signup",
     name: "SignUp",
     meta: { name: "Sign Up" },
+    beforeEnter: authGuard,
     component: () => import("@/views/SignUp.vue"),
   },
   {
     path: "/student",
     name: "",
-    meta: { name: "Student" },
+    meta: { name: "Home" },
+    beforeEnter: studentGuard,
     component: () => import("@/views/Student.vue"),
     children: [
       {
@@ -38,6 +64,7 @@ const routes = [
     path: "/adviser",
     name: "",
     meta: { name: "Adviser" },
+    beforeEnter: adviserGuard,
     component: () => import("@/views/Adviser.vue"),
     children: [
       {
@@ -64,5 +91,17 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
+
+// router.beforeEach((to, from, next) => {
+//   if (!to.matched.length) {
+//     next("/404");
+//   } else {
+//     next();
+//   }
+// });
+
+// router.afterEach((to, from) => {
+//   document.title = `CUTIE ${to.meta.name === "Home" ? "" : to.meta.name}`;
+// });
 
 export default router;

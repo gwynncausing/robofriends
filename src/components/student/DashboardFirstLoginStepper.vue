@@ -24,7 +24,6 @@
             <div class="d-flex">
               <span class="text">Team Name</span>
               <InputField
-                placeholder="Team Name"
                 @output="
                   ($event) => {
                     project.teamName = $event;
@@ -33,14 +32,34 @@
               />
             </div>
             <div
-              v-for="(item, colorIndex) in project.theme"
+              v-for="(item, colorIndex, colorIndexNumber) in project.theme"
               :key="colorIndex"
-              class="color-wrapper d-flex"
+              class="color-wrapper"
             >
-              <span class="text">Primary</span>
-              <Button class="mr-4" :color="item" />
-              <InputField class="mr-4" :text="item" />
-              <InputField :text="item" />
+              <span class="text">{{ colors[colorIndexNumber] }}: </span>
+              <v-menu offset-y>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    :color="project.theme[colorIndex]"
+                    dark
+                    class="mr-4"
+                    depressed
+                    v-on="on"
+                  ></v-btn>
+                </template>
+                <v-color-picker
+                  v-model="project.theme[colorIndex]"
+                  value="primary"
+                  hide-inputs
+                  class="mx-auto"
+                ></v-color-picker>
+              </v-menu>
+              <v-text-field
+                v-model="project.theme[colorIndex]"
+                outlined
+                dense
+                hide-details
+              ></v-text-field>
             </div>
             <div class="recommended-colors-wrapper">
               <span class="text">Recommended Colors:</span>
@@ -68,7 +87,6 @@
                 itemValue="email"
                 multiple
                 chips
-                placeholder="Adviser"
                 @output="inputAdviserDetails($event, '0')"
               />
             </div>
@@ -103,58 +121,9 @@
           <div class="d-flex">
             <Button text @click="currentStep = 1"> Back </Button>
 
-            <v-dialog v-model="inviteDialog" width="500">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  color="primary"
-                  class="ml-auto"
-                  dark
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  Invite
-                </v-btn>
-              </template>
-
-              <v-card>
-                <v-card-title class="headline secondary lighten-4">
-                  Team Invitation
-                </v-card-title>
-
-                <v-card-text>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                  cupidatat non proident, sunt in culpa qui officia deserunt
-                  mollit anim id est laborum.
-                  <div class="mt-4">
-                    When you accept you will not be able to go back in this
-                    step, although you can invite or change your settings after
-                    step 3.
-                  </div>
-                </v-card-text>
-
-                <v-divider></v-divider>
-
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    color="primary"
-                    text
-                    type="submit"
-                    @click="[(inviteDialog = false), invite()]"
-                  >
-                    I accept
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-            <!-- <Button color="primary" class="ml-auto" @click="invite">
-              Invite
-            </Button> -->
+            <Button color="primary" class="ml-auto" @click="currentStep = 3">
+              Continue
+            </Button>
           </div>
         </v-stepper-content>
 
@@ -164,7 +133,6 @@
             <div class="d-flex">
               <span class="text">Title</span>
               <InputField
-                placeholder="Title"
                 @output="
                   ($event) => {
                     project.title = $event;
@@ -181,7 +149,6 @@
               <div class="d-flex mt-3">
                 <v-text-field
                   v-model="project.objectives[0]"
-                  placeholder="Objective"
                   outlined
                   dense
                   hide-details
@@ -195,7 +162,6 @@
               >
                 <v-text-field
                   v-model="project.objectives[projectIndex + 1]"
-                  placeholder="Objective"
                   outlined
                   dense
                   hide-details
@@ -209,7 +175,6 @@
                 outlined
                 v-model="project.categories"
                 :items="category"
-                label="Category"
                 multiple
                 dense
                 chips
@@ -219,7 +184,7 @@
           </div>
 
           <div class="d-flex">
-            <Button text> Guidelines</Button>
+            <Button text @click="currentStep = 2"> Back </Button>
             <Button color="primary" class="ml-auto" @click="submit">
               Submit
             </Button>
@@ -253,8 +218,8 @@ export default {
         teamName: "",
         theme: {
           primaryColor: "#34C387",
-          secondaryColor: "#34C387",
-          tertiaryColor: "#34C387",
+          secondaryColor: "#F16F82",
+          tertiaryColor: "#1F724F",
         },
         // TODO: to be removed, will now use invited emails 
         advisers: [],
@@ -271,6 +236,7 @@ export default {
         "Backend Dev",
         "UI/UX Designer",
       ],
+      colors: ["Primary", "Secondary", "Tertiary"],
     };
   },
 
@@ -290,6 +256,10 @@ export default {
   },
 
   methods: {
+    colorPick(hex, index) {
+      console.log(hex, index);
+      this.project.theme[index] = hex;
+    },
     isObjectiveEmpty(index) {
       console.log(this.project.objectives);
       if (this.project.objectives[index] == "")
@@ -352,11 +322,17 @@ export default {
 .text {
   margin-top: 8px;
   margin-right: 20px;
+  min-width: 90px;
 }
 .start-project-text {
   min-width: 90px;
 }
 .color-wrapper {
-  max-width: 500px;
+  max-width: 325px;
+  margin-top: 10px;
+  display: flex;
+}
+.recommended-colors-wrapper {
+  margin-top: 20px;
 }
 </style>

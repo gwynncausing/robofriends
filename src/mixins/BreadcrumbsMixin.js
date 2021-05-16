@@ -8,7 +8,8 @@ export default {
     $route: {
       handler() {
         var a = this.$route.matched;
-        console.log(this.$route);
+        this.route = [];
+        console.log("route: ", this.$route);
         for (var i = 0; i < a.length; i++) {
           var object = {
             text: a[i].meta.name,

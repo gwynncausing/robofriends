@@ -1,0 +1,13 @@
+mutation updateInvitation ($input: UpdateInvitationMutationInput!){
+  updateInvitation(input: $input) {
+    invitation {
+      project {
+        teamName
+        description
+      }
+      name
+      status
+      createdAt
+    }
+  }
+}

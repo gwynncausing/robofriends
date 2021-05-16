@@ -1,10 +1,10 @@
 <template>
   <div id="dashboard">
-    <div id="dashboard-first-login">
+    <div v-if="toggle === 0" id="dashboard-first-login">
       <DashboardFirstLoginStepper />
     </div>
-    <!-- remove the hidden for the main Dashboard -->
-    <DashboardProjectAnalysis class="d-none" />
+    <!-- remove the d-none for the main Dashboard -->
+    <DashboardProjectAnalysis v-else />
   </div>
 </template>
 
@@ -15,6 +15,12 @@ import DashboardProjectAnalysis from "@/components/student/DashboardProjectAnaly
 export default {
   name: "Dashboard",
   components: { DashboardFirstLoginStepper, DashboardProjectAnalysis },
+  props: {
+    toggle: {
+      type: Number,
+      default: 0,
+    },
+  },
 };
 </script>
 

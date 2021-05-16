@@ -1,0 +1,23 @@
+query invitations ($user: ID!) {
+  invitations (user: $user ) {
+    edges {
+      node {
+        id
+        pk
+        user{
+          id
+          firstName
+          lastName
+        }
+        project {
+          id
+          pk
+          teamName
+          description
+        }
+        status
+        createdAt
+      }
+    }
+  }
+}
