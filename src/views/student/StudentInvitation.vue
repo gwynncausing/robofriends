@@ -88,7 +88,7 @@ export default {
       update: (data) => data.invitations,
       variables() {
         return {
-          user: this.getUser.id,
+          invitedEmail: this.getUser.email,
         };
       },
       pollInterval: 10000,
