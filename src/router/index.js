@@ -16,14 +16,14 @@ const studentGuard = (to, from, next) => {
     if (store.getters["user/getUserType"] == "STUDENT") {
       next();
     } else next("/");
-  } 
+  }
 };
 
 const adviserGuard = (to, from, next) => {
   if (store.getters["user/getAuthStatus"]) {
     if (store.getters["user/getUserType"] == "ADVISER") next();
     else next("/");
-  } 
+  }
 };
 
 const routes = [
@@ -31,7 +31,7 @@ const routes = [
     path: "/",
     name: "SignIn",
     meta: { name: "Sign In" },
-    beforeEnter: authGuard,
+    // beforeEnter: authGuard,
     component: () => import("@/views/SignIn.vue"),
   },
   {
@@ -44,7 +44,7 @@ const routes = [
   {
     path: "/student",
     name: "",
-    meta: { name: "Student" },
+    meta: { name: "Home" },
     beforeEnter: studentGuard,
     component: () => import("@/views/Student.vue"),
     children: [
