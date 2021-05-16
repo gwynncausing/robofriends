@@ -32,9 +32,6 @@ const getters = {
   getUser(state) {
     return state.user;
   },
-  isLoggedIn(state) {
-    return state.accessToken != null;
-  },
 };
 
 const mutations = {
