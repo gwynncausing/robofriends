@@ -90,13 +90,13 @@
                 @output="inputAdviserDetails($event, '0')"
               /> -->
               <v-select 
+              multiple
               :items="advisersNames"
               @change="
                 ($event) => {
-                  getSelectedAdviser($event)
+                  inputAdviserDetails($event)
                 }
               "> 
-                
               </v-select>
 
               <!-- {{ advisers }} -->
@@ -278,11 +278,6 @@ export default {
         this.advisersNames.push(adviser.fullName)
       })
     },
-    getSelectedAdviser(input){
-      // let index = this.advisers.findIndex((adviser) => adviser.fullName == input);
-      this.project.advisers = input
-      console.log({input:input})
-    },
     colorPick(hex, index) {
       console.log(hex, index);
       this.project.theme[index] = hex;
@@ -299,6 +294,7 @@ export default {
     },
     inputAdviserDetails(event) {
       this.project.advisers = event;
+      console.log(this.project.advisers);
     },
     nextStep(n) {
       console.log("next step", n, this.steps);
