@@ -49,7 +49,12 @@
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn v-bind="attrs" text v-on="on">
-            <v-icon left medium>mdi-account</v-icon>
+            <v-avatar size="30" class="mr-2">
+              <img
+                src="https://media-exp1.licdn.com/dms/image/C5603AQHahp2qg4auIg/profile-displayphoto-shrink_800_800/0/1611734910024?e=1626307200&v=beta&t=drBbiNfm5QjvW-SBRACzRMU6tWi0MqCmuKSFHRCJ_p8"
+                alt="John"
+              />
+            </v-avatar>
             {{ getUser.lastName }}
             <v-icon right>mdi-chevron-down</v-icon>
           </v-btn>
