@@ -50,7 +50,7 @@
         <template v-slot:activator="{ on, attrs }">
           <v-btn v-bind="attrs" text v-on="on">
             <v-icon left medium>mdi-account</v-icon>
-            Legaspi
+            {{ getUser.lastName }}
             <v-icon right>mdi-chevron-down</v-icon>
           </v-btn>
         </template>
@@ -97,8 +97,11 @@ export default {
   },
   computed: {
     ...mapGetters({
-      // getUserType: "user/getUserType",
+      getUser: "user/getUser",
     }),
+  },
+  created() {
+    console.log(this.getUser);
   },
   methods: {
     logout() {
