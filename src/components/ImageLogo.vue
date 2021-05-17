@@ -1,6 +1,6 @@
 <template>
   <v-img
-    :src="require('@/assets/logo.png')"
+    :src="require('@/assets/logo.svg')"
     class="logo"
     contain
     alt="Bud Logo"
