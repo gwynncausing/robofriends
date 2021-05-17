@@ -100,8 +100,8 @@ const router = new VueRouter({
 //   }
 // });
 
-// router.afterEach((to, from) => {
-//   document.title = `CUTIE ${to.meta.name === "Home" ? "" : to.meta.name}`;
-// });
+router.afterEach(() => {
+  document.title = `Bud`;
+});
 
 export default router;

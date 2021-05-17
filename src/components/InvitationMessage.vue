@@ -6,7 +6,10 @@
       width="477"
     ></v-img>
     <div class="text">
-      <span class="heading">You’re invited!</span>
+      <span class="heading">
+        <span v-if="invitations > 0">You’re invited!</span>
+        <span v-else>No Invitations :(</span>
+      </span>
       <p class="details">
         You received {{ invitations }} invitation/s to {{ action }} their team.
       </p>

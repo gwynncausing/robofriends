@@ -89,20 +89,33 @@
                 chips
                 @output="inputAdviserDetails($event, '0')"
               /> -->
-              <v-select 
-              multiple
-              :items="advisersNames"
-              @change="
-                ($event) => {
-                  inputAdviserDetails($event)
-                }
-              "> 
+              <v-select
+                multiple
+                outlined
+                dense
+                :items="advisers"
+                item-text="fullName"
+                item-value="email"
+                @change="
+                  ($event) => {
+                    inputAdviserDetails($event);
+                  }
+                "
+              >
               </v-select>
-
-              <!-- {{ advisers }} -->
             </div>
             <div class="d-flex">
               <span class="text start-project-text"> Member 1: </span>
+              <v-text-field
+                outlined
+                dense
+                type="email"
+                :value="getUser.email"
+                readonly
+              ></v-text-field>
+            </div>
+            <div class="d-flex">
+              <span class="text start-project-text"> Member 2: </span>
               <v-text-field
                 v-model="project.invitedEmails[0]"
                 outlined
@@ -214,6 +227,8 @@ import Button from "@/components/Button.vue";
 import GET_ADVISERS from "@/graphql/queries/get-advisers.gql";
 import CREATE_PROJECT from "@/graphql/mutations/create-project.gql";
 
+import { mapGetters } from "vuex";
+
 export default {
   name: "DashboardFirstLoginStepper",
   components: { InputField, Button },
@@ -241,15 +256,22 @@ export default {
         categories: [],
       },
       // TODO: query for adviser's name and email
-      advisers: null,
+      advisers: [],
       category: [
-        "Project Manager",
-        "Frontend Dev",
-        "Backend Dev",
-        "UI/UX Designer",
+        "Artificial Intelligence",
+        "Cary lang Sakalam",
+        "Data Analytics",
+        "Automation",
+        "Internet of Things",
       ],
       colors: ["Primary", "Secondary", "Tertiary"],
     };
+  },
+
+  computed: {
+    ...mapGetters({
+      getUser: "user/getUser",
+    }),
   },
 
   watch: {
@@ -258,9 +280,9 @@ export default {
         this.currentStep = val;
       }
     },
-    advisers: function () {
-      this.setAdviserNames();
-    },
+    // advisers: function () {
+    //   this.setAdviserNames();
+    // },
   },
 
   apollo: {
@@ -271,12 +293,12 @@ export default {
   },
 
   methods: {
-    setAdviserNames(){
-      this.advisersNames = []
-      let advisers = this.advisers
+    setAdviserNames() {
+      this.advisersNames = [];
+      let advisers = this.advisers;
       advisers.forEach((adviser) => {
-        this.advisersNames.push(adviser.fullName)
-      })
+        this.advisersNames.push(adviser.fullName);
+      });
     },
     colorPick(hex, index) {
       console.log(hex, index);
