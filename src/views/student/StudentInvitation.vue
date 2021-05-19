@@ -64,6 +64,7 @@ export default {
           createdAt: edge.node.createdAt,
         });
       });
+      console.log({invitations:this.invitations})
     },
     async updateInvitation({ invitationId, isAccepted, projectId }) {
       const input = { invitationId, isAccepted, projectId };
@@ -82,6 +83,9 @@ export default {
       }
     },
   },
+  removeInvitation(){
+
+  },
   apollo: {
     invitationsFromServer: {
       query: USER_INVITATIONS,
@@ -89,6 +93,7 @@ export default {
       variables() {
         return {
           invitedEmail: this.getUser.email,
+          status: "pending"
         };
       },
       pollInterval: 10000,
