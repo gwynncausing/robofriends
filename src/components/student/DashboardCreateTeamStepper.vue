@@ -39,7 +39,7 @@
               class="color-wrapper"
             >
               <span class="text">{{ colors[colorIndexNumber] }}: </span>
-              <v-menu offset-y>
+              <v-menu offset-y :close-on-content-click="false">
                 <template v-slot:activator="{ on }">
                   <v-btn
                     :color="project.theme[colorIndex]"
@@ -65,9 +65,34 @@
             </div>
             <div class="recommended-colors-wrapper">
               <span class="text">Recommended Colors:</span>
-              <Button color="red" class="mr-4" />
-              <Button color="blue" class="mr-4" />
-              <Button color="yellow" class="mr-4" />
+              <Button
+                class="mr-4"
+                @click="
+                  [
+                    (project.theme.primaryColor = '#34C387FF'),
+                    (project.theme.secondaryColor = '#F16F82FF'),
+                    (project.theme.tertiaryColor = '#1F724FFF'),
+                  ]
+                "
+              >
+                <span class="color-circle primary"></span>
+                <span class="color-circle secondary"></span>
+                <span class="color-circle tertiary"></span>
+              </Button>
+              <Button
+                class="mr-4"
+                @click="
+                  [
+                    (project.theme.primaryColor = '#FF5252FF'),
+                    (project.theme.secondaryColor = '#4CAF50FF'),
+                    (project.theme.tertiaryColor = '#2196F3FF'),
+                  ]
+                "
+              >
+                <span class="color-circle error"></span>
+                <span class="color-circle success"></span>
+                <span class="color-circle info"></span>
+              </Button>
             </div>
           </div>
 
@@ -277,9 +302,9 @@ export default {
         description: "",
         teamName: "",
         theme: {
-          primaryColor: "#34C387",
-          secondaryColor: "#F16F82",
-          tertiaryColor: "#1F724F",
+          primaryColor: "#34C387FF",
+          secondaryColor: "#F16F82FF",
+          tertiaryColor: "#1F724FFF",
         },
         // TODO: to be removed, will now use invited emails
         advisers: [],
@@ -421,6 +446,15 @@ export default {
 }
 .recommended-colors-wrapper {
   margin-top: 20px;
+
+  .color-circle {
+    min-width: 15px;
+    max-width: 15px;
+    min-height: 15px;
+    max-height: 15px;
+    border-radius: 50%;
+    margin: 3px;
+  }
 }
 .yaaaay-wrapper {
   position: relative;
@@ -443,5 +477,8 @@ export default {
   .details {
     font-size: 16px;
   }
+}
+.v-text-field {
+  background-color: white;
 }
 </style>

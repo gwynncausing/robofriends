@@ -76,10 +76,6 @@ export default {
 
 <style lang="scss" scoped>
 .v-text-field {
-  // margin-top: 10px !important;
-  outline: none;
-}
-.v-input--is-focused {
-  outline: none !important;
+  background-color: white;
 }
 </style>
