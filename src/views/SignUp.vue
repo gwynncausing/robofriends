@@ -253,6 +253,7 @@
                 depressed
                 block
                 dark
+                :loading="isSubmit"
                 @click="signup"
               >
                 Sign Up
@@ -329,6 +330,7 @@ export default {
         },
       ],
       selectedUserType: null,
+      isSubmit: false,
     };
   },
   computed: {
@@ -364,6 +366,7 @@ export default {
       console.log("signup");
       console.log(this.user);
       this.errors = [];
+      this.isSubmit = true;
       if (this.$refs.form.validate()) {
         this.user.username = this.user.email;
         const credentials = {
@@ -380,8 +383,12 @@ export default {
           if ("idNumber" in data.errors)
             data.errors.schoolId[0].message = "ID Number already exists.";
           this.errors = data.errors;
+          this.isSubmit = false;
         } else this.$router.push("/");
-      } else console.log("Validation raised");
+      } else {
+        console.log("Validation raised");
+        this.isSubmit = false;
+      }
     },
     initialize() {
       this.schoolNames = [];
