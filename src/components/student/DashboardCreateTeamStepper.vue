@@ -1,5 +1,5 @@
 <template>
-  <v-responsive class="first-login-stepper">
+  <v-responsive class="create-team-stepper">
     <v-stepper v-model="currentStep" alt-labels class="elevation-0">
       <v-stepper-header>
         <v-stepper-step step="1" :complete="currentStep > 1">
@@ -14,7 +14,9 @@
 
         <v-divider></v-divider>
 
-        <v-stepper-step step="3"> Start Project </v-stepper-step>
+        <v-stepper-step step="3" :complete="currentStep > 3">
+          Start Project
+        </v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items>
@@ -210,8 +212,40 @@
 
           <div class="d-flex">
             <Button text @click="currentStep = 2"> Back </Button>
-            <Button color="primary" class="ml-auto" @click="submit">
+            <Button
+              color="primary"
+              class="ml-auto"
+              :loading="isSubmit"
+              @click="submit"
+            >
               Submit
+            </Button>
+          </div>
+        </v-stepper-content>
+
+        <!-- STEP 4 -->
+        <v-stepper-content step="4">
+          <div class="mb-12 yaaaay-wrapper">
+            <v-img
+              :src="require('@/assets/Yaaaay.svg')"
+              height="300"
+              contain
+              class="yaaaay"
+            ></v-img>
+            <div class="text-details">
+              <span class="heading">
+                <span>Yaaaay! </span>
+              </span>
+              <p class="details">
+                You just submitted your project for approval. <br />
+                You can plan ahead or just chill while you wait. ;&#41;
+              </p>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <Button text @click="() => this.$router.go(0)">
+              Click here to continue
             </Button>
           </div>
         </v-stepper-content>
@@ -236,8 +270,7 @@ export default {
     return {
       inviteDialog: false,
       currentStep: 1,
-      // TODO: Check if the there is a team created, then make currentStep value to 3
-      steps: 3,
+      steps: 4,
       advisersNames: [],
       project: {
         title: "",
@@ -250,7 +283,6 @@ export default {
         },
         // TODO: to be removed, will now use invited emails
         advisers: [],
-        // members: [],
         invitedEmails: [],
         objectives: [],
         categories: [],
@@ -265,6 +297,7 @@ export default {
         "Internet of Things",
       ],
       colors: ["Primary", "Secondary", "Tertiary"],
+      isSubmit: false,
     };
   },
 
@@ -332,19 +365,28 @@ export default {
     },
     submit() {
       console.log("submit");
+      this.isSubmit = true;
+
       //TODO: call create project mutation
-      this.$apollo.mutate({
-        mutation: CREATE_PROJECT,
-        variables: { input: this.project },
-      });
+      this.$apollo
+        .mutate({
+          mutation: CREATE_PROJECT,
+          variables: { input: this.project },
+        })
+        .then((result) => {
+          this.currentStep = 4;
+          console.log("result: ", result);
+        })
+        .catch(() => {
+          this.isSubmit = false;
+        });
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.first-login-stepper {
-  // background-color: var(--v-lightgrey2);
+.create-team-stepper {
   background-color: white;
   border-radius: 10px;
   padding: 10px;
@@ -379,5 +421,27 @@ export default {
 }
 .recommended-colors-wrapper {
   margin-top: 20px;
+}
+.yaaaay-wrapper {
+  position: relative;
+  min-height: 400px;
+  margin-top: 40px;
+}
+.yaaaay {
+  position: absolute;
+}
+.text-details {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+
+  .heading {
+    font-size: 46px;
+    font-weight: bold;
+    color: var(--v-primary) !important;
+  }
+  .details {
+    font-size: 16px;
+  }
 }
 </style>

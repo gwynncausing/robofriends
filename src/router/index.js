@@ -100,8 +100,8 @@ const router = new VueRouter({
 //   }
 // });
 
-router.afterEach(() => {
-  document.title = `Bud`;
-});
+// router.beforeEach(() => {
+//   document.title = `${process.env.VUE_APP_TITLE}`;
+// });
 
 export default router;

@@ -9,6 +9,7 @@
     :dark="dark"
     :block="block"
     :text="text"
+    :loading="loading"
     @click="$emit('click', true)"
   >
     <slot> </slot>
@@ -52,6 +53,10 @@ export default {
       default: false,
     },
     text: {
+      type: Boolean,
+      default: false,
+    },
+    loading: {
       type: Boolean,
       default: false,
     },

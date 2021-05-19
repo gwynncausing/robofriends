@@ -1,7 +1,7 @@
 <template>
   <div id="dashboard">
     <div v-if="toggle === 0" id="dashboard-first-login">
-      <DashboardFirstLoginStepper />
+      <DashboardCreateTeamStepper />
     </div>
     <!-- remove the d-none for the main Dashboard -->
     <DashboardProjectAnalysis v-else />
@@ -9,12 +9,12 @@
 </template>
 
 <script>
-import DashboardFirstLoginStepper from "@/components/student/DashboardFirstLoginStepper.vue";
+import DashboardCreateTeamStepper from "@/components/student/DashboardCreateTeamStepper.vue";
 import DashboardProjectAnalysis from "@/components/student/DashboardProjectAnalysis.vue";
 
 export default {
   name: "Dashboard",
-  components: { DashboardFirstLoginStepper, DashboardProjectAnalysis },
+  components: { DashboardCreateTeamStepper, DashboardProjectAnalysis },
   props: {
     toggle: {
       type: Number,
