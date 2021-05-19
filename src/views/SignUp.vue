@@ -109,17 +109,20 @@
             </v-window-item>
             <v-window-item :value="3" class="pa-4">
               <v-row>
-                <SelectField
+                <v-select
+                  outlined
+                  dense
                   label="School"
                   placeholder="School"
                   :items="schoolNames"
                   :rules="[(v) => !!v || 'School is required']"
-                  @output="
+                  @change="
                     ($event) => {
                       getSelectedSchoolId($event);
                     }
                   "
-                />
+                >
+                </v-select>
               </v-row>
               <v-row>
                 <InputField
@@ -319,7 +322,6 @@
 import colleges from "@/assets/colleges.json";
 import ImageLogo from "@/components/ImageLogo.vue";
 import InputField from "@/components/InputField.vue";
-import SelectField from "@/components/SelectField.vue";
 import { mapActions } from "vuex";
 
 import GET_SCHOOLS from "@/graphql/queries/get-schools-for-registration.gql";
@@ -329,7 +331,6 @@ export default {
   components: {
     ImageLogo,
     InputField,
-    SelectField,
   },
   data: function () {
     return {
