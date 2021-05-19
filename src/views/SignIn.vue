@@ -38,10 +38,14 @@
             {{ error }}
           </v-row>
           <v-row>
-            <!-- <v-btn class="btn-signin" type="submit" large depressed block dark>
-              Sign in
-            </v-btn> -->
-            <Button class="btn-signin" type="submit" large dark block>
+            <Button
+              class="btn-signin"
+              type="submit"
+              large
+              dark
+              block
+              :loading="isSubmit"
+            >
               Sign In
             </Button>
           </v-row>
@@ -49,21 +53,16 @@
 
         <v-row class="or"> or </v-row>
 
-        <!-- <v-row>
-          <v-btn depressed block outlined>
-            <v-img :src="require('@/assets/Google.svg')" height="18" contain />
-            <span>Sign in with Google</span>
-          </v-btn>
-        </v-row> -->
-
         <v-row>
           <v-btn depressed large block outlined>
-            <v-icon>mdi-microsoft</v-icon>
-            <!-- <v-img
-              :src="require('@/assets/Microsoft.svg')"
-              height="18"
-              contain
-            /> -->
+            <v-avatar>
+              <v-img
+                src="https://docs.microsoft.com/en-us/azure/active-directory/develop/media/howto-add-branding-in-azure-ad-apps/ms-symbollockup_mssymbol_19.svg"
+                alt="Microsoft"
+                contain
+                height="25"
+              />
+            </v-avatar>
             <span>Sign in with Microsoft</span>
           </v-btn>
         </v-row>
@@ -93,6 +92,7 @@ export default {
     return {
       user: {},
       error: "",
+      isSubmit: false,
     };
   },
   computed: {
@@ -103,6 +103,7 @@ export default {
   methods: {
     async signin() {
       console.log("user: ", this.user);
+      this.isSubmit = true;
       if (this.$refs.form.validate()) {
         const credentials = { ...this.user };
         const data = await this.onLogin(credentials);
@@ -114,9 +115,16 @@ export default {
         } else if (data.success == false) {
           data.errors.nonFieldErrors[0].message =
             "Please enter your valid credentials";
+          this.isSubmit = false;
           this.error = data.errors.nonFieldErrors[0].message;
-        } else this.error = "Please check your internet connection";
-      } else console.log("Validation raised");
+        } else {
+          this.error = "Please check your internet connection";
+          this.isSubmit = false;
+        }
+      } else {
+        console.log("Validation raised");
+        this.isSubmit = false;
+      }
     },
     getOutput(e) {
       console.log(e);
@@ -151,7 +159,7 @@ export default {
   margin-bottom: 20px;
 }
 .or {
-  margin: 0;
+  margin: 30px 0;
   padding: 0;
 }
 a {
