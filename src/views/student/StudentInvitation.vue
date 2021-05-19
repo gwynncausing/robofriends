@@ -31,14 +31,7 @@ export default {
   data: function () {
     return {
       userType: "student",
-      invitations: [
-        {
-          teamName: "Cary & Co.",
-        },
-        {
-          teamName: "Donee & Co.",
-        },
-      ],
+      invitations: [],
     };
   },
   computed: {
@@ -82,10 +75,11 @@ export default {
         console.log(error);
       }
     },
+    removeInvitationFromList(){
+    // remove invitation from list
+    },
   },
-  removeInvitation(){
 
-  },
   apollo: {
     invitationsFromServer: {
       query: USER_INVITATIONS,
