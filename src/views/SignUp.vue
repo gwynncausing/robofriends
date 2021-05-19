@@ -11,54 +11,29 @@
           </v-row>
           <v-window v-model="step">
             <v-window-item :value="1" class="pa-4">
-              <v-item-group>
+              <v-item-group v-model="selectedUserType">
                 <v-row>
-                  <v-col cols="6" class="pa-0">
+                  <v-col
+                    v-for="(type, userIndex) in userType"
+                    :key="userIndex"
+                    cols="6"
+                    class="pa-0"
+                  >
                     <v-item v-slot="{ active, toggle }" class="m-0">
                       <v-card
                         flat
                         :color="active ? 'lightgrey2' : ''"
-                        @click="[toggle, setUserType('student')]"
+                        @click="toggle"
                       >
-                        <v-img
-                          contain
-                          max-height="300"
-                          :src="require('@/assets/student.png')"
-                        ></v-img>
+                        <v-img contain max-height="300" :src="type.img"></v-img>
                         <v-btn
                           id="selectStudent"
                           block
                           depressed
                           :color="active ? 'secondary' : 'primary'"
                           class="mt-4"
-                          @click="toggle"
                         >
-                          Student
-                        </v-btn>
-                      </v-card>
-                    </v-item>
-                  </v-col>
-                  <v-col cols="6" class="pa-0">
-                    <v-item v-slot="{ active, toggle }" class="m-0">
-                      <v-card
-                        flat
-                        :color="active ? 'lightgrey2' : ''"
-                        @click="[toggle, setUserType('adviser')]"
-                      >
-                        <v-img
-                          contain
-                          max-height="300"
-                          :src="require('@/assets/teacher.png')"
-                        ></v-img>
-                        <v-btn
-                          id="selectTeacher"
-                          block
-                          depressed
-                          :color="active ? 'secondary' : 'primary'"
-                          class="mt-4"
-                          @click="toggle"
-                        >
-                          Teacher
+                          {{ type.name }}
                         </v-btn>
                       </v-card>
                     </v-item>
@@ -343,6 +318,17 @@ export default {
       programList: [],
       year: ["First", "Second", "Third", "Fourth", "Fifth"],
       errors: [],
+      userType: [
+        {
+          name: "Student",
+          img: require("@/assets/student.png"),
+        },
+        {
+          name: "Teacher",
+          img: require("@/assets/teacher.png"),
+        },
+      ],
+      selectedUserType: null,
     };
   },
   computed: {
@@ -362,6 +348,9 @@ export default {
   watch: {
     schoolsFromServer: function () {
       this.initialize();
+    },
+    selectedUserType() {
+      this.user.userType = this.selectedUserType === 0 ? "student" : "teacher";
     },
   },
   apollo: {
@@ -417,13 +406,6 @@ export default {
     ...mapActions({
       onRegister: "user/register",
     }),
-    setUserType(userType) {
-      this.user.userType = userType;
-      if (userType === "student")
-        document.getElementById("selectStudent").click();
-      else document.getElementById("selectTeacher").click();
-      console.log(this.user.userType);
-    },
   },
 };
 </script>
