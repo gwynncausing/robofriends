@@ -22,9 +22,10 @@
       <v-stepper-items>
         <!-- STEP 1 -->
         <v-stepper-content step="1">
+          <TeamList />
           <div class="mb-12">
             <div class="d-flex">
-              <span class="text">Team Name</span>
+              <span class="text">Team Name:</span>
               <InputField
                 hidedetails
                 @output="
@@ -110,6 +111,7 @@
             <div class="d-flex">
               <span class="text start-project-text">Adviser:</span>
               <v-select
+                v-model="invitedEmails"
                 multiple
                 outlined
                 dense
@@ -117,11 +119,6 @@
                 :items="advisers"
                 item-text="fullName"
                 item-value="email"
-                @change="
-                  ($event) => {
-                    inputAdviserDetails($event);
-                  }
-                "
               >
               </v-select>
             </div>
@@ -286,6 +283,7 @@
 <script>
 import InputField from "@/components/InputField.vue";
 import Button from "@/components/Button.vue";
+import TeamList from "@/components/student/TeamList.vue";
 
 import GET_ADVISERS from "@/graphql/queries/get-advisers.gql";
 import CREATE_PROJECT from "@/graphql/mutations/create-project.gql";
@@ -294,13 +292,12 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "DashboardFirstLoginStepper",
-  components: { InputField, Button },
+  components: { InputField, Button, TeamList },
   data() {
     return {
       inviteDialog: false,
       currentStep: 1,
       steps: 4,
-      advisersNames: [],
       project: {
         title: "",
         description: "",
@@ -342,9 +339,6 @@ export default {
         this.currentStep = val;
       }
     },
-    // advisers: function () {
-    //   this.setAdviserNames();
-    // },
   },
 
   apollo: {
@@ -355,13 +349,6 @@ export default {
   },
 
   methods: {
-    setAdviserNames() {
-      this.advisersNames = [];
-      let advisers = this.advisers;
-      advisers.forEach((adviser) => {
-        this.advisersNames.push(adviser.fullName);
-      });
-    },
     colorPick(hex, index) {
       console.log(hex, index);
       this.project.theme[index] = hex;
@@ -375,22 +362,6 @@ export default {
       console.log(this.project.invitedEmails);
       if (this.project.invitedEmails[index] == "")
         this.project.invitedEmails.splice(index, 1);
-    },
-    inputAdviserDetails(event) {
-      this.project.advisers = event;
-      console.log(this.project.advisers);
-    },
-    nextStep(n) {
-      console.log("next step", n, this.steps);
-      if (n === this.steps) {
-        this.currentStep = 1;
-      } else {
-        this.currentStep = n + 1;
-      }
-    },
-    invite() {
-      this.currentStep = 3;
-      console.log("invite");
     },
     submit() {
       console.log("submit");

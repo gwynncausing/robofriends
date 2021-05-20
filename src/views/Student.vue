@@ -2,7 +2,11 @@
   <div class="student">
     <AppBar />
     <v-container>
-      <Breadcrumbs class="mt-1" :items="route" />
+      <Breadcrumbs
+        v-if="this.$route.name != 'Create Team'"
+        class="mt-1"
+        :items="route"
+      />
       <router-view class="mt-5" :toggle="toggle" />
     </v-container>
   </div>

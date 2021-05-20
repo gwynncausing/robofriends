@@ -74,6 +74,12 @@ const routes = [
         ],
       },
       {
+        path: "create-team",
+        name: "Create Team",
+        meta: { name: "Create Team" },
+        component: () => import("@/views/student/CreateTeam.vue"),
+      },
+      {
         path: "invite",
         name: "StudentInvitation",
         component: () => import("@/views/student/StudentInvitation.vue"),
