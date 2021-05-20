@@ -5,7 +5,8 @@
         <v-img :src="require('@/assets/logo.png')" width="30" contain dense />
       </v-btn>
 
-      <v-menu offset-y open-on-hover :close-on-content-click="false">
+      <v-menu offset-y :close-on-content-click="false">
+        <!-- open-on-hover -->
         <template v-slot:activator="{ on, attrs }">
           <v-btn text v-bind="attrs" v-on="on">
             <router-link :to="'/'"
