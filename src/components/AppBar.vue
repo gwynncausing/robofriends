@@ -21,14 +21,15 @@
             :to="{ name: item }"
           >
             <!-- :to="{ name: item }" -->
-            <v-btn text block left>
+            <v-btn text block>
               <router-link :to="{ name: item }">{{ item }}</router-link>
             </v-btn>
           </v-list-item-title>
         </v-list>
       </v-menu>
-      <v-btn text> Consultation </v-btn>
-      <v-btn text :to="{ name: 'Archive' }"> Archive </v-btn>
+      <v-btn text>
+        <router-link :to="{ name: 'Archive' }">Archive</router-link>
+      </v-btn>
 
       <v-spacer></v-spacer>
 
