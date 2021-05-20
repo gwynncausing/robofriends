@@ -44,19 +44,45 @@ const routes = [
   {
     path: "/student",
     name: "",
-    meta: { name: "Home" },
     beforeEnter: studentGuard,
     component: () => import("@/views/Student.vue"),
     children: [
       {
         path: "",
         name: "Dashboard",
+        meta: { name: "Home" },
         component: () => import("@/views/student/Dashboard.vue"),
+        children: [
+          {
+            path: "project",
+            name: "Project Details",
+            meta: { name: "Project Details" },
+            component: () => import("@/views/student/ProjectDetails.vue"),
+          },
+          {
+            path: "guide",
+            name: "Recommended Guides",
+            meta: { name: "Recommended Guides" },
+            component: () => import("@/views/student/RecommendedGuides.vue"),
+          },
+          {
+            path: "team",
+            name: "Team Settings",
+            meta: { name: "Team Settings" },
+            component: () => import("@/views/student/TeamSettings.vue"),
+          },
+        ],
       },
       {
         path: "invite",
         name: "StudentInvitation",
         component: () => import("@/views/student/StudentInvitation.vue"),
+      },
+      {
+        path: "archive",
+        name: "Archive",
+        meta: { name: "Archive System" },
+        component: () => import("@/views/student/Archive.vue"),
       },
     ],
   },

@@ -57,7 +57,7 @@ export default {
           createdAt: edge.node.createdAt,
         });
       });
-      console.log({invitations:this.invitations})
+      console.log({ invitations: this.invitations });
     },
     async updateInvitation({ invitationId, isAccepted, projectId }) {
       const input = { invitationId, isAccepted, projectId };
@@ -75,8 +75,8 @@ export default {
         console.log(error);
       }
     },
-    removeInvitationFromList(){
-    // remove invitation from list
+    removeInvitationFromList() {
+      // remove invitation from list
     },
   },
 
@@ -87,7 +87,7 @@ export default {
       variables() {
         return {
           invitedEmail: this.getUser.email,
-          status: "pending"
+          status: "pending",
         };
       },
       pollInterval: 10000,

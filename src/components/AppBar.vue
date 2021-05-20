@@ -5,7 +5,7 @@
         <v-img :src="require('@/assets/logo.png')" width="30" contain dense />
       </v-btn>
 
-      <v-menu offset-y open-on-hover>
+      <v-menu offset-y open-on-hover :close-on-content-click="false">
         <template v-slot:activator="{ on, attrs }">
           <v-btn text v-bind="attrs" v-on="on">
             <router-link :to="'/'"
@@ -18,14 +18,16 @@
           <v-list-item-group>
             <v-list-item v-for="(item, i) in home" :key="i">
               <v-list-item-title>
-                <router-link :to="item.route">{{ item.name }}</router-link>
+                <router-link :to="{ name: item }">
+                  {{ item }}
+                </router-link>
               </v-list-item-title>
             </v-list-item>
           </v-list-item-group>
         </v-list>
       </v-menu>
       <v-btn text> Consultation </v-btn>
-      <v-btn text> Archive </v-btn>
+      <v-btn text :to="{ name: 'Archive' }"> Archive </v-btn>
 
       <v-spacer></v-spacer>
 
@@ -37,12 +39,16 @@
         </template>
 
         <v-list>
-          <v-list-item-title>
-            <v-btn text block> Notification 1 </v-btn>
-          </v-list-item-title>
-          <v-list-item-title>
-            <v-btn text block> Notification 2 </v-btn>
-          </v-list-item-title>
+          <v-list-item>
+            <v-list-item-title>
+              <v-btn text block> Notification 1 </v-btn>
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>
+              <v-btn text block> Notification 2 </v-btn>
+            </v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
 
@@ -51,8 +57,8 @@
           <v-btn v-bind="attrs" text v-on="on">
             <v-avatar size="30" class="mr-2">
               <img
-                src="https://media-exp1.licdn.com/dms/image/C5603AQHahp2qg4auIg/profile-displayphoto-shrink_800_800/0/1611734910024?e=1626307200&v=beta&t=drBbiNfm5QjvW-SBRACzRMU6tWi0MqCmuKSFHRCJ_p8"
-                alt="John"
+                src="https://pbs.twimg.com/profile_images/516676441291759617/aLOOeXSl_400x400.jpeg"
+                alt="Profile"
               />
             </v-avatar>
             {{ getUser.lastName }}
@@ -81,22 +87,10 @@ export default {
     return {
       username: "",
       home: [
-        {
-          name: "Dashboard",
-          route: "/",
-        },
-        {
-          name: "Project Details",
-          route: "/project-details",
-        },
-        {
-          name: "Recommended Guide",
-          route: "/recommended-guide",
-        },
-        {
-          name: "Team Settings",
-          route: "/team-settings",
-        },
+        "Dashboard",
+        "Project Details",
+        "Recommended Guides",
+        "Team Settings",
       ],
     };
   },

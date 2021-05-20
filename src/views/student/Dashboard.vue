@@ -1,25 +1,17 @@
 <template>
   <div id="dashboard">
-    <div v-if="toggle === 0" id="dashboard-first-login">
-      <DashboardCreateTeamStepper />
-    </div>
-    <!-- remove the d-none for the main Dashboard -->
-    <DashboardProjectAnalysis v-else />
+    <DashboardProjectAnalysis v-if="this.$route.name == 'Dashboard'" />
+    <router-view v-else />
   </div>
 </template>
 
 <script>
-import DashboardCreateTeamStepper from "@/components/student/DashboardCreateTeamStepper.vue";
 import DashboardProjectAnalysis from "@/components/student/DashboardProjectAnalysis.vue";
 
 export default {
   name: "Dashboard",
-  components: { DashboardCreateTeamStepper, DashboardProjectAnalysis },
-  props: {
-    toggle: {
-      type: Number,
-      default: 0,
-    },
+  components: {
+    DashboardProjectAnalysis,
   },
 };
 </script>
