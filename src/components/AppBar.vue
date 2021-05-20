@@ -15,15 +15,16 @@
         </template>
 
         <v-list>
-          <v-list-item-group>
-            <v-list-item v-for="(item, i) in home" :key="i">
-              <v-list-item-title>
-                <router-link :to="{ name: item }">
-                  {{ item }}
-                </router-link>
-              </v-list-item-title>
-            </v-list-item>
-          </v-list-item-group>
+          <v-list-item-title
+            v-for="(item, i) in home"
+            :key="i"
+            :to="{ name: item }"
+          >
+            <!-- :to="{ name: item }" -->
+            <v-btn text block left>
+              <router-link :to="{ name: item }">{{ item }}</router-link>
+            </v-btn>
+          </v-list-item-title>
         </v-list>
       </v-menu>
       <v-btn text> Consultation </v-btn>
