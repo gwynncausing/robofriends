@@ -130,46 +130,44 @@
                 />
               </v-row>
               <v-row>
-                <v-col class="pl-0 py-0">
-                  <v-select
-                    v-show="user.userType === 'student'"
-                    label="Program"
-                    placeholder="Program"
-                    outlined
-                    dense
-                    :items="programList"
-                    :rules="
-                      user.userType === 'student'
-                        ? [(v) => !!v || 'Program is required']
-                        : []
-                    "
-                    @change="
-                      ($event) => {
-                        user.program = $event;
-                      }
-                    "
-                  />
-                </v-col>
-                <v-col class="pr-0 py-0">
-                  <v-select
-                    v-show="user.userType === 'student'"
-                    label="Year"
-                    placeholder="Year"
-                    outlined
-                    dense
-                    :items="year"
-                    :rules="
-                      user.userType === 'student'
-                        ? [(v) => !!v || 'Year is required']
-                        : []
-                    "
-                    @change="
-                      ($event) => {
-                        user.year = $event;
-                      }
-                    "
-                  />
-                </v-col>
+                <v-select
+                  v-show="user.userType === 'student'"
+                  label="Program"
+                  placeholder="Program"
+                  outlined
+                  dense
+                  :items="programList"
+                  :rules="
+                    user.userType === 'student'
+                      ? [(v) => !!v || 'Program is required']
+                      : []
+                  "
+                  @change="
+                    ($event) => {
+                      user.program = $event;
+                    }
+                  "
+                />
+              </v-row>
+              <v-row>
+                <v-select
+                  v-show="user.userType === 'student'"
+                  label="Year"
+                  placeholder="Year"
+                  outlined
+                  dense
+                  :items="year"
+                  :rules="
+                    user.userType === 'student'
+                      ? [(v) => !!v || 'Year is required']
+                      : []
+                  "
+                  @change="
+                    ($event) => {
+                      user.year = $event;
+                    }
+                  "
+                />
               </v-row>
             </v-window-item>
             <v-window-item :value="4" class="pa-4">
@@ -352,7 +350,7 @@ export default {
       this.initialize();
     },
     selectedUserType() {
-      this.user.userType = this.selectedUserType === 0 ? "student" : "teacher";
+      this.user.userType = this.selectedUserType === 0 ? "student" : "adviser";
     },
   },
   apollo: {

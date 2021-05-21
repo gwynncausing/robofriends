@@ -68,6 +68,11 @@ const routes = [
     component: () => import("@/views/Adviser.vue"),
     children: [
       {
+        path: "",
+        name: "Home",
+        component: () => import("@/views/adviser/Home.vue"),
+      },
+      {
         path: "invite",
         name: "AdviserInvitation",
         component: () => import("@/views/adviser/AdviserInvitation.vue"),

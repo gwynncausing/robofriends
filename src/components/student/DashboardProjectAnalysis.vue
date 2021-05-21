@@ -128,6 +128,7 @@ export default {
   border-radius: 10px;
   width: 100%;
   margin-bottom: 25px;
+  border-style: solid;
 }
 .analysis-heading {
   display: flex;
