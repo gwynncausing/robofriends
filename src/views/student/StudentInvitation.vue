@@ -31,14 +31,7 @@ export default {
   data: function () {
     return {
       userType: "student",
-      invitations: [
-        {
-          teamName: "Cary & Co.",
-        },
-        {
-          teamName: "Donee & Co.",
-        },
-      ],
+      invitations: [],
     };
   },
   computed: {
@@ -64,6 +57,7 @@ export default {
           createdAt: edge.node.createdAt,
         });
       });
+      console.log({ invitations: this.invitations });
     },
     async updateInvitation({ invitationId, isAccepted, projectId }) {
       const input = { invitationId, isAccepted, projectId };
@@ -81,7 +75,11 @@ export default {
         console.log(error);
       }
     },
+    removeInvitationFromList() {
+      // remove invitation from list
+    },
   },
+
   apollo: {
     invitationsFromServer: {
       query: USER_INVITATIONS,
@@ -89,6 +87,7 @@ export default {
       variables() {
         return {
           invitedEmail: this.getUser.email,
+          status: "pending",
         };
       },
       pollInterval: 10000,

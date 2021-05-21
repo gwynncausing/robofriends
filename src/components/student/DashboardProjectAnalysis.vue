@@ -71,11 +71,11 @@
           <div class="analysis-content">
             <simplebar style="max-width: 100%">
               <div class="d-flex mb-3">
-                <TeamAnalysisUserCard />
-                <TeamAnalysisUserCard />
-                <TeamAnalysisUserCard />
-                <TeamAnalysisUserCard />
-                <TeamAnalysisUserCard />
+                <DashboardTeamAnalysisUserCard />
+                <DashboardTeamAnalysisUserCard />
+                <DashboardTeamAnalysisUserCard />
+                <DashboardTeamAnalysisUserCard />
+                <DashboardTeamAnalysisUserCard />
               </div>
             </simplebar>
           </div>
@@ -102,11 +102,11 @@
 <script>
 import simplebar from "simplebar-vue";
 import "simplebar/dist/simplebar.min.css";
-import TeamAnalysisUserCard from "@/components/student/TeamAnalysisUserCard.vue";
+import DashboardTeamAnalysisUserCard from "@/components/student/DashboardTeamAnalysisUserCard.vue";
 
 export default {
   name: "Analysis",
-  components: { simplebar, TeamAnalysisUserCard },
+  components: { simplebar, DashboardTeamAnalysisUserCard },
   data: function () {
     return {
       days: ["7 days", "14 days", "30 days"],

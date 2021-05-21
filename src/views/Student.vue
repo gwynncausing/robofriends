@@ -2,28 +2,11 @@
   <div class="student">
     <AppBar />
     <v-container>
-      <v-btn-toggle v-model="toggle" shaped mandatory>
-        <v-btn
-          @click="
-            $route.path === '/student' ? '' : $router.push({ path: '/student' })
-          "
-        >
-          First Logged in Without Invitation
-        </v-btn>
-
-        <v-btn @click="$router.push({ path: '/student/invite' })">
-          Invited
-        </v-btn>
-
-        <v-btn
-          @click="
-            $route.path === '/student' ? '' : $router.push({ path: '/student' })
-          "
-        >
-          Has Project
-        </v-btn>
-      </v-btn-toggle>
-      <Breadcrumbs v-if="toggle === 2" class="mt-1" :items="route" />
+      <Breadcrumbs
+        v-if="this.$route.name != 'Create Team'"
+        class="mt-1"
+        :items="route"
+      />
       <router-view class="mt-5" :toggle="toggle" />
     </v-container>
   </div>

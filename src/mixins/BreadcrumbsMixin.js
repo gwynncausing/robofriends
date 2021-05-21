@@ -13,7 +13,7 @@ export default {
         for (var i = 0; i < a.length; i++) {
           var object = {
             text: a[i].meta.name,
-            href: a[i].components.default.name,
+            href: a[i].path,
             disabled: false,
           };
           if (i == a.length - 1) object.disabled = true;

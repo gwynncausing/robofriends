@@ -49,8 +49,8 @@ export default {
   border-radius: 5px;
 }
 .user-card {
-  max-width: 250px;
-  min-width: 250px;
+  max-width: 225px;
+  min-width: 225px;
   max-height: 300px;
   min-height: 300px;
   margin-top: 20px;
