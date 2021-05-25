@@ -1,92 +1,78 @@
 <template>
   <div class="signin">
-    <v-row>
-      <v-col lg="3" md="4" sm="6" cols="8">
-        <v-row>
-          <ImageLogo height="150px" width="200px" />
-        </v-row>
+    <div class="grid-item-content">
+      <ImageLogo height="150px" width="200px" />
+      <div class="signin-form">
         <v-form ref="form" lazy-validation @submit.prevent="signin">
-          <v-row>
-            <InputField
-              label="Email"
-              placeholder="firstname.lastname@cit.edu"
-              type="email"
-              required
-              @output="
-                ($event) => {
-                  user.email = $event;
-                }
-              "
-            />
-          </v-row>
-          <v-row>
-            <InputField
-              label="Password"
-              placeholder="••••••••••••"
-              type="password"
-              required
-              @output="
-                ($event) => {
-                  user.password = $event;
-                }
-              "
-            />
-          </v-row>
-          <v-row class="forgot-password"><span>Forgot Password</span></v-row>
-          <!-- Error Tags -->
-          <v-row v-if="error" class="mb-5">
+          <v-text-field
+            v-model="user.email"
+            outlined
+            dense
+            hide-details
+            label="Email"
+            placeholder="Email"
+            type="email"
+          ></v-text-field>
+          <v-text-field
+            v-model="user.password"
+            outlined
+            dense
+            hide-details
+            label="Password"
+            placeholder="Password"
+            type="password"
+          ></v-text-field>
+          <router-link class="forgot-password" :to="{ path: '/' }">
+            Forgot Password?
+          </router-link>
+
+          <div class="errors">
             {{ error }}
-          </v-row>
-          <v-row>
-            <Button
-              class="btn-signin"
-              type="submit"
-              large
-              dark
-              block
-              :loading="isSubmit"
-            >
-              Sign In
-            </Button>
-          </v-row>
-        </v-form>
-
-        <v-row class="or"> or </v-row>
-
-        <v-row>
-          <v-btn depressed large block outlined>
-            <v-avatar>
-              <v-img
-                src="https://docs.microsoft.com/en-us/azure/active-directory/develop/media/howto-add-branding-in-azure-ad-apps/ms-symbollockup_mssymbol_19.svg"
-                alt="Microsoft"
-                contain
-                height="25"
-              />
-            </v-avatar>
-            <span>Sign in with Microsoft</span>
+          </div>
+          <v-btn
+            color="primary"
+            dark
+            depressed
+            block
+            :loading="isSubmit"
+            type="submit"
+          >
+            Sign In
           </v-btn>
-        </v-row>
-
-        <v-row class="mt-10">
-          <a href="/signup">No account yet? Get started here!</a>
-        </v-row>
-      </v-col>
-    </v-row>
+        </v-form>
+        <v-btn depressed large block outlined class="signin-microsoft">
+          <v-avatar>
+            <v-img
+              src="https://docs.microsoft.com/en-us/azure/active-directory/develop/media/howto-add-branding-in-azure-ad-apps/ms-symbollockup_mssymbol_19.svg"
+              alt="Microsoft"
+              contain
+              height="25"
+            />
+          </v-avatar>
+          Sign in with Microsoft
+        </v-btn>
+        <v-btn
+          text
+          block
+          color="primary"
+          class="no-account"
+          :to="{ path: 'signup' }"
+        >
+          No Account Yet? Get started here!
+        </v-btn>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import ImageLogo from "@/components/ImageLogo.vue";
-import InputField from "@/components/InputField.vue";
-import Button from "@/components/Button.vue";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Signin",
   components: {
     ImageLogo,
-    InputField,
-    Button,
   },
   data: function () {
     return {
@@ -102,7 +88,6 @@ export default {
   },
   methods: {
     async signin() {
-      console.log("user: ", this.user);
       this.isSubmit = true;
       if (this.$refs.form.validate()) {
         const credentials = { ...this.user };
@@ -126,9 +111,6 @@ export default {
         this.isSubmit = false;
       }
     },
-    getOutput(e) {
-      console.log(e);
-    },
     ...mapActions({
       onLogin: "user/login",
     }),
@@ -137,35 +119,52 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.row,
-.col {
-  justify-content: center;
-}
-.signin {
-  margin: 50px 0px;
+* {
+  font-size: 14px;
 }
 
-.forgot-password {
-  justify-content: left;
-  cursor: pointer;
-  font-size: 0.8em;
-  color: var(--v-primary) !important;
-  margin-bottom: 40px;
+.signin {
+  max-width: 414px;
+  min-width: 360px;
+  padding: 40px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  height: 100%;
+  width: 100%;
 }
-.btn-signin {
-  background-color: var(--v-primary) !important;
+
+.grid-item-content {
+  grid-column: 1 / 5;
+  height: fit-content;
+}
+.v-text-field {
+  background-color: white;
+  margin-bottom: 20px !important;
+}
+.forgot-password {
+  margin-bottom: 40px;
+  text-decoration: none;
+}
+.errors {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--v-error);
 }
 .v-btn {
-  margin-bottom: 20px;
-}
-.or {
-  margin: 30px 0;
-  padding: 0;
-}
-a {
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
+  height: 40px !important;
+  margin-bottom: 40px;
+
+  &.no-account,
+  &.signin-microsoft {
+    letter-spacing: 0.5px;
+  }
+
+  &.signin-microsoft {
+    background-color: white;
+    margin-bottom: 70px;
   }
 }
 </style>

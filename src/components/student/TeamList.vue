@@ -3,38 +3,17 @@
     <div class="d-flex">
       <span class="text start-project-text">Adviser:</span>
       <v-select
-        v-model="project.invitedEmails"
+        v-model="advisers"
         multiple
         outlined
         dense
         hide-details
+        chips
         :items="advisers"
         item-text="fullName"
         item-value="email"
       >
       </v-select>
-    </div>
-    <div class="d-flex">
-      <span class="text start-project-text"> Member 1: </span>
-      <v-text-field
-        outlined
-        dense
-        hide-details
-        type="email"
-        :value="getUser.email"
-        readonly
-      ></v-text-field>
-    </div>
-    <div class="d-flex">
-      <span class="text start-project-text"> Member 2: </span>
-      <v-text-field
-        v-model="project.invitedEmails[0]"
-        outlined
-        dense
-        hide-details
-        type="email"
-        @change="isMemberEmpty(0)"
-      ></v-text-field>
     </div>
     <div
       v-for="(email, emailIndex) in project.invitedEmails"
@@ -42,15 +21,16 @@
       class="d-flex"
     >
       <span class="text start-project-text">
-        Member {{ emailIndex + 2 }}:
+        Member {{ emailIndex + 1 }}:
       </span>
       <v-text-field
-        v-model="project.invitedEmails[emailIndex + 1]"
+        v-model="project.invitedEmails[emailIndex]"
         outlined
         dense
         hide-details
+        readonly
         type="email"
-        @change="isMemberEmpty(emailIndex + 1)"
+        @change="isMemberEmpty(emailIndex)"
       ></v-text-field>
     </div>
   </div>
@@ -67,8 +47,13 @@ export default {
     return {
       project: {
         advisers: [],
-        invitedEmails: ["sdsdsds@cit.edu"],
+        invitedEmails: [
+          "sdsdsds@cit.edu",
+          "sdsdddsds@cit.edu",
+          "sdsdsdddsds@cit.edu",
+        ],
       },
+      willInviteEmails: [],
     };
   },
 
@@ -87,9 +72,8 @@ export default {
 
   methods: {
     isMemberEmpty(index) {
-      console.log(this.project.invitedEmails);
-      if (this.project.invitedEmails[index] == "")
-        this.project.invitedEmails.splice(index, 1);
+      if (this.willInviteEmails[index] == "")
+        this.willInviteEmails.splice(index, 1);
     },
   },
 };
