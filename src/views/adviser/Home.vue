@@ -256,6 +256,7 @@ export default {
       categories.edges.forEach((edge) =>{ 
         categoryList.push(edge.node.name);
       })
+      // console.log({categoryList: categoryList})
       return categoryList;
     },
     addObjectivesToProject(objectives){
@@ -272,6 +273,7 @@ export default {
       let feedbackList = []
       feedback.edges.forEach((edge) =>{ 
         feedbackList.push({
+          // call date-time parser here
           id: edge.node.id,
           text: edge.node.message,
           date: "test",
