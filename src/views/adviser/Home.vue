@@ -129,6 +129,8 @@
 </template>
 
 <script>
+// TODO: Create query for all advised team projects
+// TODO: Create mutation UpdateAdvisedProject for project status and feedback
 import simplebar from "simplebar-vue";
 import "simplebar/dist/simplebar.min.css";
 import ProjectDetails from "@/components/ProjectDetails.vue";
