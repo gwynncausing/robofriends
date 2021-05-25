@@ -190,6 +190,28 @@ export default {
         //     },
         //   ],
         // },
+        // {
+        //   id: "cary1",
+        //   title: "Cary title",
+        //   description: "Cary descr",
+        //   teamName: "Cary & Co.",
+        //   status: "Ongoing",
+        //   objectives: [
+        //     {
+        //       text: "Cary obj",
+        //       status: "For Revision",
+        //     },
+        //   ],
+        //   categories: ["Cary lang sakalam"],
+        //   feedbacks: [
+        //     {
+        //       id: "cary2",
+        //       date: "1/1/2021",
+        //       time: "11:00",
+        //       text: "Cary",
+        //     },
+        //   ],
+        // },
       ],
     };
   },
@@ -225,6 +247,7 @@ export default {
           feedbacks: this.addFeedbackToProject(edge.node.feedbacks)
         }
         this.projects.push(tempProject)
+        // console.log(tempProject)
       });
       console.log({projects:this.projects})
     },
@@ -238,14 +261,22 @@ export default {
     addObjectivesToProject(objectives){
       let objectiveList = []
       objectives.edges.forEach((edge) =>{ 
-        objectiveList.push(edge.node.name);
+        objectiveList.push({
+          text: edge.node.name,
+          status: edge.node.status,
+        });
       })
       return objectiveList;
     },
     addFeedbackToProject(feedback){
       let feedbackList = []
       feedback.edges.forEach((edge) =>{ 
-        feedbackList.push(edge.node.name);
+        feedbackList.push({
+          id: edge.node.id,
+          text: edge.node.message,
+          date: "test",
+          time: "10pm"
+        });
       })
       return feedbackList;
     },
