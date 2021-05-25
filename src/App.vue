@@ -32,4 +32,8 @@ export default {
 .v-btn {
   text-transform: none !important;
 }
+span.v-chip--select.v-chip.v-chip--clickable.v-chip--no-color.theme--light.v-size--default {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
 </style>
