@@ -32,14 +32,4 @@ export default {
 .v-btn {
   text-transform: none !important;
 }
-// #app {
-//   a {
-//     color: black;
-//   }
-// }
-// @media only screen and (min-width: 600px) {
-//   body {
-//     margin: 200px;
-//   }
-// }
 </style>
