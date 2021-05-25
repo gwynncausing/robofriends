@@ -232,6 +232,9 @@ export default {
   },
   methods: {
     initialize() {
+      // TODO: parse status
+      // TODO: parse updatedAt
+      // TODO: fix bug where projects are not reflected
       this.projects = [];
       this.advisedProjectsFromServer.edges.forEach((edge) => {
         // console.log(edge.node)
