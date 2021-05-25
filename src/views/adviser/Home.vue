@@ -226,6 +226,7 @@ export default {
         }
         this.projects.push(tempProject)
       });
+      console.log({projects:this.projects})
     },
     addCategoriesToProject(categories){
       let categoryList = []
