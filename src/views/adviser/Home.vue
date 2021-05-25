@@ -134,6 +134,8 @@
 import simplebar from "simplebar-vue";
 import "simplebar/dist/simplebar.min.css";
 import ProjectDetails from "@/components/ProjectDetails.vue";
+import GET_ADVISED_PROJECTS from "@/graphql/queries/get-advised-projects.gql";
+import { mapGetters } from "vuex";
 export default {
   name: "Home",
   components: { simplebar, ProjectDetails },
@@ -190,6 +192,11 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    ...mapGetters({
+      getUser: "user/getUser",
+    }),
   },
   methods: {
     statusColor(text) {
