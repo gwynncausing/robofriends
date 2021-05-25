@@ -168,32 +168,32 @@ export default {
       selectedFeedbackText: "",
       projects: [
         // sample data format
-        {
-          id: "cary1",
-          title: "Cary title",
-          description: "Cary descr",
-          teamName: "Cary & Co.",
-          status: "Ongoing",
-          objectives: [
-            {
-              text: "Cary obj",
-              status: "For Revision",
-            },
-          ],
-          categories: ["Cary lang sakalam"],
-          feedbacks: [
-            {
-              id: "cary2",
-              date: "1/1/2021",
-              time: "11:00",
-              text: "Cary",
-            },
-          ],
-        },
+        // {
+        //   id: "cary1",
+        //   title: "Cary title",
+        //   description: "Cary descr",
+        //   teamName: "Cary & Co.",
+        //   status: "Ongoing",
+        //   objectives: [
+        //     {
+        //       text: "Cary obj",
+        //       status: "For Revision",
+        //     },
+        //   ],
+        //   categories: ["Cary lang sakalam"],
+        //   feedbacks: [
+        //     {
+        //       id: "cary2",
+        //       date: "1/1/2021",
+        //       time: "11:00",
+        //       text: "Cary",
+        //     },
+        //   ],
+        // },
       ],
     };
   },
-    watch: {
+  watch: {
     advisedProjectsFromServer() {
       console.log("Initialized watch")
       this.initialize();
@@ -212,9 +212,6 @@ export default {
     initialize() {
       this.projects = [];
       this.advisedProjectsFromServer.edges.forEach((edge) => {
-
-        // this.addCategoriesToProject(edge.node.categories)
-
         // console.log(edge.node)
         let tempProject = {
           id: edge.node.id,
@@ -223,23 +220,33 @@ export default {
           teamName: edge.node.teamName,
           status: edge.node.status,
           updatedAt: edge.node.updatedAt,
-          objectives: [],
+          objectives: this.addObjectivesToProject(edge.node.objectives),
           categories: this.addCategoriesToProject(edge.node.categories),
-          feedbacks: [],
+          feedbacks: this.addFeedbackToProject(edge.node.feedbacks)
         }
-        // console.log({tempProject:tempProject})
         this.projects.push(tempProject)
-
-        // console.log("NEXT PROJECT")
       });
     },
     addCategoriesToProject(categories){
-      let newCategories = []
-      // console.log({category:categories})
+      let categoryList = []
       categories.edges.forEach((edge) =>{ 
-        newCategories.push(edge.node.name);
+        categoryList.push(edge.node.name);
       })
-      return newCategories;
+      return categoryList;
+    },
+    addObjectivesToProject(objectives){
+      let objectiveList = []
+      objectives.edges.forEach((edge) =>{ 
+        objectiveList.push(edge.node.name);
+      })
+      return objectiveList;
+    },
+    addFeedbackToProject(feedback){
+      let feedbackList = []
+      feedback.edges.forEach((edge) =>{ 
+        feedbackList.push(edge.node.name);
+      })
+      return feedbackList;
     },
     statusColor(text) {
       if (this.text === null) return "midgrey";
