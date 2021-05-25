@@ -422,7 +422,7 @@ export default {
   border-radius: 10px;
   padding: 10px;
   min-width: 360px;
-  max-width: 1250;
+  max-width: 1250px;
 }
 .v-stepper__header {
   box-shadow: none;
