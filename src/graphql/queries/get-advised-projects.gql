@@ -1,7 +1,7 @@
 query advisedProjects(
-    $adviser: ID!
+    $advisers: [ID!]
 ) {
-  projects (advisers: $adviser) {
+  projects (advisers: $advisers) {
     edges {
       node {
         id

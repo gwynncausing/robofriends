@@ -198,7 +198,15 @@ export default {
       getUser: "user/getUser",
     }),
   },
+  watch: {
+    advisedProjectsFromServer() {
+      this.initialize();
+    },
+  },
   methods: {
+    initialize() {
+      console.log("Initialized")
+    },
     statusColor(text) {
       if (this.text === null) return "midgrey";
       let i = this.status.findIndex((x) => x.name === text);
@@ -216,6 +224,18 @@ export default {
     setSelectedFeedbackText(feedback) {
       if (feedback === null) this.selectedFeedbackText = "";
       else this.selectedFeedbackText = feedback.text;
+    },
+  },
+  apollo: {
+    advisedProjectsFromServer: {
+      query: GET_ADVISED_PROJECTS,
+      update: (data) => data.projects,
+      variables() {
+        return {
+          advisers: [`${this.getUser.id}`],
+        };
+      },
+      pollInterval: 10000,
     },
   },
 };
