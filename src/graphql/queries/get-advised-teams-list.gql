@@ -1,0 +1,14 @@
+query advisedProjects(
+    $adviser: ID!
+) {
+  projects (advisers: $adviser) {
+    edges {
+      node {
+        id
+        title
+        status
+        updatedAt
+      }
+    }
+  }
+}
