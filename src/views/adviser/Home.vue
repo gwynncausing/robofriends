@@ -193,6 +193,10 @@ export default {
       ],
     };
   },
+  mounted(){
+    console.log("Initialized mounted")
+    this.initialize();
+  },
   computed: {
     ...mapGetters({
       getUser: "user/getUser",
@@ -200,12 +204,25 @@ export default {
   },
   watch: {
     advisedProjectsFromServer() {
+      console.log("Initialized watch")
       this.initialize();
     },
   },
   methods: {
     initialize() {
-      console.log("Initialized")
+      this.projects = [];
+      this.advisedProjectsFromServer.edges.forEach((edge) => {
+        console.log(edge.node)
+        // this.invitations.push({
+        //   id: edge.node.id,
+        //   projectId: edge.node.project.id,
+        //   teamName: edge.node.project.teamName,
+        //   description: edge.node.project.description,
+        //   status: edge.node.status,
+        //   createdAt: edge.node.createdAt,
+        // });
+      });
+      // console.log({ invitations: this.invitations });
     },
     statusColor(text) {
       if (this.text === null) return "midgrey";

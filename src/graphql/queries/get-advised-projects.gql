@@ -6,6 +6,30 @@ query advisedProjects(
       node {
         id
         title
+        description
+        objectives{
+          edges{
+            node{
+              name
+              status
+            }
+          }
+        }
+        categories{
+          edges{
+            node{
+              name
+            }
+          }
+        }
+        feedbacks{
+          edges{
+            node{
+              message
+              createdAt
+            }
+          }
+        }
         status
         updatedAt
       }
