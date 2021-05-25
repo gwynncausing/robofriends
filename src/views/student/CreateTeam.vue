@@ -517,7 +517,6 @@ export default {
 
 .invite-team {
   //
-  background: red;
 }
 .start-project-text {
   min-width: 90px;
