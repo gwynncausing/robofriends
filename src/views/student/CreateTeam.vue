@@ -110,85 +110,100 @@
                 </v-btn>
               </div>
             </div>
-          </div>
 
-          <div class="action-section">
-            <v-btn
-              depressed
-              color="primary"
-              class="ml-auto"
-              @click="currentStep = 2"
-            >
-              Continue
-            </v-btn>
+            <div class="action-section">
+              <v-btn
+                depressed
+                color="primary"
+                class="ml-auto"
+                @click="currentStep = 2"
+              >
+                Continue
+              </v-btn>
+            </div>
           </div>
         </v-stepper-content>
 
         <!-- STEP 2 -->
         <v-stepper-content step="2">
           <div class="invite-team">
-            <div class="d-flex">
-              <span class="text start-project-text">Adviser</span>
-              <v-select
-                v-model="advisers"
-                multiple
-                outlined
-                dense
-                hide-details
-                chips
-                :items="advisers"
-                item-text="fullName"
-                item-value="email"
+            <div class="adviser-member-wrapper">
+              <div class="member-label-reverse">Advisers</div>
+              <div class="d-flex">
+                <span class="label member-label">Adviser</span>
+                <v-select
+                  v-model="project.advisers"
+                  multiple
+                  outlined
+                  dense
+                  hide-details
+                  chips
+                  placeholder="Adviser"
+                  :items="advisers"
+                  item-text="fullName"
+                  item-value="email"
+                >
+                </v-select>
+              </div>
+              <div class="member-label-reverse">Members</div>
+              <div class="d-flex">
+                <span class="label member-label"> Member 1</span>
+                <v-text-field
+                  outlined
+                  dense
+                  hide-details
+                  type="email"
+                  :value="getUser.email"
+                  placeholder="Member 1"
+                  readonly
+                ></v-text-field>
+              </div>
+              <div class="d-flex">
+                <span class="label member-label"> Member 2</span>
+                <v-text-field
+                  v-model="project.invitedEmails[0]"
+                  outlined
+                  dense
+                  hide-details
+                  placeholder="Member 2"
+                  type="email"
+                  @change="isMemberEmpty(0)"
+                ></v-text-field>
+              </div>
+              <div
+                v-for="(email, emailIndex) in project.invitedEmails"
+                :key="emailIndex"
+                class="d-flex"
               >
-              </v-select>
+                <span class="label member-label">
+                  Member {{ emailIndex + 2 }}
+                </span>
+                <v-text-field
+                  v-model="project.invitedEmails[emailIndex + 1]"
+                  outlined
+                  dense
+                  hide-details
+                  :placeholder="`Member ${emailIndex + 3}`"
+                  type="email"
+                  @change="isMemberEmpty(emailIndex + 1)"
+                ></v-text-field>
+              </div>
+              <div>
+                <em><small> Note: You can invite members later. </small></em>
+              </div>
             </div>
-            <div class="d-flex">
-              <span class="text start-project-text"> Member 1</span>
-              <v-text-field
-                outlined
-                dense
-                hide-details
-                type="email"
-                :value="getUser.email"
-                readonly
-              ></v-text-field>
-            </div>
-            <div class="d-flex">
-              <span class="text start-project-text"> Member 2</span>
-              <v-text-field
-                v-model="project.invitedEmails[0]"
-                outlined
-                dense
-                hide-details
-                type="email"
-                @change="isMemberEmpty(0)"
-              ></v-text-field>
-            </div>
-            <div
-              v-for="(email, emailIndex) in project.invitedEmails"
-              :key="emailIndex"
-              class="d-flex"
-            >
-              <span class="text start-project-text">
-                Member {{ emailIndex + 2 }}
-              </span>
-              <v-text-field
-                v-model="project.invitedEmails[emailIndex + 1]"
-                outlined
-                dense
-                hide-details
-                type="email"
-                @change="isMemberEmpty(emailIndex + 1)"
-              ></v-text-field>
-            </div>
-          </div>
+            <div class="action-section">
+              <v-btn text @click="currentStep = 1"> Back </v-btn>
 
-          <div class="d-flex">
-            <Button text @click="currentStep = 1"> Back </Button>
-
-            <Button color="primary" class="ml-auto" @click="currentStep = 3">
-              Continue
-            </Button>
+              <v-btn
+                depressed
+                color="primary"
+                class="ml-auto"
+                @click="currentStep = 3"
+              >
+                Continue
+              </v-btn>
+            </div>
           </div>
         </v-stepper-content>
 
@@ -461,6 +476,7 @@ export default {
 }
 .create-team {
   display: grid;
+  min-height: 455px;
 
   .team-name {
     display: contents;
@@ -516,7 +532,17 @@ export default {
 }
 
 .invite-team {
-  //
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 455px;
+
+  .member-label-reverse {
+    margin-bottom: 10px;
+  }
+  .member-label {
+    display: none;
+  }
 }
 .start-project-text {
   min-width: 90px;
@@ -560,6 +586,15 @@ export default {
       .recommended-color {
         margin-top: 0;
       }
+    }
+  }
+
+  .invite-team {
+    .member-label-reverse {
+      display: none;
+    }
+    .member-label {
+      display: flex;
     }
   }
 }
