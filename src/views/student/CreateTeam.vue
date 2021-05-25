@@ -34,7 +34,7 @@
               ></v-text-field>
             </div>
 
-            <div>
+            <div class="colors">
               <div class="color-preview">
                 <div id="preview-navbar"></div>
                 <div id="preview-content"></div>
@@ -47,7 +47,7 @@
                   :key="colorIndex"
                   class="color-wrapper"
                 >
-                  <span class="text">{{ colors[colorIndexNumber] }}</span>
+                  <span class="label">{{ colors[colorIndexNumber] }}</span>
                   <v-menu offset-y :close-on-content-click="false">
                     <template v-slot:activator="{ on }">
                       <v-btn
@@ -112,24 +112,30 @@
             </div>
           </div>
 
-          <div class="d-flex">
-            <Button color="primary" class="ml-auto" @click="currentStep = 2">
+          <div class="action-section">
+            <v-btn
+              depressed
+              color="primary"
+              class="ml-auto"
+              @click="currentStep = 2"
+            >
               Continue
-            </Button>
+            </v-btn>
           </div>
         </v-stepper-content>
 
         <!-- STEP 2 -->
         <v-stepper-content step="2">
-          <div class="mb-12">
+          <div class="invite-team">
             <div class="d-flex">
-              <span class="text start-project-text">Adviser:</span>
+              <span class="text start-project-text">Adviser</span>
               <v-select
                 v-model="advisers"
                 multiple
                 outlined
                 dense
                 hide-details
+                chips
                 :items="advisers"
                 item-text="fullName"
                 item-value="email"
@@ -137,7 +143,7 @@
               </v-select>
             </div>
             <div class="d-flex">
-              <span class="text start-project-text"> Member 1: </span>
+              <span class="text start-project-text"> Member 1</span>
               <v-text-field
                 outlined
                 dense
@@ -148,7 +154,7 @@
               ></v-text-field>
             </div>
             <div class="d-flex">
-              <span class="text start-project-text"> Member 2: </span>
+              <span class="text start-project-text"> Member 2</span>
               <v-text-field
                 v-model="project.invitedEmails[0]"
                 outlined
@@ -164,7 +170,7 @@
               class="d-flex"
             >
               <span class="text start-project-text">
-                Member {{ emailIndex + 2 }}:
+                Member {{ emailIndex + 2 }}
               </span>
               <v-text-field
                 v-model="project.invitedEmails[emailIndex + 1]"
@@ -322,7 +328,7 @@ export default {
         },
         // TODO: to be removed, will now use invited emails
         advisers: [],
-        invitedEmails: [""],
+        invitedEmails: [],
         objectives: [],
         categories: [],
       },
@@ -416,7 +422,7 @@ export default {
   border-radius: 10px;
   padding: 10px;
   min-width: 360px;
-  max-width: 1250;
+  max-width: 1250px;
 }
 .v-stepper__header {
   box-shadow: none;
@@ -435,15 +441,23 @@ export default {
 }
 .label {
   margin-bottom: 10px;
+  min-width: 70px;
+  margin-right: 20px;
+  margin-top: 8px;
 }
+// TODO: remove text
 .text {
   margin-top: 5px;
   margin-right: 20px;
-  min-width: 70px;
+  min-width: 90px;
 }
 .v-text-field {
   background-color: white;
   margin-bottom: 20px;
+}
+.action-section {
+  margin-top: 80px;
+  display: flex;
 }
 .create-team {
   display: grid;
@@ -458,7 +472,7 @@ export default {
     grid-template-columns: 3fr 1fr;
     grid-template-rows: 45px 110px;
     gap: 5px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     min-width: 351px;
     max-width: 351px;
     order: 2;
@@ -501,6 +515,10 @@ export default {
   }
 }
 
+.invite-team {
+  //
+  background: red;
+}
 .start-project-text {
   min-width: 90px;
 }
@@ -525,6 +543,25 @@ export default {
   }
   .details {
     font-size: 16px;
+  }
+}
+
+@media screen and (min-width: 850px) {
+  .create-team {
+    .team-name {
+      display: flex;
+    }
+    .colors {
+      display: flex;
+      justify-content: space-between;
+    }
+    .recommended-colors-wrapper {
+      display: flex;
+
+      .recommended-color {
+        margin-top: 0;
+      }
+    }
   }
 }
 </style>
