@@ -193,6 +193,12 @@ export default {
       ],
     };
   },
+    watch: {
+    advisedProjectsFromServer() {
+      console.log("Initialized watch")
+      this.initialize();
+    },
+  },
   mounted(){
     console.log("Initialized mounted")
     this.initialize();
@@ -202,27 +208,38 @@ export default {
       getUser: "user/getUser",
     }),
   },
-  watch: {
-    advisedProjectsFromServer() {
-      console.log("Initialized watch")
-      this.initialize();
-    },
-  },
   methods: {
     initialize() {
       this.projects = [];
       this.advisedProjectsFromServer.edges.forEach((edge) => {
-        console.log(edge.node)
-        // this.invitations.push({
-        //   id: edge.node.id,
-        //   projectId: edge.node.project.id,
-        //   teamName: edge.node.project.teamName,
-        //   description: edge.node.project.description,
-        //   status: edge.node.status,
-        //   createdAt: edge.node.createdAt,
-        // });
+
+        // this.addCategoriesToProject(edge.node.categories)
+
+        // console.log(edge.node)
+        let tempProject = {
+          id: edge.node.id,
+          title: edge.node.title,
+          description: edge.node.description,
+          teamName: edge.node.teamName,
+          status: edge.node.status,
+          updatedAt: edge.node.updatedAt,
+          objectives: [],
+          categories: this.addCategoriesToProject(edge.node.categories),
+          feedbacks: [],
+        }
+        // console.log({tempProject:tempProject})
+        this.projects.push(tempProject)
+
+        // console.log("NEXT PROJECT")
       });
-      // console.log({ invitations: this.invitations });
+    },
+    addCategoriesToProject(categories){
+      let newCategories = []
+      // console.log({category:categories})
+      categories.edges.forEach((edge) =>{ 
+        newCategories.push(edge.node.name);
+      })
+      return newCategories;
     },
     statusColor(text) {
       if (this.text === null) return "midgrey";

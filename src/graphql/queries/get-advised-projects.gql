@@ -7,6 +7,8 @@ query advisedProjects(
         id
         title
         description
+        teamName
+        status
         objectives{
           edges{
             node{
@@ -25,12 +27,12 @@ query advisedProjects(
         feedbacks{
           edges{
             node{
+              id
               message
               createdAt
             }
           }
         }
-        status
         updatedAt
       }
     }
