@@ -204,11 +204,6 @@ export default {
       ],
     };
   },
-  computed: {
-    ...mapGetters({
-      getUser: "user/getUser",
-    }),
-  },
   watch: {
     advisedProjectsFromServer() {
       this.isLoading = false;
