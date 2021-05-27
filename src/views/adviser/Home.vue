@@ -215,21 +215,22 @@ export default {
       ],
     };
   },
-  watch: {
-    advisedProjectsFromServer() {
-      console.log("Initialized watch")
-      this.initialize();
-    },
-  },
-  mounted(){
-    console.log("Initialized mounted")
-    this.initialize();
-  },
   computed: {
     ...mapGetters({
       getUser: "user/getUser",
     }),
   },
+  watch: {
+    advisedProjectsFromServer() {
+      console.log("Initialized watch");
+      this.initialize();
+    },
+  },
+  mounted() {
+    console.log("Initialized mounted");
+    this.initialize();
+  },
+
   methods: {
     initialize() {
       // TODO: parse status
@@ -247,42 +248,42 @@ export default {
           updatedAt: edge.node.updatedAt,
           objectives: this.addObjectivesToProject(edge.node.objectives),
           categories: this.addCategoriesToProject(edge.node.categories),
-          feedbacks: this.addFeedbackToProject(edge.node.feedbacks)
-        }
-        this.projects.push(tempProject)
+          feedbacks: this.addFeedbackToProject(edge.node.feedbacks),
+        };
+        this.projects.push(tempProject);
         // console.log(tempProject)
       });
-      console.log({projects:this.projects})
+      console.log({ projects: this.projects });
     },
-    addCategoriesToProject(categories){
-      let categoryList = []
-      categories.edges.forEach((edge) =>{ 
+    addCategoriesToProject(categories) {
+      let categoryList = [];
+      categories.edges.forEach((edge) => {
         categoryList.push(edge.node.name);
-      })
+      });
       // console.log({categoryList: categoryList})
       return categoryList;
     },
-    addObjectivesToProject(objectives){
-      let objectiveList = []
-      objectives.edges.forEach((edge) =>{ 
+    addObjectivesToProject(objectives) {
+      let objectiveList = [];
+      objectives.edges.forEach((edge) => {
         objectiveList.push({
           text: edge.node.name,
           status: edge.node.status,
         });
-      })
+      });
       return objectiveList;
     },
-    addFeedbackToProject(feedback){
-      let feedbackList = []
-      feedback.edges.forEach((edge) =>{ 
+    addFeedbackToProject(feedback) {
+      let feedbackList = [];
+      feedback.edges.forEach((edge) => {
         feedbackList.push({
           // call date-time parser here
           id: edge.node.id,
           text: edge.node.message,
           date: "test",
-          time: "10pm"
+          time: "10pm",
         });
-      })
+      });
       return feedbackList;
     },
     statusColor(text) {
