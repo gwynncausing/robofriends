@@ -1,0 +1,17 @@
+mutation updateAdvisedProject ($input: UpdateAdvisedProjectMutationInput!){
+  updateAdvisedProject(input: $input) {
+    project {
+      id
+      title
+      status
+      feedbacks {
+        edges {
+          node {
+            id
+            message
+          }
+        }
+      }
+    }
+  }
+}
