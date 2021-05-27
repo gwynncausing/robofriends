@@ -134,6 +134,8 @@
 import simplebar from "simplebar-vue";
 import "simplebar/dist/simplebar.min.css";
 import ProjectDetails from "@/components/ProjectDetails.vue";
+import GET_ADVISED_PROJECTS from "@/graphql/queries/get-advised-projects.gql";
+import { mapGetters } from "vuex";
 export default {
   name: "Home",
   components: { simplebar, ProjectDetails },
@@ -166,32 +168,123 @@ export default {
       selectedFeedbackText: "",
       projects: [
         // sample data format
-        {
-          id: "cary1",
-          title: "Cary title",
-          description: "Cary descr",
-          teamName: "Cary & Co.",
-          status: "Ongoing",
-          objectives: [
-            {
-              text: "Cary obj",
-              status: "For Revision",
-            },
-          ],
-          categories: ["Cary lang sakalam"],
-          feedbacks: [
-            {
-              id: "cary2",
-              date: "1/1/2021",
-              time: "11:00",
-              text: "Cary",
-            },
-          ],
-        },
+        // {
+        //   id: "cary1",
+        //   title: "Cary title",
+        //   description: "Cary descr",
+        //   teamName: "Cary & Co.",
+        //   status: "Ongoing",
+        //   objectives: [
+        //     {
+        //       text: "Cary obj",
+        //       status: "For Revision",
+        //     },
+        //   ],
+        //   categories: ["Cary lang sakalam"],
+        //   feedbacks: [
+        //     {
+        //       id: "cary2",
+        //       date: "1/1/2021",
+        //       time: "11:00",
+        //       text: "Cary",
+        //     },
+        //   ],
+        // },
+        // {
+        //   id: "cary1",
+        //   title: "Cary title",
+        //   description: "Cary descr",
+        //   teamName: "Cary & Co.",
+        //   status: "Ongoing",
+        //   objectives: [
+        //     {
+        //       text: "Cary obj",
+        //       status: "For Revision",
+        //     },
+        //   ],
+        //   categories: ["Cary lang sakalam"],
+        //   feedbacks: [
+        //     {
+        //       id: "cary2",
+        //       date: "1/1/2021",
+        //       time: "11:00",
+        //       text: "Cary",
+        //     },
+        //   ],
+        // },
       ],
     };
   },
+  watch: {
+    advisedProjectsFromServer() {
+      console.log("Initialized watch")
+      this.initialize();
+    },
+  },
+  mounted(){
+    console.log("Initialized mounted")
+    this.initialize();
+  },
+  computed: {
+    ...mapGetters({
+      getUser: "user/getUser",
+    }),
+  },
   methods: {
+    initialize() {
+      // TODO: parse status
+      // TODO: parse updatedAt
+      // TODO: fix bug where projects are not reflected
+      this.projects = [];
+      this.advisedProjectsFromServer.edges.forEach((edge) => {
+        // console.log(edge.node)
+        let tempProject = {
+          id: edge.node.id,
+          title: edge.node.title,
+          description: edge.node.description,
+          teamName: edge.node.teamName,
+          status: edge.node.status,
+          updatedAt: edge.node.updatedAt,
+          objectives: this.addObjectivesToProject(edge.node.objectives),
+          categories: this.addCategoriesToProject(edge.node.categories),
+          feedbacks: this.addFeedbackToProject(edge.node.feedbacks)
+        }
+        this.projects.push(tempProject)
+        // console.log(tempProject)
+      });
+      console.log({projects:this.projects})
+    },
+    addCategoriesToProject(categories){
+      let categoryList = []
+      categories.edges.forEach((edge) =>{ 
+        categoryList.push(edge.node.name);
+      })
+      // console.log({categoryList: categoryList})
+      return categoryList;
+    },
+    addObjectivesToProject(objectives){
+      let objectiveList = []
+      objectives.edges.forEach((edge) =>{ 
+        objectiveList.push({
+          text: edge.node.name,
+          status: edge.node.status,
+        });
+      })
+      return objectiveList;
+    },
+    addFeedbackToProject(feedback){
+      let feedbackList = []
+      feedback.edges.forEach((edge) =>{ 
+        feedbackList.push({
+          // call date-time parser here
+          id: edge.node.id,
+          text: edge.node.message,
+          date: "test",
+          time: "10pm"
+        });
+      })
+      return feedbackList;
+    },
     statusColor(text) {
       if (this.text === null) return "midgrey";
       let i = this.status.findIndex((x) => x.name === text);
@@ -209,6 +302,18 @@ export default {
     setSelectedFeedbackText(feedback) {
       if (feedback === null) this.selectedFeedbackText = "";
       else this.selectedFeedbackText = feedback.text;
+    },
+  },
+  apollo: {
+    advisedProjectsFromServer: {
+      query: GET_ADVISED_PROJECTS,
+      update: (data) => data.projects,
+      variables() {
+        return {
+          advisers: [`${this.getUser.id}`],
+        };
+      },
+      pollInterval: 10000,
     },
   },
 };

@@ -1,0 +1,40 @@
+query advisedProjects(
+    $advisers: [ID!]
+) {
+  projects (advisers: $advisers) {
+    edges {
+      node {
+        id
+        title
+        description
+        teamName
+        status
+        objectives{
+          edges{
+            node{
+              name
+              status
+            }
+          }
+        }
+        categories{
+          edges{
+            node{
+              name
+            }
+          }
+        }
+        feedbacks{
+          edges{
+            node{
+              id
+              message
+              createdAt
+            }
+          }
+        }
+        updatedAt
+      }
+    }
+  }
+}
