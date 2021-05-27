@@ -48,7 +48,9 @@
               >
                 <span>{{ project.teamName }}</span
                 ><br />
-                <span>{{ project.title }}</span>
+                <span>{{ project.title }}</span
+                ><br />
+                <span>{{ project.updatedAt }}</span>
               </v-card>
             </v-item>
           </v-item-group>
@@ -56,7 +58,7 @@
       </v-col>
       <v-col cols="8">
         <div class="home-wrapper">
-          <ProjectDetails :project-prop="projects[selectedProject]" readonly />
+          <ProjectDetails v-if="!isLoading" :project-prop="projects[selectedProject]" readonly />
         </div>
         <div class="home-wrapper">
           <div class="home-heading">
@@ -65,7 +67,7 @@
           <v-row>
             <v-col cols="4">
               <simplebar style="max-height: 200px">
-                <v-list-item-group v-model="selectedFeedback">
+                <v-list-item-group v-if="!isLoading" v-model="selectedFeedback">
                   <v-list-item @click="setSelectedFeedbackText({})">
                     Current
                   </v-list-item>
@@ -129,13 +131,21 @@
 </template>
 
 <script>
-// TODO: Create query for all advised team projects
+// TODO:DONE Create query for all advised team projects
+// TODO:DONE parse status
+// TODO:DONE parse updatedAt
+// TODO:DONE fix bug where projects are not reflected
+// TODO:DONE Duplicate keys warning (please see the console for this page)
+
 // TODO: Create mutation UpdateAdvisedProject for project status and feedback
+
 import simplebar from "simplebar-vue";
 import "simplebar/dist/simplebar.min.css";
 import ProjectDetails from "@/components/ProjectDetails.vue";
-import GET_ADVISED_PROJECTS from "@/graphql/queries/get-advised-projects.gql";
+import DateTimeParser from "@/utils/date-time-parser.js"
 import { mapGetters } from "vuex";
+import GET_ADVISED_PROJECTS from "@/graphql/queries/get-advised-projects.gql";
+
 export default {
   name: "Home",
   components: { simplebar, ProjectDetails },
@@ -163,33 +173,12 @@ export default {
           color: "green",
         },
       ],
+      isLoading: true,
       selectedProject: 0,
       selectedFeedback: 0,
       selectedFeedbackText: "",
       projects: [
-        // sample data format
-        // {
-        //   id: "cary1",
-        //   title: "Cary title",
-        //   description: "Cary descr",
-        //   teamName: "Cary & Co.",
-        //   status: "Ongoing",
-        //   objectives: [
-        //     {
-        //       text: "Cary obj",
-        //       status: "For Revision",
-        //     },
-        //   ],
-        //   categories: ["Cary lang sakalam"],
-        //   feedbacks: [
-        //     {
-        //       id: "cary2",
-        //       date: "1/1/2021",
-        //       time: "11:00",
-        //       text: "Cary",
-        //     },
-        //   ],
-        // },
+        //sample data format
         // {
         //   id: "cary1",
         //   title: "Cary title",
@@ -217,13 +206,11 @@ export default {
   },
   watch: {
     advisedProjectsFromServer() {
+      this.isLoading = false;
       console.log("Initialized watch")
       this.initialize();
+      
     },
-  },
-  mounted(){
-    console.log("Initialized mounted")
-    this.initialize();
   },
   computed: {
     ...mapGetters({
@@ -232,19 +219,16 @@ export default {
   },
   methods: {
     initialize() {
-      // TODO: parse status
-      // TODO: parse updatedAt
-      // TODO: fix bug where projects are not reflected
       this.projects = [];
-      this.advisedProjectsFromServer.edges.forEach((edge) => {
-        // console.log(edge.node)
+      const advisedProjects =  this.advisedProjectsFromServer.edges.sort((a,b) => new Date(b.node.updatedAt) - new Date(a.node.updatedAt))
+      advisedProjects.forEach((edge) => {
         let tempProject = {
           id: edge.node.id,
           title: edge.node.title,
           description: edge.node.description,
           teamName: edge.node.teamName,
-          status: edge.node.status,
-          updatedAt: edge.node.updatedAt,
+          status: this.parseStatus(edge.node.status),
+          updatedAt: DateTimeParser.parse(edge.node.updatedAt, "MM/DD/YYYY hh:mm a"),
           objectives: this.addObjectivesToProject(edge.node.objectives),
           categories: this.addCategoriesToProject(edge.node.categories),
           feedbacks: this.addFeedbackToProject(edge.node.feedbacks)
@@ -257,6 +241,7 @@ export default {
     addCategoriesToProject(categories){
       let categoryList = []
       categories.edges.forEach((edge) =>{ 
+        console.log(edge.node.name)
         categoryList.push(edge.node.name);
       })
       // console.log({categoryList: categoryList})
@@ -264,10 +249,12 @@ export default {
     },
     addObjectivesToProject(objectives){
       let objectiveList = []
+      // console.log(objectives.edges)
       objectives.edges.forEach((edge) =>{ 
         objectiveList.push({
+          id: edge.node.id,
           text: edge.node.name,
-          status: edge.node.status,
+          status: this.parseStatus(edge.node.status),
         });
       })
       return objectiveList;
@@ -279,8 +266,8 @@ export default {
           // call date-time parser here
           id: edge.node.id,
           text: edge.node.message,
-          date: "test",
-          time: "10pm"
+          date: DateTimeParser.parse(edge.node.createdAt, "MM/DD/YYYY"),
+          time: DateTimeParser.parse(edge.node.createdAt, "hh:mm a"),
         });
       })
       return feedbackList;
@@ -289,6 +276,16 @@ export default {
       if (this.text === null) return "midgrey";
       let i = this.status.findIndex((x) => x.name === text);
       return this.status[i].color;
+    },
+    parseStatus(status){
+      const statusCounterparts = {
+          "NOT_STARTED": "Not Started",
+          "WAITING_FOR_APPROVAL": "Pending",
+          "ONGOING": "Ongoing",
+          "FOR_REVISION": "For Revision",
+          "FINISHED": "Finished",
+        }
+      return statusCounterparts[status];
     },
     addFeedback(status) {
       console.log(this.selectedFeedbackText);

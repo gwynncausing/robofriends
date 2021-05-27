@@ -12,6 +12,7 @@ query advisedProjects(
         objectives{
           edges{
             node{
+              id
               name
               status
             }
@@ -20,6 +21,7 @@ query advisedProjects(
         categories{
           edges{
             node{
+              id
               name
             }
           }
