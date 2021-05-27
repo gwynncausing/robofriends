@@ -23,8 +23,10 @@
         <!-- STEP 1 -->
         <v-stepper-content step="1">
           <div class="create-team">
-            <div class="team-name">
-              <span class="label">Team Name</span>
+            <div class="label-header">Create Team</div>
+            <div class="label-sm">Team Name</div>
+            <div class="d-flex">
+              <span class="label label-md">Team Name</span>
               <v-text-field
                 v-model="project.teamName"
                 outlined
@@ -111,15 +113,21 @@
               </div>
             </div>
 
+            <div id="create-team-error-section" class="errors">
+              {{ createTeamError }}
+            </div>
+
             <div class="action-section">
               <v-btn
                 depressed
                 color="primary"
                 class="ml-auto"
-                @click="currentStep = 2"
+                @click="createTeamEvaluate()"
               >
                 Continue
               </v-btn>
+              <!-- createTeamEvaluate -->
+              <!-- @click="currentStep = 2" -->
             </div>
           </div>
         </v-stepper-content>
@@ -127,10 +135,11 @@
         <!-- STEP 2 -->
         <v-stepper-content step="2">
           <div class="invite-team">
+            <div class="label-header">Invite Team</div>
             <div class="adviser-member-wrapper">
-              <div class="member-label-reverse">Advisers</div>
+              <div class="label-sm">Advisers</div>
               <div class="d-flex">
-                <span class="label member-label">Adviser</span>
+                <span class="label label-md">Advisers</span>
                 <v-select
                   v-model="project.advisers"
                   multiple
@@ -145,9 +154,9 @@
                 >
                 </v-select>
               </div>
-              <div class="member-label-reverse">Members</div>
+              <div class="label-sm">Members</div>
               <div class="d-flex">
-                <span class="label member-label"> Member 1</span>
+                <span class="label label-md"> Member 1</span>
                 <v-text-field
                   outlined
                   dense
@@ -159,7 +168,7 @@
                 ></v-text-field>
               </div>
               <div class="d-flex">
-                <span class="label member-label"> Member 2</span>
+                <span class="label label-md"> Member 2</span>
                 <v-text-field
                   v-model="project.invitedEmails[0]"
                   outlined
@@ -175,7 +184,7 @@
                 :key="emailIndex"
                 class="d-flex"
               >
-                <span class="label member-label">
+                <span class="label label-md">
                   Member {{ emailIndex + 2 }}
                 </span>
                 <v-text-field
@@ -192,14 +201,19 @@
                 <em><small> Note: You can invite members later. </small></em>
               </div>
             </div>
-            <div class="action-section">
+
+            <div id="invite-team-error-section" class="errors">
+              {{ inviteTeamError }}
+            </div>
+
+            <div class="action-section mt-auto">
               <v-btn text @click="currentStep = 1"> Back </v-btn>
 
               <v-btn
                 depressed
                 color="primary"
                 class="ml-auto"
-                @click="currentStep = 3"
+                @click="inviteTeamEvaluate"
               >
                 Continue
               </v-btn>
@@ -209,20 +223,21 @@
 
         <!-- STEP 3 -->
         <v-stepper-content step="3">
-          <div class="mb-12">
+          <div class="start-project">
+            <div class="label-header">Start Project</div>
+            <div class="label-sm">Title</div>
             <div class="d-flex">
-              <span class="text">Title</span>
-              <InputField
-                hidedetails
-                @output="
-                  ($event) => {
-                    project.title = $event;
-                  }
-                "
-              />
+              <span class="label label-md">Title</span>
+              <v-text-field
+                v-model="project.title"
+                hide-details
+                outlined
+                dense
+              ></v-text-field>
             </div>
+
             <div>
-              <div class="text mb-2">Brief Description</div>
+              <div class="label">Brief Description</div>
               <v-textarea
                 v-model="project.description"
                 outlined
@@ -231,9 +246,10 @@
               >
               </v-textarea>
             </div>
-            <div class="mb-8">
-              <span class="text mb-2">Objectives</span>
-              <div class="d-flex mt-3">
+
+            <div>
+              <div>
+                <div class="label">Objectives</div>
                 <v-text-field
                   v-model="project.objectives[0]"
                   outlined
@@ -245,7 +261,7 @@
               <div
                 v-for="(proj, projectIndex) in project.objectives"
                 :key="projectIndex + 50"
-                class="d-flex mt-3"
+                class="d-flex"
               >
                 <v-text-field
                   v-model="project.objectives[projectIndex + 1]"
@@ -257,7 +273,7 @@
               </div>
             </div>
             <div>
-              <span class="text mb-2">Category</span>
+              <div class="label">Category</div>
               <v-combobox
                 v-model="project.categories"
                 outlined
@@ -269,18 +285,23 @@
                 deletable-chips
               ></v-combobox>
             </div>
-          </div>
 
-          <div class="d-flex">
-            <Button text @click="currentStep = 2"> Back </Button>
-            <Button
-              color="primary"
-              class="ml-auto"
-              :loading="isSubmit"
-              @click="submit"
-            >
-              Submit
-            </Button>
+            <div id="start-project-error-section" class="errors">
+              {{ startProjectError }}
+            </div>
+
+            <div class="action-section">
+              <v-btn text @click="currentStep = 2"> Back </v-btn>
+              <v-btn
+                depressed
+                color="primary"
+                class="ml-auto"
+                :loading="isSubmit"
+                @click="submit"
+              >
+                Submit
+              </v-btn>
+            </div>
           </div>
         </v-stepper-content>
 
@@ -316,7 +337,6 @@
 </template>
 
 <script>
-import InputField from "@/components/InputField.vue";
 import Button from "@/components/Button.vue";
 
 import GET_ADVISERS from "@/graphql/queries/get-advisers.gql";
@@ -326,11 +346,14 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "CreateTeam",
-  components: { InputField, Button },
+  components: { Button },
   data() {
     return {
+      createTeamError: "",
+      inviteTeamError: "",
+      startProjectError: " ",
       inviteDialog: false,
-      currentStep: 1,
+      currentStep: 3,
       steps: 4,
       project: {
         title: "",
@@ -382,6 +405,12 @@ export default {
     "project.theme.tertiaryColor": function (newVal) {
       document.getElementById("preview-sidebar").style.backgroundColor = newVal;
     },
+    "project.teamName": function () {
+      if (this.project.teamName) this.createTeamError = "";
+    },
+    "project.advisers": function () {
+      if (this.project.advisers.length) this.inviteTeamError = "";
+    },
   },
 
   apollo: {
@@ -392,6 +421,21 @@ export default {
   },
 
   methods: {
+    test() {
+      console.log("called");
+    },
+    createTeamEvaluate() {
+      if (this.project.teamName) {
+        this.createTeamError = "";
+        this.currentStep++;
+      } else this.createTeamError = "Team Name must not be empty";
+    },
+    inviteTeamEvaluate() {
+      if (this.project.advisers.length) {
+        this.inviteTeamError = "";
+        this.currentStep++;
+      } else this.inviteTeamError = "Must have at least one adviser";
+    },
     colorPick(hex, index) {
       console.log(hex, index);
       this.project.theme[index] = hex;
@@ -468,10 +512,25 @@ export default {
 }
 .v-text-field {
   background-color: white;
+  margin-bottom: 20px !important;
+}
+.label-header {
   margin-bottom: 20px;
+  font-weight: 600;
+}
+.label-sm {
+  margin-bottom: 10px;
+}
+.label-md {
+  display: none;
+}
+.errors {
+  justify-self: center;
+  color: var(--v-error);
+  margin-top: 40px;
 }
 .action-section {
-  margin-top: 80px;
+  margin-top: 40px;
   display: flex;
 }
 .create-team {
@@ -534,14 +593,10 @@ export default {
 .invite-team {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   min-height: 455px;
 
-  .member-label-reverse {
-    margin-bottom: 10px;
-  }
-  .member-label {
-    display: none;
+  #invite-team-error-section {
+    align-self: center;
   }
 }
 .start-project-text {
@@ -589,13 +644,11 @@ export default {
     }
   }
 
-  .invite-team {
-    .member-label-reverse {
-      display: none;
-    }
-    .member-label {
-      display: flex;
-    }
+  .label-sm {
+    display: none;
+  }
+  .label-md {
+    display: flex;
   }
 }
 </style>

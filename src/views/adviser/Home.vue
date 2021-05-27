@@ -204,6 +204,11 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapGetters({
+      getUser: "user/getUser",
+    }),
+  },
   watch: {
     advisedProjectsFromServer() {
       this.isLoading = false;
@@ -231,37 +236,36 @@ export default {
           updatedAt: DateTimeParser.parse(edge.node.updatedAt, "MM/DD/YYYY hh:mm a"),
           objectives: this.addObjectivesToProject(edge.node.objectives),
           categories: this.addCategoriesToProject(edge.node.categories),
-          feedbacks: this.addFeedbackToProject(edge.node.feedbacks)
-        }
-        this.projects.push(tempProject)
+          feedbacks: this.addFeedbackToProject(edge.node.feedbacks),
+        };
+        this.projects.push(tempProject);
         // console.log(tempProject)
       });
-      console.log({projects:this.projects})
+      console.log({ projects: this.projects });
     },
     addCategoriesToProject(categories){
       let categoryList = []
       categories.edges.forEach((edge) =>{ 
         console.log(edge.node.name)
         categoryList.push(edge.node.name);
-      })
+      });
       // console.log({categoryList: categoryList})
       return categoryList;
     },
-    addObjectivesToProject(objectives){
-      let objectiveList = []
-      // console.log(objectives.edges)
-      objectives.edges.forEach((edge) =>{ 
+    addObjectivesToProject(objectives) {
+      let objectiveList = [];
+      objectives.edges.forEach((edge) => {
         objectiveList.push({
           id: edge.node.id,
           text: edge.node.name,
           status: this.parseStatus(edge.node.status),
         });
-      })
+      });
       return objectiveList;
     },
-    addFeedbackToProject(feedback){
-      let feedbackList = []
-      feedback.edges.forEach((edge) =>{ 
+    addFeedbackToProject(feedback) {
+      let feedbackList = [];
+      feedback.edges.forEach((edge) => {
         feedbackList.push({
           // call date-time parser here
           id: edge.node.id,
@@ -269,7 +273,7 @@ export default {
           date: DateTimeParser.parse(edge.node.createdAt, "MM/DD/YYYY"),
           time: DateTimeParser.parse(edge.node.createdAt, "hh:mm a"),
         });
-      })
+      });
       return feedbackList;
     },
     statusColor(text) {
