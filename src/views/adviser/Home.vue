@@ -33,9 +33,9 @@
               </v-row>
             </v-list>
           </v-list-group>
-          <v-item-group v-model="selectedProject" mandatory>
+          <v-item-group mandatory>
             <v-item
-              v-for="project in projects"
+              v-for="(project, index) in projects"
               v-slot="{ active, toggle }"
               :key="project.id"
             >
@@ -44,9 +44,9 @@
                   active ? 'selected-project' : '',
                   statusColor(project.status) + '-border',
                 ]"
-                @click="toggle"
+                @click="onToggle(toggle, index)"
               >
-                <span>{{ project.teamName }}</span
+                <span class="font-weight-bold">{{ project.teamName }}</span
                 ><br />
                 <span>{{ project.title }}</span
                 ><br />
@@ -58,7 +58,11 @@
       </v-col>
       <v-col cols="8">
         <div class="home-wrapper">
-          <ProjectDetails v-if="!isLoading" :project-prop="projects[selectedProject]" readonly />
+          <ProjectDetails
+            v-if="!isLoading"
+            :project-prop="projects[selectedProject]"
+            readonly
+          />
         </div>
         <div class="home-wrapper">
           <div class="home-heading">
@@ -102,7 +106,7 @@
                 class="btn-change-status"
                 depressed
                 color="lightgrey"
-                @click="addFeedback('Finished')"
+                @click="addFeedback('finished')"
               >
                 Finish
               </v-btn>
@@ -110,7 +114,7 @@
                 class="btn-change-status"
                 depressed
                 color="primary"
-                @click="addFeedback('Ongoing')"
+                @click="addFeedback('ongoing')"
               >
                 Approve
               </v-btn>
@@ -118,7 +122,7 @@
                 class="btn-change-status"
                 depressed
                 color="secondary"
-                @click="addFeedback('For Revision')"
+                @click="addFeedback('waiting_for_approval')"
               >
                 Revise
               </v-btn>
@@ -136,15 +140,16 @@
 // TODO:DONE parse updatedAt
 // TODO:DONE fix bug where projects are not reflected
 // TODO:DONE Duplicate keys warning (please see the console for this page)
-
-// TODO: Create mutation UpdateAdvisedProject for project status and feedback
+// TODO:DONE Create mutation UpdateAdvisedProject for project status and feedback
 
 import simplebar from "simplebar-vue";
 import "simplebar/dist/simplebar.min.css";
 import ProjectDetails from "@/components/ProjectDetails.vue";
-import DateTimeParser from "@/utils/date-time-parser.js"
+import DateTimeParser from "@/utils/date-time-parser.js";
+import { parseProjectStatus } from "@/utils/utils.js";
 import { mapGetters } from "vuex";
 import GET_ADVISED_PROJECTS from "@/graphql/queries/get-advised-projects.gql";
+import UPDATE_ADVISED_PROJECT from "@/graphql/mutations/update-advised-project.gql";
 
 export default {
   name: "Home",
@@ -177,6 +182,9 @@ export default {
       selectedProject: 0,
       selectedFeedback: 0,
       selectedFeedbackText: "",
+      chosenProject: null,
+      previousProjectsLength: 0,
+      newAdvisedProjectsLength: 0,
       projects: [
         //sample data format
         // {
@@ -204,44 +212,61 @@ export default {
       ],
     };
   },
-  watch: {
-    advisedProjectsFromServer() {
-      this.isLoading = false;
-      console.log("Initialized watch")
-      this.initialize();
-      
-    },
-  },
   computed: {
     ...mapGetters({
       getUser: "user/getUser",
     }),
   },
+  watch: {
+    advisedProjectsFromServer(newAdvisedProjects, previousAdvisedProjects) {
+      this.isLoading = false;
+      if (previousAdvisedProjects == null)
+        this.previousProjectsLength = newAdvisedProjects.edges.length;
+      else this.previousProjectsLength = previousAdvisedProjects.edges.length;
+      this.newAdvisedProjectsLength = newAdvisedProjects.edges.length;
+      this.initialize();
+    },
+  },
   methods: {
     initialize() {
+      console.log("Start Initialized");
       this.projects = [];
-      const advisedProjects =  this.advisedProjectsFromServer.edges.sort((a,b) => new Date(b.node.updatedAt) - new Date(a.node.updatedAt))
+      console.log(this.advisedProjectsFromServer);
+      const advisedProjects = this.advisedProjectsFromServer.edges.sort(
+        (a, b) => new Date(b.node.updatedAt) - new Date(a.node.updatedAt)
+      );
       advisedProjects.forEach((edge) => {
+        console.log(edge);
         let tempProject = {
           id: edge.node.id,
           title: edge.node.title,
           description: edge.node.description,
           teamName: edge.node.teamName,
-          status: this.parseStatus(edge.node.status),
-          updatedAt: DateTimeParser.parse(edge.node.updatedAt, "MM/DD/YYYY hh:mm a"),
+          status: parseProjectStatus(edge.node.status),
+          updatedAt: DateTimeParser.parse(
+            edge.node.updatedAt,
+            "MM/DD/YYYY hh:mm a"
+          ),
           objectives: this.addObjectivesToProject(edge.node.objectives),
           categories: this.addCategoriesToProject(edge.node.categories),
           feedbacks: this.addFeedbackToProject(edge.node.feedbacks),
         };
         this.projects.push(tempProject);
-        // console.log(tempProject)
       });
-      console.log({ projects: this.projects });
+      if (this.previousProjectsLength != this.newAdvisedProjectsLength) {
+        const index = Math.abs(
+          this.newAdvisedProjectsLength - this.previousProjectsLength
+        );
+        if (this.newAdvisedProjectsLength > this.previousProjectsLength)
+          this.selectedProject += index;
+        else this.selectedProject -= this.selectedProject == 0 ? 0 : index;
+      } else this.selectedProject = 0;
+      // console.log({ projects: this.projects });
     },
-    addCategoriesToProject(categories){
-      let categoryList = []
-      categories.edges.forEach((edge) =>{ 
-        console.log(edge.node.name)
+    addCategoriesToProject(categories) {
+      let categoryList = [];
+      categories.edges.forEach((edge) => {
+        console.log(edge.node.name);
         categoryList.push(edge.node.name);
       });
       // console.log({categoryList: categoryList})
@@ -253,7 +278,7 @@ export default {
         objectiveList.push({
           id: edge.node.id,
           text: edge.node.name,
-          status: this.parseStatus(edge.node.status),
+          status: parseProjectStatus(edge.node.status),
         });
       });
       return objectiveList;
@@ -261,6 +286,7 @@ export default {
     addFeedbackToProject(feedback) {
       let feedbackList = [];
       feedback.edges.forEach((edge) => {
+        console.log(edge.node.createdAt);
         feedbackList.push({
           // call date-time parser here
           id: edge.node.id,
@@ -276,28 +302,30 @@ export default {
       let i = this.status.findIndex((x) => x.name === text);
       return this.status[i].color;
     },
-    parseStatus(status){
-      const statusCounterparts = {
-          "NOT_STARTED": "Not Started",
-          "WAITING_FOR_APPROVAL": "Pending",
-          "ONGOING": "Ongoing",
-          "FOR_REVISION": "For Revision",
-          "FINISHED": "Finished",
-        }
-      return statusCounterparts[status];
-    },
-    addFeedback(status) {
-      console.log(this.selectedFeedbackText);
-      // add feedback query
-      // set status according to button clicked
-      console.log(status);
-      // dont remove this
+    async addFeedback(status) {
+      const input = {
+        projectId: this.projects[this.selectedProject].id,
+        status: status,
+      };
+      if (this.selectedFeedback === 0 && this.selectedFeedbackText !== null)
+        if (this.selectedFeedbackText.trim() !== "")
+          input["feedback"] = this.selectedFeedbackText;
+      await this.$apollo.mutate({
+        mutation: UPDATE_ADVISED_PROJECT,
+        variables: { input },
+      });
       this.selectedFeedback = 0;
-      this.setSelectedFeedbackText({});
+      this.setSelectedFeedbackText(null);
     },
     setSelectedFeedbackText(feedback) {
       if (feedback === null) this.selectedFeedbackText = "";
       else this.selectedFeedbackText = feedback.text;
+    },
+    onToggle(toggle, index) {
+      toggle();
+      this.selectedProject = index;
+      this.selectedFeedback = 0;
+      this.setSelectedFeedbackText(null);
     },
   },
   apollo: {

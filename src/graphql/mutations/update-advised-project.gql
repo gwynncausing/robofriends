@@ -4,11 +4,13 @@ mutation updateAdvisedProject ($input: UpdateAdvisedProjectMutationInput!){
       id
       title
       status
+      updatedAt
       feedbacks {
         edges {
           node {
             id
             message
+            createdAt
           }
         }
       }
