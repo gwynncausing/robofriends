@@ -106,7 +106,7 @@
                 class="btn-change-status"
                 depressed
                 color="lightgrey"
-                @click="addFeedback('finished')"
+                @click="addFeedback(projectStatus.PROJECT_FINISHED)"
               >
                 Finish
               </v-btn>
@@ -114,7 +114,7 @@
                 class="btn-change-status"
                 depressed
                 color="primary"
-                @click="addFeedback('ongoing')"
+                @click="addFeedback(projectStatus.PROJECT_ONGOING)"
               >
                 Approve
               </v-btn>
@@ -122,7 +122,7 @@
                 class="btn-change-status"
                 depressed
                 color="secondary"
-                @click="addFeedback('waiting_for_approval')"
+                @click="addFeedback(projectStatus.PROJECT_FOR_REVISION)"
               >
                 Revise
               </v-btn>
@@ -146,7 +146,12 @@ import simplebar from "simplebar-vue";
 import "simplebar/dist/simplebar.min.css";
 import ProjectDetails from "@/components/ProjectDetails.vue";
 import DateTimeParser from "@/utils/date-time-parser.js";
-import { parseProjectStatus } from "@/utils/utils.js";
+import {
+  parseProjectStatus,
+  PROJECT_ONGOING,
+  PROJECT_FOR_REVISION,
+  PROJECT_FINISHED,
+} from "@/utils/utils.js";
 import { mapGetters } from "vuex";
 import GET_ADVISED_PROJECTS from "@/graphql/queries/get-advised-projects.gql";
 import UPDATE_ADVISED_PROJECT from "@/graphql/mutations/update-advised-project.gql";
@@ -185,6 +190,11 @@ export default {
       chosenProject: null,
       previousProjectsLength: 0,
       newAdvisedProjectsLength: 0,
+      projectStatus: {
+        PROJECT_ONGOING: PROJECT_ONGOING,
+        PROJECT_FOR_REVISION: PROJECT_FOR_REVISION,
+        PROJECT_FINISHED: PROJECT_FINISHED,
+      },
       projects: [
         //sample data format
         // {
