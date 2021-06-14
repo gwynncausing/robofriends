@@ -9,6 +9,7 @@ export default {
       handler() {
         var a = this.$route.matched;
         this.route = [];
+        console.log("routes: ", this.$router.options);
         console.log("route: ", this.$route);
         for (var i = 0; i < a.length; i++) {
           var object = {

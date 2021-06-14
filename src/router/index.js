@@ -11,13 +11,6 @@ const authGuard = (to, from, next) => {
   } else next();
 };
 
-const adviserGuard = (to, from, next) => {
-  if (store.getters["user/getAuthStatus"]) {
-    if (store.getters["user/getUserType"] == "ADVISER") next();
-    else next("/");
-  }
-};
-
 const routes = [
   {
     path: "/",
@@ -43,25 +36,6 @@ const routes = [
     name: "Test",
     component: () => import("@/views/Test.vue"),
   },
-  {
-    path: "/adviser",
-    name: "",
-    meta: { name: "Adviser" },
-    beforeEnter: adviserGuard,
-    component: () => import("@/views/Adviser.vue"),
-    children: [
-      {
-        path: "",
-        name: "Home",
-        component: () => import("@/views/adviser/Home.vue"),
-      },
-      {
-        path: "invite",
-        name: "AdviserInvitation",
-        component: () => import("@/views/adviser/AdviserInvitation.vue"),
-      },
-    ],
-  },
 ];
 
 const router = new VueRouter({
@@ -70,13 +44,13 @@ const router = new VueRouter({
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   if (!to.matched.length) {
-//     next("/404");
-//   } else {
-//     next();
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  if (!to.matched.length) {
+    next("/");
+  } else {
+    next();
+  }
+});
 
 // router.beforeEach(() => {
 //   document.title = `${process.env.VUE_APP_TITLE}`;
