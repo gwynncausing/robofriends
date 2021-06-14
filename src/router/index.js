@@ -11,14 +11,6 @@ const authGuard = (to, from, next) => {
   } else next();
 };
 
-const studentGuard = (to, from, next) => {
-  if (store.getters["user/getAuthStatus"]) {
-    if (store.getters["user/getUserType"] == "STUDENT") {
-      next();
-    } else next("/");
-  }
-};
-
 const adviserGuard = (to, from, next) => {
   if (store.getters["user/getAuthStatus"]) {
     if (store.getters["user/getUserType"] == "ADVISER") next();
@@ -42,55 +34,14 @@ const routes = [
     component: () => import("@/views/SignUp.vue"),
   },
   {
-    path: "/student",
-    name: "",
-    beforeEnter: studentGuard,
-    component: () => import("@/views/Student.vue"),
-    children: [
-      {
-        path: "",
-        name: "Dashboard",
-        meta: { name: "Home" },
-        component: () => import("@/views/student/Dashboard.vue"),
-        children: [
-          {
-            path: "project",
-            name: "Project Details",
-            meta: { name: "Project Details" },
-            component: () => import("@/views/student/ProjectDetails.vue"),
-          },
-          {
-            path: "guide",
-            name: "Recommended Guides",
-            meta: { name: "Recommended Guides" },
-            component: () => import("@/views/student/RecommendedGuides.vue"),
-          },
-          {
-            path: "team",
-            name: "Team Settings",
-            meta: { name: "Team Settings" },
-            component: () => import("@/views/student/TeamSettings.vue"),
-          },
-        ],
-      },
-      {
-        path: "create-team",
-        name: "Create Team",
-        meta: { name: "Create Team" },
-        component: () => import("@/views/student/CreateTeam.vue"),
-      },
-      {
-        path: "invite",
-        name: "StudentInvitation",
-        component: () => import("@/views/student/StudentInvitation.vue"),
-      },
-      {
-        path: "archive",
-        name: "Archive",
-        meta: { name: "Archive System" },
-        component: () => import("@/views/student/Archive.vue"),
-      },
-    ],
+    path: "/about",
+    name: "About",
+    component: () => import("@/views/About.vue"),
+  },
+  {
+    path: "/test",
+    name: "Test",
+    component: () => import("@/views/Test.vue"),
   },
   {
     path: "/adviser",
@@ -110,16 +61,6 @@ const routes = [
         component: () => import("@/views/adviser/AdviserInvitation.vue"),
       },
     ],
-  },
-  {
-    path: "/about",
-    name: "About",
-    component: () => import("@/views/About.vue"),
-  },
-  {
-    path: "/test",
-    name: "Test",
-    component: () => import("@/views/Test.vue"),
   },
 ];
 
