@@ -67,7 +67,7 @@ export default {
           variables: { input },
         });
         const invitation = result.data.updateInvitation.invitation;
-        if (invitation.status === "ACCEPTED") this.$router.push("/student");
+        if (invitation.status === "ACCEPTED") this.$router.push("/adviser");
         else if (invitation.status === "DECLINED") {
           // handle decline
         }
