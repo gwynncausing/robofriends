@@ -24,7 +24,7 @@
         </v-card>
       </div>
       <div class="buttons">
-        <div class="primary-buttons button-groups" ref="regular-button">
+        <div ref="regular-button" class="primary-buttons button-groups">
           <div>
             <Button small> Small Button </Button>
             <Button small>
@@ -162,7 +162,7 @@
           </div>
         </div>
 
-        <div class="primary-text-buttons button-groups" ref="text-button">
+        <div ref="text-button" class="primary-text-buttons button-groups">
           <div>
             <Button small text> Small Button </Button>
             <Button small text>
@@ -301,8 +301,8 @@
         </div>
 
         <div
-          class="primary-outlined-buttons button-groups"
           ref="outlined-button"
+          class="primary-outlined-buttons button-groups"
         >
           <div>
             <Button small outlined> Small Button </Button>
@@ -445,7 +445,7 @@
           </div>
         </div>
 
-        <div class="primary-buttons button-groups" ref="loading-button">
+        <div ref="loading-button" class="primary-buttons button-groups">
           <div>
             <Button small loading> Small Button </Button>
             <Button small loading>
