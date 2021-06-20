@@ -1,0 +1,23 @@
+query invitations ($invitedEmail: String!, $status: String!) {
+  invitations (invitedEmail: $invitedEmail, status: $status) {
+    edges {
+      node {
+        id
+        pk
+        user{
+          id
+          firstName
+          lastName
+        }
+        project {
+          id
+          pk
+          teamName
+          description
+        }
+        status
+        createdAt
+      }
+    }
+  }
+}

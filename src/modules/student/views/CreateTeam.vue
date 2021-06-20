@@ -337,8 +337,8 @@
 </template>
 
 <script>
-import GET_ADVISERS from "@/graphql/queries/get-advisers.gql";
-import CREATE_PROJECT from "@/graphql/mutations/create-project.gql";
+import GET_ADVISERS from "@/modules/student/graphql/queries/get-advisers.gql";
+import CREATE_PROJECT from "@/modules/student/graphql/mutations/create-project.gql";
 
 import { mapGetters } from "vuex";
 

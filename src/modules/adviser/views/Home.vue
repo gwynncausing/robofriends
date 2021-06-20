@@ -153,8 +153,8 @@ import {
   PROJECT_FINISHED,
 } from "@/utils/utils.js";
 import { mapGetters } from "vuex";
-import GET_ADVISED_PROJECTS from "@/graphql/queries/get-advised-projects.gql";
-import UPDATE_ADVISED_PROJECT from "@/graphql/mutations/update-advised-project.gql";
+import GET_ADVISED_PROJECTS from "@/modules/adviser/graphql/queries/get-advised-projects.gql";
+import UPDATE_ADVISED_PROJECT from "@/modules/adviser/graphql/mutations/update-advised-project.gql";
 
 export default {
   name: "Home",

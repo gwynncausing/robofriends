@@ -18,8 +18,8 @@
 
 <script>
 import { mapGetters } from "vuex";
-import USER_INVITATIONS from "@/graphql/queries/user-invitations.gql";
-import UPDATE_INVITATION from "@/graphql/mutations/update-invitation.gql";
+import USER_INVITATIONS from "@/modules/adviser/graphql/queries/user-invitations.gql";
+import UPDATE_INVITATION from "@/modules/adviser/graphql/mutations/update-invitation.gql";
 import InvitationMessage from "@/components/InvitationMessage.vue";
 import InvitationRow from "@/components/InvitationRow.vue";
 export default {

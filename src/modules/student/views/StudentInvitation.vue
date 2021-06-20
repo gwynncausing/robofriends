@@ -20,8 +20,8 @@
 import { mapGetters } from "vuex";
 import InvitationMessage from "@/components/InvitationMessage.vue";
 import InvitationRow from "@/components/InvitationRow.vue";
-import USER_INVITATIONS from "@/graphql/queries/user-invitations.gql";
-import UPDATE_INVITATION from "@/graphql/mutations/update-invitation.gql";
+import USER_INVITATIONS from "@/modules/student/graphql/queries/user-invitations.gql";
+import UPDATE_INVITATION from "@/modules/student/graphql/mutations/update-invitation.gql";
 export default {
   name: "StudentInvitation",
   components: {

@@ -1,0 +1,11 @@
+query advisers{
+  users(userType:"adviser"){
+    edges{
+      node{
+        id
+        fullName
+        email
+      }
+    }
+  }
+}
