@@ -9,6 +9,8 @@
         v-for="invitation in invitations"
         :key="invitation.id"
         :team-name="invitation.teamName"
+        :invitation="invitation"
+        @updateInvitation="updateInvitation"
       />
     </div>
   </div>
