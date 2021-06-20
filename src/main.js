@@ -11,12 +11,14 @@ import Chart from "chart.js";
 
 import studentModule from "@/modules/student";
 import adviserModule from "@/modules/adviser";
+import designSystemModule from "@/modules/design_system";
 
 import { registerModules } from "./register-modules";
 
 registerModules({
   student: studentModule,
   adviser: adviserModule,
+  design_system: designSystemModule,
 });
 
 Vue.use(Chartkick.use(Chart));

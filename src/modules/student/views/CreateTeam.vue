@@ -326,9 +326,9 @@
           </div>
 
           <div class="text-center">
-            <Button text @click="() => this.$router.go(0)">
+            <v-btn color="primary" text @click="() => this.$router.go(0)">
               Click here to continue
-            </Button>
+            </v-btn>
           </div>
         </v-stepper-content>
       </v-stepper-items>
@@ -337,8 +337,6 @@
 </template>
 
 <script>
-import Button from "@/components/Button.vue";
-
 import GET_ADVISERS from "@/graphql/queries/get-advisers.gql";
 import CREATE_PROJECT from "@/graphql/mutations/create-project.gql";
 
@@ -346,14 +344,13 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "CreateTeam",
-  components: { Button },
   data() {
     return {
       createTeamError: "",
       inviteTeamError: "",
       startProjectError: " ",
       inviteDialog: false,
-      currentStep: 3,
+      currentStep: 4,
       steps: 4,
       project: {
         title: "",
@@ -418,6 +415,10 @@ export default {
       query: GET_ADVISERS,
       update: (data) => data.users.edges.map((edge) => edge.node),
     },
+  },
+  created() {
+    console.log("test");
+    console.log(this.$options);
   },
 
   methods: {

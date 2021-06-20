@@ -15,4 +15,11 @@ module.exports = {
       .end();
   },
   transpileDependencies: ["vuetify"],
+  css: {
+    loaderOptions: {
+      scss: {
+        additionalData: `@import "@/styles/_variables.scss";`,
+      },
+    },
+  },
 };
