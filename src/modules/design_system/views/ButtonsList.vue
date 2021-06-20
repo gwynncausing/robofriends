@@ -490,6 +490,52 @@
             </Button>
           </div>
         </div>
+
+        <div ref="disabled-button" class="primary-buttons button-groups">
+          <div>
+            <Button small disabled> Small Button </Button>
+            <Button small disabled>
+              Small Button
+              <v-icon class="icon-right">mdi-plus-circle</v-icon>
+            </Button>
+            <Button icon small disabled>
+              <v-icon>mdi-plus-circle</v-icon>
+            </Button>
+          </div>
+
+          <div>
+            <Button disabled> Normal Button </Button>
+            <Button disabled>
+              Normal Button
+              <v-icon class="icon-right">mdi-plus-circle</v-icon>
+            </Button>
+            <Button icon disabled>
+              <v-icon>mdi-plus-circle</v-icon>
+            </Button>
+          </div>
+
+          <div>
+            <Button large disabled> Large Button </Button>
+            <Button large disabled>
+              Large Button
+              <v-icon class="icon-right">mdi-plus-circle</v-icon>
+            </Button>
+            <Button large icon disabled>
+              <v-icon>mdi-plus-circle</v-icon>
+            </Button>
+          </div>
+
+          <div>
+            <Button x-large disabled> Extra Large Button </Button>
+            <Button x-large disabled>
+              Extra Large Button
+              <v-icon class="icon-right">mdi-plus-circle</v-icon>
+            </Button>
+            <Button x-large icon disabled>
+              <v-icon>mdi-plus-circle</v-icon>
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -509,6 +555,7 @@ export default {
         { text: "Text", icon: "mdi-account", goto: "text-button" },
         { text: "Outlined", icon: "mdi-flag", goto: "outlined-button" },
         { text: "Loading", icon: "mdi-flag", goto: "loading-button" },
+        { text: "Disabled", icon: "mdi-flag", goto: "disabled-button" },
       ],
     };
   },
@@ -517,7 +564,7 @@ export default {
       var element = this.$refs[refName];
       var top = element.offsetTop;
 
-      window.scrollTo(0, top);
+      window.scrollTo({ left: 0, top: top, behavior: "smooth" });
     },
   },
 };
@@ -531,10 +578,9 @@ i.v-icon.icon-left {
   margin-left: 8px;
 }
 .container {
-  display: flex;
-  flex-direction: row-reverse;
   width: 100%;
   .navigation {
+    right: 0;
     position: fixed;
   }
 }
@@ -542,7 +588,7 @@ i.v-icon.icon-left {
   display: grid;
   grid-template-rows: auto;
   gap: 10px;
-  width: 100%;
+  width: 80%;
   .button-groups {
     display: grid;
     grid-template-rows: auto;

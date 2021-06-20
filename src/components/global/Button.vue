@@ -15,6 +15,7 @@
     :disabled="disabled"
     :depressed="true"
     v-bind="$attrs"
+    :class="!small && !large && !xLarge ? 'default' : ''"
     v-on="$listeners"
   >
     <template v-for="slotName in Object.keys($slots)" :slot="slotName">
@@ -94,6 +95,9 @@ button {
   font-family: "Montserat", Tahoma, Geneva, Verdana, sans-serif !important;
   font-weight: $font-weight-medium;
   letter-spacing: 0.5px;
+}
+.default {
+  height: 40px !important;
 }
 i.v-icon.icon-right {
   margin-left: 8px;

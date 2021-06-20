@@ -43,43 +43,34 @@
             </v-window-item>
             <v-window-item :value="2" class="pa-4">
               <v-row>
-                <InputField
+                <v-text-field
+                  v-model="user.firstName"
                   label="First Name"
                   placeholder="First Name"
                   type="text"
                   :required="true"
-                  @output="
-                    ($event) => {
-                      user.firstName = $event;
-                    }
-                  "
-                />
+                >
+                </v-text-field>
               </v-row>
               <v-row>
-                <InputField
+                <v-text-field
+                  v-model="user.middleInitial"
                   label="Middle Initial"
                   placeholder="Middle Initial"
                   type="text"
                   :required="false"
-                  @output="
-                    ($event) => {
-                      user.middleInitial = $event;
-                    }
-                  "
-                />
+                >
+                </v-text-field>
               </v-row>
               <v-row>
-                <InputField
+                <v-text-field
+                  v-model="user.lastName"
                   label="Last Name"
                   placeholder="Last Name"
                   type="text"
                   :required="true"
-                  @output="
-                    ($event) => {
-                      user.lastName = $event;
-                    }
-                  "
-                />
+                >
+                </v-text-field>
               </v-row>
             </v-window-item>
             <v-window-item :value="3" class="pa-4">
@@ -100,17 +91,14 @@
                 </v-select>
               </v-row>
               <v-row>
-                <InputField
+                <v-text-field
+                  v-model="user.idNumber"
                   label="ID Number"
                   placeholder="12-3456-789"
                   type="text"
                   :required="true"
-                  @output="
-                    ($event) => {
-                      user.idNumber = $event;
-                    }
-                  "
-                />
+                >
+                </v-text-field>
               </v-row>
               <v-row>
                 <v-select
@@ -172,43 +160,34 @@
             </v-window-item>
             <v-window-item :value="4" class="pa-4">
               <v-row>
-                <InputField
+                <v-text-field
+                  v-model="user.email"
                   label="Institutional Email"
                   placeholder="firstname.lastname@cit.edu"
                   type="text"
                   :required="true"
-                  @output="
-                    ($event) => {
-                      user.email = $event;
-                    }
-                  "
-                />
+                >
+                </v-text-field>
               </v-row>
               <v-row>
-                <InputField
+                <v-text-field
+                  v-model="user.password1"
                   label="Password"
                   placeholder="••••••••••••"
                   type="password"
                   :required="true"
-                  @output="
-                    ($event) => {
-                      user.password1 = $event;
-                    }
-                  "
-                />
+                >
+                </v-text-field>
               </v-row>
               <v-row>
-                <InputField
+                <v-text-field
+                  v-model="user.password2"
                   label="Confirm Password"
                   placeholder="••••••••••••"
                   type="password"
                   :required="true"
-                  @output="
-                    ($event) => {
-                      user.password2 = $event;
-                    }
-                  "
-                />
+                >
+                </v-text-field>
               </v-row>
             </v-window-item>
           </v-window>
@@ -295,7 +274,6 @@
 
 import colleges from "@/assets/colleges.json";
 import ImageLogo from "@/components/ImageLogo.vue";
-import InputField from "@/components/InputField.vue";
 import { mapActions } from "vuex";
 
 import GET_SCHOOLS from "@/graphql/queries/get-schools-for-registration.gql";
@@ -304,7 +282,6 @@ export default {
   name: "Signin",
   components: {
     ImageLogo,
-    InputField,
   },
   data: function () {
     return {

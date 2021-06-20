@@ -11,6 +11,13 @@ const designSystemRoutes = [
         component: () =>
           import("@/modules/design_system/views/ButtonsList.vue"),
       },
+      {
+        path: "textfields",
+        name: "TextFields",
+        meta: { name: "TextFields List" },
+        component: () =>
+          import("@/modules/design_system/views/TextFieldsList.vue"),
+      },
     ],
   },
 ];
