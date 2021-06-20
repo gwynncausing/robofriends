@@ -33,7 +33,7 @@
               </v-row>
             </v-list>
           </v-list-group>
-          <v-item-group mandatory>
+          <v-item-group v-if="hasHandledProject" mandatory>
             <v-item
               v-for="(project, index) in projects"
               v-slot="{ active, toggle }"
@@ -59,19 +59,19 @@
       <v-col cols="8">
         <div class="home-wrapper">
           <ProjectDetails
-            v-if="!isLoading"
+            v-if="!isLoading && hasHandledProject"
             :project-prop="projects[selectedProject]"
             readonly
           />
         </div>
-        <div class="home-wrapper">
+        <div v-if="!isLoading && hasHandledProject" class="home-wrapper">
           <div class="home-heading">
             <div class="title">Feedbacks</div>
           </div>
           <v-row>
             <v-col cols="4">
               <simplebar style="max-height: 200px">
-                <v-list-item-group v-if="!isLoading" v-model="selectedFeedback">
+                <v-list-item-group v-model="selectedFeedback">
                   <v-list-item @click="setSelectedFeedbackText({})">
                     Current
                   </v-list-item>
@@ -190,6 +190,7 @@ export default {
       chosenProject: null,
       previousProjectsLength: 0,
       newAdvisedProjectsLength: 0,
+      hasHandledProject: false,
       projectStatus: {
         PROJECT_ONGOING: PROJECT_ONGOING,
         PROJECT_FOR_REVISION: PROJECT_FOR_REVISION,
@@ -239,39 +240,39 @@ export default {
   },
   methods: {
     initialize() {
-      console.log("Start Initialized");
-      this.projects = [];
-      console.log(this.advisedProjectsFromServer);
-      const advisedProjects = this.advisedProjectsFromServer.edges.sort(
-        (a, b) => new Date(b.node.updatedAt) - new Date(a.node.updatedAt)
-      );
-      advisedProjects.forEach((edge) => {
-        console.log(edge);
-        let tempProject = {
-          id: edge.node.id,
-          title: edge.node.title,
-          description: edge.node.description,
-          teamName: edge.node.teamName,
-          status: parseProjectStatus(edge.node.status),
-          updatedAt: DateTimeParser.parse(
-            edge.node.updatedAt,
-            "MM/DD/YYYY hh:mm a"
-          ),
-          objectives: this.addObjectivesToProject(edge.node.objectives),
-          categories: this.addCategoriesToProject(edge.node.categories),
-          feedbacks: this.addFeedbackToProject(edge.node.feedbacks),
-        };
-        this.projects.push(tempProject);
-      });
-      if (this.previousProjectsLength != this.newAdvisedProjectsLength) {
-        const index = Math.abs(
-          this.newAdvisedProjectsLength - this.previousProjectsLength
+      if (this.advisedProjectsFromServer.edges.length > 0) {
+        this.projects = [];
+        this.hasHandledProject = true;
+        const advisedProjects = this.advisedProjectsFromServer.edges.sort(
+          (a, b) => new Date(b.node.updatedAt) - new Date(a.node.updatedAt)
         );
-        if (this.newAdvisedProjectsLength > this.previousProjectsLength)
-          this.selectedProject += index;
-        else this.selectedProject -= this.selectedProject == 0 ? 0 : index;
-      } else this.selectedProject = 0;
-      // console.log({ projects: this.projects });
+        advisedProjects.forEach((edge) => {
+          console.log(edge);
+          let tempProject = {
+            id: edge.node.id,
+            title: edge.node.title,
+            description: edge.node.description,
+            teamName: edge.node.teamName,
+            status: parseProjectStatus(edge.node.status),
+            updatedAt: DateTimeParser.parse(
+              edge.node.updatedAt,
+              "MM/DD/YYYY hh:mm a"
+            ),
+            objectives: this.addObjectivesToProject(edge.node.objectives),
+            categories: this.addCategoriesToProject(edge.node.categories),
+            feedbacks: this.addFeedbackToProject(edge.node.feedbacks),
+          };
+          this.projects.push(tempProject);
+        });
+        if (this.previousProjectsLength != this.newAdvisedProjectsLength) {
+          const index = Math.abs(
+            this.newAdvisedProjectsLength - this.previousProjectsLength
+          );
+          if (this.newAdvisedProjectsLength > this.previousProjectsLength)
+            this.selectedProject += index;
+          else this.selectedProject -= this.selectedProject == 0 ? 0 : index;
+        } else this.selectedProject = 0;
+      } else this.hasHandledProject = false;
     },
     addCategoriesToProject(categories) {
       let categoryList = [];
@@ -279,7 +280,6 @@ export default {
         console.log(edge.node.name);
         categoryList.push(edge.node.name);
       });
-      // console.log({categoryList: categoryList})
       return categoryList;
     },
     addObjectivesToProject(objectives) {
@@ -298,7 +298,6 @@ export default {
       feedback.edges.forEach((edge) => {
         console.log(edge.node.createdAt);
         feedbackList.push({
-          // call date-time parser here
           id: edge.node.id,
           text: edge.node.message,
           date: DateTimeParser.parse(edge.node.createdAt, "MM/DD/YYYY"),
