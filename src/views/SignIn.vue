@@ -4,24 +4,20 @@
       <ImageLogo height="150px" width="200px" />
       <div class="signin-form">
         <v-form ref="form" lazy-validation @submit.prevent="signin">
-          <v-text-field
+          <TextField
             v-model="user.email"
-            outlined
-            dense
-            hide-details
+            name="email"
             label="Email"
-            placeholder="Email"
-            type="email"
-          ></v-text-field>
-          <v-text-field
+          ></TextField>
+          <TextField
             v-model="user.password"
-            outlined
-            dense
-            hide-details
+            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="show1 ? 'text' : 'password'"
+            name="password"
             label="Password"
-            placeholder="Password"
-            type="password"
-          ></v-text-field>
+            @click:append="show1 = !show1"
+          >
+          </TextField>
           <router-link class="forgot-password" :to="{ path: '/' }">
             Forgot Password?
           </router-link>
@@ -29,19 +25,10 @@
           <div class="errors">
             {{ error }}
           </div>
-          <v-btn
-            color="primary"
-            dark
-            depressed
-            block
-            :loading="isSubmit"
-            type="submit"
-          >
-            Sign In
-          </v-btn>
+          <Button block :loading="isSubmit" type="submit"> Sign In </Button>
         </v-form>
-        <v-btn depressed large block outlined class="signin-microsoft">
-          <v-avatar>
+        <Button color="darkgrey" block outlined class="signin-microsoft">
+          <v-avatar right>
             <v-img
               src="https://docs.microsoft.com/en-us/azure/active-directory/develop/media/howto-add-branding-in-azure-ad-apps/ms-symbollockup_mssymbol_19.svg"
               alt="Microsoft"
@@ -50,16 +37,10 @@
             />
           </v-avatar>
           Sign in with Microsoft
-        </v-btn>
-        <v-btn
-          text
-          block
-          color="primary"
-          class="no-account"
-          :to="{ path: 'signup' }"
-        >
+        </Button>
+        <Button text block class="no-account" :to="{ path: 'signup' }">
           No Account Yet? Get started here!
-        </v-btn>
+        </Button>
       </div>
     </div>
   </div>
@@ -67,17 +48,23 @@
 
 <script>
 import ImageLogo from "@/components/ImageLogo.vue";
+import TextField from "@/components/global/TextField.vue";
+import Button from "@/components/global/Button.vue";
+
 import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Signin",
   components: {
     ImageLogo,
+    TextField,
+    Button,
   },
   data: function () {
     return {
       user: {},
       error: "",
+      show1: false,
       isSubmit: false,
     };
   },

@@ -31,6 +31,13 @@ const designSystemRoutes = [
         meta: { name: "Chips List" },
         component: () => import("@/modules/design_system/views/ChipsList.vue"),
       },
+      {
+        path: "selects",
+        name: "Selects",
+        meta: { name: "Selects List" },
+        component: () =>
+          import("@/modules/design_system/views/SelectsList.vue"),
+      },
     ],
   },
 ];
