@@ -18,6 +18,19 @@ const designSystemRoutes = [
         component: () =>
           import("@/modules/design_system/views/TextFieldsList.vue"),
       },
+      {
+        path: "combobox",
+        name: "Combobox",
+        meta: { name: "Combobox List" },
+        component: () =>
+          import("@/modules/design_system/views/ComboboxList.vue"),
+      },
+      {
+        path: "chips",
+        name: "Chips",
+        meta: { name: "Chips List" },
+        component: () => import("@/modules/design_system/views/ChipsList.vue"),
+      },
     ],
   },
 ];

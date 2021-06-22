@@ -27,7 +27,7 @@
           <v-divider></v-divider>
           <v-list nav dense>
             <v-list-item-group v-model="selectedItem" color="primary">
-              <v-list-item v-for="(item, i) in items" :key="i" :to="item.go">
+              <v-list-item v-for="(item, i) in items" :key="i" :to="item.route">
                 <v-list-item-icon>
                   <v-icon v-text="item.icon"></v-icon>
                 </v-list-item-icon>
@@ -52,24 +52,20 @@ export default {
   name: "DesignSystem",
   data() {
     return {
-      selectedItem: 0,
-      items: [
-        { text: "Buttons", icon: "mdi-folder", go: { name: "Buttons" } },
-        {
-          text: "TextFields",
-          icon: "mdi-account-multiple",
-          go: { name: "TextFields" },
-        },
-        // { text: "Starred", icon: "mdi-star" },
-        // { text: "Recent", icon: "mdi-history" },
-        // { text: "Offline", icon: "mdi-check-circle" },
-        // { text: "Uploads", icon: "mdi-upload" },
-        // { text: "Backups", icon: "mdi-cloud-upload" },
-      ],
+      selectedItem: null,
+      items: [],
     };
   },
-  created() {
-    console.log("design");
+  mounted() {
+    this.$router.getRoutes().forEach((element) => {
+      if (element.path.includes("design-system") && element.name !== "") {
+        this.items.push({
+          text: element.name,
+          icon: "mdi-folder",
+          route: { path: element.path },
+        });
+      }
+    });
   },
 };
 </script>

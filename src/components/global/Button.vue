@@ -13,9 +13,10 @@
     :block="block"
     :fab="fab"
     :disabled="disabled"
+    :ripple="ripple"
     :depressed="true"
-    v-bind="$attrs"
     :class="!small && !large && !xLarge ? 'default' : ''"
+    v-bind="$attrs"
     v-on="$listeners"
   >
     <template v-for="slotName in Object.keys($slots)" :slot="slotName">
@@ -81,6 +82,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
+    },
+    ripple: {
+      type: Boolean,
+      default: true,
     },
     color: {
       type: String,

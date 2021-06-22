@@ -2,7 +2,7 @@
   <div class="textfields-list">
     <span>Textfields</span>
     <div class="container">
-      <div class="navigation">
+      <div class="navigation d-none">
         <v-card class="mx-auto" max-width="300" tile>
           <v-list dense>
             <v-subheader>REPORTS</v-subheader>
@@ -32,6 +32,12 @@
           placeholder="Placeholder"
         ></TextField>
         <TextField v-model="input" name="" label="Label"></TextField>
+        <TextField
+          v-model="input"
+          name=""
+          label="Custom Color"
+          color="secondary"
+        ></TextField>
         <TextField
           v-model="input"
           name=""
@@ -118,6 +124,18 @@
             </ul>
           </div>
         </v-tooltip>
+        <TextField
+          v-model="input"
+          name=""
+          placeholder="Prefix"
+          prefix=">"
+        ></TextField>
+        <TextField
+          v-model="input"
+          name=""
+          placeholder="Suffix"
+          suffix="<"
+        ></TextField>
       </div>
     </div>
   </div>
