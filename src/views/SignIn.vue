@@ -38,7 +38,7 @@
           </v-avatar>
           Sign in with Microsoft
         </Button>
-        <Button text block class="no-account" :to="{ path: 'signup' }">
+        <Button text block class="footer" :to="{ path: 'signup' }">
           No Account Yet? Get started here!
         </Button>
       </div>
@@ -144,7 +144,7 @@ export default {
   height: 40px !important;
   margin-bottom: 40px;
 
-  &.no-account,
+  &.footer,
   &.signin-microsoft {
     letter-spacing: 0.5px;
   }
