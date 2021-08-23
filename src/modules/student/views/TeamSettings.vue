@@ -82,9 +82,7 @@
 </template>
 
 <script>
-import GET_ADVISERS from "@/graphql/queries/get-advisers.gql";
-
-import { mapGetters } from "vuex";
+// import { mapGetters } from "vuex";
 
 export default {
   name: "TeamSettings",
@@ -104,16 +102,9 @@ export default {
   },
 
   computed: {
-    ...mapGetters({
-      getUser: "user/getUser",
-    }),
-  },
-
-  apollo: {
-    advisers: {
-      query: GET_ADVISERS,
-      update: (data) => data.users.edges.map((edge) => edge.node),
-    },
+    // ...mapGetters({
+    //   getUser: "user/getUser",
+    // }),
   },
 
   methods: {

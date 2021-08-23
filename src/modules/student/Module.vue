@@ -2,37 +2,19 @@
   <div class="student">
     <AppBar />
     <v-container>
-      <Breadcrumbs
-        v-if="this.$route.name != 'Create Team'"
-        class="mt-1"
-        :items="route"
-      />
-      <router-view class="mt-5" :toggle="toggle" />
+      <router-view class="mt-5" />
     </v-container>
   </div>
 </template>
 
 <script>
 import AppBar from "@/components/AppBar.vue";
-import Breadcrumbs from "@/components/Breadcrumbs.vue";
-import BreadcrumbsMixin from "@/mixins/BreadcrumbsMixin";
-
-// query for project theme
 
 export default {
   name: "Student",
-  components: { AppBar, Breadcrumbs },
-  mixins: [BreadcrumbsMixin],
+  components: { AppBar },
   data: function () {
-    return {
-      toggle: 0,
-    };
-  },
-  created() {
-    // set here the project theme
-    // this.$vuetify.theme.themes.light.primary =
-    // this.$vuetify.theme.themes.light.secondary =
-    // this.$vuetify.theme.themes.light.tertiary =
+    return {};
   },
 };
 </script>

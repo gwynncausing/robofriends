@@ -1,7 +1,7 @@
 <template>
   <div class="signin">
     <div class="grid-item-content">
-      <ImageLogo height="150px" width="200px" />
+      <span>logo</span>
       <div class="signin-form">
         <v-form ref="form" lazy-validation @submit.prevent="signin">
           <TextField
@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import ImageLogo from "@/components/ImageLogo.vue";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
@@ -56,7 +55,6 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Signin",
   components: {
-    ImageLogo,
     TextField,
     Button,
   },

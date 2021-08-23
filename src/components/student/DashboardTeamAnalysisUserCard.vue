@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card class="user-card">
-      <simplebar style="max-height: 280px">
+      <div>
         <div class="user-card-avatar">
           <v-avatar>
             <img
@@ -26,18 +26,14 @@
             </v-item-group>
           </v-list>
         </v-card-text>
-      </simplebar>
+      </div>
     </v-card>
   </div>
 </template>
 
 <script>
-import simplebar from "simplebar-vue";
-import "simplebar/dist/simplebar.min.css";
-
 export default {
   name: "TeamAnalysisUserCard",
-  components: { simplebar },
 };
 </script>
 

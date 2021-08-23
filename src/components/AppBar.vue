@@ -64,7 +64,8 @@
                 alt="Profile"
               />
             </v-avatar>
-            {{ getUser.lastName }}
+            <!-- {{ getUser.lastName }} -->
+            Test
             <v-icon right>mdi-chevron-down</v-icon>
           </v-btn>
         </template>
@@ -83,7 +84,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+// import { mapActions, mapGetters } from "vuex";
 export default {
   name: "AppBar",
   data() {
@@ -98,21 +99,18 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      getUser: "user/getUser",
-    }),
-  },
-  created() {
-    console.log(this.getUser);
+    // ...mapGetters({
+    //   getUser: "user/getUser",
+    // }),
   },
   methods: {
     logout() {
       this.onLogout();
       this.$router.push("/");
     },
-    ...mapActions({
-      onLogout: "user/logout",
-    }),
+    // ...mapActions({
+    //   onLogout: "user/logout",
+    // }),
   },
 };
 </script>

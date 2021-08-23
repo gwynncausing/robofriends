@@ -69,7 +69,7 @@
           </div>
 
           <div class="analysis-content">
-            <simplebar style="max-width: 100%">
+            <div>
               <div class="d-flex mb-3">
                 <DashboardTeamAnalysisUserCard />
                 <DashboardTeamAnalysisUserCard />
@@ -77,7 +77,7 @@
                 <DashboardTeamAnalysisUserCard />
                 <DashboardTeamAnalysisUserCard />
               </div>
-            </simplebar>
+            </div>
           </div>
         </div>
       </v-col>
@@ -100,13 +100,11 @@
 </template>
 
 <script>
-import simplebar from "simplebar-vue";
-import "simplebar/dist/simplebar.min.css";
 import DashboardTeamAnalysisUserCard from "@/components/student/DashboardTeamAnalysisUserCard.vue";
 
 export default {
   name: "Analysis",
-  components: { simplebar, DashboardTeamAnalysisUserCard },
+  components: { DashboardTeamAnalysisUserCard },
   data: function () {
     return {
       days: ["7 days", "14 days", "30 days"],

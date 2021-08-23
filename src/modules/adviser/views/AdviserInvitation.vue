@@ -17,9 +17,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import USER_INVITATIONS from "@/modules/adviser/graphql/queries/user-invitations.gql";
-import UPDATE_INVITATION from "@/modules/adviser/graphql/mutations/update-invitation.gql";
+// import { mapGetters } from "vuex";
+// import USER_INVITATIONS from "@/modules/adviser/graphql/queries/user-invitations.gql";
+// import UPDATE_INVITATION from "@/modules/adviser/graphql/mutations/update-invitation.gql";
 import InvitationMessage from "@/components/InvitationMessage.vue";
 import InvitationRow from "@/components/InvitationRow.vue";
 export default {
@@ -35,9 +35,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      getUser: "user/getUser",
-    }),
+    // ...mapGetters({
+    //   getUser: "user/getUser",
+    // }),
   },
   watch: {
     invitationsFromServer() {
@@ -60,36 +60,24 @@ export default {
       console.log({ invitations: this.invitations });
     },
     async updateInvitation({ invitationId, isAccepted, projectId }) {
-      const input = { invitationId, isAccepted, projectId };
-      try {
-        const result = await this.$apollo.mutate({
-          mutation: UPDATE_INVITATION,
-          variables: { input },
-        });
-        const invitation = result.data.updateInvitation.invitation;
-        if (invitation.status === "ACCEPTED") this.$router.push("/adviser");
-        else if (invitation.status === "DECLINED") {
-          // handle decline
-        }
-      } catch (error) {
-        console.log(error);
-      }
+      console.log(invitationId, isAccepted, projectId);
+      // const input = { invitationId, isAccepted, projectId };
+      // try {
+      //   const result = await this.$apollo.mutate({
+      //     mutation: UPDATE_INVITATION,
+      //     variables: { input },
+      //   });
+      //   const invitation = result.data.updateInvitation.invitation;
+      //   if (invitation.status === "ACCEPTED") this.$router.push("/adviser");
+      //   else if (invitation.status === "DECLINED") {
+      //     // handle decline
+      //   }
+      // } catch (error) {
+      //   console.log(error);
+      // }
     },
     removeInvitationFromList() {
       // remove invitation from list
-    },
-  },
-  apollo: {
-    invitationsFromServer: {
-      query: USER_INVITATIONS,
-      update: (data) => data.invitations,
-      variables() {
-        return {
-          invitedEmail: this.getUser.email,
-          status: "pending",
-        };
-      },
-      pollInterval: 10000,
     },
   },
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="signup">
     <div class="grid-item-content">
-      <ImageLogo height="150px" width="200px" />
+      <span>logo</span>
       <v-form ref="form" lazy-validation @submit.prevent="signup">
         <v-row>
           <h2 class="title-signup mb-8">{{ header }}</h2>
@@ -205,19 +205,15 @@
 // TODO: Handle if school id already exists in the backend
 
 import colleges from "@/assets/colleges.json";
-import ImageLogo from "@/components/ImageLogo.vue";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 import Select from "@/components/global/Select.vue";
 
 import { mapActions } from "vuex";
 
-import GET_SCHOOLS from "@/graphql/queries/get-schools-for-registration.gql";
-
 export default {
   name: "Signin",
   components: {
-    ImageLogo,
     TextField,
     Button,
     Select,
@@ -319,12 +315,6 @@ export default {
     },
     selectedUserType() {
       this.user.userType = this.selectedUserType === 0 ? "student" : "adviser";
-    },
-  },
-  apollo: {
-    schoolsFromServer: {
-      query: GET_SCHOOLS,
-      update: (data) => data.schools,
     },
   },
   methods: {

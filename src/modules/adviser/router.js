@@ -1,20 +1,19 @@
-import store from "@/store/index";
+// import store from "@/store/index";
 
-const adviserGuard = (to, from, next) => {
-  if (store.getters["user/getAuthStatus"]) {
-    if (store.getters["user/getUserType"] == "ADVISER") next();
-    else {
-      next("/");
-    }
-  }
-};
+// const adviserGuard = (to, from, next) => {
+//   if (store.getters["user/getAuthStatus"]) {
+//     if (store.getters["user/getUserType"] == "ADVISER") next();
+//     else {
+//       next("/");
+//     }
+//   }
+// };
 
 const adviserRoutes = [
   {
     path: "/adviser",
     name: "",
-    meta: { name: "Adviser" },
-    beforeEnter: adviserGuard,
+    // beforeEnter: adviserGuard,
     component: () => import("@/modules/adviser/Module.vue"),
     children: [
       {

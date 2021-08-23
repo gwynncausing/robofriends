@@ -1,18 +1,11 @@
 <template>
-  <div id="dashboard">
-    <DashboardProjectAnalysis v-if="this.$route.name == 'Dashboard'" />
-    <router-view v-else />
-  </div>
+  <div id="dashboard">dashboard</div>
 </template>
 
 <script>
-import DashboardProjectAnalysis from "@/components/student/DashboardProjectAnalysis.vue";
-
 export default {
   name: "Dashboard",
-  components: {
-    DashboardProjectAnalysis,
-  },
+  components: {},
 };
 </script>
 

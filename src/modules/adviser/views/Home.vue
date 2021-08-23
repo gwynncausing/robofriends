@@ -70,7 +70,7 @@
           </div>
           <v-row>
             <v-col cols="4">
-              <simplebar style="max-height: 200px">
+              <div>
                 <v-list-item-group v-model="selectedFeedback">
                   <v-list-item @click="setSelectedFeedbackText({})">
                     Current
@@ -85,7 +85,7 @@
                     {{ feedback.date }} {{ feedback.time }}
                   </v-list-item>
                 </v-list-item-group>
-              </simplebar>
+              </div>
             </v-col>
             <v-col cols="8">
               <v-textarea
@@ -142,9 +142,7 @@
 // TODO:DONE Duplicate keys warning (please see the console for this page)
 // TODO:DONE Create mutation UpdateAdvisedProject for project status and feedback
 
-import simplebar from "simplebar-vue";
-import "simplebar/dist/simplebar.min.css";
-import ProjectDetails from "@/components/ProjectDetails.vue";
+// import ProjectDetails from "@/components/ProjectDetails.vue";
 import DateTimeParser from "@/utils/date-time-parser.js";
 import {
   parseProjectStatus,
@@ -152,13 +150,13 @@ import {
   PROJECT_FOR_REVISION,
   PROJECT_FINISHED,
 } from "@/utils/utils.js";
-import { mapGetters } from "vuex";
-import GET_ADVISED_PROJECTS from "@/modules/adviser/graphql/queries/get-advised-projects.gql";
-import UPDATE_ADVISED_PROJECT from "@/modules/adviser/graphql/mutations/update-advised-project.gql";
+// import { mapGetters } from "vuex";
+// import GET_ADVISED_PROJECTS from "@/modules/adviser/graphql/queries/get-advised-projects.gql";
+// import UPDATE_ADVISED_PROJECT from "@/modules/adviser/graphql/mutations/update-advised-project.gql";
 
 export default {
   name: "Home",
-  components: { simplebar, ProjectDetails },
+  // components: { ProjectDetails },
   data() {
     return {
       status: [
@@ -224,9 +222,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      getUser: "user/getUser",
-    }),
+    // ...mapGetters({
+    //   getUser: "user/getUser",
+    // }),
   },
   watch: {
     advisedProjectsFromServer(newAdvisedProjects, previousAdvisedProjects) {
@@ -312,19 +310,20 @@ export default {
       return this.status[i].color;
     },
     async addFeedback(status) {
-      const input = {
-        projectId: this.projects[this.selectedProject].id,
-        status: status,
-      };
-      if (this.selectedFeedback === 0 && this.selectedFeedbackText !== null)
-        if (this.selectedFeedbackText.trim() !== "")
-          input["feedback"] = this.selectedFeedbackText;
-      await this.$apollo.mutate({
-        mutation: UPDATE_ADVISED_PROJECT,
-        variables: { input },
-      });
-      this.selectedFeedback = 0;
-      this.setSelectedFeedbackText(null);
+      console.log(status);
+      // const input = {
+      //   projectId: this.projects[this.selectedProject].id,
+      //   status: status,
+      // };
+      // if (this.selectedFeedback === 0 && this.selectedFeedbackText !== null)
+      //   if (this.selectedFeedbackText.trim() !== "")
+      //     input["feedback"] = this.selectedFeedbackText;
+      // await this.$apollo.mutate({
+      //   mutation: UPDATE_ADVISED_PROJECT,
+      //   variables: { input },
+      // });
+      // this.selectedFeedback = 0;
+      // this.setSelectedFeedbackText(null);
     },
     setSelectedFeedbackText(feedback) {
       if (feedback === null) this.selectedFeedbackText = "";
@@ -335,18 +334,6 @@ export default {
       this.selectedProject = index;
       this.selectedFeedback = 0;
       this.setSelectedFeedbackText(null);
-    },
-  },
-  apollo: {
-    advisedProjectsFromServer: {
-      query: GET_ADVISED_PROJECTS,
-      update: (data) => data.projects,
-      variables() {
-        return {
-          advisers: [`${this.getUser.id}`],
-        };
-      },
-      pollInterval: 10000,
     },
   },
 };

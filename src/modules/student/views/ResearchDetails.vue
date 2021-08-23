@@ -1,5 +1,5 @@
 <template>
-  <div>Recommended Guides</div>
+  <div>Research Details</div>
 </template>
 
 <script>

@@ -162,7 +162,7 @@
                   dense
                   hide-details
                   type="email"
-                  :value="getUser.email"
+                  value="getUser.email"
                   placeholder="Member 1"
                   readonly
                 ></v-text-field>
@@ -337,10 +337,7 @@
 </template>
 
 <script>
-import GET_ADVISERS from "@/modules/student/graphql/queries/get-advisers.gql";
-import CREATE_PROJECT from "@/modules/student/graphql/mutations/create-project.gql";
-
-import { mapGetters } from "vuex";
+// import { mapGetters } from "vuex";
 
 export default {
   name: "CreateTeam",
@@ -350,17 +347,12 @@ export default {
       inviteTeamError: "",
       startProjectError: " ",
       inviteDialog: false,
-      currentStep: 4,
+      currentStep: 1,
       steps: 4,
       project: {
         title: "",
         description: "",
         teamName: "",
-        theme: {
-          primaryColor: "#34C387FF",
-          secondaryColor: "#F16F82FF",
-          tertiaryColor: "#1F724FFF",
-        },
         // TODO: to be removed, will now use invited emails
         advisers: [],
         invitedEmails: [],
@@ -382,9 +374,9 @@ export default {
   },
 
   computed: {
-    ...mapGetters({
-      getUser: "user/getUser",
-    }),
+    // ...mapGetters({
+    //   getUser: "user/getUser",
+    // }),
   },
 
   watch: {
@@ -392,15 +384,6 @@ export default {
       if (this.currentStep > val) {
         this.currentStep = val;
       }
-    },
-    "project.theme.primaryColor": function (newVal) {
-      document.getElementById("preview-content").style.backgroundColor = newVal;
-    },
-    "project.theme.secondaryColor": function (newVal) {
-      document.getElementById("preview-navbar").style.backgroundColor = newVal;
-    },
-    "project.theme.tertiaryColor": function (newVal) {
-      document.getElementById("preview-sidebar").style.backgroundColor = newVal;
     },
     "project.teamName": function () {
       if (this.project.teamName) this.createTeamError = "";
@@ -410,21 +393,7 @@ export default {
     },
   },
 
-  apollo: {
-    advisers: {
-      query: GET_ADVISERS,
-      update: (data) => data.users.edges.map((edge) => edge.node),
-    },
-  },
-  created() {
-    console.log("test");
-    console.log(this.$options);
-  },
-
   methods: {
-    test() {
-      console.log("called");
-    },
     createTeamEvaluate() {
       if (this.project.teamName) {
         this.createTeamError = "";
@@ -456,18 +425,6 @@ export default {
       this.isSubmit = true;
 
       //TODO: call create project mutation
-      this.$apollo
-        .mutate({
-          mutation: CREATE_PROJECT,
-          variables: { input: this.project },
-        })
-        .then((result) => {
-          this.currentStep = 4;
-          console.log("result: ", result);
-        })
-        .catch(() => {
-          this.isSubmit = false;
-        });
     },
   },
 };

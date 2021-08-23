@@ -1,19 +1,4 @@
-/* Resources:
- *   [1] Loader for gql: https://cli.vuejs.org/guide/webpack.html#modifying-options-of-a-loader
- *
- */
-
 module.exports = {
-  chainWebpack: (config) => {
-    // [1]
-    // GraphQL Loader
-    config.module
-      .rule("graphql")
-      .test(/\.gql$/)
-      .use("graphql-tag/loader")
-      .loader("graphql-tag/loader")
-      .end();
-  },
   transpileDependencies: ["vuetify"],
   css: {
     loaderOptions: {
@@ -21,5 +6,11 @@ module.exports = {
         additionalData: `@import "@/styles/_variables.scss";`,
       },
     },
+  },
+  chainWebpack: (config) => {
+    config.plugin("html").tap((args) => {
+      args[0].title = "Bud";
+      return args;
+    });
   },
 };

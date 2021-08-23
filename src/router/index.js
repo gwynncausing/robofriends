@@ -1,40 +1,33 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import store from "@/store/index";
+// import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
-const authGuard = (to, from, next) => {
-  if (store.getters["user/getAuthStatus"]) {
-    if (store.getters["user/getUserType"] == "STUDENT") next("/student");
-    else next("/adviser");
-  } else next();
-};
-
 const routes = [
+  // {
+  //   path: "/",
+  //   name: "Home",
+  //   component: Home,
+  // },
+  {
+    path: "/about",
+    name: "About",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+  },
   {
     path: "/",
     name: "SignIn",
-    meta: { name: "Sign In" },
-    beforeEnter: authGuard,
     component: () => import("@/views/SignIn.vue"),
   },
   {
     path: "/signup",
     name: "SignUp",
-    meta: { name: "Sign Up" },
-    beforeEnter: authGuard,
     component: () => import("@/views/SignUp.vue"),
-  },
-  {
-    path: "/about",
-    name: "About",
-    component: () => import("@/views/About.vue"),
-  },
-  {
-    path: "/test",
-    name: "Test",
-    component: () => import("@/views/Test.vue"),
   },
 ];
 
@@ -43,17 +36,5 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
-
-router.beforeEach((to, from, next) => {
-  if (!to.matched.length) {
-    next("/");
-  } else {
-    next();
-  }
-});
-
-// router.beforeEach(() => {
-//   document.title = `${process.env.VUE_APP_TITLE}`;
-// });
 
 export default router;
