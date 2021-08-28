@@ -83,18 +83,13 @@
                 v-model="user.college"
                 label="College"
                 placeholder="College"
+                :items="collegeList"
+                item-text="text"
+                item-value="abbr"
                 outlined
                 dense
-                :items="collegeList"
                 :rules="rules.college"
               />
-              <!-- @change="
-                  ($event) => {
-                    user.college = $event;
-                    let x = collegeList.findIndex((c) => c.text === $event);
-                    programList = collegeList[x].programs;
-                  }
-                " -->
               <Select
                 v-show="user.userType === 'student'"
                 v-model="user.program"
@@ -103,6 +98,7 @@
                 outlined
                 dense
                 :items="programList"
+                item-text="text"
                 :rules="
                   user.userType === 'student'
                     ? [(v) => !!v || 'Program is required']
@@ -217,7 +213,7 @@
 <script>
 // TODO: Handle if school id already exists in the backend
 
-// import colleges from "@/assets/colleges.json";
+import COLLEGES from "@/assets/colleges.json";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 import Select from "@/components/global/Select.vue";
@@ -237,9 +233,8 @@ export default {
       user: {},
       selectedSchoolPk: null,
       schoolNames: ["CIT", "UC", "USPF"],
-      collegeList: ["CEA", "CSS", "CMBA", "CJJ", "CNAHS"],
       year: ["First", "Second", "Third", "Fourth", "Fifth"],
-      programList: ["IT", "CS", "CPE", "CE", "ME"],
+      // programList: ["IT", "CS", "CPE", "CE", "ME"],
       errors: [],
       userType: [
         {
@@ -289,6 +284,17 @@ export default {
     };
   },
   computed: {
+    collegeList() {
+      return COLLEGES;
+    },
+    programList() {
+      return COLLEGES.reduce((total, current) => {
+        if (current.abbr === this.user.college) {
+          total = [...current.programs];
+        }
+        return total;
+      }, []);
+    },
     header() {
       switch (this.step) {
         case 1:
