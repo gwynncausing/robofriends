@@ -1,7 +1,7 @@
 <template>
   <div class="signup">
     <div class="grid-item-content">
-      <v-img src="@/assets/logo.svg" alt="Bud Logo" class="bud-logo" contain>
+      <v-img src="@/assets/logo.svg" alt="Bud Logo" height="130" contain>
         <template v-slot:placeholder>
           <v-skeleton-loader class="mx-auto" type="image"></v-skeleton-loader>
         </template>
@@ -65,15 +65,11 @@
           <v-window-item :value="3">
             <v-form ref="form-step-3" lazy-validation>
               <Select
+                v-model="user.school"
                 label="School"
                 :items="schoolNames"
                 :rules="rules.school"
                 name="school"
-                @change="
-                  ($event) => {
-                    getSelectedSchoolId($event);
-                  }
-                "
               >
               </Select>
               <TextField
@@ -101,6 +97,7 @@
                 " -->
               <Select
                 v-show="user.userType === 'student'"
+                v-model="user.program"
                 label="Program"
                 placeholder="Program"
                 outlined
@@ -111,14 +108,10 @@
                     ? [(v) => !!v || 'Program is required']
                     : []
                 "
-                @change="
-                  ($event) => {
-                    user.program = $event;
-                  }
-                "
               />
               <Select
                 v-show="user.userType === 'student'"
+                v-model="user.year"
                 label="Year"
                 placeholder="Year"
                 outlined
@@ -129,46 +122,45 @@
                     ? [(v) => !!v || 'Year is required']
                     : []
                 "
-                @change="
-                  ($event) => {
-                    user.year = $event;
-                  }
-                "
               />
             </v-form>
           </v-window-item>
           <v-window-item :value="4">
-            <TextField
-              v-model="user.email"
-              label="Institutional Email"
-              required
-            >
-            </TextField>
-            <TextField
-              v-model="user.password1"
-              :append-icon="showPassword1 ? 'mdi-eye' : 'mdi-eye-off'"
-              :type="showPassword1 ? 'text' : 'password'"
-              name=""
-              placeholder="Password"
-              @click:append="showPassword1 = !showPassword1"
-            >
-            </TextField>
-            <div>
-              <ul class="password-rules">
-                <li>Must contain the following:</li>
-                <li
-                  v-for="item in passwordRules"
-                  :key="item.rule"
-                  class="password-rule"
-                >
-                  <v-icon v-if="item.status === '200'" color="primary"
-                    >mdi-check</v-icon
+            <v-form ref="form-step-4" lazy-validation>
+              <TextField
+                v-model="user.email"
+                :rules="rules.email"
+                label="Institutional Email"
+                required
+              >
+              </TextField>
+              <TextField
+                v-model="user.password"
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPassword ? 'text' : 'password'"
+                name=""
+                placeholder="Password"
+                :rules="rules.password"
+                @click:append="showPassword = !showPassword"
+              >
+              </TextField>
+              <div>
+                <ul class="password-rules">
+                  <li>Must contain the following:</li>
+                  <li
+                    v-for="item in passwordRules"
+                    :key="item.rule"
+                    class="password-rule"
                   >
-                  <v-icon v-else color="neutral-200">mdi-close</v-icon>
-                  {{ item.rule }}
-                </li>
-              </ul>
-            </div>
+                    <v-icon v-if="item.status === '200'" color="primary"
+                      >mdi-check</v-icon
+                    >
+                    <v-icon v-else color="neutral-200">mdi-close</v-icon>
+                    {{ item.rule }}
+                  </li>
+                </ul>
+              </div>
+            </v-form>
           </v-window-item>
         </v-window>
         <!-- Start: Error Display -->
@@ -241,11 +233,10 @@ export default {
   },
   data: function () {
     return {
-      step: 4,
+      step: 1,
       user: {},
       selectedSchoolPk: null,
       schoolNames: ["CIT", "UC", "USPF"],
-      schoolsFromServer: null,
       collegeList: ["CEA", "CSS", "CMBA", "CJJ", "CNAHS"],
       year: ["First", "Second", "Third", "Fourth", "Fifth"],
       programList: ["IT", "CS", "CPE", "CE", "ME"],
@@ -268,6 +259,9 @@ export default {
         school: [(v) => !!v || "School is required"],
         idNumber: [(v) => !!v || "ID Number is required"],
         college: [(v) => !!v || "College is required"],
+        email: [(v) => !!v || "Email is required"],
+        password: [(v) => v || "Password is required"],
+        // (v) => ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$.test(v) || "Password must meet the requirements"
       },
       passwordRules: [
         {
@@ -291,6 +285,7 @@ export default {
           rule: "At least 1 symbol",
         },
       ],
+      showPassword: false,
     };
   },
   computed: {
@@ -306,7 +301,7 @@ export default {
           return "Sign In Credentials";
       }
     },
-    progressPassword1() {
+    progresspassword() {
       let progress = this.passwordRules.reduce((accumulator, currentValue) => {
         let add = 0;
         if (currentValue.status === "200") add = 1;
@@ -314,47 +309,39 @@ export default {
       }, 0);
       return progress * 20;
     },
-    colorPassword1() {
+    colorpassword() {
       return ["error", "warning", "success"][
-        Math.floor(this.progressPassword1 / 40)
+        Math.floor(this.progresspassword / 40)
       ];
     },
   },
   watch: {
-    "user.password1": function () {
-      if (this.user.password1.length >= 8) {
+    "user.password": function () {
+      if (this.user.password.length >= 8) {
         this.passwordRules[0].status = "200";
       } else this.passwordRules[0].status = "500";
-      if (/[a-z]/.test(this.user.password1)) {
+      if (/[a-z]/.test(this.user.password)) {
         this.passwordRules[1].status = "200";
       } else this.passwordRules[1].status = "500";
-      if (/[A-Z]/.test(this.user.password1)) {
+      if (/[A-Z]/.test(this.user.password)) {
         this.passwordRules[2].status = "200";
       } else this.passwordRules[2].status = "500";
-      if (/\d/.test(this.user.password1)) {
+      if (/\d/.test(this.user.password)) {
         this.passwordRules[3].status = "200";
       } else this.passwordRules[3].status = "500";
-      if (/(?=.*[!@#$%^&*])/.test(this.user.password1)) {
+      if (/(?=.*[!@#$%^&*])/.test(this.user.password)) {
         this.passwordRules[4].status = "200";
       } else this.passwordRules[4].status = "500";
-    },
-    schoolsFromServer: function () {
-      this.initialize();
     },
     selectedUserType: {
       handler: function () {
         this.user.userType =
           this.selectedUserType === 0 ? "student" : "teacher";
-        console.log(this.user.userType);
       },
       immediate: true,
     },
   },
   methods: {
-    test() {
-      console.log("test");
-      console.log("ref: ", this.$refs["form-step-2"].validate());
-    },
     nextStep() {
       console.log("user: ", this.user);
       if (this.step === 1) {
@@ -365,52 +352,41 @@ export default {
         if (this.$refs["form-step-3"].validate()) this.step++;
       }
     },
+    toCapitalize(input = "") {
+      return input
+        .toLowerCase()
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    },
     async signup() {
       this.errors = [];
       this.isSubmit = true;
-      if (this.$refs.form.validate()) {
+      if (this.$refs["form-step-4"].validate()) {
         this.user.username = this.user.email;
-        const credentials = {
-          ...this.user,
-          isAdmin: false,
-          school: this.selectedSchoolPk,
-        };
-        console.log({ credentials: credentials });
-        const data = await this.onRegister(credentials);
-        if (data.success == false) {
-          console.log(data.errors);
-          if ("username" in data.errors)
-            data.errors.username[0].message = "Email already exists.";
-          if ("idNumber" in data.errors)
-            data.errors.schoolId[0].message = "ID Number already exists.";
-          this.errors = data.errors;
-          this.isSubmit = false;
-        } else this.$router.push("/");
+        this.user.firstName = this.toCapitalize(this.user.firstName);
+        this.user.middleName = this.toCapitalize(this.user.middleName);
+        this.user.lastName = this.toCapitalize(this.user.lastName);
+        // const credentials = {
+        //   ...this.user,
+        //   isAdmin: false,
+        //   school: this.selectedSchoolPk,
+        // };
+        // console.log({ credentials: credentials });
+        // const data = await this.onRegister(credentials);
+        // if (data.success == false) {
+        //   console.log(data.errors);
+        //   if ("username" in data.errors)
+        //     data.errors.username[0].message = "Email already exists.";
+        //   if ("idNumber" in data.errors)
+        //     data.errors.schoolId[0].message = "ID Number already exists.";
+        //   this.errors = data.errors;
+        this.isSubmit = false;
+        // } else this.$router.push("/");
       } else {
         console.log("Validation raised");
         this.isSubmit = false;
       }
-    },
-    initialize() {
-      this.schoolNames = [];
-      this.schools = [];
-      let schools = this.schoolsFromServer.edges;
-      schools.forEach((value) => {
-        var currentSchool = value.node;
-        var tempSchool = {
-          pk: currentSchool.pk,
-          name: currentSchool.name,
-        };
-        this.schools.push(tempSchool);
-        this.schoolNames.push(tempSchool.name);
-      });
-      console.log({ schools: this.schools });
-    },
-    getSelectedSchoolId(input) {
-      // let index = this.schools.findIndex((school) => school.name == input);
-      // this.selectedSchoolPk = this.schools[index].pk;
-      // console.log(this.selectedSchoolPk);
-      console.log(input);
     },
     ...mapActions({
       onRegister: "user/register",
@@ -420,9 +396,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.bud-logo {
-  height: clamp(130px, 2.5vw, 150px);
-}
 .signup {
   max-width: 414px;
   min-width: 360px;

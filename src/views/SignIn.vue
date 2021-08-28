@@ -1,7 +1,7 @@
 <template>
   <div class="signin">
     <div class="grid-item-content">
-      <v-img src="@/assets/logo.svg" alt="Bud Logo" height="150" contain>
+      <v-img src="@/assets/logo.svg" alt="Bud Logo" height="130" contain>
         <template v-slot:placeholder>
           <v-skeleton-loader class="mx-auto" type="image"></v-skeleton-loader>
         </template>
