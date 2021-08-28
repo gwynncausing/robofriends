@@ -2,7 +2,6 @@
   <VCombobox
     flat
     outlined
-    hide-details
     dense
     :label="label"
     :color="color"

@@ -1,14 +1,20 @@
 <template>
   <div class="signup">
     <div class="grid-item-content">
-      <span>logo</span>
-      <v-form ref="form" lazy-validation @submit.prevent="signup">
+      <v-img src="@/assets/logo.svg" alt="Bud Logo" class="bud-logo" contain>
+        <template v-slot:placeholder>
+          <v-skeleton-loader class="mx-auto" type="image"></v-skeleton-loader>
+        </template>
+      </v-img>
+
+      <div class="signup-form">
+        <!-- ref="form" lazy-validation @submit.prevent="signup" -->
         <v-row>
-          <h2 class="title-signup mb-8">{{ header }}</h2>
+          <h5 class="title-signup mb-8">{{ header }}</h5>
         </v-row>
         <v-window v-model="step">
           <v-window-item :value="1">
-            <v-item-group v-model="selectedUserType">
+            <v-item-group v-model="selectedUserType" mandatory>
               <div class="student-teacher-wrapper">
                 <div v-for="(type, userIndex) in userType" :key="userIndex">
                   <v-item v-slot="{ active, toggle }" class="m-0">
@@ -19,7 +25,7 @@
                     >
                       <v-img contain max-height="250px" :src="type.img"></v-img>
                       <div
-                        class="student-teacher-toggle"
+                        class="student-teacher-toggle button-font"
                         :class="active ? 'secondary' : 'primary'"
                       >
                         {{ type.name }}
@@ -31,78 +37,105 @@
             </v-item-group>
           </v-window-item>
           <v-window-item :value="2">
-            <TextField v-model="user.firstName" label="First Name" required>
-            </TextField>
-            <TextField v-model="user.middleInitial" label="Middle Initial">
-            </TextField>
-            <TextField v-model="user.lastName" label="Last Name" required>
-            </TextField>
+            <v-form ref="form-step-2" lazy-validation>
+              <TextField
+                v-model="user.firstName"
+                :rules="rules.firstName"
+                label="First Name"
+                name="first-name"
+                required
+              >
+              </TextField>
+              <TextField
+                v-model="user.middleName"
+                label="Middle Name"
+                name="middle-name"
+              >
+              </TextField>
+              <TextField
+                v-model="user.lastName"
+                :rules="rules.lastName"
+                label="Last Name"
+                name="last-name"
+                required
+              >
+              </TextField>
+            </v-form>
           </v-window-item>
           <v-window-item :value="3">
-            <Select
-              label="School"
-              :items="schoolNames"
-              :rules="[(v) => !!v || 'School is required']"
-              @change="
-                ($event) => {
-                  getSelectedSchoolId($event);
-                }
-              "
-            >
-            </Select>
-            <TextField v-model="user.idNumber" label="ID Number" required>
-            </TextField>
-            <Select
-              label="College"
-              placeholder="College"
-              outlined
-              dense
-              :items="collegeList"
-              :rules="[(v) => !!v || 'College is required']"
-              @change="
-                ($event) => {
-                  user.college = $event;
-                  let x = collegeList.findIndex((c) => c.text === $event);
-                  programList = collegeList[x].programs;
-                }
-              "
-            />
-            <Select
-              v-show="user.userType === 'student'"
-              label="Program"
-              placeholder="Program"
-              outlined
-              dense
-              :items="programList"
-              :rules="
-                user.userType === 'student'
-                  ? [(v) => !!v || 'Program is required']
-                  : []
-              "
-              @change="
-                ($event) => {
-                  user.program = $event;
-                }
-              "
-            />
-            <Select
-              v-show="user.userType === 'student'"
-              label="Year"
-              placeholder="Year"
-              outlined
-              dense
-              :items="year"
-              :rules="
-                user.userType === 'student'
-                  ? [(v) => !!v || 'Year is required']
-                  : []
-              "
-              @change="
-                ($event) => {
-                  user.year = $event;
-                }
-              "
-            />
+            <v-form ref="form-step-3" lazy-validation>
+              <Select
+                label="School"
+                :items="schoolNames"
+                :rules="rules.school"
+                name="school"
+                @change="
+                  ($event) => {
+                    getSelectedSchoolId($event);
+                  }
+                "
+              >
+              </Select>
+              <TextField
+                v-model="user.idNumber"
+                :rules="rules.idNumber"
+                label="ID Number"
+                required
+              >
+              </TextField>
+              <Select
+                v-model="user.college"
+                label="College"
+                placeholder="College"
+                outlined
+                dense
+                :items="collegeList"
+                :rules="rules.college"
+              />
+              <!-- @change="
+                  ($event) => {
+                    user.college = $event;
+                    let x = collegeList.findIndex((c) => c.text === $event);
+                    programList = collegeList[x].programs;
+                  }
+                " -->
+              <Select
+                v-show="user.userType === 'student'"
+                label="Program"
+                placeholder="Program"
+                outlined
+                dense
+                :items="programList"
+                :rules="
+                  user.userType === 'student'
+                    ? [(v) => !!v || 'Program is required']
+                    : []
+                "
+                @change="
+                  ($event) => {
+                    user.program = $event;
+                  }
+                "
+              />
+              <Select
+                v-show="user.userType === 'student'"
+                label="Year"
+                placeholder="Year"
+                outlined
+                dense
+                :items="year"
+                :rules="
+                  user.userType === 'student'
+                    ? [(v) => !!v || 'Year is required']
+                    : []
+                "
+                @change="
+                  ($event) => {
+                    user.year = $event;
+                  }
+                "
+              />
+            </v-form>
           </v-window-item>
           <v-window-item :value="4">
             <TextField
@@ -111,33 +144,20 @@
               required
             >
             </TextField>
-            <template v-slot:activator="{}">
-              <TextField
-                v-model="user.password1"
-                v-click-outside="password1TooltipClose"
-                :append-icon="showPassword1 ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPassword1 ? 'text' : 'password'"
-                name=""
-                placeholder="Password"
-                loading
-                @click:append="showPassword1 = !showPassword1"
-                @focus="password1Tooltip = !password1Tooltip"
-              >
-                <template v-slot:progress>
-                  <v-progress-linear
-                    :value="progressPassword1"
-                    :color="colorPassword1"
-                    absolute
-                    height="7"
-                  ></v-progress-linear>
-                </template>
-              </TextField>
-            </template>
+            <TextField
+              v-model="user.password1"
+              :append-icon="showPassword1 ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="showPassword1 ? 'text' : 'password'"
+              name=""
+              placeholder="Password"
+              @click:append="showPassword1 = !showPassword1"
+            >
+            </TextField>
             <div>
               <ul class="password-rules">
                 <li>Must contain the following:</li>
                 <li
-                  v-for="item in password1Rules"
+                  v-for="item in passwordRules"
                   :key="item.rule"
                   class="password-rule"
                 >
@@ -174,26 +194,27 @@
           </v-col>
           <v-spacer></v-spacer>
           <v-col>
-            <Button v-show="step !== 4" depressed block @click="nextStep()">
+            <Button
+              v-show="step !== 4"
+              class="next-btn"
+              depressed
+              block
+              @click="nextStep()"
+            >
               Next
             </Button>
-            <Button v-show="step === 4" :loading="isSubmit" @click="signup">
+            <Button
+              v-show="step === 4"
+              class="sign-up-btn"
+              :loading="isSubmit"
+              @click="signup"
+            >
               Sign Up
             </Button>
           </v-col>
         </v-row>
-      </v-form>
-      <Button color="darkgrey" block outlined class="signin-microsoft">
-        <v-avatar left>
-          <v-img
-            src="https://docs.microsoft.com/en-us/azure/active-directory/develop/media/howto-add-branding-in-azure-ad-apps/ms-symbollockup_mssymbol_19.svg"
-            alt="Microsoft"
-            contain
-            height="25"
-          />
-        </v-avatar>
-        Sign in with Microsoft
-      </Button>
+      </div>
+
       <Button text block class="footer" :to="{ path: '/' }">
         I already have an account.
       </Button>
@@ -204,7 +225,7 @@
 <script>
 // TODO: Handle if school id already exists in the backend
 
-import colleges from "@/assets/colleges.json";
+// import colleges from "@/assets/colleges.json";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 import Select from "@/components/global/Select.vue";
@@ -223,11 +244,11 @@ export default {
       step: 4,
       user: {},
       selectedSchoolPk: null,
-      schoolNames: [],
+      schoolNames: ["CIT", "UC", "USPF"],
       schoolsFromServer: null,
-      collegeList: colleges,
-      programList: [],
+      collegeList: ["CEA", "CSS", "CMBA", "CJJ", "CNAHS"],
       year: ["First", "Second", "Third", "Fourth", "Fifth"],
+      programList: ["IT", "CS", "CPE", "CE", "ME"],
       errors: [],
       userType: [
         {
@@ -239,9 +260,16 @@ export default {
           img: require("@/assets/teacher.png"),
         },
       ],
-      selectedUserType: null,
+      selectedUserType: 0,
       isSubmit: false,
-      password1Rules: [
+      rules: {
+        firstName: [(v) => !!v || "Last Name is required"],
+        lastName: [(v) => !!v || "First Name is required"],
+        school: [(v) => !!v || "School is required"],
+        idNumber: [(v) => !!v || "ID Number is required"],
+        college: [(v) => !!v || "College is required"],
+      },
+      passwordRules: [
         {
           status: "500",
           rule: "At least 8 characters",
@@ -279,7 +307,7 @@ export default {
       }
     },
     progressPassword1() {
-      let progress = this.password1Rules.reduce((accumulator, currentValue) => {
+      let progress = this.passwordRules.reduce((accumulator, currentValue) => {
         let add = 0;
         if (currentValue.status === "200") add = 1;
         return accumulator + add;
@@ -295,45 +323,47 @@ export default {
   watch: {
     "user.password1": function () {
       if (this.user.password1.length >= 8) {
-        this.password1Rules[0].status = "200";
-      } else this.password1Rules[0].status = "500";
+        this.passwordRules[0].status = "200";
+      } else this.passwordRules[0].status = "500";
       if (/[a-z]/.test(this.user.password1)) {
-        this.password1Rules[1].status = "200";
-      } else this.password1Rules[1].status = "500";
+        this.passwordRules[1].status = "200";
+      } else this.passwordRules[1].status = "500";
       if (/[A-Z]/.test(this.user.password1)) {
-        this.password1Rules[2].status = "200";
-      } else this.password1Rules[2].status = "500";
+        this.passwordRules[2].status = "200";
+      } else this.passwordRules[2].status = "500";
       if (/\d/.test(this.user.password1)) {
-        this.password1Rules[3].status = "200";
-      } else this.password1Rules[3].status = "500";
+        this.passwordRules[3].status = "200";
+      } else this.passwordRules[3].status = "500";
       if (/(?=.*[!@#$%^&*])/.test(this.user.password1)) {
-        this.password1Rules[4].status = "200";
-      } else this.password1Rules[4].status = "500";
+        this.passwordRules[4].status = "200";
+      } else this.passwordRules[4].status = "500";
     },
     schoolsFromServer: function () {
       this.initialize();
     },
-    selectedUserType() {
-      this.user.userType = this.selectedUserType === 0 ? "student" : "adviser";
+    selectedUserType: {
+      handler: function () {
+        this.user.userType =
+          this.selectedUserType === 0 ? "student" : "teacher";
+        console.log(this.user.userType);
+      },
+      immediate: true,
     },
   },
   methods: {
-    nextStep() {
-      console.log(this.step);
-      if (this.step === 1) {
-        if (this.selectedUserType) this.step++;
-        else alert("Choose User");
-      } else if (this.step === 2) {
-        if (this.user.firstName && this.user.lastName) this.step++;
-        else alert("Input Must not be empty");
-      } else if (this.step === 3) {
-        if (this.selectedSchoolPk && this.user.idNumber && this.user.college)
-          this.step++;
-        else alert("Input Must not be empty");
-      }
+    test() {
+      console.log("test");
+      console.log("ref: ", this.$refs["form-step-2"].validate());
     },
-    password1TooltipClose() {
-      this.password1Tooltip = false;
+    nextStep() {
+      console.log("user: ", this.user);
+      if (this.step === 1) {
+        if (this.selectedUserType !== null) this.step++;
+      } else if (this.step === 2) {
+        if (this.$refs["form-step-2"].validate()) this.step++;
+      } else if (this.step === 3) {
+        if (this.$refs["form-step-3"].validate()) this.step++;
+      }
     },
     async signup() {
       this.errors = [];
@@ -377,9 +407,10 @@ export default {
       console.log({ schools: this.schools });
     },
     getSelectedSchoolId(input) {
-      let index = this.schools.findIndex((school) => school.name == input);
-      this.selectedSchoolPk = this.schools[index].pk;
-      console.log(this.selectedSchoolPk);
+      // let index = this.schools.findIndex((school) => school.name == input);
+      // this.selectedSchoolPk = this.schools[index].pk;
+      // console.log(this.selectedSchoolPk);
+      console.log(input);
     },
     ...mapActions({
       onRegister: "user/register",
@@ -389,6 +420,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.bud-logo {
+  height: clamp(130px, 2.5vw, 150px);
+}
 .signup {
   max-width: 414px;
   min-width: 360px;
@@ -399,6 +433,12 @@ export default {
   gap: 20px;
   height: 100%;
   width: 100%;
+}
+.signup-form {
+  margin-top: 48px;
+  .title-signup {
+    color: var(--v-tertiary);
+  }
 }
 .grid-item-content {
   grid-column: 1 / 5;
@@ -424,12 +464,6 @@ export default {
 .v-window-item {
   padding-top: 10px;
   padding-bottom: 10px;
-  // display: grid;
-  // grid-template-rows: ;
-  .v-text-field {
-    background-color: white;
-    margin-bottom: 20px !important;
-  }
 }
 .password-rules {
   list-style-type: none;
@@ -440,33 +474,8 @@ export default {
   }
 }
 
-// .title-signup {
-//   text-align: left;
-//   color: var(--v-primary);
-// }
-// .v-card {
-//   margin: 4px;
-// }
-// .btn-next {
-//   margin-top: 20px;
-//   background-color: var(--v-primary) !important;
-// }
-// .btn-back {
-//   margin-top: 20px;
-//   color: var(--v-primary) !important;
-// }
-// .btn-signinwith {
-//   margin-bottom: 20px;
-// }
-// .or {
-//   margin: 0;
-//   padding: 0;
-//   justify-content: center;
-// }
-// a {
-//   text-decoration: none;
-//   &:hover {
-//     text-decoration: underline;
-//   }
-// }
+.next-btn,
+.sign-up-btn {
+  margin-bottom: 48px;
+}
 </style>

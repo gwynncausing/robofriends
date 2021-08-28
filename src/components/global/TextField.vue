@@ -2,7 +2,6 @@
   <VTextField
     flat
     outlined
-    hide-details
     dense
     :label="label"
     :color="color"
@@ -15,6 +14,7 @@
     :append-outer-icon="appendOuterIcon"
     :prefix="prefix"
     :suffix="suffix"
+    :name="name"
     :clear-icon="clearIcon ? 'mdi-close-circle' : 'mdi-close'"
     v-bind="$attrs"
     v-on="$listeners"
@@ -33,6 +33,10 @@ export default {
   components: { VTextField },
   inheritAttrs: true,
   props: {
+    name: {
+      type: String,
+      default: "",
+    },
     clearable: {
       type: Boolean,
       default: false,
@@ -87,10 +91,7 @@ export default {
 
 <style lang="scss" scoped>
 .v-text-field {
-  // font-family: "Montserat", Tahoma, Geneva, Verdana, sans-serif !important;
-  // font-weight: $font-weight-medium;
-  // letter-spacing: 0.5px;
-  // border: 1px solid black;
+  background-color: white;
 }
 i.v-icon.icon-right {
   margin-left: 8px;

@@ -1,47 +1,43 @@
 <template>
   <div class="signin">
     <div class="grid-item-content">
-      <span>logo</span>
-      <div class="signin-form">
-        <v-form ref="form" lazy-validation @submit.prevent="signin">
-          <TextField
-            v-model="user.email"
-            name="email"
-            label="Email"
-          ></TextField>
-          <TextField
-            v-model="user.password"
-            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="show1 ? 'text' : 'password'"
-            name="password"
-            label="Password"
-            @click:append="show1 = !show1"
-          >
-          </TextField>
-          <router-link class="forgot-password" :to="{ path: '/' }">
-            Forgot Password?
-          </router-link>
+      <v-img src="@/assets/logo.svg" alt="Bud Logo" height="150" contain>
+        <template v-slot:placeholder>
+          <v-skeleton-loader class="mx-auto" type="image"></v-skeleton-loader>
+        </template>
+      </v-img>
 
-          <div class="errors">
-            {{ error }}
-          </div>
-          <Button block :loading="isSubmit" type="submit"> Sign In </Button>
-        </v-form>
-        <Button color="darkgrey" block outlined class="signin-microsoft">
-          <v-avatar right>
-            <v-img
-              src="https://docs.microsoft.com/en-us/azure/active-directory/develop/media/howto-add-branding-in-azure-ad-apps/ms-symbollockup_mssymbol_19.svg"
-              alt="Microsoft"
-              contain
-              height="25"
-            />
-          </v-avatar>
-          Sign in with Microsoft
+      <v-form
+        ref="form"
+        class="signin-form"
+        lazy-validation
+        @submit.prevent="signin"
+      >
+        <TextField v-model="user.email" name="email" label="Email"></TextField>
+        <TextField
+          v-model="user.password"
+          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="show1 ? 'text' : 'password'"
+          name="password"
+          label="Password"
+          @click:append="show1 = !show1"
+        >
+        </TextField>
+
+        <div v-if="error" class="errors">
+          {{ error }}
+        </div>
+        <Button block :loading="isSubmit" class="sign-in-submit" type="submit">
+          Sign In
         </Button>
-        <Button text block class="footer" :to="{ path: 'signup' }">
-          No Account Yet? Get started here!
-        </Button>
-      </div>
+      </v-form>
+      <Button text block class="no-account-yet" :to="{ path: 'signup' }">
+        No Account Yet? Get started here!
+      </Button>
+
+      <Button text block class="no-access" :to="{ path: '/404' }">
+        I cannot access my account
+      </Button>
     </div>
   </div>
 </template>
@@ -104,10 +100,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-* {
-  font-size: 14px;
-}
-
 .signin {
   max-width: 414px;
   min-width: 360px;
@@ -124,10 +116,6 @@ export default {
   grid-column: 1 / 5;
   height: fit-content;
 }
-.v-text-field {
-  background-color: white;
-  margin-bottom: 20px !important;
-}
 .forgot-password {
   margin-bottom: 40px;
   text-decoration: none;
@@ -138,18 +126,15 @@ export default {
   text-align: center;
   color: var(--v-error);
 }
-.v-btn {
-  height: 40px !important;
-  margin-bottom: 40px;
-
-  &.footer,
-  &.signin-microsoft {
-    letter-spacing: 0.5px;
-  }
-
-  &.signin-microsoft {
-    background-color: white;
-    margin-bottom: 70px;
-  }
+.signin-form {
+  margin-top: 48px;
+}
+.sign-in-submit,
+.no-account-yet,
+.no-access {
+  margin-bottom: 48px;
+}
+.sign-in-submit {
+  margin-top: 28px;
 }
 </style>

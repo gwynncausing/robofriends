@@ -1,0 +1,31 @@
+body {
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+}
+
+h1 {
+  font-size: 6rem;
+}
+
+h2 {
+  font-size: clamp(3rem, 6vw, 3.75rem);
+}
+
+h3 {
+  font-size: clamp(2.125rem, 4.7vw, 3rem);
+}
+
+h4 {
+  font-size: clamp(1.5rem, 3.5vw, 2.125rem);
+}
+
+h5 {
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+}
+
+h6 {
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.button-font {
+  font-size: 0.875rem;
+}
