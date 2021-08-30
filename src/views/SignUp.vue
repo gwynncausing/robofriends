@@ -8,11 +8,10 @@
       </v-img>
 
       <div class="signup-form">
-        <!-- ref="form" lazy-validation @submit.prevent="signup" -->
         <v-row>
-          <h5 class="title-signup mb-8">{{ header }}</h5>
+          <h5 class="title-signup mb-8">Create Account</h5>
         </v-row>
-        <v-window v-model="step">
+        <!-- <v-window v-model="step">
           <v-window-item :value="1">
             <v-item-group v-model="selectedUserType" mandatory>
               <div class="student-teacher-wrapper">
@@ -36,31 +35,25 @@
               </div>
             </v-item-group>
           </v-window-item>
-          <v-window-item :value="2">
-            <v-form ref="form-step-2" lazy-validation>
-              <TextField
-                v-model="user.firstName"
-                :rules="rules.firstName"
-                label="First Name"
-                name="first-name"
-                required
-              >
-              </TextField>
-              <TextField
-                v-model="user.middleName"
-                label="Middle Name"
-                name="middle-name"
-              >
-              </TextField>
-              <TextField
-                v-model="user.lastName"
-                :rules="rules.lastName"
-                label="Last Name"
-                name="last-name"
-                required
-              >
-              </TextField>
-            </v-form>
+          <v-window-item :value="2">-->
+        <v-form ref="form" lazy-validation>
+          <TextField
+            v-model="user.firstName"
+            :rules="rules.firstName"
+            label="First Name"
+            name="first-name"
+            required
+          >
+          </TextField>
+          <TextField
+            v-model="user.lastName"
+            :rules="rules.lastName"
+            label="Last Name"
+            name="last-name"
+            required
+          >
+          </TextField>
+          <!-- </v-form>
           </v-window-item>
           <v-window-item :value="3">
             <v-form ref="form-step-3" lazy-validation>
@@ -121,86 +114,48 @@
               />
             </v-form>
           </v-window-item>
-          <v-window-item :value="4">
-            <v-form ref="form-step-4" lazy-validation>
-              <TextField
-                v-model="user.email"
-                :rules="rules.email"
-                label="Institutional Email"
-                required
+          <v-window-item :value="4"> -->
+          <!-- <v-form ref="form-step-4" lazy-validation> -->
+          <TextField
+            v-model="user.email"
+            :rules="rules.email"
+            label="Institutional Email"
+            required
+          >
+          </TextField>
+          <TextField
+            v-model="user.password"
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPassword ? 'text' : 'password'"
+            name="password"
+            label="Password"
+            :rules="rules.password"
+            @click:append="showPassword = !showPassword"
+            @keydown.enter="signup()"
+          >
+          </TextField>
+          <div>
+            <ul class="password-rules">
+              <li>Must contain the following:</li>
+              <li
+                v-for="item in passwordRules"
+                :key="item.rule"
+                class="password-rule"
               >
-              </TextField>
-              <TextField
-                v-model="user.password"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPassword ? 'text' : 'password'"
-                name=""
-                placeholder="Password"
-                :rules="rules.password"
-                @click:append="showPassword = !showPassword"
-              >
-              </TextField>
-              <div>
-                <ul class="password-rules">
-                  <li>Must contain the following:</li>
-                  <li
-                    v-for="item in passwordRules"
-                    :key="item.rule"
-                    class="password-rule"
-                  >
-                    <v-icon v-if="item.status === '200'" color="primary"
-                      >mdi-check</v-icon
-                    >
-                    <v-icon v-else color="neutral-200">mdi-close</v-icon>
-                    {{ item.rule }}
-                  </li>
-                </ul>
-              </div>
-            </v-form>
-          </v-window-item>
-        </v-window>
-        <!-- Start: Error Display -->
-        <v-row>
-          <v-col v-if="errors != null" class="text-center">
-            <v-label v-for="(error, errorKey) in errors" :key="errorKey">
-              {{ error[0].message }} <br />
-            </v-label>
-          </v-col>
-        </v-row>
-        <!-- End: Error Display -->
-        <v-row class="px-1">
-          <v-col>
-            <v-btn
-              v-show="step !== 1"
-              class="btn-back"
-              block
-              text
-              @click="step--"
-            >
-              Back
-            </v-btn>
-          </v-col>
-          <v-spacer></v-spacer>
-          <v-col>
-            <Button
-              v-show="step !== 4"
-              class="next-btn"
-              depressed
-              block
-              @click="nextStep()"
-            >
-              Next
-            </Button>
-            <Button
-              v-show="step === 4"
-              class="sign-up-btn"
-              :loading="isSubmit"
-              @click="signup"
-            >
+                <v-icon v-if="item.status === '200'" color="primary"
+                  >mdi-check</v-icon
+                >
+                <v-icon v-else color="neutral-200">mdi-close</v-icon>
+                {{ item.rule }}
+              </li>
+            </ul>
+          </div>
+          <div class="d-flex py-6">
+            <Button class="ml-auto" :loading="isSubmit" @click="signup()">
               Sign Up
             </Button>
-          </v-col>
-        </v-row>
+          </div>
+        </v-form>
       </div>
 
       <Button text block class="footer" :to="{ path: '/' }">
@@ -211,8 +166,6 @@
 </template>
 
 <script>
-// TODO: Handle if school id already exists in the backend
-
 import COLLEGES from "@/assets/colleges.json";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
@@ -229,34 +182,20 @@ export default {
   },
   data: function () {
     return {
-      step: 1,
       user: {},
-      selectedSchoolPk: null,
-      schoolNames: ["CIT", "UC", "USPF"],
-      year: ["First", "Second", "Third", "Fourth", "Fifth"],
-      // programList: ["IT", "CS", "CPE", "CE", "ME"],
       errors: [],
-      userType: [
-        {
-          name: "Student",
-          img: require("@/assets/student.png"),
-        },
-        {
-          name: "Teacher",
-          img: require("@/assets/teacher.png"),
-        },
-      ],
-      selectedUserType: 0,
       isSubmit: false,
       rules: {
         firstName: [(v) => !!v || "Last Name is required"],
         lastName: [(v) => !!v || "First Name is required"],
-        school: [(v) => !!v || "School is required"],
-        idNumber: [(v) => !!v || "ID Number is required"],
-        college: [(v) => !!v || "College is required"],
         email: [(v) => !!v || "Email is required"],
-        password: [(v) => v || "Password is required"],
-        // (v) => ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$.test(v) || "Password must meet the requirements"
+        password: [
+          (v) => !!v || "Password is required",
+          (v) =>
+            /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?).{8,}/.test(
+              v
+            ) || "Password must meet the requirements",
+        ],
       },
       passwordRules: [
         {
@@ -339,25 +278,8 @@ export default {
         this.passwordRules[4].status = "200";
       } else this.passwordRules[4].status = "500";
     },
-    selectedUserType: {
-      handler: function () {
-        this.user.userType =
-          this.selectedUserType === 0 ? "student" : "teacher";
-      },
-      immediate: true,
-    },
   },
   methods: {
-    nextStep() {
-      console.log("user: ", this.user);
-      if (this.step === 1) {
-        if (this.selectedUserType !== null) this.step++;
-      } else if (this.step === 2) {
-        if (this.$refs["form-step-2"].validate()) this.step++;
-      } else if (this.step === 3) {
-        if (this.$refs["form-step-3"].validate()) this.step++;
-      }
-    },
     toCapitalize(input = "") {
       return input
         .toLowerCase()
@@ -366,29 +288,13 @@ export default {
         .join(" ");
     },
     async signup() {
+      console.log("signup", this.$refs);
       this.errors = [];
       this.isSubmit = true;
-      if (this.$refs["form-step-4"].validate()) {
-        this.user.username = this.user.email;
+      if (this.$refs.form.validate()) {
         this.user.firstName = this.toCapitalize(this.user.firstName);
-        this.user.middleName = this.toCapitalize(this.user.middleName);
         this.user.lastName = this.toCapitalize(this.user.lastName);
-        // const credentials = {
-        //   ...this.user,
-        //   isAdmin: false,
-        //   school: this.selectedSchoolPk,
-        // };
-        // console.log({ credentials: credentials });
-        // const data = await this.onRegister(credentials);
-        // if (data.success == false) {
-        //   console.log(data.errors);
-        //   if ("username" in data.errors)
-        //     data.errors.username[0].message = "Email already exists.";
-        //   if ("idNumber" in data.errors)
-        //     data.errors.schoolId[0].message = "ID Number already exists.";
-        //   this.errors = data.errors;
         this.isSubmit = false;
-        // } else this.$router.push("/");
       } else {
         console.log("Validation raised");
         this.isSubmit = false;
@@ -451,10 +357,5 @@ export default {
   .password-rule {
     text-indent: 30px;
   }
-}
-
-.next-btn,
-.sign-up-btn {
-  margin-bottom: 48px;
 }
 </style>
