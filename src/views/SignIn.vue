@@ -27,17 +27,23 @@
         <div v-if="error" class="errors">
           {{ error }}
         </div>
-        <Button block :loading="isSubmit" class="sign-in-submit" type="submit">
-          Sign In
-        </Button>
+        <div class="py-6">
+          <Button block :loading="isSubmit" type="submit"> Sign In </Button>
+        </div>
       </v-form>
-      <Button text block class="no-account-yet" :to="{ path: 'signup' }">
-        No Account Yet? Get started here!
-      </Button>
+      <div>
+        <div>
+          <Button text block :to="{ path: 'signup' }">
+            No Account Yet? Get started here!
+          </Button>
+        </div>
 
-      <Button text block class="no-access" :to="{ path: '/404' }">
-        I cannot access my account
-      </Button>
+        <div class="py-6">
+          <Button text block :to="{ path: '/404' }">
+            I cannot access my account
+          </Button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -57,6 +63,7 @@ export default {
   data: function () {
     return {
       user: {},
+      userForSubmit: {},
       error: "",
       show1: false,
       isSubmit: false,
@@ -68,29 +75,36 @@ export default {
     }),
   },
   methods: {
+    verifyEmailPassword() {
+      return !/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
+        this.user.email
+      );
+    },
     async signin() {
-      this.isSubmit = true;
-      if (this.$refs.form.validate()) {
-        const credentials = { ...this.user };
-        const data = await this.onLogin(credentials);
-        // console.log(data)
-        if (data.success) {
-          this.error = "";
-          if (this.getUserType == "STUDENT") this.$router.push("/student");
-          else this.$router.push("/adviser");
-        } else if (data.success == false) {
-          data.errors.nonFieldErrors[0].message =
-            "Please enter your valid credentials";
-          this.isSubmit = false;
-          this.error = data.errors.nonFieldErrors[0].message;
-        } else {
-          this.error = "Please check your internet connection";
-          this.isSubmit = false;
-        }
-      } else {
-        console.log("Validation raised");
-        this.isSubmit = false;
+      let isEmailOk = this.verifyEmailPassword();
+      if (isEmailOk || !this.user.password) {
+        this.error = "Invalid Email or Password";
+        return;
       }
+
+      this.error = "";
+      this.isSubmit = true;
+
+      // const credentials = { ...this.user };
+      // const data = await this.onLogin(credentials);
+      // console.log(data)
+      // if (data.success) {
+      //   this.error = "";
+      //   if (this.getUserType == "STUDENT") this.$router.push("/student");
+      //   else this.$router.push("/adviser");
+      // } else if (data.success == false) {
+      //   data.errors.nonFieldErrors[0].message =
+      //     "Please enter your valid credentials";
+      //   this.isSubmit = false;
+      //   this.error = data.errors.nonFieldErrors[0].message;
+      // } else {
+      //   this.error = "Please check your internet connection";
+      this.isSubmit = false;
     },
     ...mapActions({
       onLogin: "user/login",
@@ -128,13 +142,5 @@ export default {
 }
 .signin-form {
   margin-top: 48px;
-}
-.sign-in-submit,
-.no-account-yet,
-.no-access {
-  margin-bottom: 48px;
-}
-.sign-in-submit {
-  margin-top: 28px;
 }
 </style>

@@ -158,7 +158,7 @@
         </v-form>
       </div>
 
-      <Button text block class="footer" :to="{ path: '/' }">
+      <Button text block :to="{ path: '/' }">
         I already have an account.
       </Button>
     </div>
@@ -166,10 +166,8 @@
 </template>
 
 <script>
-import COLLEGES from "@/assets/colleges.json";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
-import Select from "@/components/global/Select.vue";
 
 import { mapActions } from "vuex";
 
@@ -178,7 +176,6 @@ export default {
   components: {
     TextField,
     Button,
-    Select,
   },
   data: function () {
     return {
@@ -186,13 +183,28 @@ export default {
       errors: [],
       isSubmit: false,
       rules: {
-        firstName: [(v) => !!v || "Last Name is required"],
-        lastName: [(v) => !!v || "First Name is required"],
-        email: [(v) => !!v || "Email is required"],
+        firstName: [
+          (v) => !!v || "Last Name is required",
+          (v) =>
+            /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/.test(v) ||
+            "Invalid First Name",
+        ],
+        lastName: [
+          (v) => !!v || "First Name is required",
+          (v) =>
+            /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/.test(v) ||
+            "Invalid Last Name",
+        ],
+        email: [
+          (v) => !!v || "Email is required",
+          (v) =>
+            /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+            "Invalid Email",
+        ],
         password: [
           (v) => !!v || "Password is required",
           (v) =>
-            /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?).{8,}/.test(
+            /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&{}[:;,.?\]\\+\-_]).{8,}/.test(
               v
             ) || "Password must meet the requirements",
         ],
@@ -222,44 +234,6 @@ export default {
       showPassword: false,
     };
   },
-  computed: {
-    collegeList() {
-      return COLLEGES;
-    },
-    programList() {
-      return COLLEGES.reduce((total, current) => {
-        if (current.abbr === this.user.college) {
-          total = [...current.programs];
-        }
-        return total;
-      }, []);
-    },
-    header() {
-      switch (this.step) {
-        case 1:
-          return "I want to sign up as a...";
-        case 2:
-          return "Sign Up";
-        case 3:
-          return "School Credentials";
-        default:
-          return "Sign In Credentials";
-      }
-    },
-    progresspassword() {
-      let progress = this.passwordRules.reduce((accumulator, currentValue) => {
-        let add = 0;
-        if (currentValue.status === "200") add = 1;
-        return accumulator + add;
-      }, 0);
-      return progress * 20;
-    },
-    colorpassword() {
-      return ["error", "warning", "success"][
-        Math.floor(this.progresspassword / 40)
-      ];
-    },
-  },
   watch: {
     "user.password": function () {
       if (this.user.password.length >= 8) {
@@ -274,7 +248,7 @@ export default {
       if (/\d/.test(this.user.password)) {
         this.passwordRules[3].status = "200";
       } else this.passwordRules[3].status = "500";
-      if (/(?=.*[!@#$%^&*])/.test(this.user.password)) {
+      if (/(?=.*[*.!@$%^&{}[:;,.?\]\\+\-_])/.test(this.user.password)) {
         this.passwordRules[4].status = "200";
       } else this.passwordRules[4].status = "500";
     },
