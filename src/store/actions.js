@@ -4,8 +4,8 @@ const TestRepository = Repository.get("test");
 export default {
   async test() {
     try {
-      const result = await TestRepository.get();
-      return result.data;
+      const response = await TestRepository.get();
+      return response.data;
     } catch (err) {
       return err;
     }
