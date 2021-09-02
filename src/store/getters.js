@@ -1,3 +1,5 @@
 export default {
-  // place getters here
+  getTest({ test }) {
+    return test;
+  },
 };

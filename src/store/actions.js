@@ -1,13 +1,11 @@
+import { FETCH_TEST } from "./types/actions";
+import { SET_TEST } from "./types/mutations";
 import Repository from "@/repositories/repository-factory";
 const TestRepository = Repository.get("test");
 
 export default {
-  async test() {
-    try {
-      const response = await TestRepository.get();
-      return response.data;
-    } catch (err) {
-      return err;
-    }
+  async [FETCH_TEST]({ commit }) {
+    const response = await TestRepository.get();
+    commit(SET_TEST, { test: response.data });
   },
 };
