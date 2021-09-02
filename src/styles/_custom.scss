@@ -26,6 +26,55 @@ h6 {
   font-size: clamp(1rem, 2.5vw, 1.25rem);
 }
 
+// .subheading1 {
+//   font-size: clamp(0.875rem, 2.5vw, 1rem);
+// }
+
+.subheading2 {
+  font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+}
+
 .button-font {
   font-size: 0.875rem;
+}
+
+.caption {
+  font-size: 0.75rem;
+}
+
+.overline {
+  font-size: 0.625rem;
+}
+
+// Colors
+
+.text-neutral-50 {
+  color: $neutral-50;
+}
+.text-neutral-100 {
+  color: $neutral-100;
+}
+.text-neutral-200 {
+  color: $neutral-200;
+}
+.text-neutral-300 {
+  color: $neutral-300;
+}
+.text-neutral-400 {
+  color: $neutral-400;
+}
+.text-neutral-500 {
+  color: $neutral-500;
+}
+.text-neutral-600 {
+  color: $neutral-600;
+}
+.text-neutral-700 {
+  color: $neutral-700;
+}
+.text-neutral-800 {
+  color: $neutral-800;
+}
+.text-neutral-900 {
+  color: $neutral-900;
 }

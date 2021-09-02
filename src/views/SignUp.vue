@@ -11,31 +11,6 @@
         <v-row>
           <h5 class="title-signup mb-8">Create Account</h5>
         </v-row>
-        <!-- <v-window v-model="step">
-          <v-window-item :value="1">
-            <v-item-group v-model="selectedUserType" mandatory>
-              <div class="student-teacher-wrapper">
-                <div v-for="(type, userIndex) in userType" :key="userIndex">
-                  <v-item v-slot="{ active, toggle }" class="m-0">
-                    <v-card
-                      flat
-                      :color="active ? 'neutral-50' : ''"
-                      @click="toggle"
-                    >
-                      <v-img contain max-height="250px" :src="type.img"></v-img>
-                      <div
-                        class="student-teacher-toggle button-font"
-                        :class="active ? 'secondary' : 'primary'"
-                      >
-                        {{ type.name }}
-                      </div>
-                    </v-card>
-                  </v-item>
-                </div>
-              </div>
-            </v-item-group>
-          </v-window-item>
-          <v-window-item :value="2">-->
         <v-form ref="form" lazy-validation>
           <TextField
             v-model="user.firstName"
@@ -53,69 +28,6 @@
             required
           >
           </TextField>
-          <!-- </v-form>
-          </v-window-item>
-          <v-window-item :value="3">
-            <v-form ref="form-step-3" lazy-validation>
-              <Select
-                v-model="user.school"
-                label="School"
-                :items="schoolNames"
-                :rules="rules.school"
-                name="school"
-              >
-              </Select>
-              <TextField
-                v-model="user.idNumber"
-                :rules="rules.idNumber"
-                label="ID Number"
-                required
-              >
-              </TextField>
-              <Select
-                v-model="user.college"
-                label="College"
-                placeholder="College"
-                :items="collegeList"
-                item-text="text"
-                item-value="abbr"
-                outlined
-                dense
-                :rules="rules.college"
-              />
-              <Select
-                v-show="user.userType === 'student'"
-                v-model="user.program"
-                label="Program"
-                placeholder="Program"
-                outlined
-                dense
-                :items="programList"
-                item-text="text"
-                :rules="
-                  user.userType === 'student'
-                    ? [(v) => !!v || 'Program is required']
-                    : []
-                "
-              />
-              <Select
-                v-show="user.userType === 'student'"
-                v-model="user.year"
-                label="Year"
-                placeholder="Year"
-                outlined
-                dense
-                :items="year"
-                :rules="
-                  user.userType === 'student'
-                    ? [(v) => !!v || 'Year is required']
-                    : []
-                "
-              />
-            </v-form>
-          </v-window-item>
-          <v-window-item :value="4"> -->
-          <!-- <v-form ref="form-step-4" lazy-validation> -->
           <TextField
             v-model="user.email"
             :rules="rules.email"
@@ -302,27 +214,6 @@ export default {
 .grid-item-content {
   grid-column: 1 / 5;
   height: fit-content;
-}
-.student-teacher-wrapper {
-  display: grid;
-  grid-template-columns: 49% 49%;
-  gap: 8px;
-  .student-teacher-toggle {
-    background-color: $primary;
-    padding: 8px 0;
-    color: white;
-    text-align: center;
-    border-radius: 4px;
-    margin-top: 8px;
-    transition-duration: 0.2s;
-    &:hover {
-      filter: brightness(1.025);
-    }
-  }
-}
-.v-window-item {
-  padding-top: 10px;
-  padding-bottom: 10px;
 }
 .password-rules {
   list-style-type: none;

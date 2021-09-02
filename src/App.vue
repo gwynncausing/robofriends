@@ -28,7 +28,9 @@ export default {
 
 * {
   font-family: "Montserrat", Tahoma, Geneva, Verdana, sans-serif;
-  // font-size: 16px;
+}
+.v-application {
+  color: $neutral-900 !important;
 }
 .v-btn {
   text-transform: none !important;
