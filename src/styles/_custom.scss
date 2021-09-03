@@ -46,6 +46,18 @@ h6 {
   font-size: 0.625rem;
 }
 
+// font weight
+
+.font-medium {
+  font-weight: $font-weight-medium;
+}
+.font-semi-bold {
+  font-weight: $font-weight-semi-bold;
+}
+.font-bold {
+  font-weight: $font-weight-bold;
+}
+
 // Colors
 
 .text-neutral-50 {

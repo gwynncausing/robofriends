@@ -15,7 +15,10 @@
     :disabled="disabled"
     :ripple="ripple"
     :depressed="true"
-    :class="!small && !large && !xLarge ? 'default' : ''"
+    :class="{
+      default: !small && !large && !xLarge,
+      'font-medium': text,
+    }"
     v-bind="$attrs"
     v-on="$listeners"
   >
@@ -96,10 +99,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-button {
+button,
+a {
   font-family: "Montserat", Tahoma, Geneva, Verdana, sans-serif !important;
-  font-weight: $font-weight-medium;
-  letter-spacing: 0.5px;
+  font-weight: $font-weight-bold;
+  letter-spacing: 0.04rem;
 }
 .default {
   height: 40px !important;

@@ -22,9 +22,9 @@
                     <div v-for="(type, userIndex) in userType" :key="userIndex">
                       <v-item v-slot="{ active }">
                         <v-card
+                          class="student-teacher"
                           flat
                           :color="active ? 'neutral-50' : ''"
-                          class="student-teacher"
                           @click="
                             chooseUserTypeClick
                               ? { click: selectUserType(type.name) }
@@ -69,12 +69,12 @@
                 <Select
                   v-model="user.college"
                   label="College"
-                  placeholder="College"
-                  :items="collegeList"
+                  name="college"
                   item-text="text"
                   item-value="abbr"
                   outlined
                   dense
+                  :items="collegeList"
                   :rules="rules.college"
                 />
 
@@ -83,40 +83,40 @@
                     v-show="user.userType === 'Student'"
                     v-model="user.program"
                     label="Program"
-                    placeholder="Program"
+                    name="program"
                     outlined
                     dense
-                    :items="programList"
+                    class="program"
                     item-text="text"
+                    :items="programList"
                     :rules="
                       user.userType === 'Student'
                         ? [(v) => !!v || 'Program is required']
                         : []
                     "
-                    class="program"
                   />
 
                   <Select
                     v-show="user.userType === 'Student'"
                     v-model="user.year"
                     label="Year"
-                    placeholder="Year"
+                    name="year"
                     outlined
                     dense
+                    class="year"
                     :items="year"
                     :rules="
                       user.userType === 'Student'
                         ? [(v) => !!v || 'Year is required']
                         : []
                     "
-                    class="year"
                   />
                 </div>
                 <TextField
                   v-model="user.idNumber"
-                  :rules="rules.idNumber"
                   label="ID Number"
-                  required
+                  name="id-number"
+                  :rules="rules.idNumber"
                 />
 
                 <div class="d-flex justify-space-between">

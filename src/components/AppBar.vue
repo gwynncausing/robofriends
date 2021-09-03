@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="appbar">
     <v-app-bar elevation="2">
       <v-btn text>
         <v-img :src="require('@/assets/logo.png')" width="30" contain dense />
@@ -116,6 +116,9 @@ export default {
 </script>
 
 <style scoped>
+.appbar {
+  margin-bottom: 24px;
+}
 .title {
   font-family: "aqumregular" !important;
   color: #8c383e;
