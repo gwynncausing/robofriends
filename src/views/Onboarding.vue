@@ -1,127 +1,132 @@
 <template>
-  <div id="onboarding">
-    <div class="onboarding-wrapper">
-      <div class="grid-item-content">
-        <v-form
-          ref="onboarding-form"
-          lazy-validation
-          @submit.prevent="finishOnboarding()"
-        >
-          <transition name="slide-fade">
-            <div v-if="step == 1">
-              <div style="text-align: left">
-                <h4>Account Type</h4>
-                <p class="subheading1 text-neutral-500">
-                  Choose how you want to use Bud.
-                </p>
-              </div>
-              <v-item-group>
-                <div class="student-teacher-wrapper">
-                  <div v-for="(type, userIndex) in userType" :key="userIndex">
-                    <v-item v-slot="{ active }">
-                      <v-card
-                        flat
-                        :color="active ? 'neutral-50' : ''"
-                        class="student-teacher"
-                        @click="
-                          chooseUserTypeClick
-                            ? { click: selectUserType(type.name) }
-                            : {}
-                        "
-                      >
-                        <v-img
-                          contain
-                          max-height="250px"
-                          :src="type.img"
-                        ></v-img>
-                        <div
-                          class="student-teacher-toggle button-font"
-                          :class="
-                            type.name === 'Teacher' ? 'secondary' : 'primary'
+  <div>
+    <AppBar />
+    <div id="onboarding">
+      <div class="onboarding-wrapper">
+        <div class="grid-item-content">
+          <v-form
+            ref="onboarding-form"
+            lazy-validation
+            @submit.prevent="finishOnboarding()"
+          >
+            <transition name="slide-fade">
+              <div v-if="step == 1">
+                <div class="step-title">
+                  <h4>Account Type</h4>
+                  <p class="subheading1 text-neutral-500">
+                    Choose how you want to use Bud.
+                  </p>
+                </div>
+                <v-item-group>
+                  <div class="student-teacher-wrapper">
+                    <div v-for="(type, userIndex) in userType" :key="userIndex">
+                      <v-item v-slot="{ active }">
+                        <v-card
+                          flat
+                          :color="active ? 'neutral-50' : ''"
+                          class="student-teacher"
+                          @click="
+                            chooseUserTypeClick
+                              ? { click: selectUserType(type.name) }
+                              : {}
                           "
                         >
-                          {{ type.name }}
-                        </div>
-                      </v-card>
-                    </v-item>
+                          <v-img
+                            contain
+                            max-height="250px"
+                            :src="type.img"
+                          ></v-img>
+                          <div
+                            class="student-teacher-toggle button-font"
+                            :class="
+                              type.name === 'Teacher' ? 'secondary' : 'primary'
+                            "
+                          >
+                            {{ type.name }}
+                          </div>
+                        </v-card>
+                      </v-item>
+                    </div>
                   </div>
+                </v-item-group>
+              </div>
+            </transition>
+            <transition name="slide-fade">
+              <div v-if="step == 2">
+                <div class="step-title">
+                  <h4>School Details</h4>
+                  <p class="subheading1 text-neutral-500">
+                    Access groups and researches from your school.
+                  </p>
                 </div>
-              </v-item-group>
-            </div>
-          </transition>
-          <transition name="slide-fade">
-            <div v-if="step == 2">
-              <div style="text-align: left">
-                <h4>School Details</h4>
-                <p class="subheading1 text-neutral-500">
-                  Access groups and researches from your school.
-                </p>
-              </div>
-              <Select
-                v-model="user.school"
-                label="School"
-                name="school"
-                :items="schoolNames"
-                :rules="rules.school"
-              />
-              <Select
-                v-model="user.college"
-                label="College"
-                placeholder="College"
-                :items="collegeList"
-                item-text="text"
-                item-value="abbr"
-                outlined
-                dense
-                :rules="rules.college"
-              />
-
-              <div class="program-year">
                 <Select
-                  v-show="user.userType === 'Student'"
-                  v-model="user.program"
-                  label="Program"
-                  placeholder="Program"
-                  outlined
-                  dense
-                  :items="programList"
+                  v-model="user.school"
+                  label="School"
+                  name="school"
+                  :items="schoolNames"
+                  :rules="rules.school"
+                />
+                <Select
+                  v-model="user.college"
+                  label="College"
+                  placeholder="College"
+                  :items="collegeList"
                   item-text="text"
-                  :rules="
-                    user.userType === 'Student'
-                      ? [(v) => !!v || 'Program is required']
-                      : []
-                  "
-                />
-
-                <Select
-                  v-show="user.userType === 'Student'"
-                  v-model="user.year"
-                  label="Year"
-                  placeholder="Year"
+                  item-value="abbr"
                   outlined
                   dense
-                  :items="year"
-                  :rules="
-                    user.userType === 'Student'
-                      ? [(v) => !!v || 'Year is required']
-                      : []
-                  "
+                  :rules="rules.college"
                 />
-              </div>
-              <TextField
-                v-model="user.idNumber"
-                :rules="rules.idNumber"
-                label="ID Number"
-                required
-              />
 
-              <div class="d-flex justify-space-between">
-                <Button text @click="prevStep()"> Back </Button>
-                <Button @click="finishOnboarding()"> Submit </Button>
+                <div class="program-year">
+                  <Select
+                    v-show="user.userType === 'Student'"
+                    v-model="user.program"
+                    label="Program"
+                    placeholder="Program"
+                    outlined
+                    dense
+                    :items="programList"
+                    item-text="text"
+                    :rules="
+                      user.userType === 'Student'
+                        ? [(v) => !!v || 'Program is required']
+                        : []
+                    "
+                    class="program"
+                  />
+
+                  <Select
+                    v-show="user.userType === 'Student'"
+                    v-model="user.year"
+                    label="Year"
+                    placeholder="Year"
+                    outlined
+                    dense
+                    :items="year"
+                    :rules="
+                      user.userType === 'Student'
+                        ? [(v) => !!v || 'Year is required']
+                        : []
+                    "
+                    class="year"
+                  />
+                </div>
+                <TextField
+                  v-model="user.idNumber"
+                  :rules="rules.idNumber"
+                  label="ID Number"
+                  required
+                />
+
+                <div class="d-flex justify-space-between">
+                  <Button text @click="prevStep()"> Back </Button>
+                  <Button @click="completeOnboarding()"> Submit </Button>
+                </div>
               </div>
-            </div>
-          </transition>
-        </v-form>
+            </transition>
+          </v-form>
+        </div>
       </div>
     </div>
   </div>
@@ -132,12 +137,14 @@ import COLLEGES from "@/assets/colleges.json";
 import Select from "@/components/global/Select.vue";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
+import AppBar from "@/components/AppBar.vue";
 export default {
   name: "OnboardingAccountType",
   components: {
     Select,
     TextField,
     Button,
+    AppBar,
   },
   data() {
     return {
@@ -189,7 +196,7 @@ export default {
   },
 
   created() {
-    //
+    console.log("Onboarding Started");
   },
 
   methods: {
@@ -212,8 +219,9 @@ export default {
         this.step -= 0.5;
       }, 800);
     },
-    finishOnboarding() {
-      console.log("finished", this.$refs["onboarding-form"].validate());
+    completeOnboarding() {
+      if (!this.$refs["onboarding-form"].validate()) return;
+      console.log("complete onboarding");
     },
   },
 };
@@ -222,20 +230,19 @@ export default {
 <style lang="scss" scoped>
 #onboarding {
   text-align: -webkit-center;
+  margin: clamp(30px, 7vw, 50px) 20px 20px 20px !important;
+  // margin: 20px;
 }
 .onboarding-wrapper {
   max-width: 421px;
-  min-width: 360px;
-  margin: 20px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  height: 100%;
-  width: 100%;
   .grid-item-content {
     grid-column: 1 / 5;
     height: fit-content;
   }
+}
+.step-title {
+  text-align: left;
+  margin-bottom: 48px;
 }
 .student-teacher-wrapper {
   display: grid;
@@ -263,8 +270,12 @@ export default {
 
 .program-year {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: calc(50% - 5px) calc(50% - 5px);
   gap: 10px;
+  .program,
+  .year {
+    max-width: 100%;
+  }
 }
 .slide-fade-enter-active {
   transition: all 0.8s ease;
