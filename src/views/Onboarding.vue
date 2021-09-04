@@ -13,7 +13,7 @@
               <div v-if="step == 1">
                 <div class="step-title">
                   <h4>Account Type</h4>
-                  <p class="subheading1 text-neutral-500">
+                  <p class="subheading1 neutral-500--text">
                     Choose how you want to use Bud.
                   </p>
                 </div>
@@ -55,7 +55,7 @@
               <div v-if="step == 2">
                 <div class="step-title">
                   <h4>School Details</h4>
-                  <p class="subheading1 text-neutral-500">
+                  <p class="subheading1 neutral-500--text">
                     Access groups and researches from your school.
                   </p>
                 </div>

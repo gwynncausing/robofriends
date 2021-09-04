@@ -33,13 +33,13 @@
       </v-form>
       <div>
         <div>
-          <Button text block :to="{ path: 'signup' }">
+          <Button text block :to="{ name: 'CreateAccount' }">
             No Account Yet? Get started here!
           </Button>
         </div>
 
         <div class="py-6">
-          <Button text block :to="{ path: '/404' }">
+          <Button text block :to="{ name: '404' }">
             I cannot access my account
           </Button>
         </div>

@@ -39,6 +39,11 @@ const routes = [
     name: "Onboarding",
     component: () => import("@/views/Onboarding.vue"),
   },
+  {
+    path: "*",
+    name: "PageNotFound",
+    component: () => import("@/views/PageNotFound.vue"),
+  },
 ];
 
 const router = new VueRouter({
