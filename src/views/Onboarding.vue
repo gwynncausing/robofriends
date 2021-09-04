@@ -145,7 +145,6 @@ export default {
         },
       ],
       schoolNames: ["CIT", "UC", "USJR"],
-      year: ["First", "Second", "Third", "Fourth", "Fifth"],
       rules: {
         idNumber: [(v) => !!v || "ID Number is required"],
         school: [(v) => !!v || "School is required"],
