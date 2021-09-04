@@ -1,6 +1,6 @@
 <template>
   <v-app :style="cssProps">
-    <v-main class="main">
+    <v-main>
       <router-view />
     </v-main>
   </v-app>
@@ -38,5 +38,8 @@ export default {
 span.v-chip--select.v-chip.v-chip--clickable.v-chip--no-color.theme--light.v-size--default {
   margin-top: 2px;
   margin-bottom: 2px;
+}
+a {
+  text-decoration: none;
 }
 </style>

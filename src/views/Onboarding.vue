@@ -12,7 +12,7 @@
             <transition name="slide-fade">
               <div v-if="step == 1">
                 <div class="step-title">
-                  <h4>Account Type</h4>
+                  <h4>Welcome to Bud!</h4>
                   <p class="subheading1 neutral-500--text">
                     Choose how you want to use Bud.
                   </p>
@@ -54,7 +54,7 @@
             <transition name="slide-fade">
               <div v-if="step == 2">
                 <div class="step-title">
-                  <h4>School Details</h4>
+                  <h4>Your School Details</h4>
                   <p class="subheading1 neutral-500--text">
                     Access groups and researches from your school.
                   </p>
@@ -77,41 +77,22 @@
                   :items="collegeList"
                   :rules="rules.college"
                 />
-
-                <div class="program-year">
-                  <Select
-                    v-show="user.userType === 'Student'"
-                    v-model="user.program"
-                    label="Program"
-                    name="program"
-                    outlined
-                    dense
-                    class="program"
-                    item-text="text"
-                    :items="programList"
-                    :rules="
-                      user.userType === 'Student'
-                        ? [(v) => !!v || 'Program is required']
-                        : []
-                    "
-                  />
-
-                  <Select
-                    v-show="user.userType === 'Student'"
-                    v-model="user.year"
-                    label="Year"
-                    name="year"
-                    outlined
-                    dense
-                    class="year"
-                    :items="year"
-                    :rules="
-                      user.userType === 'Student'
-                        ? [(v) => !!v || 'Year is required']
-                        : []
-                    "
-                  />
-                </div>
+                <Select
+                  v-show="user.userType === 'Student'"
+                  v-model="user.program"
+                  label="Program"
+                  name="program"
+                  outlined
+                  dense
+                  class="program"
+                  item-text="text"
+                  :items="programList"
+                  :rules="
+                    user.userType === 'Student'
+                      ? [(v) => !!v || 'Program is required']
+                      : []
+                  "
+                />
                 <TextField
                   v-model="user.idNumber"
                   label="ID Number"
@@ -230,8 +211,7 @@ export default {
 <style lang="scss" scoped>
 #onboarding {
   text-align: -webkit-center;
-  margin: clamp(30px, 7vw, 50px) 20px 20px 20px !important;
-  // margin: 20px;
+  margin: clamp(56px, 7vw, 96px) 20px 20px 20px !important;
 }
 .onboarding-wrapper {
   max-width: 421px;
@@ -268,15 +248,6 @@ export default {
   }
 }
 
-.program-year {
-  display: grid;
-  grid-template-columns: calc(50% - 5px) calc(50% - 5px);
-  gap: 10px;
-  .program,
-  .year {
-    max-width: 100%;
-  }
-}
 .slide-fade-enter-active {
   transition: all 0.8s ease;
 }
