@@ -21,6 +21,11 @@ const studentRoutes = [
         component: () => import("@/modules/student/views/Dashboard.vue"),
       },
       {
+        path: "teamlist",
+        name: "TeamList",
+        component: () => import("@/modules/student/views/TeamList.vue"),
+      },
+      {
         path: "create-team",
         name: "Create Team",
         component: () => import("@/modules/student/views/CreateTeam.vue"),
