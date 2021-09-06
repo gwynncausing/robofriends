@@ -19,25 +19,6 @@ const studentRoutes = [
         path: "",
         name: "Dashboard",
         component: () => import("@/modules/student/views/Dashboard.vue"),
-        // children: [
-        //   {
-        //     path: "project",
-        //     name: "Project Details",
-        //     component: () =>
-        //       import("@/modules/student/views/ProjectDetails.vue"),
-        //   },
-        //   {
-        //     path: "guide",
-        //     name: "Recommended Guides",
-        //     component: () =>
-        //       import("@/modules/student/views/RecommendedGuides.vue"),
-        //   },
-        //   {
-        //     path: "team",
-        //     name: "Team Settings",
-        //     component: () => import("@/modules/student/views/TeamSettings.vue"),
-        //   },
-        // ],
       },
       {
         path: "create-team",
@@ -47,8 +28,7 @@ const studentRoutes = [
       {
         path: "invite",
         name: "StudentInvitation",
-        component: () =>
-          import("@/modules/student/views/StudentInvitation.vue"),
+        component: () => import("@/modules/student/views/Invitation.vue"),
       },
       {
         path: "archive",

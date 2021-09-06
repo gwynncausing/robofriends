@@ -1,25 +1,39 @@
 <template>
-  <div>
-    <v-row class="mx-8">
-      <v-col cols="8">
-        <v-sheet outlined rounded height="48">
-          <span class="team-name">{{ teamName }}</span>
-        </v-sheet>
-      </v-col>
-      <v-col>
-        <v-btn-toggle>
-          <v-btn @click="view"> View </v-btn>
-          <v-btn class="btn-white btn-deny" @click="deny"> Deny </v-btn>
-          <v-btn class="btn-white btn-join" @click="join"> Join </v-btn>
-        </v-btn-toggle>
-      </v-col>
-    </v-row>
+  <div class="invitation-row">
+    <v-sheet outlined rounded height="40">
+      {{ teamName }}
+    </v-sheet>
+    <div class="invitation-row-buttons d-none d-sm-flex">
+      <!-- // TODO: add dialog on click -->
+      <Button class="neutral-50 neutral-900--text" @click="view"> View </Button>
+      <Button class="secondary" @click="deny"> Deny </Button>
+      <Button class="primary" @click="join"> Join </Button>
+    </div>
+    <div class="invitation-row-buttons d-flex d-sm-none">
+      <!-- // TODO: add dialog on click -->
+      <Button
+        icon
+        class="neutral-50 neutral-900--text invitation-row-button-mobile"
+        @click="view"
+      >
+        <v-icon>mdi-eye</v-icon>
+      </Button>
+      <Button icon class="secondary invitation-row-button-mobile" @click="deny">
+        <v-icon color="white">mdi-close-thick</v-icon>
+      </Button>
+      <Button icon class="primary invitation-row-button-mobile" @click="join">
+        <v-icon color="white">mdi-check-bold</v-icon>
+      </Button>
+    </div>
   </div>
 </template>
 
 <script>
+import Button from "@/components/global/Button.vue";
+
 export default {
   name: "InvitationMessage",
+  components: { Button },
   props: {
     teamName: {
       type: String,
@@ -60,22 +74,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.v-sheet {
+.invitation-row {
   display: flex;
-  align-items: center;
-}
-.team-name {
-  padding: 2%;
-}
-.btn-white {
-  color: white !important;
+  margin: 24px auto;
+  max-width: 680px;
 
-  &.btn-deny {
-    background-color: var(--v-secondary) !important;
+  .v-sheet {
+    padding: 10px;
+    margin-right: 16px;
+    width: 100%;
   }
-
-  &.btn-join {
-    background-color: var(--v-primary) !important;
+  .invitation-row-buttons {
+    display: flex;
+  }
+  .invitation-row-button-mobile {
+    width: 50px;
+  }
+  .invitation-row-buttons button:nth-child(1) {
+    border-radius: 4px 0 0 4px;
+  }
+  .invitation-row-buttons button:nth-child(2) {
+    border-radius: 0;
+  }
+  .invitation-row-buttons button:nth-child(3) {
+    border-radius: 0 4px 4px 0;
   }
 }
 </style>

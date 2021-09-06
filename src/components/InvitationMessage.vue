@@ -1,19 +1,13 @@
 <template>
-  <div class="mb-10">
-    <v-img
-      :src="require('@/assets/invitation.svg')"
-      height="260"
-      width="477"
-    ></v-img>
-    <div class="text">
-      <span class="heading">
-        <span v-if="invitations > 0">You’re invited!</span>
-        <span v-else>No Invitations :(</span>
-      </span>
-      <p class="details">
+  <div class="invitation-message">
+    <div class="invitation-message-heading">
+      <span v-if="invitations > 0" class="primary--text">You’re invited!</span>
+      <span v-else class="secondary--text">No Invitations :(</span>
+      <p class="subheading mt-10">
         You received {{ invitations }} invitation/s to {{ action }} their team.
       </p>
     </div>
+    <v-img :src="require('@/assets/invitation.svg')" width="432" />
   </div>
 </template>
 
@@ -41,18 +35,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.text {
-  position: absolute;
-  top: 10%;
-  left: 50%;
-}
+.invitation-message {
+  text-align: -webkit-center;
 
-.heading {
-  font-size: 46px;
-  font-weight: bold;
-  color: var(--v-secondary) !important;
-}
-.details {
-  font-size: 16px;
+  .invitation-message-heading {
+    margin-bottom: 40px;
+    span {
+      font-size: 2.125rem;
+      font-weight: $font-weight-bold;
+    }
+  }
 }
 </style>

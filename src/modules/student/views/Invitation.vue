@@ -1,6 +1,6 @@
 <template>
   <div class="invitation">
-    <div class="message">
+    <div class="invitation-wrapper">
       <InvitationMessage
         :invitations="invitations.length"
         :user-type="userType"
@@ -12,6 +12,20 @@
         :invitation="invitation"
         @updateInvitation="updateInvitation"
       />
+    </div>
+    <div class="invitation-create-or-join-team">
+      <p>
+        I want to
+        <!-- // TODO:  change to go to create team -->
+        <router-link class="primary--text" :to="{ name: 'CreateAccount' }">
+          <strong>create my own team</strong>
+        </router-link>
+        or
+        <!-- // TODO:  change to go to team list -->
+        <router-link class="secondary--text" :to="{ name: 'CreateAccount' }">
+          <strong>join another team</strong>
+        </router-link>
+      </p>
     </div>
   </div>
 </template>
@@ -29,7 +43,16 @@ export default {
   data: function () {
     return {
       userType: "student",
-      invitations: [],
+      invitations: [
+        {
+          id: "1",
+          teamName: "Cary & Co.",
+        },
+        {
+          id: "2",
+          teamName: "Donee & Co.",
+        },
+      ],
     };
   },
   computed: {
@@ -45,16 +68,16 @@ export default {
   methods: {
     initialize() {
       this.invitations = [];
-      this.invitationsFromServer.edges.forEach((edge) => {
-        this.invitations.push({
-          id: edge.node.id,
-          projectId: edge.node.project.id,
-          teamName: edge.node.project.teamName,
-          description: edge.node.project.description,
-          status: edge.node.status,
-          createdAt: edge.node.createdAt,
-        });
-      });
+      // this.invitationsFromServer.edges.forEach((edge) => {
+      //   this.invitations.push({
+      //     id: edge.node.id,
+      //     projectId: edge.node.project.id,
+      //     teamName: edge.node.project.teamName,
+      //     description: edge.node.project.description,
+      //     status: edge.node.status,
+      //     createdAt: edge.node.createdAt,
+      //   });
+      // });
       console.log({ invitations: this.invitations });
     },
     async updateInvitation({ invitationId, isAccepted, projectId }) {
@@ -83,14 +106,14 @@ export default {
 
 <style lang="scss" scoped>
 .invitation {
-  display: flex;
-  justify-content: center;
-}
-.message {
-  margin: 0;
-  padding: 0;
-  position: relative;
-  width: 70%;
-  margin-top: 5%;
+  margin: clamp(56px, 7vw, 96px) 20px 120px 20px !important;
+
+  .invitation-wrapper {
+    align-self: center;
+    margin-bottom: 104px;
+  }
+  .invitation-create-or-join-team {
+    text-align: center;
+  }
 }
 </style>
