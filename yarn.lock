@@ -9186,6 +9186,11 @@
     "semver" "^7.1.2"
     "shelljs" "^0.8.3"
 
+"vue-dragscroll@^3.0.1":
+  "integrity" "sha512-4Oq3S1RGm94YMy/DcjcvM+itRLoTGnKaxlpUUVICPPkNEvMMKzArZUNDXxmDInVa8t4GtrfM0uGAShFP+0JIUw=="
+  "resolved" "https://registry.npmjs.org/vue-dragscroll/-/vue-dragscroll-3.0.1.tgz"
+  "version" "3.0.1"
+
 "vue-eslint-parser@^2.0.3":
   "integrity" "sha512-ZezcU71Owm84xVF6gfurBQUGg8WQ+WZGxgDEQu1IHFBZNx7BFZg3L1yHxrCBNNwbwFtE1GuvfJKMtb6Xuwc/Bw=="
   "resolved" "https://registry.npmjs.org/vue-eslint-parser/-/vue-eslint-parser-2.0.3.tgz"

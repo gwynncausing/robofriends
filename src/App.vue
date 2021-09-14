@@ -24,22 +24,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600;700;800&display=swap");
-
-* {
-  font-family: "Montserrat", Tahoma, Geneva, Verdana, sans-serif;
-}
-.v-application {
-  color: $neutral-900 !important;
-}
-.v-btn {
-  text-transform: none !important;
-}
-span.v-chip--select.v-chip.v-chip--clickable.v-chip--no-color.theme--light.v-size--default {
-  margin-top: 2px;
-  margin-bottom: 2px;
-}
-a {
-  text-decoration: none;
-}
+@import "@/styles/_global-styles.scss";
 </style>

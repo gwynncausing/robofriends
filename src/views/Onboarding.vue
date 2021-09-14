@@ -137,11 +137,11 @@ export default {
       userType: [
         {
           name: "Student",
-          img: require("@/assets/student.png"),
+          img: require("@/assets/student.svg"),
         },
         {
           name: "Teacher",
-          img: require("@/assets/teacher.png"),
+          img: require("@/assets/teacher.svg"),
         },
       ],
       schoolNames: ["CIT", "UC", "USJR"],
