@@ -11,9 +11,7 @@ import { FETCH_TEST } from "@/store/types/actions";
 export default {
   name: "Test",
   components: {},
-  data: function () {
-    return {};
-  },
+  data: () => ({}),
   computed: {
     ...mapGetters({
       posts: "getTest",
