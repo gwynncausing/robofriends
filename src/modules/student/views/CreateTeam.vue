@@ -1,82 +1,123 @@
 <template>
   <div id="create-team">
-    <div class="team-name">
-      <div class="team-name-wrapper">
-        <span class="team-name-label">Team Name</span>
-        <TextField
-          v-model="team.teamName"
-          name="team-name"
-          :rules="rules.teamName"
-        />
-      </div>
-    </div>
-    <div class="teacher-list">
-      <div
-        v-for="(teacher, index) in team.teacher"
-        :key="index"
-        class="teacher-list-wrapper"
-      >
-        <span class="teacher-list-label">Teacher {{ index + 1 }}</span>
-        <Combobox v-model="team.teacher[index]" name="teachers" />
-        <span>{{ team.teacher[index] }}</span>
-      </div>
-      <Button
-        text
-        :class="{ active: addTeacherActive }"
-        class="add-teacher"
-        @click="addTeacher"
-      >
-        Add Teacher
-      </Button>
-    </div>
-
-    <div class="member-list">
-      <div
-        v-for="(member, index) in team.member"
-        :key="index"
-        class="member-list-wrapper"
-      >
-        <span class="member-list-label">Member {{ index + 1 }}</span>
-        <TextField v-model="team.member[index]" name="member" />
-      </div>
-      <Button
-        text
-        :class="{ active: addMemberActive }"
-        class="add-member"
-        @click="addMember"
-      >
-        Add Member
-      </Button>
-    </div>
-
-    <div :class="{ active: addMemberActive }" class="tree-list">
-      <span class="tree-list-label">Choose a tree you want to plant</span>
-      <v-item-group active-class="neutral-50">
-        <div v-dragscroll.x class="tree-list-wrapper">
-          <v-item
-            v-for="(tree, index) in treeList"
-            :key="index"
-            v-slot="{ toggle }"
-          >
-            <div
-              v-ripple="{ center: true }"
-              class="tree-list-tree"
-              @click="[toggle, (team.tree = tree.title)]"
-            >
-              <v-img
-                :src="require('@/assets/' + tree.src)"
-                :alt="tree.title"
-                height="120"
-                contain
-              />
-              <span>{{ capitalize(tree.title) }}</span>
-            </div>
-          </v-item>
+    <v-form id="form" ref="form" lazy-validation>
+      <div class="team-name">
+        <div class="team-name-wrapper">
+          <span class="team-name-label">Team Name</span>
+          <TextField
+            v-model="team.teamName"
+            name="team-name"
+            :rules="rules.teamName"
+          />
         </div>
-      </v-item-group>
-    </div>
+      </div>
 
-    <div class="submit-wrapper d-flex">
+      <div class="teacher-list">
+        <div
+          v-for="(teacher, index) in team.teacher"
+          :key="index"
+          class="teacher-list-wrapper"
+        >
+          <span class="teacher-list-label">Teacher {{ index + 1 }}</span>
+          <Combobox
+            v-model="team.teacher[index]"
+            name="teachers"
+            :items="teachersList"
+            :rules="rules.teamName"
+          />
+          <v-btn
+            v-if="index !== 0"
+            class="btn-remove-item"
+            icon
+            @click="removeItem(index, team.teacher)"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </div>
+        <Button
+          text
+          :class="{ active: addTeacherActive }"
+          class="add-teacher"
+          @click="addItem(team.teacher, 'addTeacherActive')"
+        >
+          Add Teacher
+        </Button>
+      </div>
+
+      <div :class="{ active: addTeacherActive }" class="member-list">
+        <div
+          v-for="(member, index) in team.member"
+          :key="index"
+          class="member-list-wrapper"
+        >
+          <span class="member-list-label">Member {{ index + 1 }}</span>
+          <TextField
+            v-model="team.member[index]"
+            name="member"
+            :rules="rules.teamName"
+          />
+          <v-btn
+            v-if="index !== 0"
+            class="btn-remove-item"
+            icon
+            @click="removeItem(index, team.member)"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </div>
+        <Button
+          text
+          :class="{ active: addMemberActive }"
+          class="add-member"
+          @click="addItem(team.member, 'addMemberActive')"
+        >
+          Add Member
+        </Button>
+      </div>
+
+      <div
+        :class="{ active: addMemberActive || addTeacherActive }"
+        class="tree-list"
+      >
+        <div class="tree-list-container">
+          <span class="tree-list-label">Choose a tree you want to plant</span>
+          <v-item-group active-class="neutral-50">
+            <div v-dragscroll.x class="tree-list-wrapper">
+              <v-item
+                v-for="(tree, index) in treeList"
+                :key="index"
+                v-slot="{ toggle }"
+              >
+                <div
+                  v-ripple="{ center: true }"
+                  class="tree-list-tree"
+                  @click="[toggle(), selectTree(tree.title)]"
+                >
+                  <v-img
+                    :src="require('@/assets/' + tree.src)"
+                    :alt="tree.title"
+                    height="120"
+                    contain
+                  />
+                  <span>{{ capitalize(tree.title) }}</span>
+                </div>
+              </v-item>
+            </div>
+          </v-item-group>
+        </div>
+        <span
+          class="error--text plant-error"
+          :class="{ 'plant-error-active': isTreeError }"
+        >
+          A plant is required
+        </span>
+      </div>
+    </v-form>
+
+    <div
+      :class="{ active: addMemberActive || addTeacherActive }"
+      class="submit-wrapper"
+    >
       <Button class="ml-auto" @click="submit"> Submit</Button>
     </div>
   </div>
@@ -103,12 +144,14 @@ export default {
       addTeacherActive: false,
       addMemberActive: false,
       treeList: [],
+      teachersList: ["Juan", "Thoo", "Thri"],
       team: {
         teamName: "",
         teacher: [""],
         member: [""],
         tree: "",
       },
+      isTreeError: false,
     };
   },
 
@@ -116,10 +159,6 @@ export default {
     // ...mapGetters({
     //   getUser: "user/getUser",
     // }),
-  },
-
-  watch: {
-    //
   },
 
   created() {
@@ -139,35 +178,50 @@ export default {
   },
 
   methods: {
+    removeItem(item = 0, user = []) {
+      user.splice(item, 1);
+    },
     importAllImages(directory) {
       return directory.keys().map(directory);
     },
     capitalize(item) {
       return item.charAt(0).toUpperCase() + item.slice(1);
     },
-    addTeacher() {
-      this.team.teacher.push("");
+    addItem(user = [], userActive) {
+      console.log(user, userActive);
+      user.push("");
+      if (userActive === "addMemberActive") {
+        this.addMemberActive = !this.addMemberActive;
+        setTimeout(() => {
+          this.addMemberActive = !this.addMemberActive;
+        }, 1000);
+        return;
+      }
       this.addTeacherActive = !this.addTeacherActive;
       setTimeout(() => {
         this.addTeacherActive = !this.addTeacherActive;
       }, 1000);
     },
-    addMember() {
-      this.team.member.push("");
-      this.addMemberActive = !this.addMemberActive;
-      setTimeout(() => {
-        this.addMemberActive = !this.addMemberActive;
-      }, 1000);
+    selectTree(treeTitle) {
+      if (this.team.tree !== treeTitle) {
+        this.team.tree = treeTitle;
+        this.isTreeError = false;
+        return;
+      }
+      this.team.tree = "";
     },
     submit() {
-      console.log("team", this.team);
+      if (!this.team.tree) this.isTreeError = true;
+      if (this.$refs.form.validate() && !this.isTreeError) {
+        console.log("success", this.team);
+      }
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-#create-team {
+#form {
   max-width: 1252px;
   padding: 40px clamp(20px, 5.5vw, 80px);
   display: grid;
@@ -192,6 +246,11 @@ export default {
       padding-top: 8px;
       width: 120px;
     }
+
+    .btn-remove-item {
+      margin-top: 2px;
+      margin-left: 8px;
+    }
   }
 
   .add-teacher,
@@ -201,21 +260,26 @@ export default {
 }
 
 .tree-list {
+  height: 246px;
+  position: relative;
+  overflow: hidden;
+}
+.tree-list-container {
   height: 100%;
-  overflow: auto;
-  visibility: hidden;
+  overflow-y: hidden;
+  position: relative;
+  background: $white;
 
   .tree-list-label {
     padding-top: 8px;
     width: 120px;
-    visibility: visible;
   }
 
   .tree-list-wrapper {
     display: flex;
-    overflow-x: scroll;
-    overflow-y: hidden;
     padding: 12px;
+    cursor: pointer;
+    overflow-x: scroll;
 
     .tree-list-tree {
       width: 200px;
@@ -230,30 +294,29 @@ export default {
 
       &:hover {
         background-color: $neutral-50;
+        visibility: visible;
       }
     }
   }
-
-  &:hover {
-    visibility: visible;
-  }
 }
 
-.member-list-wrapper:not(:first-child) {
+.submit-wrapper {
+  display: flex;
+  margin-top: 24px;
+}
+
+.member-list-wrapper:not(:first-child),
+.teacher-list-wrapper:not(:first-child) {
   animation: fade-in-opacity 1s ease-in-out;
 }
 
 .add-teacher.active,
 .add-member.active,
-.tree-list.active {
+.member-list.active,
+.tree-list.active,
+.submit-wrapper.active {
   animation: fade-in 1s ease-in-out;
 }
-
-// .submit-wrapper {
-//   button.active {
-//     animation: fade-in 1s ease-in-out;
-//   }
-// }
 
 @keyframes fade-in-opacity {
   0% {
@@ -274,5 +337,20 @@ export default {
   .tree-list {
     visibility: visible;
   }
+}
+
+.plant-error {
+  font-size: 0.75rem;
+  padding-left: 0.75rem;
+  position: absolute;
+  left: 0;
+  bottom: 18px;
+  transition: bottom 250ms linear;
+  z-index: -1;
+}
+
+.plant-error-active {
+  bottom: 0px;
+  z-index: 0;
 }
 </style>
