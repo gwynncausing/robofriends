@@ -17,16 +17,27 @@
       <p>
         I want to
         <!-- // TODO:  change to go to create team -->
-        <router-link class="primary--text" :to="{ name: 'CreateAccount' }">
+        <router-link class="primary--text" :to="{ name: 'Create Team' }">
           <strong>create my own team</strong>
         </router-link>
         or
-        <!-- // TODO:  change to go to team list -->
-        <router-link class="secondary--text" :to="{ name: 'CreateAccount' }">
+        <span
+          class="secondary--text btn-join-team"
+          @click="
+            {
+              joinTeamModal = true;
+            }
+          "
+        >
           <strong>join another team</strong>
-        </router-link>
+        </span>
       </p>
     </div>
+    <JoinTeamModal
+      :dialog-props="joinTeamModal"
+      @dialogClose="joinTeamModal = $event"
+      @dialogJoinTeam="joinTeam($event)"
+    />
   </div>
 </template>
 
@@ -34,14 +45,18 @@
 // import { mapGetters } from "vuex";
 import InvitationMessage from "@/components/InvitationMessage.vue";
 import InvitationRow from "@/components/InvitationRow.vue";
+import JoinTeamModal from "../components/JoinTeamModal.vue";
+
 export default {
   name: "StudentInvitation",
   components: {
     InvitationMessage,
     InvitationRow,
+    JoinTeamModal,
   },
   data: function () {
     return {
+      joinTeamModal: false,
       userType: "student",
       invitations: [
         {
@@ -66,6 +81,9 @@ export default {
     },
   },
   methods: {
+    joinTeam(code) {
+      console.log("joinTeam called ", code);
+    },
     initialize() {
       this.invitations = [];
       // this.invitationsFromServer.edges.forEach((edge) => {
@@ -106,7 +124,7 @@ export default {
 
 <style lang="scss" scoped>
 .invitation {
-  margin: clamp(56px, 7vw, 96px) 20px 120px 20px !important;
+  margin: clamp(14px, 7vw, 24px) 20px 120px 20px !important;
 
   .invitation-wrapper {
     align-self: center;
@@ -114,6 +132,10 @@ export default {
   }
   .invitation-create-or-join-team {
     text-align: center;
+  }
+
+  .btn-join-team {
+    cursor: pointer;
   }
 }
 </style>

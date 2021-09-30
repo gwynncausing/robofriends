@@ -8,11 +8,10 @@
         <p>
           Do you want to
           <!-- // TODO:  change to go to create team -->
-          <router-link class="primary--text" :to="{ name: 'CreateAccount' }">
+          <router-link class="primary--text" :to="{ name: 'Create Team' }">
             <strong>create</strong>
           </router-link>
           or
-          <!-- // TODO:  change to go to team list -->
           <span
             class="secondary--text btn-join-team"
             @click="
@@ -25,22 +24,11 @@
           </span>
           a team?
         </p>
-        <JoinTeamModal :dialog="joinTeamModal" @closed="joinTeamModal = $event">
-          <template v-slot:title>
-            <h4>Join a team</h4>
-            <span class="subheading1 neutral-500--text">
-              Enter the team code given by your friend
-            </span>
-          </template>
-          <template v-slot:content>
-            <TextField v-model="teamCode" placeholder="Team code"> </TextField>
-          </template>
-          <template v-slot:footer>
-            <v-spacer></v-spacer>
-            <Button text @click="joinTeamModal = false">Cancel</Button>
-            <Button @click="joinTeam()">Submit</Button>
-          </template>
-        </JoinTeamModal>
+        <JoinTeamModal
+          :dialog-props="joinTeamModal"
+          @dialogClose="joinTeamModal = $event"
+          @dialogJoinTeam="joinTeam($event)"
+        />
       </div>
     </div>
     <div v-else id="dashboard-has-team">
@@ -64,9 +52,7 @@ import TeamTracker from "./dashboard/TeamTracker";
 import TasksBoard from "./dashboard/TasksBoard";
 import IndividualInsight from "./dashboard/IndividualInsight";
 import AppTabs from "../components/AppTabs";
-import JoinTeamModal from "../components/JoinTeamModal";
-import TextField from "@/components/global/TextField.vue";
-import Button from "@/components/global/Button.vue";
+import JoinTeamModal from "../components/JoinTeamModal.vue";
 
 export default {
   name: "Dashboard",
@@ -76,8 +62,6 @@ export default {
     IndividualInsight,
     AppTabs,
     JoinTeamModal,
-    TextField,
-    Button,
   },
   data() {
     return {
@@ -100,12 +84,11 @@ export default {
           value: "tasks-board",
         },
       ],
-      teamCode: "",
     };
   },
   methods: {
-    joinTeam() {
-      console.log("joinTeam called ", this.teamCode);
+    joinTeam(code) {
+      console.log("joinTeam called ", code);
     },
   },
 };

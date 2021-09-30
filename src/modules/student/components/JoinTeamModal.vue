@@ -1,46 +1,61 @@
 <template>
-  <v-dialog v-model="dialogModal" width="500">
-    <v-card class="pa-5">
-      <v-card-title class="text-h5">
-        <slot name="title"></slot>
-      </v-card-title>
-
-      <v-card-text>
-        <slot name="content"></slot>
-      </v-card-text>
-
-      <v-card-actions>
-        <slot name="footer"></slot>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <ModalSmall :dialog="dialog" @closed="closeModal()">
+    <template v-slot:title>
+      <h4>Join a team</h4>
+      <span class="subheading1 neutral-500--text">
+        Enter the team code given by your friend
+      </span>
+    </template>
+    <template v-slot:content>
+      <TextField v-model="teamCode" placeholder="Team code" name="team-code" />
+    </template>
+    <template v-slot:footer>
+      <v-spacer></v-spacer>
+      <Button text @click="closeModal()">Cancel</Button>
+      <Button @click="joinTeam(teamCode)">Submit</Button>
+    </template>
+  </ModalSmall>
 </template>
 
 <script>
+import ModalSmall from "@/components/ModalSmall.vue";
+import TextField from "@/components/global/TextField.vue";
+import Button from "@/components/global/Button.vue";
+
 export default {
   name: "JoinTeamModal",
+  components: {
+    ModalSmall,
+    TextField,
+    Button,
+  },
   props: {
-    dialog: {
+    dialogProps: {
       type: Boolean,
       default: false,
     },
   },
   data() {
     return {
-      dialogModal: false,
+      teamCode: "",
+      dialog: false,
     };
   },
   watch: {
-    dialog(newVal) {
-      this.dialogModal = newVal;
+    dialogProps(newVal) {
+      this.dialog = newVal;
     },
-    dialogModal(newVal) {
-      if (!newVal) this.closeModal();
+    dialog(newVal) {
+      this.$emit("dialogClose", newVal);
     },
   },
   methods: {
     closeModal() {
-      this.$emit("closed", false);
+      this.dialog = false;
+    },
+    joinTeam(code) {
+      // this.dialog = false;
+      this.$emit("dialogJoinTeam", code);
     },
   },
 };
