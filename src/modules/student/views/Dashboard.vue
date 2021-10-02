@@ -48,9 +48,9 @@
 </template>
 
 <script>
-import TeamTracker from "./dashboard/TeamTracker";
-import TasksBoard from "./dashboard/TasksBoard";
-import IndividualInsight from "./dashboard/IndividualInsight";
+import TeamTracker from "../components/dashboard/TeamTracker";
+import TasksBoard from "../components/dashboard/TasksBoard";
+import IndividualInsight from "../components/dashboard/IndividualInsight";
 import AppTabsHolder from "@/components/AppTabsHolder";
 import JoinTeamModal from "../components/JoinTeamModal.vue";
 
