@@ -1,5 +1,5 @@
 <template>
-  <ModalSmall :dialog="dialog" @closed="closeModal()">
+  <Modal small :dialog="dialog" @closed="closeModal()">
     <template v-slot:title>
       <h4>Join a team</h4>
       <span class="subheading1 neutral-500--text">
@@ -14,18 +14,18 @@
       <Button text @click="closeModal()">Cancel</Button>
       <Button @click="joinTeam(teamCode)">Submit</Button>
     </template>
-  </ModalSmall>
+  </Modal>
 </template>
 
 <script>
-import ModalSmall from "@/components/ModalSmall.vue";
+import Modal from "@/components/Modal.vue";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
 export default {
   name: "JoinTeamModal",
   components: {
-    ModalSmall,
+    Modal,
     TextField,
     Button,
   },
