@@ -43,6 +43,11 @@
           <TasksBoard />
         </template>
       </AppTabsHolder>
+      <KickstartResearchModal
+        :dialog-props="kickstartResearchModal"
+        @dialogClose="kickstartResearchModal = $event"
+        @dialogKickstartResearch="kickstartResearch"
+      ></KickstartResearchModal>
     </div>
   </div>
 </template>
@@ -53,6 +58,7 @@ import TasksBoard from "../components/dashboard/TasksBoard";
 import IndividualInsight from "../components/dashboard/IndividualInsight";
 import AppTabsHolder from "@/components/AppTabsHolder";
 import JoinTeamModal from "../components/JoinTeamModal.vue";
+import KickstartResearchModal from "../components/KickstartResearchModal.vue";
 
 export default {
   name: "Dashboard",
@@ -62,10 +68,12 @@ export default {
     IndividualInsight,
     AppTabsHolder,
     JoinTeamModal,
+    KickstartResearchModal,
   },
   data() {
     return {
       joinTeamModal: false,
+      kickstartResearchModal: false,
       user: {
         teamList: {},
       },
@@ -86,9 +94,18 @@ export default {
       ],
     };
   },
+  mounted() {
+    this.showKickstartResearchModal();
+  },
   methods: {
+    showKickstartResearchModal() {
+      this.kickstartResearchModal = true;
+    },
     joinTeam(code) {
       console.log("joinTeam called ", code);
+    },
+    kickstartResearch() {
+      console.log("kickstartResearch called");
     },
   },
 };
