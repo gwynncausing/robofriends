@@ -32,7 +32,7 @@
       </div>
     </div>
     <div v-else id="dashboard-has-team">
-      <AppTabs active="team-tracker" :items="items">
+      <AppTabsHolder active="team-tracker" :items="items">
         <template v-slot:body-team-tracker>
           <TeamTracker />
         </template>
@@ -42,7 +42,7 @@
         <template v-slot:body-tasks-board>
           <TasksBoard />
         </template>
-      </AppTabs>
+      </AppTabsHolder>
     </div>
   </div>
 </template>
@@ -51,7 +51,7 @@
 import TeamTracker from "./dashboard/TeamTracker";
 import TasksBoard from "./dashboard/TasksBoard";
 import IndividualInsight from "./dashboard/IndividualInsight";
-import AppTabs from "../components/AppTabs";
+import AppTabsHolder from "@/components/AppTabsHolder";
 import JoinTeamModal from "../components/JoinTeamModal.vue";
 
 export default {
@@ -60,7 +60,7 @@ export default {
     TeamTracker,
     TasksBoard,
     IndividualInsight,
-    AppTabs,
+    AppTabsHolder,
     JoinTeamModal,
   },
   data() {
