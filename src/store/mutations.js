@@ -2,7 +2,6 @@ import { MUTATIONS } from "./types/mutations";
 
 export default {
   [MUTATIONS.SET_USER](state, { user }) {
-    console.log("User Mutation", user);
     state.user = user;
   },
   [MUTATIONS.SET_TOKEN_ACCESS](state, { access }) {

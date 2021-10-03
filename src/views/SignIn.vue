@@ -53,6 +53,10 @@ import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
 import { mapActions, mapGetters } from "vuex";
+import { GETTERS } from "@/store/types/getters";
+import { ACTIONS } from "@/store/types/actions";
+import { USER } from "@/utils/constants/user";
+import { STATUS_CODES } from "@/utils/constants/http-status-codes";
 
 export default {
   name: "Signin",
@@ -71,7 +75,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getUserType: "user/getUserType",
+      getUser: GETTERS.GET_USER,
+      getUserType: GETTERS.GET_USER_TYPE,
     }),
   },
   methods: {
@@ -86,28 +91,36 @@ export default {
         this.error = "Invalid Email or Password";
         return;
       }
-
       this.error = "";
       this.isSubmit = true;
-
-      // const credentials = { ...this.user };
-      // const data = await this.onLogin(credentials);
-      // console.log(data)
-      // if (data.success) {
-      //   this.error = "";
-      //   if (this.getUserType == "STUDENT") this.$router.push("/student");
-      //   else this.$router.push("/adviser");
-      // } else if (data.success == false) {
-      //   data.errors.nonFieldErrors[0].message =
-      //     "Please enter your valid credentials";
-      //   this.isSubmit = false;
-      //   this.error = data.errors.nonFieldErrors[0].message;
-      // } else {
-      //   this.error = "Please check your internet connection";
-      this.isSubmit = false;
+      try {
+        await this.onLogin(this.user);
+        switch (this.getUserType) {
+          case USER.TYPES.STUDENT:
+            this.$router.replace({ name: "Dashboard" });
+            break;
+          case USER.TYPES.TEACHER:
+            //TODO: change to teacher dashboard route
+            console.log("Redirect to teacher's dashboard");
+            break;
+          default:
+            this.$router.replace({ name: "Onboarding" });
+            break;
+        }
+      } catch (error) {
+        switch (error?.response?.status) {
+          case STATUS_CODES.ERRORS.UNAUTHORIZED:
+            this.error = "Incorrect email or password";
+            break;
+          default:
+            break;
+        }
+      } finally {
+        this.isSubmit = false;
+      }
     },
     ...mapActions({
-      onLogin: "user/login",
+      onLogin: ACTIONS.LOGIN_USER,
     }),
   },
 };
