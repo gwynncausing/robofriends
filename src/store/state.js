@@ -1,3 +1,9 @@
 export default () => ({
-  test: "",
+  isLoggedIn: false,
+  user: {},
+  userType: "",
+  tokens: {
+    access: "",
+    refresh: "",
+  },
 });
