@@ -109,8 +109,8 @@ export default {
         }
       } catch (error) {
         switch (error?.response?.status) {
-          case STATUS_CODES.ERRORS.UNAUTHORIZED:
-            this.error = "Incorrect email or password";
+          case STATUS_CODES.ERRORS.NOT_FOUND:
+            this.error = "No user found for this email/password";
             break;
           default:
             break;
