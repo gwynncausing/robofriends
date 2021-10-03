@@ -22,6 +22,11 @@ const adviserRoutes = [
         component: () => import("@/modules/adviser/views/Home.vue"),
       },
       {
+        path: "manage-teams",
+        name: "Manage Teams",
+        component: () => import("@/modules/adviser/views/ManageTeams.vue"),
+      },
+      {
         path: "invite",
         name: "AdviserInvitation",
         component: () =>
