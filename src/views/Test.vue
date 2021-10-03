@@ -5,29 +5,29 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import { FETCH_TEST } from "@/store/types/actions";
+// import { mapActions, mapGetters } from "vuex";
+// import { FETCH_TEST } from "@/store/types/actions";
 
 export default {
   name: "Test",
   components: {},
   data: () => ({}),
   computed: {
-    ...mapGetters({
-      posts: "getTest",
-    }),
+    // ...mapGetters({
+    //   posts: "getTest",
+    // }),
   },
   async created() {
-    try {
-      await this.fetchPosts();
-    } catch (error) {
-      throw new Error(error.message);
-    }
+    // try {
+    //   await this.fetchPosts();
+    // } catch (error) {
+    //   throw new Error(error.message);
+    // }
   },
   methods: {
-    ...mapActions({
-      fetchPosts: FETCH_TEST,
-    }),
+    // ...mapActions({
+    //   fetchPosts: FETCH_TEST,
+    // }),
   },
 };
 </script>
