@@ -1,11 +1,11 @@
 import Client from "@/clients/client-axios";
-const resource = "/posts";
+const resource = "/schools";
 
 export default {
   get() {
     return Client.get(`${resource}`);
   },
-  getPost(id) {
+  getSchool(id) {
     return Client.get(`${resource}/${id}`);
   },
   create(payload) {
