@@ -1,6 +1,12 @@
 <template>
-  <div>
-    <v-tabs v-model="tab" v-bind="$attrs" fixed-tabs v-on="$listeners">
+  <div id="tab">
+    <v-tabs
+      v-model="tab"
+      v-bind="$attrs"
+      fixed-tabs
+      show-arrows
+      v-on="$listeners"
+    >
       <v-tab
         v-for="(item, index) in items"
         :key="index"
@@ -55,4 +61,4 @@ export default {
 };
 </script>
 
-<style style="scoped"></style>
+<style lang="scss" style="scoped"></style>
