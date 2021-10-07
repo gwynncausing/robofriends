@@ -13,6 +13,9 @@ const CardList = (props) => {
   //     />
   //   );
   // });
+  // if (true) { // throws an error
+  //   throw new Error("Could not find this page");
+  // }
   return (
     // <div>{cardsArray}</div>
     <div>
