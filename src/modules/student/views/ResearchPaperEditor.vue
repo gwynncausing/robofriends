@@ -17,7 +17,11 @@
         </v-list>
       </v-menu>
     </div>
-    <div class="editor-list">
+    <div
+      v-for="(editor, index) in numberOfEditors"
+      :key="index"
+      class="editor-list"
+    >
       <div class="editor-row">
         <div class="editor-profile-list">
           <div v-for="item in 3" :key="item" class="profile">
@@ -27,18 +31,26 @@
           </div>
         </div>
 
-        <div class="editor-content">editor content</div>
+        <div class="editor-content">
+          <Editor />
+        </div>
 
         <div class="editor-controls-list">
-          <div
-            v-for="item in editorButtonItems"
-            :key="item"
-            class="editor-control-button-wrapper"
-          >
-            <Button icon class="editor-control-button">
-              <v-icon class="editor-control-icon">{{ item.icon }}</v-icon>
-            </Button>
-          </div>
+          <Button icon @click="addNumberEditor(index)">
+            <v-icon class="editor-control-icon">mdi-plus-circle</v-icon>
+          </Button>
+
+          <Button icon @click="testMethod">
+            <v-icon class="editor-control-icon">mdi-image</v-icon>
+          </Button>
+
+          <Button icon @click="testMethod">
+            <v-icon class="editor-control-icon">mdi-comment-text</v-icon>
+          </Button>
+
+          <Button icon @click="testMethod">
+            <v-icon class="editor-control-icon">mdi-delete</v-icon>
+          </Button>
         </div>
       </div>
     </div>
@@ -48,22 +60,29 @@
 <script>
 // import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
+import Editor from "../components/Editor.vue";
 
 export default {
   name: "ResearchPaperEditor",
   components: {
     Button,
+    Editor,
   },
   data() {
     return {
       exportItems: [{ title: "ACM" }, { title: "APA" }, { title: "MLA" }],
-      editorButtonItems: [
-        { icon: "mdi-plus-circle" },
-        { icon: "mdi-image" },
-        { icon: "mdi-comment-text" },
-        { icon: "mdi-delete" },
-      ],
+      numberOfEditors: 1,
     };
+  },
+  methods: {
+    addNumberEditor(index) {
+      console.log("asdasd", index);
+      this.numberOfEditors += 1;
+      // this.splice( index, 0, item );
+    },
+    testMethod() {
+      console.log("testMethod called");
+    },
   },
 };
 </script>
@@ -115,26 +134,19 @@ export default {
       border-radius: 4px;
       padding: 0.5rem;
 
-      .editor-control-button-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
+      button {
+        width: 40px;
+
+        .editor-control-icon {
+          color: $neutral-700;
+        }
 
         &:last-child {
           margin-top: auto;
-        }
-
-        .editor-control-button {
-          width: 40px;
 
           .editor-control-icon {
-            color: $neutral-700;
+            color: $red;
           }
-        }
-
-        &:last-child .editor-control-button .editor-control-icon {
-          color: $red;
         }
       }
     }
