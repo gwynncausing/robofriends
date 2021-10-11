@@ -46,6 +46,9 @@
             @keydown.enter="signup()"
           >
           </TextField>
+          <div v-if="error" class="errors">
+            {{ error }}
+          </div>
           <div>
             <ul class="password-rules">
               <li>Must contain the following:</li>
@@ -82,6 +85,8 @@ import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
 import { mapActions } from "vuex";
+import { ACTIONS } from "@/store/types/actions";
+import { STATUS_CODES } from "@/utils/constants/http-status-codes";
 
 export default {
   name: "Signin",
@@ -92,7 +97,7 @@ export default {
   data: function () {
     return {
       user: {},
-      errors: [],
+      error: "",
       isSubmit: false,
       rules: {
         firstName: [
@@ -175,19 +180,30 @@ export default {
     },
     async signup() {
       console.log("signup", this.$refs);
-      this.errors = [];
+      this.error = "";
       this.isSubmit = true;
       if (this.$refs.form.validate()) {
         this.user.firstName = this.toCapitalize(this.user.firstName);
         this.user.lastName = this.toCapitalize(this.user.lastName);
         this.isSubmit = false;
+        try {
+          await this.onSignup(this.user);
+          this.$router.replace({ name: "Onboarding" });
+        } catch (error) {
+          switch (error?.response?.status) {
+            case STATUS_CODES.ERRORS.BAD_REQUEST:
+              this.error = error.response.data.error[0];
+              break;
+            default:
+              break;
+          }
+        }
       } else {
-        console.log("Validation raised");
         this.isSubmit = false;
       }
     },
     ...mapActions({
-      onRegister: "user/register",
+      onSignup: ACTIONS.SIGNUP_USER,
     }),
   },
 };
@@ -214,6 +230,12 @@ export default {
 .grid-item-content {
   grid-column: 1 / 5;
   height: fit-content;
+}
+.errors {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--v-error);
 }
 .password-rules {
   list-style-type: none;
