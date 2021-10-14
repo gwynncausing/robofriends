@@ -114,6 +114,16 @@
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import StarterKit from "@tiptap/starter-kit";
 
+import Collaboration from "@tiptap/extension-collaboration";
+import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
+import * as Y from "yjs";
+import { WebrtcProvider } from "y-webrtc";
+
+// A new Y document
+// const ydoc = new Y.Doc();
+// Registered with a WebRTC provider
+// new WebrtcProvider("bud-test-1", ydoc);
+
 export default {
   components: {
     EditorContent,
@@ -126,10 +136,32 @@ export default {
   },
 
   mounted() {
+    const ydoc = new Y.Doc();
+    
+    const documentId = "testDocumentIdentifier";
+
+    let content = `
+      <h4>Hello Cary Gwapo!</h4>
+      <p>This is a test text.</p>
+    `;
+
+    const provider = new WebrtcProvider(documentId, ydoc);
+
     this.editor = new Editor({
-      extensions: [StarterKit],
-      content: `
-      `,
+      extensions: [
+        StarterKit,
+        Collaboration.configure({
+          document: ydoc,
+        }),
+        CollaborationCursor.configure({
+          provider: provider,
+          user: {
+            name: "Test User",
+            color: "Grey",
+          },
+        }),
+      ],
+      content,
     });
   },
 
