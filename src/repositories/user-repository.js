@@ -12,7 +12,7 @@ export default {
     return Client.post(`${resource}`, payload);
   },
   update(payload, id) {
-    return Client.put(`${resource}/${id}`, payload);
+    return Client.patch(`${resource}/${id}`, payload);
   },
   delete(id) {
     return Client.delete(`${resource}/${id}`);

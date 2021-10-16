@@ -16,4 +16,7 @@ export default {
   [MUTATIONS.SET_USER_TYPE](state, { type }) {
     state.userType = type;
   },
+  [MUTATIONS.SET_SCHOOLS](state, { schools }) {
+    state.schools = schools;
+  },
 };

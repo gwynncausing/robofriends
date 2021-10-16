@@ -137,7 +137,7 @@ export default {
 
   mounted() {
     const ydoc = new Y.Doc();
-    
+
     const documentId = "testDocumentIdentifier";
 
     let content = `

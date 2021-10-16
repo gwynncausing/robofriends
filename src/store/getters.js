@@ -16,4 +16,7 @@ export default {
   [GETTERS.GET_USER_TYPE]({ userType }) {
     return userType;
   },
+  [GETTERS.GET_SCHOOLS]({ schools }) {
+    return schools;
+  },
 };

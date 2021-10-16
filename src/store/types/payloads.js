@@ -6,20 +6,17 @@ const SIGNUP_USER = {
   lastName: String,
 };
 
-const UPDATE_USER = {
-  email: String,
-  password: String,
-  confirmPassword: String,
-  firstName: String,
-  lastName: String,
-  phone: String,
-  idNumber: String,
-  year: Number,
-  program: String,
-  department: String,
-  college: String,
-  schoolId: String,
-  type: String,
+const ONBOARD_USER = {
+  id: Number,
+  user: {
+    firstName: String,
+    lastName: String,
+    idNumber: String,
+    program: String,
+    collegeId: String,
+    schoolId: String,
+    type: String,
+  },
 };
 
 const LOG_IN_USER = {
@@ -29,6 +26,6 @@ const LOG_IN_USER = {
 
 export const PAYLOADS = {
   SIGNUP_USER,
-  UPDATE_USER,
+  ONBOARD_USER,
   LOG_IN_USER,
 };
