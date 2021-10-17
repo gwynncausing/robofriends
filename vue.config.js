@@ -1,6 +1,9 @@
 let path = require("path");
 
 module.exports = {
+  devServer: {
+    disableHostCheck: true, // remove or false on production
+  },
   transpileDependencies: ["vuetify"],
   css: {
     loaderOptions: {

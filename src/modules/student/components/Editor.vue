@@ -5,106 +5,75 @@
         :class="{ 'is-active': editor.isActive('bold') }"
         @click="editor.chain().focus().toggleBold().run()"
       >
-        bold
+        <v-icon> mdi-format-bold </v-icon>
       </button>
       <button
         :class="{ 'is-active': editor.isActive('italic') }"
         @click="editor.chain().focus().toggleItalic().run()"
       >
-        italic
+        <v-icon> mdi-format-italic </v-icon>
       </button>
       <button
         :class="{ 'is-active': editor.isActive('strike') }"
         @click="editor.chain().focus().toggleStrike().run()"
       >
-        strike
+        <v-icon> mdi-format-strikethrough-variant </v-icon>
       </button>
       <button
         :class="{ 'is-active': editor.isActive('code') }"
         @click="editor.chain().focus().toggleCode().run()"
       >
-        code
+        <v-icon>mdi-code-tags</v-icon>
       </button>
-      <button @click="editor.chain().focus().unsetAllMarks().run()">
+      <!-- <button @click="editor.chain().focus().unsetAllMarks().run()">
         clear marks
-      </button>
+      </button> -->
       <button @click="editor.chain().focus().clearNodes().run()">
-        clear nodes
+        <!-- clear nodes -->
+        <v-icon>mdi-format-title</v-icon>
       </button>
       <button
         :class="{ 'is-active': editor.isActive('paragraph') }"
         @click="editor.chain().focus().setParagraph().run()"
       >
-        paragraph
+        <v-icon>mdi-format-paragraph</v-icon>
       </button>
       <button
         :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
         @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
       >
-        h1
+        <v-icon>mdi-format-header-1</v-icon>
       </button>
       <button
         :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
         @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
       >
-        h2
+        <v-icon>mdi-format-header-2</v-icon>
       </button>
       <button
         :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
         @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
       >
-        h3
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }"
-        @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
-      >
-        h4
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('heading', { level: 5 }) }"
-        @click="editor.chain().focus().toggleHeading({ level: 5 }).run()"
-      >
-        h5
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('heading', { level: 6 }) }"
-        @click="editor.chain().focus().toggleHeading({ level: 6 }).run()"
-      >
-        h6
+        <v-icon>mdi-format-header-3</v-icon>
       </button>
       <button
         :class="{ 'is-active': editor.isActive('bulletList') }"
         @click="editor.chain().focus().toggleBulletList().run()"
       >
-        bullet list
+        <v-icon>mdi-format-list-bulleted</v-icon>
       </button>
       <button
         :class="{ 'is-active': editor.isActive('orderedList') }"
         @click="editor.chain().focus().toggleOrderedList().run()"
       >
-        ordered list
+        <v-icon>mdi-format-list-numbered</v-icon>
       </button>
-      <button
-        :class="{ 'is-active': editor.isActive('codeBlock') }"
-        @click="editor.chain().focus().toggleCodeBlock().run()"
-      >
-        code block
+      <button @click="editor.chain().focus().redo().run()">
+        <v-icon>mdi-redo</v-icon>
       </button>
-      <button
-        :class="{ 'is-active': editor.isActive('blockquote') }"
-        @click="editor.chain().focus().toggleBlockquote().run()"
-      >
-        blockquote
+      <button @click="editor.chain().focus().undo().run()">
+        <v-icon>mdi-undo</v-icon>
       </button>
-      <button @click="editor.chain().focus().setHorizontalRule().run()">
-        horizontal rule
-      </button>
-      <button @click="editor.chain().focus().setHardBreak().run()">
-        hard break
-      </button>
-      <button @click="editor.chain().focus().undo().run()">undo</button>
-      <button @click="editor.chain().focus().redo().run()">redo</button>
     </div>
     <editor-content :editor="editor" />
   </div>
@@ -140,10 +109,9 @@ export default {
 
     const documentId = "testDocumentIdentifier";
 
-    let content = `
-      <h4>Hello Cary Gwapo!</h4>
-      <p>This is a test text.</p>
-    `;
+    let content = ``;
+    // <h4>Hello Cary Gwapo!</h4>
+    //   <p>This is a test text.</p>
 
     const provider = new WebrtcProvider(documentId, ydoc);
 
@@ -157,7 +125,7 @@ export default {
           provider: provider,
           user: {
             name: "Test User",
-            color: "Grey",
+            color: "#58D29F",
           },
         }),
       ],
@@ -216,6 +184,16 @@ button {
     line-height: 1.1;
   }
 
+  h1 {
+    font-size: 32px;
+  }
+  h2 {
+    font-size: 26.4px;
+  }
+  h3 {
+    font-size: 18.72px;
+  }
+
   code {
     background-color: rgba(#616161, 0.1);
     color: #616161;
@@ -250,6 +228,40 @@ button {
     border: none;
     border-top: 2px solid rgba(#0d0d0d, 0.1);
     margin: 2rem 0;
+  }
+
+  .collaboration-cursor__caret {
+    position: relative;
+    margin-left: -1px;
+    margin-right: -1px;
+    border-left: 1px solid #0d0d0d;
+    // border-right: 1px solid #0d0d0d;
+    word-break: normal;
+
+    &::before {
+      content: " ";
+      position: absolute;
+      width: 0.4rem;
+      height: -webkit-fill-available;
+    }
+
+    .collaboration-cursor__label {
+      white-space: nowrap;
+      position: absolute;
+      top: -1.4em;
+      left: 0;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 0.2rem;
+      opacity: 0;
+      line-height: normal;
+    }
+
+    &:hover {
+      .collaboration-cursor__label {
+        opacity: 1;
+      }
+    }
   }
 }
 </style>
