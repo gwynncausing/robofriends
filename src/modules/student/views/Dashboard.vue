@@ -32,7 +32,7 @@
       </div>
     </div>
     <div v-else id="dashboard-has-team">
-      <AppTabsHolder active="team-tracker" :items="items">
+      <Tabs active="team-tracker" :items="items">
         <template v-slot:body-team-tracker>
           <TeamTracker />
         </template>
@@ -42,7 +42,7 @@
         <template v-slot:body-tasks-board>
           <TasksBoard />
         </template>
-      </AppTabsHolder>
+      </Tabs>
       <KickstartResearchModal
         :dialog-props="kickstartResearchModal"
         @dialogClose="kickstartResearchModal = $event"
@@ -56,7 +56,7 @@
 import TeamTracker from "../components/dashboard/TeamTracker";
 import TasksBoard from "../components/dashboard/TasksBoard";
 import IndividualInsight from "../components/dashboard/IndividualInsight";
-import AppTabsHolder from "@/components/AppTabsHolder";
+import Tabs from "@/components/Tabs";
 import JoinTeamModal from "../components/JoinTeamModal.vue";
 import KickstartResearchModal from "../components/KickstartResearchModal.vue";
 
@@ -66,7 +66,7 @@ export default {
     TeamTracker,
     TasksBoard,
     IndividualInsight,
-    AppTabsHolder,
+    Tabs,
     JoinTeamModal,
     KickstartResearchModal,
   },

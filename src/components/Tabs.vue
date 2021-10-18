@@ -1,9 +1,10 @@
 <template>
-  <div id="tab">
+  <div>
     <v-tabs
       v-model="tab"
       v-bind="$attrs"
-      fixed-tabs
+      grow
+      center-active
       show-arrows
       v-on="$listeners"
     >
@@ -11,7 +12,7 @@
         v-for="(item, index) in items"
         :key="index"
         :href="`#${item.value}`"
-        class="neutral-900--text font-medium"
+        class="font-medium"
         >{{ item.title }}</v-tab
       >
     </v-tabs>
@@ -29,7 +30,7 @@
 
 <script>
 export default {
-  name: "AppTabs",
+  name: "AppTabsHolder",
   props: {
     active: {
       type: String,
@@ -61,4 +62,13 @@ export default {
 };
 </script>
 
+<<<<<<< Updated upstream
 <style lang="scss" style="scoped"></style>
+||||||| constructed merge base
+<style style="scoped"></style>
+=======
+<style style="scoped">
+.v-tabs {
+}
+</style>
+>>>>>>> Stashed changes
