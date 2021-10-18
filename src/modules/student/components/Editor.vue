@@ -88,6 +88,8 @@ import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 
+import { adjectives, animals } from "@/utils/names.js";
+
 // A new Y document
 // const ydoc = new Y.Doc();
 // Registered with a WebRTC provider
@@ -102,6 +104,12 @@ export default {
     return {
       editor: null,
     };
+  },
+
+  computed: {
+    friendlyName: function () {
+      return `${this.getRandomAdjective()} ${this.getRandomName()}`;
+    },
   },
 
   mounted() {
@@ -124,13 +132,29 @@ export default {
         CollaborationCursor.configure({
           provider: provider,
           user: {
-            name: "Test User",
+            name: this.friendlyName,
             color: "#58D29F",
           },
         }),
       ],
       content,
     });
+  },
+
+  methods: {
+    capitalize(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    },
+    getRandomName() {
+      let name = animals[Math.floor(Math.random() * animals.length)];
+      name = name.split(" ").map(this.capitalize).join(" ");
+      return name;
+    },
+    getRandomAdjective() {
+      let adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+      adjective = adjective.split(" ").map(this.capitalize).join(" ");
+      return adjective;
+    },
   },
 
   beforeUnmount() {
@@ -235,7 +259,6 @@ button {
     margin-left: -1px;
     margin-right: -1px;
     border-left: 1px solid #0d0d0d;
-    // border-right: 1px solid #0d0d0d;
     word-break: normal;
 
     &::before {
@@ -249,7 +272,7 @@ button {
       white-space: nowrap;
       position: absolute;
       top: -1.4em;
-      left: 0;
+      left: -1px;
       font-size: 12px;
       font-weight: bold;
       padding: 0.2rem;
