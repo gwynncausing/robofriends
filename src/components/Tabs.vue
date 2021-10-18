@@ -30,7 +30,7 @@
 
 <script>
 export default {
-  name: "AppTabsHolder",
+  name: "Tabs",
   props: {
     active: {
       type: String,
@@ -62,13 +62,6 @@ export default {
 };
 </script>
 
-<<<<<<< Updated upstream
-<style lang="scss" style="scoped"></style>
-||||||| constructed merge base
-<style style="scoped"></style>
-=======
 <style style="scoped">
-.v-tabs {
-}
+.v-tabs {}
 </style>
->>>>>>> Stashed changes
