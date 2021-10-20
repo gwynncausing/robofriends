@@ -5,9 +5,9 @@
         <div class="team-name-wrapper">
           <span class="team-name-label">Team Name</span>
           <TextField
-            v-model="team.teamName"
+            v-model="team.name"
             name="team-name"
-            :rules="rules.teamName"
+            :rules="rules.name"
           />
         </div>
       </div>
@@ -23,7 +23,7 @@
             v-model="team.teacher[index]"
             name="teachers"
             :items="teachersList"
-            :rules="rules.teamName"
+            :rules="rules.name"
           />
           <v-btn
             v-if="index !== 0"
@@ -54,7 +54,7 @@
           <TextField
             v-model="team.member[index]"
             name="member"
-            :rules="rules.teamName"
+            :rules="rules.name"
           />
           <v-btn
             v-if="index !== 0"
@@ -127,7 +127,13 @@
 import Combobox from "@/components/global/Combobox.vue";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
-// import { mapGetters } from "vuex";
+
+import { mapActions, mapGetters } from "vuex";
+import { ACTIONS } from "../store/types/actions";
+import { GETTERS } from "../store/types/getters";
+import { UTILS } from "../constants/utils";
+// import { USER } from "@/utils/constants/user";
+// import { STATUS_CODES } from "@/utils/constants/http-status-codes";
 
 export default {
   name: "CreateTeam",
@@ -139,14 +145,14 @@ export default {
   data() {
     return {
       rules: {
-        teamName: [(v) => !!v || "Team Name is required"],
+        name: [(v) => !!v || "Team Name is required"],
       },
       addTeacherActive: false,
       addMemberActive: false,
       treeList: [],
       teachersList: ["Juan", "Thoo", "Thri"],
       team: {
-        teamName: "",
+        name: "",
         teacher: [""],
         member: [""],
         tree: "",
@@ -156,9 +162,11 @@ export default {
   },
 
   computed: {
-    // ...mapGetters({
-    //   getUser: "user/getUser",
-    // }),
+    ...mapGetters({
+      getTeam: `${UTILS.STORE_MODULE_PATH}${GETTERS.GET_TEAM}`,
+      getSentMembersInvitations: `${UTILS.STORE_MODULE_PATH}${GETTERS.GET_SENT_MEMBERS_INVITATIONS}`,
+      getSentTeachersInvitations: `${UTILS.STORE_MODULE_PATH}${GETTERS.GET_SENT_TEACHERS_INVITATIONS}`,
+    }),
   },
 
   created() {
@@ -178,6 +186,11 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      onCreateTeam: `${UTILS.STORE_MODULE_PATH}${ACTIONS.CREATE_TEAM}`,
+      onSendMembersInvitations: `${UTILS.STORE_MODULE_PATH}${ACTIONS.SEND_MEMBERS_INVITATIONS}`,
+      onSendTeachersInvitations: `${UTILS.STORE_MODULE_PATH}${ACTIONS.SEND_TEACHERS_INVITATIONS}`,
+    }),
     removeItem(item = 0, user = []) {
       user.splice(item, 1);
     },
@@ -210,10 +223,34 @@ export default {
       }
       this.team.tree = "";
     },
-    submit() {
+    async submit() {
       if (!this.team.tree) this.isTreeError = true;
       if (this.$refs.form.validate() && !this.isTreeError) {
-        console.log("success", this.team);
+        try {
+          const createTeamPayload = {
+            name: this.team.name,
+            description: "random",
+          };
+          await this.onCreateTeam(createTeamPayload);
+          const invitedMembersPayload = {
+            id: this.getTeam.id,
+            emails: {
+              invitedEmails: this.team.member,
+              baseRole: "member",
+            },
+          };
+          await this.onSendMembersInvitations(invitedMembersPayload);
+          const invitedTeachersPayload = {
+            id: this.getTeam.id,
+            emails: {
+              invitedEmails: this.team.teacher,
+              baseRole: "adviser",
+            },
+          };
+          await this.onSendTeachersInvitations(invitedTeachersPayload);
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
   },
