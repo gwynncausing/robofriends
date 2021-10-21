@@ -1,3 +1,6 @@
 export default () => ({
-  // place state here
+  team: {},
+  sentMembersInvitations: [],
+  sentTeachersInvitations: [],
+  invitations: [],
 });

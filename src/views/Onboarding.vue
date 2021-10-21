@@ -100,7 +100,9 @@
                   name="id-number"
                   :rules="rules.idNumber"
                 />
-
+                <div v-if="error" class="errors">
+                  {{ error }}
+                </div>
                 <div class="d-flex justify-space-between">
                   <Button text @click="prevStep()"> Back </Button>
                   <Button @click="completeOnboarding()"> Submit </Button>
@@ -124,6 +126,7 @@ import { mapActions, mapGetters } from "vuex";
 import { ACTIONS } from "@/store/types/actions";
 import { GETTERS } from "@/store/types/getters";
 import { USER } from "@/utils/constants/user";
+import { STATUS_CODES } from "@/utils/constants/http-status-codes";
 
 export default {
   name: "OnboardingAccountType",
@@ -140,6 +143,7 @@ export default {
       step: 1,
       chooseUserTypeClick: true,
       user: {},
+      error: "",
       userType: [
         {
           name: "Student",
@@ -190,6 +194,7 @@ export default {
 
   async created() {
     await this.fetchSchools();
+    console.log(this.schools);
   },
 
   methods: {
@@ -256,7 +261,13 @@ export default {
             break;
         }
       } catch (error) {
-        console.log(error);
+        switch (error?.response?.status) {
+          case STATUS_CODES.ERRORS.BAD_REQUEST:
+            this.error = "ID number is already taken";
+            break;
+          default:
+            break;
+        }
       }
     },
   },
@@ -302,7 +313,12 @@ export default {
     }
   }
 }
-
+.errors {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--v-error);
+}
 .slide-fade-enter-active {
   transition: all 0.8s ease;
 }

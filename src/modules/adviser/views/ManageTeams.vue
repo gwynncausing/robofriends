@@ -1,6 +1,6 @@
 <template>
   <div id="manage-teams">
-    <AppTabsHolder active="pending-proposals" :items="items">
+    <Tabs active="pending-proposals" :items="items">
       <template v-slot:body-pending-proposals>
         <PendingProposals />
       </template>
@@ -10,19 +10,19 @@
       <template v-slot:body-research-paper>
         <ResearchPaper />
       </template>
-    </AppTabsHolder>
+    </Tabs>
   </div>
 </template>
 
 <script>
-import AppTabsHolder from "@/components/AppTabsHolder";
+import Tabs from "@/components/Tabs";
 import PendingProposals from "../components/manage-teams/PendingProposals";
 import ApprovedResearch from "../components/manage-teams/ApprovedResearch";
 import ResearchPaper from "../components/manage-teams/ResearchPaper";
 export default {
   name: "ManageTeams",
   components: {
-    AppTabsHolder,
+    Tabs,
     PendingProposals,
     ApprovedResearch,
     ResearchPaper,

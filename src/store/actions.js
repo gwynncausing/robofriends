@@ -20,8 +20,8 @@ export default {
     const response = await UserRepository.create(payload);
     const { user, tokens } = response.data;
     commit(MUTATIONS.SET_USER, { user: user });
-    commit(MUTATIONS.SET_TOKEN_ACCESS, { access: tokens.access });
-    commit(MUTATIONS.SET_TOKEN_REFRESH, { refresh: tokens.refresh });
+    commit(MUTATIONS.SET_TOKEN_ACCESS, { access: tokens.access_token });
+    commit(MUTATIONS.SET_TOKEN_REFRESH, { refresh: tokens.refresh_token });
   },
   async [ACTIONS.ONBOARD_USER]({ commit }, payload = PAYLOADS.ONBOARD_USER) {
     const { id, user } = payload;
