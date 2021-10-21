@@ -4,11 +4,7 @@
       <div class="team-name">
         <div class="team-name-wrapper">
           <span class="team-name-label">Team Name</span>
-          <TextField
-            v-model="team.name"
-            name="team-name"
-            :rules="rules.name"
-          />
+          <TextField v-model="team.name" name="team-name" :rules="rules.name" />
         </div>
       </div>
 
