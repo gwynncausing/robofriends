@@ -60,7 +60,7 @@
 <script>
 // import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
-import TextEditor from "../components/TextEditor.vue";
+import TextEditor from "@/components/student/TextEditor.vue";
 
 export default {
   name: "ResearchPaperEditor",

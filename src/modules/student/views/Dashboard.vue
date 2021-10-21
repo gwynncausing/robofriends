@@ -53,12 +53,12 @@
 </template>
 
 <script>
-import TeamTracker from "../components/dashboard/TeamTracker";
-import TasksBoard from "../components/dashboard/TasksBoard";
-import IndividualInsight from "../components/dashboard/IndividualInsight";
+import TeamTracker from "@/components/student/dashboard/TeamTracker";
+import TasksBoard from "@/components/student/dashboard/TasksBoard";
+import IndividualInsight from "@/components/student/dashboard/IndividualInsight";
 import Tabs from "@/components/Tabs";
-import JoinTeamModal from "../components/JoinTeamModal.vue";
-import KickstartResearchModal from "../components/KickstartResearchModal.vue";
+import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
+import KickstartResearchModal from "@/components/student/KickstartResearchModal.vue";
 
 export default {
   name: "Dashboard",
