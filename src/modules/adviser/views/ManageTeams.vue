@@ -1,6 +1,6 @@
 <template>
   <div id="manage-teams">
-    <Tabs active="pending-proposals" :items="items">
+    <Tabs active="pending-proposals" :items="items" class="tabs">
       <template v-slot:body-pending-proposals>
         <PendingProposals />
       </template>
@@ -50,7 +50,6 @@ export default {
 
 <style lang="scss" scoped>
 #manage-teams {
-  text-align: -webkit-center;
-  margin: clamp(14px, 7vw, 24px) 20px 20px 20px !important;
+  padding: 40px clamp(20px, 5.5vw, 80px);
 }
 </style>

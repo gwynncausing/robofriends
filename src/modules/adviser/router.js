@@ -28,7 +28,7 @@ const adviserRoutes = [
       },
       {
         path: "invite",
-        name: "AdviserInvitation",
+        name: "Adviser Invitation",
         component: () =>
           import("@/modules/adviser/views/AdviserInvitation.vue"),
       },

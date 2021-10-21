@@ -19,6 +19,13 @@ const designSystemRoutes = [
           import("@/modules/design_system/views/TextFieldsList.vue"),
       },
       {
+        path: "textareas",
+        name: "Textareas",
+        meta: { name: "Textareas List" },
+        component: () =>
+          import("@/modules/design_system/views/TextareasList.vue"),
+      },
+      {
         path: "combobox",
         name: "Combobox",
         meta: { name: "Combobox List" },

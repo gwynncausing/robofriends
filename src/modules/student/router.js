@@ -36,6 +36,11 @@ const studentRoutes = [
         component: () => import("@/modules/student/views/Invitation.vue"),
       },
       {
+        path: "research-details",
+        name: "Research Details",
+        component: () => import("@/modules/student/views/ResearchDetails.vue"),
+      },
+      {
         path: "editor",
         name: "Research Paper Editor",
         component: () =>
