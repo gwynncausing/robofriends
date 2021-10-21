@@ -1,6 +1,7 @@
 <template>
   <div id="manage-teams">
-    <Tabs active="pending-proposals" :items="items">
+    <TeamList />
+    <Tabs active="pending-proposals" :items="items" class="tabs">
       <template v-slot:body-pending-proposals>
         <PendingProposals />
       </template>
@@ -15,6 +16,7 @@
 </template>
 
 <script>
+// import TeamCard from "@/components/TeamCard";
 import Tabs from "@/components/Tabs";
 import PendingProposals from "../components/manage-teams/PendingProposals";
 import ApprovedResearch from "../components/manage-teams/ApprovedResearch";
@@ -50,7 +52,6 @@ export default {
 
 <style lang="scss" scoped>
 #manage-teams {
-  text-align: -webkit-center;
   margin: clamp(14px, 7vw, 24px) 20px 20px 20px !important;
 }
 </style>
