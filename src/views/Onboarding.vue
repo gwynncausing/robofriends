@@ -1,6 +1,11 @@
 <template>
   <div>
-    <AppBar />
+    <AppBar
+      :routes="appBar.routes"
+      :notifications="appBar.notifications"
+      :user="appBar.user"
+      @logout="appBar.logout"
+    />
     <div id="onboarding">
       <div class="onboarding-wrapper">
         <div class="grid-item-content">
@@ -138,6 +143,27 @@ export default {
   },
   data() {
     return {
+      appBar: {
+        user: {
+          name: "Unknown",
+          profile: "",
+          image:
+            "https://pbs.twimg.com/profile_images/516676441291759617/aLOOeXSl_400x400.jpeg",
+        },
+        routes: [
+          {
+            name: "Archive",
+            path: { name: "Archive" },
+          },
+        ],
+        notifications: [
+          {
+            name: "Notification 1",
+            details: "",
+            path: "",
+          },
+        ],
+      },
       valid: false,
       show: true,
       step: 1,
@@ -202,6 +228,9 @@ export default {
       onFetchSchools: ACTIONS.FETCH_SCHOOLS,
       onOnboardUser: ACTIONS.ONBOARD_USER,
     }),
+    logout() {
+      console.log("Logout User");
+    },
     async fetchSchools() {
       try {
         await this.onFetchSchools();
