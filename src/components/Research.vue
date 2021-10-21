@@ -2,44 +2,46 @@
   <div id="research-details">
     <div class="research-title">
       <div class="research-title-wrapper">
-        <span class="research-title-label font-semi-bold">Title</span>
+        <div class="research-title-label-wrapper">
+          <span class="research-title-label font-semi-bold">Title</span>
+          <Chip
+            v-show="!approvedresearch"
+            v-model="research.status"
+            small
+            dark
+            :color="statusColors[research.status]"
+          >
+            {{ research.status }}
+          </Chip>
+        </div>
         <TextField v-model="research.title" :readonly="readonly" />
       </div>
     </div>
 
     <div class="description">
       <div class="description-wrapper">
-        <span class="description-label font-semi-bold">Brief Description</span>
-        <v-textarea
+        <div class="description-label font-semi-bold">Brief Description</div>
+        <Textarea
           v-model="research.description"
-          outlined
           rows="4"
           :readonly="readonly"
-          auto-grow
-          dense
         />
       </div>
     </div>
 
     <div class="objectives">
       <div class="objectives-wrapper">
-        <span class="objectives-label font-semi-bold">Objectives</span>
+        <div class="objectives-label font-semi-bold">Objectives</div>
         <div
           v-for="(objective, index) in research.objectives"
           :key="objective.id"
           class="objective-list-wrapper"
           :class="{ active: addObjectiveActive }"
         >
-          <v-textarea
-            v-model="research.objectives[index]"
-            outlined
-            rows="1"
-            auto-grow
-            :readonly="readonly"
-            dense
-          ></v-textarea>
+          <Textarea v-model="research.objectives[index]" :readonly="readonly" />
           <v-btn
             v-if="index !== 0"
+            v-show="!readonly"
             class="btn-remove-item"
             icon
             @click="removeObjective(index)"
@@ -50,6 +52,7 @@
       </div>
 
       <Button
+        v-show="!readonly"
         :class="{ active: addObjectiveActive }"
         text
         class="add-objective align-self-end"
@@ -58,18 +61,29 @@
         Add Objective
       </Button>
     </div>
+
+    <div class="feedback">
+      <div class="feedback-wrapper">
+        <div class="feedback-label font-semi-bold">Feedback</div>
+        <Textarea v-model="research.feedback.text" :readonly="!readonly" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import Textarea from "@/components/global/Textarea.vue";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
+import Chip from "@/components/global/Chip.vue";
 
 export default {
   name: "ResearchDetails",
   components: {
+    Textarea,
     TextField,
     Button,
+    Chip,
   },
   props: {
     readonly: {
@@ -80,12 +94,28 @@ export default {
       type: Object,
       default: () => {},
     },
+    approvedresearch: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       addObjectiveActive: false,
+      statusColors: {
+        Pending: "yellow",
+        Returned: "red",
+        Approved: "primary",
+      },
     };
   },
+
+  // computed: {
+  //   statusColor: () => {
+  //     let index = this.status.indexOf({ status: this.props.research.status });
+  //     return this.status[index].color;
+  //   },
+  // },
 
   methods: {
     addItem() {
@@ -108,21 +138,29 @@ export default {
     animation: fade-in-opacity 1s ease-in-out;
   }
 
-  .title .description,
-  .objectives {
+  .research-title,
+  .description,
+  .objectives,
+  .feedback {
     display: flex;
     flex-direction: column;
 
-    .research-title-wrapper,
-    .description-wrapper,
-    .objective-wrapper {
+    .research-title-label-wrapper {
       display: flex;
-      .research-title-label,
-      .description-label,
-      .objectives-label {
-        padding-bottom: 100px;
+      column-gap: 8px;
+      flex-direction: row;
+      align-items: center;
+      .research-title-label {
+        padding: 8px;
       }
     }
+
+    .description-label,
+    .objectives-label,
+    .feedback-label {
+      padding: 8px;
+    }
+
     .objective-list-wrapper {
       display: flex;
     }

@@ -40,8 +40,8 @@ export default {
       default: "",
     },
     rows: {
-      type: Number,
-      default: 1,
+      type: String,
+      default: "1",
     },
     clearable: {
       type: Boolean,
