@@ -1,6 +1,6 @@
 <template>
   <div id="appbar">
-    <v-app-bar elevation="2">
+    <v-app-bar elevation="2" color="white">
       <v-app-bar-nav-icon
         class="hidden-md-and-up"
         @click.stop="drawer = !drawer"
