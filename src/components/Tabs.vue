@@ -3,7 +3,7 @@
     <v-tabs
       v-model="tab"
       v-bind="$attrs"
-      grow
+      fixed-tabs
       center-active
       show-arrows
       v-on="$listeners"
