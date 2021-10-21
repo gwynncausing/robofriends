@@ -21,9 +21,9 @@
         <v-list-item
           v-for="(route, id) in routes"
           :key="id"
-          style="border-radius: 5px"
           :to="route.path"
           :exact-path="true"
+          class="smooth-border"
         >
           <v-list-item-title>
             <span class="button-font">{{ route.name }}</span>
@@ -113,9 +113,9 @@
         <v-list-item
           v-for="(route, id) in routes"
           :key="id"
-          style="border-radius: 5px"
           :to="route.path"
           :exact="true"
+          class="smooth-border"
         >
           <v-list-item-title class="button-font">
             {{ route.name }}
@@ -183,5 +183,8 @@ export default {
 a {
   text-decoration: none;
   color: black;
+}
+.smooth-border {
+  border-radius: 5px;
 }
 </style>
