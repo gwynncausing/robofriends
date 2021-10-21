@@ -17,11 +17,7 @@
         </v-list>
       </v-menu>
     </div>
-    <div
-      v-for="(editor, index) in numberOfEditors"
-      :key="index"
-      class="editor-list"
-    >
+    <div v-for="(editor, index) in editors" :key="index" class="editor-list">
       <div class="editor-row">
         <div class="editor-profile-list">
           <div v-for="item in 3" :key="item" class="profile">
@@ -32,11 +28,15 @@
         </div>
 
         <div class="editor-content">
-          <Editor />
+          <TextEditor
+            v-if="editor.blockType === 'text'"
+            :editor-data="editor"
+            @input="testInput($event, index)"
+          />
         </div>
 
         <div class="editor-controls-list">
-          <Button icon @click="addNumberEditor(index)">
+          <Button icon @click="addEditor(index)">
             <v-icon class="editor-control-icon">mdi-plus-circle</v-icon>
           </Button>
 
@@ -60,25 +60,38 @@
 <script>
 // import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
-import Editor from "../components/Editor.vue";
+import TextEditor from "../components/TextEditor.vue";
 
 export default {
   name: "ResearchPaperEditor",
   components: {
     Button,
-    Editor,
+    TextEditor,
   },
   data() {
     return {
       exportItems: [{ title: "ACM" }, { title: "APA" }, { title: "MLA" }],
-      numberOfEditors: 1,
+      editors: [],
     };
   },
+
+  mounted() {
+    if (!this.editors.length) {
+      this.addEditor(0);
+    }
+  },
+
   methods: {
-    addNumberEditor(index) {
-      console.log("asdasd", index);
-      this.numberOfEditors += 1;
-      // this.splice( index, 0, item );
+    testInput(event, index) {
+      Object.assign(this.editors[index].content, event);
+    },
+    addEditor(index) {
+      let id = Date.now().toString();
+      this.editors.splice(index, 0, {
+        id,
+        content: [],
+        blockType: "text",
+      });
     },
     testMethod() {
       console.log("testMethod called");

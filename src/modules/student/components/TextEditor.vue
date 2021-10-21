@@ -100,9 +100,17 @@ export default {
     EditorContent,
   },
 
+  props: {
+    editorData: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+
   data() {
     return {
       editor: null,
+      content: "",
     };
   },
 
@@ -112,14 +120,19 @@ export default {
     },
   },
 
+  watch: {
+    content: function (val) {
+      console.log(val);
+    },
+  },
+
   mounted() {
     const ydoc = new Y.Doc();
 
     const documentId = "testDocumentIdentifier";
+    // const documentId = this.editorData.id;
 
-    let content = ``;
-    // <h4>Hello Cary Gwapo!</h4>
-    //   <p>This is a test text.</p>
+    // let content = this.editorData.content;
 
     const provider = new WebrtcProvider(documentId, ydoc);
 
@@ -133,12 +146,16 @@ export default {
           provider: provider,
           user: {
             name: this.friendlyName,
-            color: "#58D29F",
+            color: this.getRandomColor(),
           },
         }),
       ],
-      content,
+      content: this.content,
     });
+
+    setInterval(() => {
+      this.$emit("input", this.editor.getJSON());
+    }, 2000);
   },
 
   methods: {
@@ -154,6 +171,14 @@ export default {
       let adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
       adjective = adjective.split(" ").map(this.capitalize).join(" ");
       return adjective;
+    },
+    getRandomColor() {
+      let letters = "0123456789ABCDEF";
+      let color = "#";
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
     },
   },
 
@@ -259,6 +284,7 @@ button {
     margin-left: -1px;
     margin-right: -1px;
     border-left: 1px solid #0d0d0d;
+    border-right: 1px solid #0d0d0d;
     word-break: normal;
 
     &::before {

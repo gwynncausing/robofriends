@@ -1,7 +1,7 @@
 <template>
   <div id="dashboard">
     <!-- //* Remove negation to hasTeam to show team/join team -->
-    <div v-if="!hasTeam" id="dashboard-no-team">
+    <div v-if="hasTeam" id="dashboard-no-team">
       <v-img :src="require('@/assets/dashboard-no-team.svg')" width="400" />
       <div class="dashboard-cta">
         <h5>Looks like you don’t have a team yet.</h5>
