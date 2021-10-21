@@ -1,7 +1,7 @@
 <template>
   <div id="dashboard">
     <!-- //* Remove negation to hasTeam to show team/join team -->
-    <div v-if="!hasTeam" id="dashboard-no-team">
+    <div v-if="hasTeam" id="dashboard-no-team">
       <v-img :src="require('@/assets/dashboard-no-team.svg')" width="400" />
       <div class="dashboard-cta">
         <h5>Looks like you don’t have a team yet.</h5>
@@ -53,12 +53,12 @@
 </template>
 
 <script>
-import TeamTracker from "../components/dashboard/TeamTracker";
-import TasksBoard from "../components/dashboard/TasksBoard";
-import IndividualInsight from "../components/dashboard/IndividualInsight";
+import TeamTracker from "@/components/student/dashboard/TeamTracker";
+import TasksBoard from "@/components/student/dashboard/TasksBoard";
+import IndividualInsight from "@/components/student/dashboard/IndividualInsight";
 import Tabs from "@/components/Tabs";
-import JoinTeamModal from "../components/JoinTeamModal.vue";
-import KickstartResearchModal from "../components/KickstartResearchModal.vue";
+import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
+import KickstartResearchModal from "@/components/student/KickstartResearchModal.vue";
 
 export default {
   name: "Dashboard",

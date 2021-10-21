@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+# Ensure all JS and Vue files use LF.
+*.js         eol=lf
+*.vue       eol=lf

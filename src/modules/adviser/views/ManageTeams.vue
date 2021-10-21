@@ -16,9 +16,9 @@
 
 <script>
 import Tabs from "@/components/Tabs";
-import PendingProposals from "../components/manage-teams/PendingProposals";
-import ApprovedResearch from "../components/manage-teams/ApprovedResearch";
-import ResearchPaper from "../components/manage-teams/ResearchPaper";
+import PendingProposals from "@/components/adviser/manage-teams/PendingProposals";
+import ApprovedResearch from "@/components/adviser/manage-teams/ApprovedResearch";
+import ResearchPaper from "@/components/adviser/manage-teams/ResearchPaper";
 export default {
   name: "ManageTeams",
   components: {
