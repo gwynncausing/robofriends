@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="tabs">
     <v-tabs
       v-model="tab"
       v-bind="$attrs"
-      fixed-tabs
+      grow
       center-active
       show-arrows
       v-on="$listeners"
@@ -62,7 +62,4 @@ export default {
 };
 </script>
 
-<style style="scoped">
-.v-tabs {
-}
-</style>
+<style style="scoped"></style>

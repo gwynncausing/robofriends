@@ -62,7 +62,7 @@
       </Button>
     </div>
 
-    <div class="feedback">
+    <div class="feedback" v-show="!approvedresearch">
       <div class="feedback-wrapper">
         <div class="feedback-label font-semi-bold">Feedback</div>
         <Textarea v-model="research.feedback.text" :readonly="!readonly" />
@@ -109,13 +109,6 @@ export default {
       },
     };
   },
-
-  // computed: {
-  //   statusColor: () => {
-  //     let index = this.status.indexOf({ status: this.props.research.status });
-  //     return this.status[index].color;
-  //   },
-  // },
 
   methods: {
     addItem() {
