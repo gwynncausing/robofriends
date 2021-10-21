@@ -23,7 +23,7 @@
           :key="id"
           style="border-radius: 5px"
           :to="route.path"
-          :exact="true"
+          :exact-path="true"
         >
           <v-list-item-title>
             <span class="button-font">{{ route.name }}</span>
