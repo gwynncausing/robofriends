@@ -20,7 +20,7 @@ import Proposals from "@/components/student/research-details/Proposals";
 import ApprovedResearch from "@/components/student/research-details/ApprovedResearch";
 import CreateNew from "@/components/student/research-details/CreateNew";
 export default {
-  name: "ManageTeams",
+  name: "ResearchDetails",
   components: {
     Tabs,
     Proposals,
