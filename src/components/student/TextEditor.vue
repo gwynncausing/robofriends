@@ -30,7 +30,7 @@
       </button> -->
       <button @click="editor.chain().focus().clearNodes().run()">
         <!-- clear nodes -->
-        <v-icon>mdi-format-title</v-icon>
+        <v-icon>mdi-cancel</v-icon>
       </button>
       <button
         :class="{ 'is-active': editor.isActive('paragraph') }"
