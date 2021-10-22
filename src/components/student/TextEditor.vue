@@ -1,80 +1,6 @@
 <template>
   <div>
-    <div v-if="editor">
-      <button
-        :class="{ 'is-active': editor.isActive('bold') }"
-        @click="editor.chain().focus().toggleBold().run()"
-      >
-        <v-icon> mdi-format-bold </v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('italic') }"
-        @click="editor.chain().focus().toggleItalic().run()"
-      >
-        <v-icon> mdi-format-italic </v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('strike') }"
-        @click="editor.chain().focus().toggleStrike().run()"
-      >
-        <v-icon> mdi-format-strikethrough-variant </v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('code') }"
-        @click="editor.chain().focus().toggleCode().run()"
-      >
-        <v-icon>mdi-code-tags</v-icon>
-      </button>
-      <!-- <button @click="editor.chain().focus().unsetAllMarks().run()">
-        clear marks
-      </button> -->
-      <button @click="editor.chain().focus().clearNodes().run()">
-        <!-- clear nodes -->
-        <v-icon>mdi-cancel</v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('paragraph') }"
-        @click="editor.chain().focus().setParagraph().run()"
-      >
-        <v-icon>mdi-format-paragraph</v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
-        @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
-      >
-        <v-icon>mdi-format-header-1</v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
-        @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
-      >
-        <v-icon>mdi-format-header-2</v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
-        @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
-      >
-        <v-icon>mdi-format-header-3</v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('bulletList') }"
-        @click="editor.chain().focus().toggleBulletList().run()"
-      >
-        <v-icon>mdi-format-list-bulleted</v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('orderedList') }"
-        @click="editor.chain().focus().toggleOrderedList().run()"
-      >
-        <v-icon>mdi-format-list-numbered</v-icon>
-      </button>
-      <button @click="editor.chain().focus().redo().run()">
-        <v-icon>mdi-redo</v-icon>
-      </button>
-      <button @click="editor.chain().focus().undo().run()">
-        <v-icon>mdi-undo</v-icon>
-      </button>
-    </div>
+    <TextEditorButtons :editor="editor" />
     <editor-content :editor="editor" />
   </div>
 </template>
@@ -82,6 +8,9 @@
 <script>
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import Superscript from "@tiptap/extension-superscript";
+import Subscript from "@tiptap/extension-subscript";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
@@ -89,6 +18,7 @@ import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 
 import { adjectives, animals } from "@/utils/names.js";
+import TextEditorButtons from "./TextEditorButtons";
 
 // A new Y document
 // const ydoc = new Y.Doc();
@@ -97,6 +27,7 @@ import { adjectives, animals } from "@/utils/names.js";
 
 export default {
   components: {
+    TextEditorButtons,
     EditorContent,
   },
 
@@ -139,6 +70,9 @@ export default {
     this.editor = new Editor({
       extensions: [
         StarterKit,
+        Underline,
+        Superscript,
+        Subscript,
         Collaboration.configure({
           document: ydoc,
         }),
@@ -187,21 +121,6 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-button {
-  border: 1px solid $neutral-700;
-  border-radius: 4px;
-  padding: 2px;
-  margin: 4px;
-  background-color: $white;
-  transition: background-color 250ms;
-
-  &:hover {
-    background-color: $neutral-100;
-  }
-}
-</style>
 
 <style lang="scss">
 /* Basic editor styles */
