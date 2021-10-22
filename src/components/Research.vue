@@ -1,5 +1,5 @@
 <template>
-  <div id="research-details">
+  <div id="research">
     <div class="research-title">
       <div class="research-title-wrapper">
         <div class="research-title-label-wrapper">
