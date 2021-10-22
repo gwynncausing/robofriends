@@ -62,7 +62,7 @@
       </Button>
     </div>
 
-    <div class="feedback" v-show="!approvedresearch">
+    <div v-show="!approvedresearch" class="feedback">
       <div class="feedback-wrapper">
         <div class="feedback-label font-semi-bold">Feedback</div>
         <Textarea v-model="research.feedback.text" :readonly="!readonly" />
