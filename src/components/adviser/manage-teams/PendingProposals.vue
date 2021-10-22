@@ -2,7 +2,9 @@
   <div class="pending-proposals">
     <Research
       :research="research"
-      readonly
+      details-readonly
+      show-status
+      show-feedback
       @addObjective="addObjective"
       @removeObjective="removeObjective"
     />
@@ -23,22 +25,24 @@ export default {
     Research,
     Button,
   },
-  data: () => ({
-    research: {
-      id: "1",
-      title: "title",
-      description: "description",
-      teamName: "Cary & Co.",
-      status: "Pending", // ? values: Pending, Approved, Returned
-      objectives: ["obj1", "obj2"],
-      feedback: {
+  data() {
+    return {
+      research: {
         id: "1",
-        date: "1/1/2021",
-        time: "11:00",
-        text: "Good job!",
+        title: "title",
+        description: "description",
+        teamName: "Cary & Co.",
+        status: "Pending", // ? values: Pending, Approved, Returned
+        objectives: ["obj1", "obj2"],
+        feedback: {
+          id: "1",
+          date: "1/1/2021",
+          time: "11:00",
+          text: "Good job!",
+        },
       },
-    },
-  }),
+    };
+  },
   methods: {
     addObjective() {
       this.research.objectives.push("");
