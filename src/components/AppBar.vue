@@ -1,116 +1,167 @@
 <template>
   <div id="appbar">
-    <v-app-bar elevation="2">
-      <v-btn text>
-        <v-img :src="require('@/assets/logo.png')" width="30" contain dense />
-      </v-btn>
-
-      <v-menu offset-y :close-on-content-click="false">
-        <!-- open-on-hover -->
+    <v-app-bar elevation="2" color="white">
+      <v-app-bar-nav-icon
+        class="hidden-md-and-up"
+        @click.stop="drawer = !drawer"
+      ></v-app-bar-nav-icon>
+      <Button text disabled>
+        <v-img
+          :src="require('@/assets/bud-flower.png')"
+          width="30"
+          contain
+          dense
+        />
+      </Button>
+      <v-list-item-group
+        mandatory
+        class="hidden-sm-and-down d-md-flex align-md-center"
+        active-class="primary-300 white--text"
+      >
+        <v-list-item
+          v-for="(route, id) in routes"
+          :key="id"
+          :to="route.path"
+          :exact-path="true"
+          class="smooth-border"
+        >
+          <v-list-item-title>
+            <span class="button-font">{{ route.name }}</span>
+          </v-list-item-title>
+        </v-list-item>
+      </v-list-item-group>
+      <v-spacer></v-spacer>
+      <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn text v-bind="attrs" v-on="on">
-            <router-link :to="'/'"
-              >Home <v-icon right>mdi-chevron-down</v-icon></router-link
-            >
+          <v-btn color="primary" icon v-bind="attrs" v-on="on">
+            <v-icon color="neutral-600">mdi-bell</v-icon>
           </v-btn>
         </template>
-
         <v-list>
           <v-list-item-title
-            v-for="(item, i) in home"
-            :key="i"
-            :to="{ name: item }"
+            v-for="(notification, id) in notifications"
+            :key="id"
           >
-            <!-- :to="{ name: item }" -->
-            <v-btn text block>
-              <router-link :to="{ name: item }">{{ item }}</router-link>
-            </v-btn>
+            <Button text block>
+              <span class="neutral-600--text button-font">{{
+                notification.name
+              }}</span>
+            </Button>
           </v-list-item-title>
         </v-list>
       </v-menu>
-      <v-btn text>
-        <router-link :to="{ name: 'Archive' }">Archive</router-link>
-      </v-btn>
-
-      <v-spacer></v-spacer>
-
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn text v-bind="attrs" v-on="on">
-            <v-icon>mdi-bell</v-icon>
-          </v-btn>
-        </template>
-
-        <v-list>
-          <v-list-item>
-            <v-list-item-title>
-              <v-btn text block> Notification 1 </v-btn>
-            </v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-title>
-              <v-btn text block> Notification 2 </v-btn>
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-
-      <v-menu offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" text v-on="on">
-            <v-avatar size="30" class="mr-2">
-              <img
-                src="https://pbs.twimg.com/profile_images/516676441291759617/aLOOeXSl_400x400.jpeg"
-                alt="Profile"
-              />
+          <v-btn
+            v-bind="attrs"
+            class="d-flex justify-center"
+            color="primary"
+            text
+            :icon="isBreakpointMdAndUp"
+            v-on="on"
+          >
+            <v-avatar size="30" class="d-flex justify-center">
+              <img :src="user.image" alt="Profile" />
             </v-avatar>
-            <!-- {{ getUser.lastName }} -->
-            Test
-            <v-icon right>mdi-chevron-down</v-icon>
+            <div
+              :class="[
+                'ml-2',
+                'neutral-600--text',
+                'button-font',
+                isBreakpointMdAndUp ? 'd-none' : 'd-flex',
+              ]"
+            >
+              {{ user.name }}
+              <v-icon right>mdi-chevron-down</v-icon>
+            </div>
           </v-btn>
         </template>
-
         <v-list>
-          <v-list-item-title>
-            <v-btn text block to="/student/profile"> Profile </v-btn>
+          <v-list-item-title class="d-flex justify-center">
+            <Button
+              :class="[isBreakpointMdAndUp ? '' : 'd-none']"
+              text
+              block
+              :to="user.profile"
+              disabled
+            >
+              <span class="neutral-600--text button-font">{{
+                user.name
+              }}</span></Button
+            >
           </v-list-item-title>
           <v-list-item-title>
-            <v-btn text block @click="logout"> Logout </v-btn>
+            <Button text block :to="user.profile">
+              <span class="neutral-600--text button-font">Profile</span></Button
+            >
+          </v-list-item-title>
+          <v-list-item-title>
+            <Button text block @click="logout"
+              ><span class="neutral-600--text button-font">Logout</span></Button
+            >
           </v-list-item-title>
         </v-list>
       </v-menu>
     </v-app-bar>
+    <v-navigation-drawer
+      v-model="drawer"
+      class="hidden-md-and-up"
+      absolute
+      temporary
+    >
+      <v-list-item-group active-class="primary-300 white--text" class="pa-3">
+        <v-list-item
+          v-for="(route, id) in routes"
+          :key="id"
+          :to="route.path"
+          :exact="true"
+          class="smooth-border"
+        >
+          <v-list-item-title class="button-font">
+            {{ route.name }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list-item-group>
+    </v-navigation-drawer>
   </div>
 </template>
 
 <script>
-// import { mapActions, mapGetters } from "vuex";
+import Button from "@/components/global/Button.vue";
+
 export default {
   name: "AppBar",
+  components: {
+    Button,
+  },
+  props: {
+    routes: {
+      type: Array,
+      default: () => [],
+    },
+    notifications: {
+      type: Array,
+      default: () => [],
+    },
+    user: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
-      username: "",
-      home: [
-        "Dashboard",
-        "Project Details",
-        "Recommended Guides",
-        "Team Settings",
-      ],
+      drawer: false,
     };
   },
   computed: {
-    // ...mapGetters({
-    //   getUser: "user/getUser",
-    // }),
+    isBreakpointMdAndUp() {
+      return this.$vuetify.breakpoint.mdAndUp ? false : true;
+    },
   },
   methods: {
     logout() {
-      this.onLogout();
-      this.$router.push("/");
+      this.$emit("logout");
     },
-    // ...mapActions({
-    //   onLogout: "user/logout",
-    // }),
   },
 };
 </script>
@@ -132,5 +183,8 @@ export default {
 a {
   text-decoration: none;
   color: black;
+}
+.smooth-border {
+  border-radius: 5px;
 }
 </style>

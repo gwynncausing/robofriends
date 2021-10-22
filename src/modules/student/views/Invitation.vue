@@ -45,7 +45,7 @@
 // import { mapGetters } from "vuex";
 import InvitationMessage from "@/components/InvitationMessage.vue";
 import InvitationRow from "@/components/InvitationRow.vue";
-import JoinTeamModal from "../components/JoinTeamModal.vue";
+import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
 
 export default {
   name: "StudentInvitation",

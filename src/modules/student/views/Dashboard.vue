@@ -1,7 +1,7 @@
 <template>
   <div id="dashboard">
     <!-- //* Remove negation to hasTeam to show team/join team -->
-    <div v-if="!hasTeam" id="dashboard-no-team">
+    <div v-if="hasTeam" id="dashboard-no-team">
       <v-img :src="require('@/assets/dashboard-no-team.svg')" width="400" />
       <div class="dashboard-cta">
         <h5>Looks like you don’t have a team yet.</h5>
@@ -32,7 +32,7 @@
       </div>
     </div>
     <div v-else id="dashboard-has-team">
-      <AppTabsHolder active="team-tracker" :items="items">
+      <Tabs active="team-tracker" :items="items">
         <template v-slot:body-team-tracker>
           <TeamTracker />
         </template>
@@ -42,7 +42,7 @@
         <template v-slot:body-tasks-board>
           <TasksBoard />
         </template>
-      </AppTabsHolder>
+      </Tabs>
       <KickstartResearchModal
         :dialog-props="kickstartResearchModal"
         @dialogClose="kickstartResearchModal = $event"
@@ -53,12 +53,12 @@
 </template>
 
 <script>
-import TeamTracker from "../components/dashboard/TeamTracker";
-import TasksBoard from "../components/dashboard/TasksBoard";
-import IndividualInsight from "../components/dashboard/IndividualInsight";
-import AppTabsHolder from "@/components/AppTabsHolder";
-import JoinTeamModal from "../components/JoinTeamModal.vue";
-import KickstartResearchModal from "../components/KickstartResearchModal.vue";
+import TeamTracker from "@/components/student/dashboard/TeamTracker";
+import TasksBoard from "@/components/student/dashboard/TasksBoard";
+import IndividualInsight from "@/components/student/dashboard/IndividualInsight";
+import Tabs from "@/components/Tabs";
+import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
+import KickstartResearchModal from "@/components/student/KickstartResearchModal.vue";
 
 export default {
   name: "Dashboard",
@@ -66,7 +66,7 @@ export default {
     TeamTracker,
     TasksBoard,
     IndividualInsight,
-    AppTabsHolder,
+    Tabs,
     JoinTeamModal,
     KickstartResearchModal,
   },

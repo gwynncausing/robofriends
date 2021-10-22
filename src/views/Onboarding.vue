@@ -1,6 +1,11 @@
 <template>
   <div>
-    <AppBar />
+    <AppBar
+      :routes="appBar.routes"
+      :notifications="appBar.notifications"
+      :user="appBar.user"
+      @logout="appBar.logout"
+    />
     <div id="onboarding">
       <div class="onboarding-wrapper">
         <div class="grid-item-content">
@@ -60,35 +65,36 @@
                   </p>
                 </div>
                 <Select
-                  v-model="user.school"
+                  v-model="user.schoolId"
                   label="School"
                   name="school"
-                  :items="schoolNames"
-                  :rules="rules.school"
+                  item-text="name"
+                  item-value="id"
+                  :items="schools"
+                  :rules="rules.schoolId"
                 />
                 <Select
-                  v-model="user.college"
+                  v-model="user.collegeId"
                   label="College"
                   name="college"
-                  item-text="text"
-                  item-value="abbr"
+                  item-text="name"
+                  item-value="id"
                   outlined
                   dense
-                  :items="collegeList"
-                  :rules="rules.college"
+                  :items="colleges"
+                  :rules="rules.collegeId"
                 />
                 <Select
-                  v-show="user.userType === 'Student'"
+                  v-show="user.type === 'Student'"
                   v-model="user.program"
                   label="Program"
                   name="program"
                   outlined
                   dense
                   class="program"
-                  item-text="text"
-                  :items="programList"
+                  :items="programs"
                   :rules="
-                    user.userType === 'Student'
+                    user.type === 'Student'
                       ? [(v) => !!v || 'Program is required']
                       : []
                   "
@@ -99,7 +105,9 @@
                   name="id-number"
                   :rules="rules.idNumber"
                 />
-
+                <div v-if="error" class="errors">
+                  {{ error }}
+                </div>
                 <div class="d-flex justify-space-between">
                   <Button text @click="prevStep()"> Back </Button>
                   <Button @click="completeOnboarding()"> Submit </Button>
@@ -114,11 +122,17 @@
 </template>
 
 <script>
-import COLLEGES from "@/assets/colleges.json";
 import Select from "@/components/global/Select.vue";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 import AppBar from "@/components/AppBar.vue";
+
+import { mapActions, mapGetters } from "vuex";
+import { ACTIONS } from "@/store/types/actions";
+import { GETTERS } from "@/store/types/getters";
+import { USER } from "@/utils/constants/user";
+import { STATUS_CODES } from "@/utils/constants/http-status-codes";
+
 export default {
   name: "OnboardingAccountType",
   components: {
@@ -129,11 +143,33 @@ export default {
   },
   data() {
     return {
+      appBar: {
+        user: {
+          name: "Unknown",
+          profile: "",
+          image:
+            "https://pbs.twimg.com/profile_images/516676441291759617/aLOOeXSl_400x400.jpeg",
+        },
+        routes: [
+          {
+            name: "Archive",
+            path: { name: "Archive" },
+          },
+        ],
+        notifications: [
+          {
+            name: "Notification 1",
+            details: "",
+            path: "",
+          },
+        ],
+      },
       valid: false,
       show: true,
       step: 1,
       chooseUserTypeClick: true,
       user: {},
+      error: "",
       userType: [
         {
           name: "Student",
@@ -144,28 +180,24 @@ export default {
           img: require("@/assets/teacher.svg"),
         },
       ],
-      schoolNames: ["CIT", "UC", "USJR"],
+      schools: ["CIT", "UC", "USJR"],
+      colleges: [],
+      programs: [],
       rules: {
         idNumber: [(v) => !!v || "ID Number is required"],
-        school: [(v) => !!v || "School is required"],
-        college: [(v) => !!v || "College is required"],
-        Program: [(v) => !!v || "Program is required"],
+        schoolId: [(v) => !!v || "School is required"],
+        collegeId: [(v) => !!v || "College is required"],
+        program: [(v) => !!v || "Program is required"],
       },
     };
   },
 
   computed: {
-    collegeList() {
-      return COLLEGES;
-    },
-    programList() {
-      return COLLEGES.reduce((total, current) => {
-        if (current.abbr === this.user.college) {
-          total = [...current.programs];
-        }
-        return total;
-      }, []);
-    },
+    ...mapGetters({
+      getSchools: GETTERS.GET_SCHOOLS,
+      getUser: GETTERS.GET_USER,
+      getUserType: GETTERS.GET_USER_TYPE,
+    }),
   },
 
   watch: {
@@ -173,16 +205,43 @@ export default {
       if (newVal != 1) return;
       this.chooseUserTypeClick = true;
     },
+    "user.schoolId": function () {
+      this.colleges = this.schools.find(
+        (school) => school.id === this.user.schoolId
+      ).colleges;
+      this.programs = [];
+    },
+    "user.collegeId": function () {
+      this.programs = this.colleges.find(
+        (college) => college.id === this.user.collegeId
+      ).programs;
+    },
   },
 
-  created() {
-    console.log("Onboarding Started");
+  async created() {
+    await this.fetchSchools();
+    console.log(this.schools);
   },
 
   methods: {
+    ...mapActions({
+      onFetchSchools: ACTIONS.FETCH_SCHOOLS,
+      onOnboardUser: ACTIONS.ONBOARD_USER,
+    }),
+    logout() {
+      console.log("Logout User");
+    },
+    async fetchSchools() {
+      try {
+        await this.onFetchSchools();
+        this.schools = this.getSchools;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     selectUserType(item) {
       this.chooseUserTypeClick = false;
-      this.user.userType = item;
+      this.user.type = item;
       this.nextStep();
     },
     nextStep() {
@@ -199,9 +258,46 @@ export default {
         this.step -= 0.5;
       }, 800);
     },
-    completeOnboarding() {
+    async completeOnboarding() {
       if (!this.$refs["onboarding-form"].validate()) return;
-      console.log("complete onboarding");
+      try {
+        const payload = {
+          id: this.getUser.id,
+          user: {
+            ...this.user,
+            type:
+              this.user.type === "Student"
+                ? USER.TYPES.STUDENT
+                : USER.TYPES.TEACHER,
+            firstName: this.getUser.firstName,
+            lastName: this.getUser.lastName,
+          },
+        };
+        //TODO: temporary solution for the error if user is teacher, inform backend later
+        if (this.user.type === "Teacher")
+          payload.user.program = this.programs[0];
+        await this.onOnboardUser(payload);
+        switch (this.getUserType) {
+          case USER.TYPES.STUDENT:
+            this.$router.replace({ name: "Dashboard" });
+            break;
+          case USER.TYPES.TEACHER:
+            //TODO: change to teacher dashboard route
+            console.log("Redirect to teacher's dashboard");
+            break;
+          default:
+            console.log("Default");
+            break;
+        }
+      } catch (error) {
+        switch (error?.response?.status) {
+          case STATUS_CODES.ERRORS.BAD_REQUEST:
+            this.error = "ID number is already taken";
+            break;
+          default:
+            break;
+        }
+      }
     },
   },
 };
@@ -246,7 +342,12 @@ export default {
     }
   }
 }
-
+.errors {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--v-error);
+}
 .slide-fade-enter-active {
   transition: all 0.8s ease;
 }

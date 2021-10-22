@@ -6,4 +6,5 @@ export default () => ({
     access: "",
     refresh: "",
   },
+  schools: {},
 });
