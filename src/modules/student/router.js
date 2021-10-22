@@ -31,7 +31,7 @@ const studentRoutes = [
         component: () => import("@/modules/student/views/CreateTeam.vue"),
       },
       {
-        path: "invite",
+        path: "invitations",
         name: "StudentInvitation",
         component: () => import("@/modules/student/views/Invitation.vue"),
       },
