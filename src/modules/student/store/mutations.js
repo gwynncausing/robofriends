@@ -1,8 +1,8 @@
 import { MUTATIONS } from "./types/mutations";
 
 export default {
-  [MUTATIONS.SET_TEAM](state, { team }) {
-    state.team = team;
+  [MUTATIONS.SET_CURRENT_CREATED_TEAM](state, { team }) {
+    state.currentCreatedTeam = team;
   },
   [MUTATIONS.SET_SENT_MEMBERS_INVITATIONS](state, { sentMembersInvitations }) {
     state.sentMembersInvitations = sentMembersInvitations;

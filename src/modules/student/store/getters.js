@@ -1,8 +1,8 @@
 import { GETTERS } from "./types/getters";
 
 export default {
-  [GETTERS.GET_TEAM]({ team }) {
-    return team;
+  [GETTERS.GET_CURRENT_CREATED_TEAM]({ currentCreatedTeam }) {
+    return currentCreatedTeam;
   },
   [GETTERS.GET_SENT_MEMBERS_INVITATIONS]({ sentMembersInvitations }) {
     return sentMembersInvitations;

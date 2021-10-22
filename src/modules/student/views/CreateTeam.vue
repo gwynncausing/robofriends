@@ -4,7 +4,12 @@
       <div class="team-name">
         <div class="team-name-wrapper">
           <span class="team-name-label">Team Name</span>
-          <TextField v-model="team.name" name="team-name" :rules="rules.name" />
+          <TextField
+            v-model="team.name"
+            name="team-name"
+            :rules="rules.teamName"
+            placeholder="Group Name"
+          />
         </div>
       </div>
 
@@ -19,7 +24,8 @@
             v-model="team.teacher[index]"
             name="teachers"
             :items="teachersList"
-            :rules="rules.name"
+            :rules="rules.email"
+            placeholder="teacher.teacher@email.com"
           />
           <v-btn
             v-if="index !== 0"
@@ -50,7 +56,8 @@
           <TextField
             v-model="team.member[index]"
             name="member"
-            :rules="rules.name"
+            :rules="rules.email"
+            placeholder="member.member@email.com"
           />
           <v-btn
             v-if="index !== 0"
@@ -141,7 +148,11 @@ export default {
   data() {
     return {
       rules: {
-        name: [(v) => !!v || "Team Name is required"],
+        teamName: [(v) => !!v || "Team Name is required"],
+        email: [
+          (v) =>
+            v.trim() === "" || /.+@.+\..+/.test(v) || "E-mail must be valid",
+        ],
       },
       addTeacherActive: false,
       addMemberActive: false,
@@ -159,7 +170,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      getTeam: `${UTILS.STORE_MODULE_PATH}${GETTERS.GET_TEAM}`,
+      getCurrentCreatedTeam: `${UTILS.STORE_MODULE_PATH}${GETTERS.GET_CURRENT_CREATED_TEAM}`,
       getSentMembersInvitations: `${UTILS.STORE_MODULE_PATH}${GETTERS.GET_SENT_MEMBERS_INVITATIONS}`,
       getSentTeachersInvitations: `${UTILS.STORE_MODULE_PATH}${GETTERS.GET_SENT_TEACHERS_INVITATIONS}`,
     }),
@@ -228,22 +239,27 @@ export default {
             description: "random",
           };
           await this.onCreateTeam(createTeamPayload);
-          const invitedMembersPayload = {
-            id: this.getTeam.id,
-            emails: {
-              invitedEmails: this.team.member,
-              baseRole: "member",
-            },
-          };
-          await this.onSendMembersInvitations(invitedMembersPayload);
-          const invitedTeachersPayload = {
-            id: this.getTeam.id,
-            emails: {
-              invitedEmails: this.team.teacher,
-              baseRole: "adviser",
-            },
-          };
-          await this.onSendTeachersInvitations(invitedTeachersPayload);
+          if (this.team.member.length >= 0) {
+            const invitedMembersPayload = {
+              id: this.getCurrentCreatedTeam.id,
+              emails: {
+                invitedEmails: this.team.member,
+                baseRole: "member",
+              },
+            };
+            await this.onSendMembersInvitations(invitedMembersPayload);
+          }
+          if (this.team.teacher.length >= 0) {
+            const invitedTeachersPayload = {
+              id: this.getCurrentCreatedTeam.id,
+              emails: {
+                invitedEmails: this.team.teacher,
+                baseRole: "adviser",
+              },
+            };
+            await this.onSendTeachersInvitations(invitedTeachersPayload);
+          }
+          this.$router.push({ name: "Dashboard" });
         } catch (error) {
           console.log(error);
         }

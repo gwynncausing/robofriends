@@ -1,5 +1,5 @@
 export default () => ({
-  team: {},
+  currentCreatedTeam: {},
   sentMembersInvitations: [],
   sentTeachersInvitations: [],
   invitations: [],

@@ -8,7 +8,7 @@ export default {
   async [ACTIONS.CREATE_TEAM]({ commit }, payload = PAYLOADS.CREATE_TEAM) {
     const response = await TeamRepository.create(payload);
     const team = response.data;
-    commit(MUTATIONS.SET_TEAM, { team: team });
+    commit(MUTATIONS.SET_CURRENT_CREATED_TEAM, { team: team });
   },
   async [ACTIONS.SEND_MEMBERS_INVITATIONS](
     { commit },
@@ -31,10 +31,5 @@ export default {
     commit(MUTATIONS.SET_SENT_TEACHERS_INVITATIONS, {
       sentTeachersInvitations: sentTeachersInvitations,
     });
-  },
-  async [ACTIONS.FETCH_INVITATIONS]({ commit }) {
-    const response = await TeamRepository.getInvitations();
-    const invitations = response.data;
-    commit(MUTATIONS.SET_TEAM, { team: invitations });
   },
 };
