@@ -1,11 +1,11 @@
 <template>
-  <v-card class="mx-auto" elevation="1">
+  <v-card class="mx-auto py-2" elevation="1">
     <v-card-text class="d-flex">
       <v-avatar size="36px">
         <img alt="Avatar" :src="user.image" />
       </v-avatar>
       <div class="ml-2">
-        <div class="button-font font-bold text-left">
+        <div class="button-font font-bold text-left neutral-800--text">
           {{ completeName }}
         </div>
         <div class="caption text-left">{{ user.lastActive }}</div>
@@ -14,11 +14,11 @@
     <v-card-text class="d-flex justify-space-between py-1">
       <v-progress-linear :value="progress" height="12" rounded>
         <div class="white--text caption d-flex align-center">
-          {{ progress }}%
+          {{ progress }} %
         </div>
       </v-progress-linear>
     </v-card-text>
-    <v-card-text class="d-flex justify-space-between">
+    <v-card-text class="d-flex justify-space-between neutral-800--text">
       <div class="px-2">
         <h5>{{ completedTasksCount }}</h5>
         <div class="button-font font-semi-bold">Completed Tasks</div>
@@ -43,14 +43,14 @@
         >
           <template v-slot:activator>
             <v-list-item-content>
-              <span class="neutral-600--text d-flex justify-start button-font">
+              <span class="neutral-800--text d-flex justify-start button-font">
                 {{ task.title }} ({{ task.count }})
               </span>
             </v-list-item-content>
           </template>
           <v-list-item v-for="child in task.tasks" :key="child.title">
             <v-list-item-content>
-              <span class="neutral-600--text d-flex justify-start button-font">
+              <span class="neutral-800--text d-flex justify-start button-font">
                 {{ child.name }}
               </span>
             </v-list-item-content>
