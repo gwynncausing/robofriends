@@ -1,15 +1,15 @@
 <template>
-  <div class="research-paper">Research Paper</div>
+  <div class="proposals">Proposals</div>
 </template>
 
 <script>
 export default {
-  name: "ResearchPaper",
+  name: "Proposals",
 };
 </script>
 
 <style lang="scss" scoped>
-.research-paper {
+.proposals {
   padding-top: 24px;
 }
 </style>

@@ -1,15 +1,15 @@
 <template>
-  <div class="research-paper">Research Paper</div>
+  <div class="approved-research">Approved Research</div>
 </template>
 
 <script>
 export default {
-  name: "ResearchPaper",
+  name: "ApprovedResearch",
 };
 </script>
 
 <style lang="scss" scoped>
-.research-paper {
+.approved-research {
   padding-top: 24px;
 }
 </style>
