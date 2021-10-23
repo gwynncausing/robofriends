@@ -55,32 +55,12 @@
           </div>
         </div>
       </div>
-
-      <div
-        ref="editor-controls-list"
-        class="editor-controls-list"
-        :style="{ top: currentToolbarPosition + 'px' }"
-      >
-        <Button icon @click="addEditor(currentSelectedEditorIndex)">
-          <v-icon class="editor-control-icon">mdi-plus-circle-outline</v-icon>
-        </Button>
-
-        <Button icon @click="addEditor(currentSelectedEditorIndex, 'image')">
-          <v-icon class="editor-control-icon">mdi-image-outline</v-icon>
-        </Button>
-
-        <Button icon @click="testMethod">
-          <v-icon class="editor-control-icon">mdi-application-outline</v-icon>
-        </Button>
-
-        <Button icon @click="testMethod">
-          <v-icon class="editor-control-icon">mdi-comment-text-outline</v-icon>
-        </Button>
-
-        <Button icon @click="removeEditor(currentSelectedEditorIndex)">
-          <v-icon class="editor-control-icon">mdi-delete</v-icon>
-        </Button>
-      </div>
+      <EditorToolbar
+        :current-toolbar-position="currentToolbarPosition"
+        :current-selected-editor-index="currentSelectedEditorIndex"
+        @addEditor="addEditor($event)"
+        @removeEditor="removeEditor($event)"
+      />
     </div>
   </div>
 </template>
@@ -89,6 +69,7 @@
 import Button from "@/components/global/Button.vue";
 import EditorText from "@/components/student/EditorText.vue";
 import EditorImage from "@/components/student/EditorImage.vue";
+import EditorToolbar from "@/components/student/EditorToolbar.vue";
 
 export default {
   name: "ResearchPaperEditor",
@@ -96,6 +77,7 @@ export default {
     Button,
     EditorText,
     EditorImage,
+    EditorToolbar,
   },
   data() {
     return {
@@ -115,7 +97,9 @@ export default {
 
   mounted() {
     if (!this.editors.length) {
-      this.addEditor(0);
+      this.addEditor({
+        currentSelectedEditorIndex: this.currentSelectedEditorIndex,
+      });
     }
   },
 
@@ -158,7 +142,7 @@ export default {
     getContent(event, index) {
       this.editors[index].content = event;
     },
-    addEditor(index = -1, blockType = "text") {
+    addEditor({ currentSelectedEditorIndex: index, blockType = "text" }) {
       if (index === -1) return;
       this.editors.splice(index + 1, 0, {
         id: this.id++,
@@ -167,7 +151,7 @@ export default {
         users: [],
       });
     },
-    removeEditor(index = -1) {
+    removeEditor({ currentSelectedEditorIndex: index = -1 }) {
       this.editors.splice(index, 1);
     },
     getRandomColor() {
@@ -198,36 +182,6 @@ export default {
 
   .editor-list-wrapper {
     position: relative;
-
-    .editor-controls-list {
-      position: absolute;
-      top: 0;
-      right: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      border: 1px solid $neutral-400;
-      border-radius: 4px;
-      padding: 0.5rem;
-      height: 288px;
-      transition: all 0.5s;
-
-      button {
-        width: 40px;
-
-        .editor-control-icon {
-          color: $neutral-700;
-        }
-
-        &:last-child {
-          margin-top: auto;
-
-          .editor-control-icon {
-            color: $red;
-          }
-        }
-      }
-    }
   }
 
   .editor-list {
