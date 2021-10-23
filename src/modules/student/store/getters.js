@@ -13,4 +13,10 @@ export default {
   [GETTERS.GET_INVITATIONS]({ invitations }) {
     return invitations;
   },
+  [GETTERS.GET_MEMBERSHIPS]({ memberships }) {
+    return memberships;
+  },
+  [GETTERS.GET_HAS_MEMBERSHIPS]({ hasMemberships }) {
+    return hasMemberships;
+  },
 };

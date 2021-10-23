@@ -43,9 +43,15 @@ export default {
   ) {
     const { id, invitation } = payload;
     const response = await TeamRepository.updateInvite(invitation, id);
-    console.log(response);
-    console.log(commit);
     const updatedInvitation = response.data;
     commit(MUTATIONS.SET_UPDATE_INVITATION, { invitation: updatedInvitation });
+  },
+  async [ACTIONS.FETCH_MEMBERSHIPS]({ commit }) {
+    const response = await TeamRepository.getMemberships();
+    const memberships = response.data;
+    commit(MUTATIONS.SET_MEMBERSHIPS, { memberships: memberships });
+    commit(MUTATIONS.SET_HAS_MEMBERSHIPS, {
+      hasMemberships: memberships.length !== 0 ? true : false,
+    });
   },
 };

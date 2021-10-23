@@ -24,4 +24,10 @@ export default {
     invitations[index] = invitation;
     state.invitations = Object.assign([], invitations);
   },
+  [MUTATIONS.SET_MEMBERSHIPS](state, { memberships }) {
+    state.memberships = memberships;
+  },
+  [MUTATIONS.SET_HAS_MEMBERSHIPS](state, { hasMemberships }) {
+    state.hasMemberships = hasMemberships;
+  },
 };

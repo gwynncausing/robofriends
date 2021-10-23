@@ -3,4 +3,6 @@ export default () => ({
   sentMembersInvitations: [],
   sentTeachersInvitations: [],
   invitations: [],
+  memberships: [],
+  hasMemberships: false,
 });

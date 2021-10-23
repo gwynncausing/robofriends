@@ -26,6 +26,9 @@ export default {
   getInvitations() {
     return Client.get(`${resource}/invitations`);
   },
+  getMemberships() {
+    return Client.get(`${resource}/memberships`);
+  },
   delete(id) {
     return Client.delete(`${resource}/${id}`);
   },

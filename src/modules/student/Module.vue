@@ -1,7 +1,7 @@
 <template>
   <div class="student">
     <AppBar
-      :routes="routes"
+      :routes="updatedRoutes"
       :notifications="notifications"
       :user="user"
       @logout="logout"
@@ -15,7 +15,8 @@
 <script>
 import AppBar from "@/components/AppBar.vue";
 
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import { GETTERS } from "./store/types/getters";
 import { ACTIONS } from "./store/types/actions";
 import { UTILS } from "./constants/utils";
 
@@ -36,16 +37,18 @@ export default {
           path: { name: "Dashboard" },
         },
         {
+          name: "Archive",
+          path: { name: "Archive" },
+        },
+      ],
+      teamRoutes: [
+        {
           name: "Research Details",
           path: { name: "Research Details" },
         },
         {
           name: "Research Paper",
           path: { name: "Research Paper Editor" },
-        },
-        {
-          name: "Archive",
-          path: { name: "Archive" },
         },
       ],
       notifications: [
@@ -67,16 +70,24 @@ export default {
       ],
     };
   },
-  computed: {},
-  created() {
-    this.fetchInvitations();
+  computed: {
+    ...mapGetters({
+      hasMemberships: `${UTILS.STORE_MODULE_PATH}${GETTERS.GET_HAS_MEMBERSHIPS}`,
+    }),
+    updatedRoutes() {
+      if (this.hasMemberships) return [...this.routes, ...this.teamRoutes];
+      else return this.routes;
+    },
+  },
+  async mounted() {
+    await this.fetchInvitations();
   },
   methods: {
     ...mapActions({
       onFetchInvitations: `${UTILS.STORE_MODULE_PATH}${ACTIONS.FETCH_INVITATIONS}`,
     }),
-    async fetchInvitations() {
-      await this.onFetchInvitations();
+    fetchInvitations() {
+      return this.onFetchInvitations();
     },
     logout() {
       console.log("Logout User");
