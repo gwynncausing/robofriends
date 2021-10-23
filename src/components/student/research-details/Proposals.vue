@@ -33,7 +33,7 @@ export default {
         title: "title",
         description: "description",
         teamName: "Cary & Co.",
-        status: "Approved", // ? values: Pending, Approved, Returned
+        status: "Pending", // ? values: Pending, Approved, Returned
         objectives: ["obj1", "obj2"],
         feedback: {
           id: "1",
