@@ -33,8 +33,15 @@
             </div>
           </div>
           <div class="editor-content">
-            <TextEditor
+            <EditorText
               v-if="editor.blockType === 'text'"
+              :editor-data="editor"
+              @input="getContent($event, index)"
+              @userFocus="addUser($event)"
+              @userBlur="removeUser($event)"
+            />
+            <EditorImage
+              v-if="editor.blockType === 'image'"
               :editor-data="editor"
               @input="getContent($event, index)"
               @userFocus="addUser($event)"
@@ -75,13 +82,15 @@
 
 <script>
 import Button from "@/components/global/Button.vue";
-import TextEditor from "@/components/student/TextEditor.vue";
+import EditorText from "@/components/student/EditorText.vue";
+import EditorImage from "@/components/student/EditorImage.vue";
 
 export default {
   name: "ResearchPaperEditor",
   components: {
     Button,
-    TextEditor,
+    EditorText,
+    EditorImage,
   },
   data() {
     return {
