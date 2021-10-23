@@ -47,13 +47,13 @@
       <div
         ref="editor-controls-list"
         class="editor-controls-list"
-        :style="{ top: currentPosition + 'px' }"
+        :style="{ top: currentToolbarPosition + 'px' }"
       >
-        <Button icon @click="addEditor()">
+        <Button icon @click="addEditor(currentSelectedEditorIndex)">
           <v-icon class="editor-control-icon">mdi-plus-circle-outline</v-icon>
         </Button>
 
-        <Button icon @click="testMethod">
+        <Button icon @click="addEditor(currentSelectedEditorIndex, 'image')">
           <v-icon class="editor-control-icon">mdi-image-outline</v-icon>
         </Button>
 
@@ -65,7 +65,7 @@
           <v-icon class="editor-control-icon">mdi-comment-text-outline</v-icon>
         </Button>
 
-        <Button icon @click="testMethod">
+        <Button icon @click="removeEditor(currentSelectedEditorIndex)">
           <v-icon class="editor-control-icon">mdi-delete</v-icon>
         </Button>
       </div>
@@ -88,7 +88,8 @@ export default {
       exportItems: [{ title: "ACM" }, { title: "APA" }, { title: "MLA" }],
       editors: [],
       id: 123,
-      currentPosition: 0,
+      currentToolbarPosition: 0,
+      currentSelectedEditorIndex: 0,
     };
   },
 
@@ -118,6 +119,7 @@ export default {
       if (!hasVal) this.editors[index].users.push(object.name);
 
       this.moveToolbar(object.id, index);
+      this.currentSelectedEditorIndex = index;
     },
     moveToolbar(id, index) {
       const editorID = "editor-" + id;
@@ -131,18 +133,22 @@ export default {
       }
 
       const blockHeight = document.getElementById(editorID).clientHeight;
-      this.currentPosition = position - blockHeight;
+      this.currentToolbarPosition = position - blockHeight;
     },
     getContent(event, index) {
       this.editors[index].content = event;
     },
-    addEditor(index = 0) {
+    addEditor(index = -1, blockType = "text") {
+      if (index === -1) return;
       this.editors.splice(index + 1, 0, {
         id: this.id++,
         content: ``,
-        blockType: "text",
+        blockType,
         users: [],
       });
+    },
+    removeEditor(index = -1) {
+      this.editors.splice(index, 1);
     },
     testMethod() {
       console.log("testMethod called");
