@@ -26,9 +26,14 @@
           class="editor-row"
         >
           <div class="editor-profile-list">
-            <div v-for="item in editor.users" :key="item" class="profile">
+            <div
+              v-for="item in editor.users"
+              :key="item"
+              class="profile"
+              :style="{ backgroundColor: userColor }"
+            >
               <v-avatar size="38">
-                {{ item[0] }}
+                {{ item.split(" ")[0][0] }} {{ item.split(" ")[1][0] }}
               </v-avatar>
             </div>
           </div>
@@ -102,6 +107,12 @@ export default {
     };
   },
 
+  computed: {
+    userColor() {
+      return this.getRandomColor();
+    },
+  },
+
   mounted() {
     if (!this.editors.length) {
       this.addEditor(0);
@@ -158,6 +169,14 @@ export default {
     },
     removeEditor(index = -1) {
       this.editors.splice(index, 1);
+    },
+    getRandomColor() {
+      let letters = "0123456789ABCDEF";
+      let color = "#";
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
     },
     testMethod() {
       console.log("testMethod called");
@@ -229,7 +248,7 @@ export default {
         .profile {
           width: 42px;
           height: 42px;
-          background: $primary;
+          background-color: $primary;
           display: flex;
           align-items: center;
           justify-content: center;
