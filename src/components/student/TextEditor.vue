@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div v-for="user in users" :key="user.id">
+      {{ user.name }}
+    </div>
     <TextEditorButtons :editor="editor" />
     <editor-content :editor="editor" />
   </div>
@@ -7,18 +10,27 @@
 
 <script>
 import { Editor, EditorContent } from "@tiptap/vue-2";
-import StarterKit from "@tiptap/starter-kit";
+// import StarterKit from "@tiptap/starter-kit";
+import Document from "@tiptap/extension-document";
+import Paragraph from "@tiptap/extension-paragraph";
+import Text from "@tiptap/extension-text";
+import Code from "@tiptap/extension-code";
 import Underline from "@tiptap/extension-underline";
 import Superscript from "@tiptap/extension-superscript";
 import Subscript from "@tiptap/extension-subscript";
+import Heading from "@tiptap/extension-heading";
+import BulletList from "@tiptap/extension-bullet-list";
+import ListItem from "@tiptap/extension-list-item";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 
-import { adjectives, animals } from "@/utils/names.js";
 import TextEditorButtons from "./TextEditorButtons";
+
+import { mapGetters } from "vuex";
+import { GETTERS } from "@/store/types/getters";
 
 // A new Y document
 // const ydoc = new Y.Doc();
@@ -42,70 +54,91 @@ export default {
     return {
       editor: null,
       content: "",
+      users: [],
     };
   },
 
   computed: {
-    friendlyName: function () {
-      return `${this.getRandomAdjective()} ${this.getRandomName()}`;
-    },
+    ...mapGetters({
+      getUser: `${GETTERS.GET_USER}`,
+    }),
   },
 
   watch: {
-    content: function (val) {
-      console.log(val);
-    },
+    // users: function (newVal) {
+    // console.log(newVal);
+    // },
   },
 
   mounted() {
     const ydoc = new Y.Doc();
 
-    const documentId = "testDocumentIdentifier";
-    // const documentId = this.editorData.id;
+    // const documentId = "testDocumentIdentifier";
+    const documentId = this.editorData.id;
 
+    const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
     // let content = this.editorData.content;
 
-    const provider = new WebrtcProvider(documentId, ydoc);
+    const provider = new WebrtcProvider(documentId + "", ydoc);
 
-    this.editor = new Editor({
-      extensions: [
-        StarterKit,
-        Underline,
-        Superscript,
-        Subscript,
-        Collaboration.configure({
-          document: ydoc,
-        }),
-        CollaborationCursor.configure({
-          provider: provider,
-          user: {
-            name: this.friendlyName,
-            color: this.getRandomColor(),
-          },
-        }),
-      ],
-      content: this.content,
-    });
+    try {
+      this.editor = new Editor({
+        extensions: [
+          // StarterKit.configure({
+          //   history: false,
+          // }),
+          Document,
+          Paragraph,
+          Text,
+          Code,
+          BulletList,
+          ListItem,
+          Underline,
+          Superscript,
+          Subscript,
+          Heading.configure({
+            levels: [1, 2, 3],
+          }),
 
-    setInterval(() => {
-      this.$emit("input", this.editor.getJSON());
-    }, 2000);
+          Collaboration.configure({
+            document: ydoc,
+          }),
+          CollaborationCursor.configure({
+            provider: provider,
+            user: {
+              name,
+              color: this.getRandomColor(),
+            },
+            onUpdate: (users) => {
+              // Object.assign(this.users, users);
+              this.users = users;
+              // console.log(documentId, " users", users);
+            },
+          }),
+        ],
+        content: this.content,
+        onUpdate: () => {
+          this.$emit("input", this.editor.getJSON());
+        },
+        onFocus: () => {
+          this.$emit("userFocus", {
+            name,
+            id: this.editorData.id,
+          });
+        },
+        onBlur: () => {
+          this.$emit("userBlur", {
+            name,
+            id: this.editorData.id,
+          });
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
   },
 
   methods: {
-    capitalize(string) {
-      return string.charAt(0).toUpperCase() + string.slice(1);
-    },
-    getRandomName() {
-      let name = animals[Math.floor(Math.random() * animals.length)];
-      name = name.split(" ").map(this.capitalize).join(" ");
-      return name;
-    },
-    getRandomAdjective() {
-      let adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-      adjective = adjective.split(" ").map(this.capitalize).join(" ");
-      return adjective;
-    },
     getRandomColor() {
       let letters = "0123456789ABCDEF";
       let color = "#";
