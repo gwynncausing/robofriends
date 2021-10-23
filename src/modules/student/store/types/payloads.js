@@ -14,7 +14,7 @@ const UPDATE_INVITATION = {
   },
 };
 
-export const PAYLOADS = {
+export const STUDENT_PAYLOADS = {
   CREATE_TEAM,
   SEND_TEAM_INVITATIONS,
   UPDATE_INVITATION,

@@ -16,8 +16,8 @@
 import AppBar from "@/components/AppBar.vue";
 
 import { mapGetters, mapActions } from "vuex";
-import { GETTERS } from "./store/types/getters";
-import { ACTIONS } from "./store/types/actions";
+import { STUDENT_GETTERS } from "./store/types/getters";
+import { STUDENT_ACTIONS } from "./store/types/actions";
 import { UTILS } from "./constants/utils";
 
 export default {
@@ -72,7 +72,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      hasMemberships: `${UTILS.STORE_MODULE_PATH}${GETTERS.GET_HAS_MEMBERSHIPS}`,
+      hasMemberships: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
     }),
     updatedRoutes() {
       if (this.hasMemberships) return [...this.routes, ...this.teamRoutes];
@@ -84,7 +84,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      onFetchInvitations: `${UTILS.STORE_MODULE_PATH}${ACTIONS.FETCH_INVITATIONS}`,
+      onFetchInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.FETCH_INVITATIONS}`,
     }),
     fetchInvitations() {
       return this.onFetchInvitations();

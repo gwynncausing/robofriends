@@ -132,8 +132,8 @@ import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import { ACTIONS } from "../store/types/actions";
-import { GETTERS } from "../store/types/getters";
+import { STUDENT_ACTIONS } from "../store/types/actions";
+import { STUDENT_GETTERS } from "../store/types/getters";
 import { UTILS } from "../constants/utils";
 // import { USER } from "@/utils/constants/user";
 // import { STATUS_CODES } from "@/utils/constants/http-status-codes";
@@ -170,9 +170,9 @@ export default {
 
   computed: {
     ...mapGetters({
-      getCurrentCreatedTeam: `${UTILS.STORE_MODULE_PATH}${GETTERS.GET_CURRENT_CREATED_TEAM}`,
-      getSentMembersInvitations: `${UTILS.STORE_MODULE_PATH}${GETTERS.GET_SENT_MEMBERS_INVITATIONS}`,
-      getSentTeachersInvitations: `${UTILS.STORE_MODULE_PATH}${GETTERS.GET_SENT_TEACHERS_INVITATIONS}`,
+      getCurrentCreatedTeam: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_CURRENT_CREATED_TEAM}`,
+      getSentMembersInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_SENT_MEMBERS_INVITATIONS}`,
+      getSentTeachersInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_SENT_TEACHERS_INVITATIONS}`,
     }),
   },
 
@@ -194,9 +194,9 @@ export default {
 
   methods: {
     ...mapActions({
-      onCreateTeam: `${UTILS.STORE_MODULE_PATH}${ACTIONS.CREATE_TEAM}`,
-      onSendMembersInvitations: `${UTILS.STORE_MODULE_PATH}${ACTIONS.SEND_MEMBERS_INVITATIONS}`,
-      onSendTeachersInvitations: `${UTILS.STORE_MODULE_PATH}${ACTIONS.SEND_TEACHERS_INVITATIONS}`,
+      onCreateTeam: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.CREATE_TEAM}`,
+      onSendMembersInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.SEND_MEMBERS_INVITATIONS}`,
+      onSendTeachersInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.SEND_TEACHERS_INVITATIONS}`,
     }),
     removeItem(item = 0, user = []) {
       user.splice(item, 1);

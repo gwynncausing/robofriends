@@ -1,22 +1,25 @@
-import { MUTATIONS } from "./types/mutations";
+import { STUDENT_MUTATIONS } from "./types/mutations";
 
 export default {
-  [MUTATIONS.SET_CURRENT_CREATED_TEAM](state, { team }) {
+  [STUDENT_MUTATIONS.SET_CURRENT_CREATED_TEAM](state, { team }) {
     state.currentCreatedTeam = team;
   },
-  [MUTATIONS.SET_SENT_MEMBERS_INVITATIONS](state, { sentMembersInvitations }) {
+  [STUDENT_MUTATIONS.SET_SENT_MEMBERS_INVITATIONS](
+    state,
+    { sentMembersInvitations }
+  ) {
     state.sentMembersInvitations = sentMembersInvitations;
   },
-  [MUTATIONS.SET_SENT_TEACHERS_INVITATIONS](
+  [STUDENT_MUTATIONS.SET_SENT_TEACHERS_INVITATIONS](
     state,
     { sentTeachersInvitations }
   ) {
     state.sentTeachersInvitations = sentTeachersInvitations;
   },
-  [MUTATIONS.SET_INVITATIONS](state, { invitations }) {
+  [STUDENT_MUTATIONS.SET_INVITATIONS](state, { invitations }) {
     state.invitations = invitations;
   },
-  [MUTATIONS.SET_UPDATE_INVITATION](state, { invitation }) {
+  [STUDENT_MUTATIONS.SET_UPDATE_INVITATION](state, { invitation }) {
     const invitations = state.invitations;
     const index = invitations.findIndex(
       (_invitation) => _invitation.id === invitation.id
@@ -24,10 +27,10 @@ export default {
     invitations[index] = invitation;
     state.invitations = Object.assign([], invitations);
   },
-  [MUTATIONS.SET_MEMBERSHIPS](state, { memberships }) {
+  [STUDENT_MUTATIONS.SET_MEMBERSHIPS](state, { memberships }) {
     state.memberships = memberships;
   },
-  [MUTATIONS.SET_HAS_MEMBERSHIPS](state, { hasMemberships }) {
+  [STUDENT_MUTATIONS.SET_HAS_MEMBERSHIPS](state, { hasMemberships }) {
     state.hasMemberships = hasMemberships;
   },
 };
