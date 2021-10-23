@@ -45,5 +45,7 @@ export default {
     const response = await TeamRepository.updateInvite(invitation, id);
     console.log(response);
     console.log(commit);
+    const updatedInvitation = response.data;
+    commit(MUTATIONS.SET_UPDATE_INVITATION, { invitation: updatedInvitation });
   },
 };

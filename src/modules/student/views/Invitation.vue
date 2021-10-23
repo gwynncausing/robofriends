@@ -94,8 +94,11 @@ export default {
     },
   },
   watch: {
-    getInvitations() {
-      this.setInvitations();
+    getInvitations: {
+      deep: true,
+      handler() {
+        this.setInvitations();
+      },
     },
   },
   methods: {
@@ -114,7 +117,6 @@ export default {
       };
       try {
         await this.onUpdateInvitation(payload);
-        console.log("success");
       } catch (error) {
         console.log(error);
       }

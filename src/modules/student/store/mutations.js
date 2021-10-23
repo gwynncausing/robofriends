@@ -16,4 +16,12 @@ export default {
   [MUTATIONS.SET_INVITATIONS](state, { invitations }) {
     state.invitations = invitations;
   },
+  [MUTATIONS.SET_UPDATE_INVITATION](state, { invitation }) {
+    const invitations = state.invitations;
+    const index = invitations.findIndex(
+      (_invitation) => _invitation.id === invitation.id
+    );
+    invitations[index] = invitation;
+    state.invitations = Object.assign([], invitations);
+  },
 };
