@@ -24,7 +24,7 @@ const LOG_IN_USER = {
   password: String,
 };
 
-export const PAYLOADS = {
+export const ROOT_PAYLOADS = {
   SIGNUP_USER,
   ONBOARD_USER,
   LOG_IN_USER,

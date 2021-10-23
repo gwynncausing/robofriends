@@ -53,8 +53,8 @@ import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import { GETTERS } from "@/store/types/getters";
-import { ACTIONS } from "@/store/types/actions";
+import { ROOT_GETTERS } from "@/store/types/getters";
+import { ROOT_ACTIONS } from "@/store/types/actions";
 import { USER } from "@/utils/constants/user";
 import { STATUS_CODES } from "@/utils/constants/http-status-codes";
 
@@ -75,8 +75,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getUser: GETTERS.GET_USER,
-      getUserType: GETTERS.GET_USER_TYPE,
+      getUser: ROOT_GETTERS.GET_USER,
+      getUserType: ROOT_GETTERS.GET_USER_TYPE,
     }),
   },
   methods: {
@@ -123,7 +123,7 @@ export default {
       }
     },
     ...mapActions({
-      onLogin: ACTIONS.LOGIN_USER,
+      onLogin: ROOT_ACTIONS.LOGIN_USER,
     }),
   },
 };

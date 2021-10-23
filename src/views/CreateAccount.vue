@@ -85,7 +85,7 @@ import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
 import { mapActions } from "vuex";
-import { ACTIONS } from "@/store/types/actions";
+import { ROOT_ACTIONS } from "@/store/types/actions";
 import { STATUS_CODES } from "@/utils/constants/http-status-codes";
 
 export default {
@@ -203,7 +203,7 @@ export default {
       }
     },
     ...mapActions({
-      onSignup: ACTIONS.SIGNUP_USER,
+      onSignup: ROOT_ACTIONS.SIGNUP_USER,
     }),
   },
 };

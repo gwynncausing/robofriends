@@ -128,8 +128,8 @@ import Button from "@/components/global/Button.vue";
 import AppBar from "@/components/AppBar.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import { ACTIONS } from "@/store/types/actions";
-import { GETTERS } from "@/store/types/getters";
+import { ROOT_ACTIONS } from "@/store/types/actions";
+import { ROOT_GETTERS } from "@/store/types/getters";
 import { USER } from "@/utils/constants/user";
 import { STATUS_CODES } from "@/utils/constants/http-status-codes";
 
@@ -194,9 +194,9 @@ export default {
 
   computed: {
     ...mapGetters({
-      getSchools: GETTERS.GET_SCHOOLS,
-      getUser: GETTERS.GET_USER,
-      getUserType: GETTERS.GET_USER_TYPE,
+      getSchools: ROOT_GETTERS.GET_SCHOOLS,
+      getUser: ROOT_GETTERS.GET_USER,
+      getUserType: ROOT_GETTERS.GET_USER_TYPE,
     }),
   },
 
@@ -225,8 +225,8 @@ export default {
 
   methods: {
     ...mapActions({
-      onFetchSchools: ACTIONS.FETCH_SCHOOLS,
-      onOnboardUser: ACTIONS.ONBOARD_USER,
+      onFetchSchools: ROOT_ACTIONS.FETCH_SCHOOLS,
+      onOnboardUser: ROOT_ACTIONS.ONBOARD_USER,
     }),
     logout() {
       console.log("Logout User");
