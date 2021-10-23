@@ -106,8 +106,6 @@ export default {
   },
   async created() {
     await this.fetchMemberships();
-  },
-  mounted() {
     this.showKickstartResearchModal();
   },
   methods: {
