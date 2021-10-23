@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint ./src/ \"--fix\""
   },
   "dependencies": {
+    "@tiptap/extension-bold": "^2.0.0-beta.19",
     "@tiptap/extension-bullet-list": "^2.0.0-beta.18",
     "@tiptap/extension-code": "^2.0.0-beta.20",
     "@tiptap/extension-collaboration": "^2.0.0-beta.23",
@@ -16,8 +17,10 @@
     "@tiptap/extension-dropcursor": "^2.0.0-beta.19",
     "@tiptap/extension-heading": "^2.0.0-beta.18",
     "@tiptap/extension-image": "^2.0.0-beta.19",
+    "@tiptap/extension-italic": "^2.0.0-beta.19",
     "@tiptap/extension-list-item": "^2.0.0-beta.14",
     "@tiptap/extension-paragraph": "^2.0.0-beta.17",
+    "@tiptap/extension-strike": "^2.0.0-beta.21",
     "@tiptap/extension-subscript": "^2.0.0-beta.4",
     "@tiptap/extension-superscript": "^2.0.0-beta.4",
     "@tiptap/extension-text": "^2.0.0-beta.13",
