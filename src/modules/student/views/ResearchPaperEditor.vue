@@ -22,18 +22,16 @@
         <div
           v-for="(editor, index) in editors"
           :id="'editor-' + editor.id"
-          :key="index"
+          :key="editor.id"
           class="editor-row"
         >
           <div class="editor-profile-list">
             <div v-for="item in editor.users" :key="item" class="profile">
               <v-avatar size="38">
-                <!-- <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" /> -->
                 {{ item[0] }}
               </v-avatar>
             </div>
           </div>
-
           <div class="editor-content">
             <TextEditor
               v-if="editor.blockType === 'text'"
@@ -136,18 +134,15 @@ export default {
       this.currentPosition = position - blockHeight;
     },
     getContent(event, index) {
-      Object.assign(this.editors[index].content, event);
+      this.editors[index].content = event;
     },
-    // ! TODO: Adding Editor in a specific index still not working
     addEditor(index = 0) {
       this.editors.splice(index + 1, 0, {
         id: this.id++,
-        content: [],
+        content: ``,
         blockType: "text",
         users: [],
       });
-      console.log("###", index);
-      this.editors.forEach((editor) => console.log(editor.id, editor.content));
     },
     testMethod() {
       console.log("testMethod called");

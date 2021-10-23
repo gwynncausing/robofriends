@@ -10,7 +10,6 @@
 
 <script>
 import { Editor, EditorContent } from "@tiptap/vue-2";
-// import StarterKit from "@tiptap/starter-kit";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
@@ -70,28 +69,24 @@ export default {
   },
 
   watch: {
-    // users: function (newVal) {
-    // console.log(newVal);
-    // },
+    content(newVal) {
+      console.log(newVal);
+    },
   },
 
   mounted() {
     const ydoc = new Y.Doc();
 
-    // const documentId = "testDocumentIdentifier";
     const documentId = this.editorData.id;
 
     const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
-    // let content = this.editorData.content;
+    let content = this.editorData.content;
 
     const provider = new WebrtcProvider(documentId + "", ydoc);
 
     try {
       this.editor = new Editor({
         extensions: [
-          // StarterKit.configure({
-          //   history: false,
-          // }),
           Document,
           Paragraph,
           Text,
@@ -109,7 +104,6 @@ export default {
           Heading.configure({
             levels: [1, 2, 3, 4],
           }),
-
           Collaboration.configure({
             document: ydoc,
           }),
@@ -126,7 +120,7 @@ export default {
             },
           }),
         ],
-        content: this.content,
+        content: content,
         onUpdate: () => {
           this.$emit("input", this.editor.getJSON());
         },
