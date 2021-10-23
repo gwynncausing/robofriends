@@ -140,7 +140,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#research-details {
+#research {
   .objective-list-wrapper:not(:first-child) {
     animation: fade-in-opacity 1s ease-in-out;
   }

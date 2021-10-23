@@ -25,4 +25,5 @@ export default {
 
 <style lang="scss">
 @import "@/styles/_global-styles.scss";
+@import "@/styles/prosemirror.scss";
 </style>
