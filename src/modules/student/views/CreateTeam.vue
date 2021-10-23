@@ -230,30 +230,35 @@ export default {
       }
       this.team.tree = "";
     },
+    cleanEmailsArray(emailsArray) {
+      return emailsArray.filter((email) => email !== "");
+    },
     async submit() {
       if (!this.team.tree) this.isTreeError = true;
       if (this.$refs.form.validate() && !this.isTreeError) {
         try {
+          const cleanedMembersEmail = this.cleanEmailsArray(this.team.member);
+          const cleanedTeachersEmail = this.cleanEmailsArray(this.team.teacher);
           const createTeamPayload = {
             name: this.team.name,
             description: "random",
           };
           await this.onCreateTeam(createTeamPayload);
-          if (this.team.member.length >= 0) {
+          if (cleanedMembersEmail.length > 0) {
             const invitedMembersPayload = {
               id: this.getCurrentCreatedTeam.id,
               emails: {
-                invitedEmails: this.team.member,
+                invitedEmails: cleanedMembersEmail,
                 baseRole: "member",
               },
             };
             await this.onSendMembersInvitations(invitedMembersPayload);
           }
-          if (this.team.teacher.length >= 0) {
+          if (cleanedTeachersEmail.length > 0) {
             const invitedTeachersPayload = {
               id: this.getCurrentCreatedTeam.id,
               emails: {
-                invitedEmails: this.team.teacher,
+                invitedEmails: cleanedTeachersEmail,
                 baseRole: "adviser",
               },
             };
