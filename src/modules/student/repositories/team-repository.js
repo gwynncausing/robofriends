@@ -18,7 +18,7 @@ export default {
     return Client.post(`${resource}/${id}/invite-many`, payload);
   },
   updateInvite(payload, id) {
-    return Client.post(`${resource}/invitations/${id}`, payload);
+    return Client.patch(`${resource}/invitations/${id}`, payload);
   },
   joinTeam(payload) {
     return Client.post(`${resource}/code`, payload);

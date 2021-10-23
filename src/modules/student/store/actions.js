@@ -32,4 +32,18 @@ export default {
       sentTeachersInvitations: sentTeachersInvitations,
     });
   },
+  async [ACTIONS.FETCH_INVITATIONS]({ commit }) {
+    const response = await TeamRepository.getInvitations();
+    const invitations = response.data;
+    commit(MUTATIONS.SET_INVITATIONS, { invitations: invitations });
+  },
+  async [ACTIONS.UPDATE_INVITATION](
+    { commit },
+    payload = PAYLOADS.UPDATE_INVITATION
+  ) {
+    const { id, invitation } = payload;
+    const response = await TeamRepository.updateInvite(invitation, id);
+    console.log(response);
+    console.log(commit);
+  },
 };
