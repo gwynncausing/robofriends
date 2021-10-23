@@ -138,6 +138,7 @@ export default {
     getContent(event, index) {
       Object.assign(this.editors[index].content, event);
     },
+    // ! TODO: Adding Editor in a specific index still not working
     addEditor(index = 0) {
       this.editors.splice(index + 1, 0, {
         id: this.id++,

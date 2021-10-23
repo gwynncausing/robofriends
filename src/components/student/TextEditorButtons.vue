@@ -64,6 +64,12 @@
     >
       <v-icon>mdi-format-header-3</v-icon>
     </button>
+    <button
+      :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }"
+      @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
+    >
+      <v-icon>mdi-format-header-4</v-icon>
+    </button>
 
     <span class="formatter-section-end"></span>
 

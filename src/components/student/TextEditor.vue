@@ -21,6 +21,8 @@ import Subscript from "@tiptap/extension-subscript";
 import Heading from "@tiptap/extension-heading";
 import BulletList from "@tiptap/extension-bullet-list";
 import ListItem from "@tiptap/extension-list-item";
+import Image from "@tiptap/extension-image";
+import Dropcursor from "@tiptap/extension-dropcursor";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
@@ -96,8 +98,10 @@ export default {
           Underline,
           Superscript,
           Subscript,
+          Dropcursor,
+          Image,
           Heading.configure({
-            levels: [1, 2, 3],
+            levels: [1, 2, 3, 4],
           }),
 
           Collaboration.configure({
@@ -194,6 +198,9 @@ export default {
   h3 {
     font-size: 18.72px;
   }
+  h4 {
+    font-size: 16px;
+  }
 
   code {
     background-color: rgba(#616161, 0.1);
@@ -216,7 +223,7 @@ export default {
   }
 
   img {
-    max-width: 100%;
+    max-width: 500px;
     height: auto;
   }
 
