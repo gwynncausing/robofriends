@@ -3,7 +3,7 @@
     <AppBar
       :routes="updatedRoutes"
       :notifications="notifications"
-      :user="user"
+      :user="userInformation"
       @logout="logout"
     />
     <v-container>
@@ -18,7 +18,9 @@ import AppBar from "@/components/AppBar.vue";
 import { mapGetters, mapActions } from "vuex";
 import { STUDENT_GETTERS } from "./store/types/getters";
 import { STUDENT_ACTIONS } from "./store/types/actions";
+import { ROOT_GETTERS } from "@/store/types/getters";
 import { UTILS } from "./constants/utils";
+import HelperFunctions from "@/utils/helper-functions";
 
 export default {
   name: "Student",
@@ -73,7 +75,14 @@ export default {
   computed: {
     ...mapGetters({
       hasMemberships: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
+      getUser: ROOT_GETTERS.GET_USER,
     }),
+    userInformation() {
+      return {
+        ...this.user,
+        name: HelperFunctions.capitalizeFirstLetter(this.getUser.lastName),
+      };
+    },
     updatedRoutes() {
       if (this.hasMemberships) return [...this.routes, ...this.teamRoutes];
       else return this.routes;
