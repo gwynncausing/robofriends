@@ -110,7 +110,7 @@
                 </div>
                 <div class="d-flex justify-space-between">
                   <Button text @click="prevStep()"> Back </Button>
-                  <Button @click="completeOnboarding()"> Submit </Button>
+                  <Button :loading="isSubmit" @click="completeOnboarding()"> Submit </Button>
                 </div>
               </div>
             </transition>
@@ -164,6 +164,7 @@ export default {
           },
         ],
       },
+      isSubmit: false,
       valid: false,
       show: true,
       step: 1,
@@ -220,7 +221,6 @@ export default {
 
   async created() {
     await this.fetchSchools();
-    console.log(this.schools);
   },
 
   methods: {
@@ -261,6 +261,7 @@ export default {
     async completeOnboarding() {
       if (!this.$refs["onboarding-form"].validate()) return;
       try {
+        this.isSubmit = true;
         const payload = {
           id: this.getUser.id,
           user: {
@@ -297,6 +298,8 @@ export default {
           default:
             break;
         }
+      } finally {
+        this.isSubmit = false;
       }
     },
   },

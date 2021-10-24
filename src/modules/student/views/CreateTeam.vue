@@ -121,7 +121,9 @@
       :class="{ active: addMemberActive || addTeacherActive }"
       class="submit-wrapper"
     >
-      <Button class="ml-auto" @click="submit"> Submit</Button>
+      <Button class="ml-auto" :loading="isSubmit" @click="submit"
+        >Submit</Button
+      >
     </div>
   </div>
 </template>
@@ -147,6 +149,7 @@ export default {
   },
   data() {
     return {
+      isSubmit: false,
       rules: {
         teamName: [(v) => !!v || "Team Name is required"],
         email: [
@@ -237,6 +240,7 @@ export default {
       if (!this.team.tree) this.isTreeError = true;
       if (this.$refs.form.validate() && !this.isTreeError) {
         try {
+          this.isSubmit = true;
           const cleanedMembersEmail = this.cleanEmailsArray(this.team.member);
           const cleanedTeachersEmail = this.cleanEmailsArray(this.team.teacher);
           const createTeamPayload = {
@@ -267,6 +271,8 @@ export default {
           this.$router.push({ name: "Dashboard" });
         } catch (error) {
           console.log(error);
+        } finally {
+          this.isSubmit = false;
         }
       }
     },

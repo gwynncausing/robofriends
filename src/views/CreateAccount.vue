@@ -171,6 +171,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      onSignup: ROOT_ACTIONS.SIGNUP_USER,
+    }),
     toCapitalize(input = "") {
       return input
         .toLowerCase()
@@ -179,14 +182,12 @@ export default {
         .join(" ");
     },
     async signup() {
-      console.log("signup", this.$refs);
       this.error = "";
-      this.isSubmit = true;
       if (this.$refs.form.validate()) {
         this.user.firstName = this.toCapitalize(this.user.firstName);
         this.user.lastName = this.toCapitalize(this.user.lastName);
-        this.isSubmit = false;
         try {
+          this.isSubmit = true;
           await this.onSignup(this.user);
           this.$router.replace({ name: "Onboarding" });
         } catch (error) {
@@ -197,14 +198,11 @@ export default {
             default:
               break;
           }
+        } finally {
+          this.isSubmit = false;
         }
-      } else {
-        this.isSubmit = false;
       }
     },
-    ...mapActions({
-      onSignup: ROOT_ACTIONS.SIGNUP_USER,
-    }),
   },
 };
 </script>
