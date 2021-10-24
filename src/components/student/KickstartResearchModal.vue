@@ -49,15 +49,11 @@ export default {
   },
   watch: {
     dialogProps(newVal) {
-      console.log("I am here");
       this.dialog = newVal;
     },
     dialog(newVal) {
       this.$emit("dialogClose", newVal);
     },
-  },
-  mounted() {
-    console.log("I am in dialog props: ", this.dialogProps);
   },
   methods: {
     closeModal() {

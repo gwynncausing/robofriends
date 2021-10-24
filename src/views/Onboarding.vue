@@ -110,7 +110,9 @@
                 </div>
                 <div class="d-flex justify-space-between">
                   <Button text @click="prevStep()"> Back </Button>
-                  <Button :loading="isSubmit" @click="completeOnboarding()"> Submit </Button>
+                  <Button :loading="isSubmit" @click="completeOnboarding()">
+                    Submit
+                  </Button>
                 </div>
               </div>
             </transition>
