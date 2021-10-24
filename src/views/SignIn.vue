@@ -80,6 +80,9 @@ export default {
     }),
   },
   methods: {
+    ...mapActions({
+      onLogin: ROOT_ACTIONS.LOGIN_USER,
+    }),
     verifyEmailPassword() {
       return !/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
         this.user.email
@@ -122,9 +125,6 @@ export default {
         this.isSubmit = false;
       }
     },
-    ...mapActions({
-      onLogin: ROOT_ACTIONS.LOGIN_USER,
-    }),
   },
 };
 </script>
