@@ -1,11 +1,14 @@
 <template>
   <div class="approved-research">
+    <div class="version-button-wrapper">
+      <Button outlined> Version History </Button>
+    </div>
     <Research
       :research="research"
       @addObjective="addObjective"
       @removeObjective="removeObjective"
     />
-    <div class="button-wrapper">
+    <div class="save-button-wrapper">
       <Button> Save </Button>
     </div>
   </div>
@@ -52,8 +55,12 @@ export default {
 <style lang="scss" scoped>
 .approved-research {
   padding-top: 24px;
-  .button-wrapper {
+  .save-button-wrapper {
     padding-top: 24px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .version-button-wrapper {
     display: flex;
     justify-content: flex-end;
   }
