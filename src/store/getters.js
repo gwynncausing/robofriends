@@ -1,22 +1,22 @@
-import { GETTERS } from "./types/getters";
+import { ROOT_GETTERS } from "./types/getters";
 
 export default {
-  [GETTERS.GET_USER]({ user }) {
+  [ROOT_GETTERS.GET_USER]({ user }) {
     return user;
   },
-  [GETTERS.GET_TOKEN_ACCESS]({ tokens }) {
+  [ROOT_GETTERS.GET_TOKEN_ACCESS]({ tokens }) {
     return tokens.access;
   },
-  [GETTERS.GET_TOKEN_REFRESH]({ tokens }) {
+  [ROOT_GETTERS.GET_TOKEN_REFRESH]({ tokens }) {
     return tokens.refresh;
   },
-  [GETTERS.GET_IS_LOGGED_IN]({ isLoggedIn }) {
+  [ROOT_GETTERS.GET_IS_LOGGED_IN]({ isLoggedIn }) {
     return isLoggedIn;
   },
-  [GETTERS.GET_USER_TYPE]({ userType }) {
+  [ROOT_GETTERS.GET_USER_TYPE]({ userType }) {
     return userType;
   },
-  [GETTERS.GET_SCHOOLS]({ schools }) {
+  [ROOT_GETTERS.GET_SCHOOLS]({ schools }) {
     return schools;
   },
 };

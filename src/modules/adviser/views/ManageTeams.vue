@@ -50,6 +50,6 @@ export default {
 
 <style lang="scss" scoped>
 #manage-teams {
-  padding: 40px clamp(20px, 5.5vw, 80px);
+  padding: 24px clamp(20px, 5.5vw, 80px);
 }
 </style>

@@ -1,7 +1,6 @@
 <template>
   <div id="dashboard">
-    <!-- //* Remove negation to hasTeam to show team/join team -->
-    <div v-if="hasTeam" id="dashboard-no-team">
+    <div v-if="!hasMemberships" id="dashboard-no-team">
       <v-img :src="require('@/assets/dashboard-no-team.svg')" width="400" />
       <div class="dashboard-cta">
         <h5>Looks like you don’t have a team yet.</h5>
@@ -60,6 +59,11 @@ import Tabs from "@/components/Tabs";
 import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
 import KickstartResearchModal from "@/components/student/KickstartResearchModal.vue";
 
+import { mapActions, mapGetters } from "vuex";
+import { STUDENT_ACTIONS } from "../store/types/actions";
+import { STUDENT_GETTERS } from "../store/types/getters";
+import { UTILS } from "../constants/utils";
+
 export default {
   name: "Dashboard",
   components: {
@@ -94,10 +98,23 @@ export default {
       ],
     };
   },
-  mounted() {
+  computed: {
+    ...mapGetters({
+      getMemberships: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_MEMBERSHIPS}`,
+      hasMemberships: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
+    }),
+  },
+  async created() {
+    await this.fetchMemberships();
     this.showKickstartResearchModal();
   },
   methods: {
+    ...mapActions({
+      onFetchMemberships: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.FETCH_MEMBERSHIPS}`,
+    }),
+    async fetchMemberships() {
+      return this.onFetchMemberships();
+    },
     showKickstartResearchModal() {
       this.kickstartResearchModal = true;
     },

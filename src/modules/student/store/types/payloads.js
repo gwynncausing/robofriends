@@ -7,7 +7,15 @@ const SEND_TEAM_INVITATIONS = {
   baseRole: String,
 };
 
-export const PAYLOADS = {
+const UPDATE_INVITATION = {
+  id: String,
+  invitation: {
+    status: String,
+  },
+};
+
+export const STUDENT_PAYLOADS = {
   CREATE_TEAM,
   SEND_TEAM_INVITATIONS,
+  UPDATE_INVITATION,
 };

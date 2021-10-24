@@ -1,16 +1,15 @@
 <template>
-  <div class="pending-proposals">
+  <div class="approved-research">
+    <div class="version-button-wrapper">
+      <Button outlined> Version History </Button>
+    </div>
     <Research
       :research="research"
-      details-readonly
-      show-status
-      show-feedback
       @addObjective="addObjective"
       @removeObjective="removeObjective"
     />
-    <div class="button-wrapper">
-      <Button outlined> Return </Button>
-      <Button> Approve </Button>
+    <div class="save-button-wrapper">
+      <Button> Save </Button>
     </div>
   </div>
 </template>
@@ -18,12 +17,11 @@
 <script>
 import Research from "@/components/Research";
 import Button from "@/components/global/Button.vue";
-
 export default {
-  name: "PendingProposals",
+  name: "ApprovedResearch",
   components: {
-    Research,
     Button,
+    Research,
   },
   data() {
     return {
@@ -32,7 +30,7 @@ export default {
         title: "title",
         description: "description",
         teamName: "Cary & Co.",
-        status: "Pending", // ? values: Pending, Approved, Returned
+        status: "Returned", // ? values: Pending, Approved, Returned
         objectives: ["obj1", "obj2"],
         feedback: {
           id: "1",
@@ -55,13 +53,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.pending-proposals {
+.approved-research {
   padding-top: 24px;
-
-  .button-wrapper {
+  .save-button-wrapper {
+    padding-top: 24px;
     display: flex;
-    flex-direction: row;
-    column-gap: 16px;
+    justify-content: flex-end;
+  }
+  .version-button-wrapper {
+    display: flex;
     justify-content: flex-end;
   }
 }

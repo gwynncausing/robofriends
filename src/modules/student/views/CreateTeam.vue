@@ -4,7 +4,12 @@
       <div class="team-name">
         <div class="team-name-wrapper">
           <span class="team-name-label">Team Name</span>
-          <TextField v-model="team.name" name="team-name" :rules="rules.name" />
+          <TextField
+            v-model="team.name"
+            name="team-name"
+            :rules="rules.teamName"
+            placeholder="Group Name"
+          />
         </div>
       </div>
 
@@ -19,7 +24,8 @@
             v-model="team.teacher[index]"
             name="teachers"
             :items="teachersList"
-            :rules="rules.name"
+            :rules="rules.email"
+            placeholder="teacher.teacher@email.com"
           />
           <v-btn
             v-if="index !== 0"
@@ -50,7 +56,8 @@
           <TextField
             v-model="team.member[index]"
             name="member"
-            :rules="rules.name"
+            :rules="rules.email"
+            placeholder="member.member@email.com"
           />
           <v-btn
             v-if="index !== 0"
@@ -114,7 +121,9 @@
       :class="{ active: addMemberActive || addTeacherActive }"
       class="submit-wrapper"
     >
-      <Button class="ml-auto" @click="submit"> Submit</Button>
+      <Button class="ml-auto" :loading="isSubmit" @click="submit"
+        >Submit</Button
+      >
     </div>
   </div>
 </template>
@@ -125,8 +134,8 @@ import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import { ACTIONS } from "../store/types/actions";
-import { GETTERS } from "../store/types/getters";
+import { STUDENT_ACTIONS } from "../store/types/actions";
+import { STUDENT_GETTERS } from "../store/types/getters";
 import { UTILS } from "../constants/utils";
 // import { USER } from "@/utils/constants/user";
 // import { STATUS_CODES } from "@/utils/constants/http-status-codes";
@@ -140,8 +149,13 @@ export default {
   },
   data() {
     return {
+      isSubmit: false,
       rules: {
-        name: [(v) => !!v || "Team Name is required"],
+        teamName: [(v) => !!v || "Team Name is required"],
+        email: [
+          (v) =>
+            v.trim() === "" || /.+@.+\..+/.test(v) || "E-mail must be valid",
+        ],
       },
       addTeacherActive: false,
       addMemberActive: false,
@@ -159,9 +173,9 @@ export default {
 
   computed: {
     ...mapGetters({
-      getTeam: `${UTILS.STORE_MODULE_PATH}${GETTERS.GET_TEAM}`,
-      getSentMembersInvitations: `${UTILS.STORE_MODULE_PATH}${GETTERS.GET_SENT_MEMBERS_INVITATIONS}`,
-      getSentTeachersInvitations: `${UTILS.STORE_MODULE_PATH}${GETTERS.GET_SENT_TEACHERS_INVITATIONS}`,
+      getCurrentCreatedTeam: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_CURRENT_CREATED_TEAM}`,
+      getSentMembersInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_SENT_MEMBERS_INVITATIONS}`,
+      getSentTeachersInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_SENT_TEACHERS_INVITATIONS}`,
     }),
   },
 
@@ -183,9 +197,9 @@ export default {
 
   methods: {
     ...mapActions({
-      onCreateTeam: `${UTILS.STORE_MODULE_PATH}${ACTIONS.CREATE_TEAM}`,
-      onSendMembersInvitations: `${UTILS.STORE_MODULE_PATH}${ACTIONS.SEND_MEMBERS_INVITATIONS}`,
-      onSendTeachersInvitations: `${UTILS.STORE_MODULE_PATH}${ACTIONS.SEND_TEACHERS_INVITATIONS}`,
+      onCreateTeam: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.CREATE_TEAM}`,
+      onSendMembersInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.SEND_MEMBERS_INVITATIONS}`,
+      onSendTeachersInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.SEND_TEACHERS_INVITATIONS}`,
     }),
     removeItem(item = 0, user = []) {
       user.splice(item, 1);
@@ -219,33 +233,46 @@ export default {
       }
       this.team.tree = "";
     },
+    cleanEmailsArray(emailsArray) {
+      return emailsArray.filter((email) => email !== "");
+    },
     async submit() {
       if (!this.team.tree) this.isTreeError = true;
       if (this.$refs.form.validate() && !this.isTreeError) {
         try {
+          this.isSubmit = true;
+          const cleanedMembersEmail = this.cleanEmailsArray(this.team.member);
+          const cleanedTeachersEmail = this.cleanEmailsArray(this.team.teacher);
           const createTeamPayload = {
             name: this.team.name,
             description: "random",
           };
           await this.onCreateTeam(createTeamPayload);
-          const invitedMembersPayload = {
-            id: this.getTeam.id,
-            emails: {
-              invitedEmails: this.team.member,
-              baseRole: "member",
-            },
-          };
-          await this.onSendMembersInvitations(invitedMembersPayload);
-          const invitedTeachersPayload = {
-            id: this.getTeam.id,
-            emails: {
-              invitedEmails: this.team.teacher,
-              baseRole: "adviser",
-            },
-          };
-          await this.onSendTeachersInvitations(invitedTeachersPayload);
+          if (cleanedMembersEmail.length > 0) {
+            const invitedMembersPayload = {
+              id: this.getCurrentCreatedTeam.id,
+              emails: {
+                invitedEmails: cleanedMembersEmail,
+                baseRole: "member",
+              },
+            };
+            await this.onSendMembersInvitations(invitedMembersPayload);
+          }
+          if (cleanedTeachersEmail.length > 0) {
+            const invitedTeachersPayload = {
+              id: this.getCurrentCreatedTeam.id,
+              emails: {
+                invitedEmails: cleanedTeachersEmail,
+                baseRole: "adviser",
+              },
+            };
+            await this.onSendTeachersInvitations(invitedTeachersPayload);
+          }
+          this.$router.push({ name: "Dashboard" });
         } catch (error) {
           console.log(error);
+        } finally {
+          this.isSubmit = false;
         }
       }
     },

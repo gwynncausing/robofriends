@@ -1,16 +1,12 @@
 <template>
-  <div class="pending-proposals">
+  <div class="create-new">
     <Research
       :research="research"
-      details-readonly
-      show-status
-      show-feedback
       @addObjective="addObjective"
       @removeObjective="removeObjective"
     />
     <div class="button-wrapper">
-      <Button outlined> Return </Button>
-      <Button> Approve </Button>
+      <Button> Submit </Button>
     </div>
   </div>
 </template>
@@ -18,27 +14,26 @@
 <script>
 import Research from "@/components/Research";
 import Button from "@/components/global/Button.vue";
-
 export default {
-  name: "PendingProposals",
+  name: "CreateNew",
   components: {
-    Research,
     Button,
+    Research,
   },
   data() {
     return {
       research: {
-        id: "1",
-        title: "title",
-        description: "description",
-        teamName: "Cary & Co.",
-        status: "Pending", // ? values: Pending, Approved, Returned
-        objectives: ["obj1", "obj2"],
+        id: "",
+        title: "",
+        description: "",
+        teamName: "",
+        status: "",
+        objectives: [""],
         feedback: {
-          id: "1",
-          date: "1/1/2021",
-          time: "11:00",
-          text: "Good job!",
+          id: "",
+          date: "",
+          time: "",
+          text: "",
         },
       },
     };
@@ -55,13 +50,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.pending-proposals {
+.create-new {
   padding-top: 24px;
-
   .button-wrapper {
+    padding-top: 24px;
     display: flex;
-    flex-direction: row;
-    column-gap: 16px;
     justify-content: flex-end;
   }
 }

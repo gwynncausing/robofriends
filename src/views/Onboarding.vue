@@ -110,7 +110,9 @@
                 </div>
                 <div class="d-flex justify-space-between">
                   <Button text @click="prevStep()"> Back </Button>
-                  <Button @click="completeOnboarding()"> Submit </Button>
+                  <Button :loading="isSubmit" @click="completeOnboarding()">
+                    Submit
+                  </Button>
                 </div>
               </div>
             </transition>
@@ -128,8 +130,8 @@ import Button from "@/components/global/Button.vue";
 import AppBar from "@/components/AppBar.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import { ACTIONS } from "@/store/types/actions";
-import { GETTERS } from "@/store/types/getters";
+import { ROOT_ACTIONS } from "@/store/types/actions";
+import { ROOT_GETTERS } from "@/store/types/getters";
 import { USER } from "@/utils/constants/user";
 import { STATUS_CODES } from "@/utils/constants/http-status-codes";
 
@@ -164,6 +166,7 @@ export default {
           },
         ],
       },
+      isSubmit: false,
       valid: false,
       show: true,
       step: 1,
@@ -194,9 +197,9 @@ export default {
 
   computed: {
     ...mapGetters({
-      getSchools: GETTERS.GET_SCHOOLS,
-      getUser: GETTERS.GET_USER,
-      getUserType: GETTERS.GET_USER_TYPE,
+      getSchools: ROOT_GETTERS.GET_SCHOOLS,
+      getUser: ROOT_GETTERS.GET_USER,
+      getUserType: ROOT_GETTERS.GET_USER_TYPE,
     }),
   },
 
@@ -220,13 +223,12 @@ export default {
 
   async created() {
     await this.fetchSchools();
-    console.log(this.schools);
   },
 
   methods: {
     ...mapActions({
-      onFetchSchools: ACTIONS.FETCH_SCHOOLS,
-      onOnboardUser: ACTIONS.ONBOARD_USER,
+      onFetchSchools: ROOT_ACTIONS.FETCH_SCHOOLS,
+      onOnboardUser: ROOT_ACTIONS.ONBOARD_USER,
     }),
     logout() {
       console.log("Logout User");
@@ -261,6 +263,7 @@ export default {
     async completeOnboarding() {
       if (!this.$refs["onboarding-form"].validate()) return;
       try {
+        this.isSubmit = true;
         const payload = {
           id: this.getUser.id,
           user: {
@@ -297,6 +300,8 @@ export default {
           default:
             break;
         }
+      } finally {
+        this.isSubmit = false;
       }
     },
   },

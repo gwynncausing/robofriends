@@ -83,9 +83,10 @@
 <script>
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
+import HelperFunctions from "@/utils/helper-functions.js";
 
 import { mapActions } from "vuex";
-import { ACTIONS } from "@/store/types/actions";
+import { ROOT_ACTIONS } from "@/store/types/actions";
 import { STATUS_CODES } from "@/utils/constants/http-status-codes";
 
 export default {
@@ -171,22 +172,23 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      onSignup: ROOT_ACTIONS.SIGNUP_USER,
+    }),
     toCapitalize(input = "") {
       return input
         .toLowerCase()
         .split(" ")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .map((word) => HelperFunctions.capitalizeFirstLetter(word))
         .join(" ");
     },
     async signup() {
-      console.log("signup", this.$refs);
       this.error = "";
-      this.isSubmit = true;
       if (this.$refs.form.validate()) {
         this.user.firstName = this.toCapitalize(this.user.firstName);
         this.user.lastName = this.toCapitalize(this.user.lastName);
-        this.isSubmit = false;
         try {
+          this.isSubmit = true;
           await this.onSignup(this.user);
           this.$router.replace({ name: "Onboarding" });
         } catch (error) {
@@ -197,14 +199,11 @@ export default {
             default:
               break;
           }
+        } finally {
+          this.isSubmit = false;
         }
-      } else {
-        this.isSubmit = false;
       }
     },
-    ...mapActions({
-      onSignup: ACTIONS.SIGNUP_USER,
-    }),
   },
 };
 </script>

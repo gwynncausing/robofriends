@@ -1,4 +1,4 @@
-export const ACTIONS = {
+export const ROOT_ACTIONS = {
   LOGIN_USER: "LOGIN_USER",
   SIGNUP_USER: "SIGNUP_USER",
   ONBOARD_USER: "ONBOARD_USER",

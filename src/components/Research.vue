@@ -1,11 +1,11 @@
 <template>
-  <div id="research-details">
+  <div id="research">
     <div class="research-title">
       <div class="research-title-wrapper">
         <div class="research-title-label-wrapper">
           <span class="research-title-label font-semi-bold">Title</span>
           <Chip
-            v-show="!approvedresearch"
+            v-show="showStatus"
             v-model="research.status"
             small
             dark
@@ -14,7 +14,7 @@
             {{ research.status }}
           </Chip>
         </div>
-        <TextField v-model="research.title" :readonly="readonly" />
+        <TextField v-model="research.title" :readonly="detailsReadonly" />
       </div>
     </div>
 
@@ -24,7 +24,7 @@
         <Textarea
           v-model="research.description"
           rows="4"
-          :readonly="readonly"
+          :readonly="detailsReadonly"
         />
       </div>
     </div>
@@ -38,10 +38,13 @@
           class="objective-list-wrapper"
           :class="{ active: addObjectiveActive }"
         >
-          <Textarea v-model="research.objectives[index]" :readonly="readonly" />
+          <Textarea
+            v-model="research.objectives[index]"
+            :readonly="detailsReadonly"
+          />
           <v-btn
             v-if="index !== 0"
-            v-show="!readonly"
+            v-show="!detailsReadonly"
             class="btn-remove-item"
             icon
             @click="removeObjective(index)"
@@ -52,7 +55,7 @@
       </div>
 
       <Button
-        v-show="!readonly"
+        v-show="!detailsReadonly"
         :class="{ active: addObjectiveActive }"
         text
         class="add-objective align-self-end"
@@ -62,10 +65,13 @@
       </Button>
     </div>
 
-    <div v-show="!approvedresearch" class="feedback">
+    <div v-show="showFeedback" class="feedback">
       <div class="feedback-wrapper">
         <div class="feedback-label font-semi-bold">Feedback</div>
-        <Textarea v-model="research.feedback.text" :readonly="!readonly" />
+        <Textarea
+          v-model="research.feedback.text"
+          :readonly="feedbackReadonly"
+        />
       </div>
     </div>
   </div>
@@ -86,17 +92,25 @@ export default {
     Chip,
   },
   props: {
-    readonly: {
+    detailsReadonly: {
+      type: Boolean,
+      default: false,
+    },
+    feedbackReadonly: {
+      type: Boolean,
+      default: false,
+    },
+    showFeedback: {
+      type: Boolean,
+      default: false,
+    },
+    showStatus: {
       type: Boolean,
       default: false,
     },
     research: {
       type: Object,
       default: () => {},
-    },
-    approvedresearch: {
-      type: Boolean,
-      default: false,
     },
   },
   data() {
@@ -126,7 +140,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#research-details {
+#research {
   .objective-list-wrapper:not(:first-child) {
     animation: fade-in-opacity 1s ease-in-out;
   }

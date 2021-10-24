@@ -2,13 +2,13 @@
   <div class="invitation">
     <div class="invitation-wrapper">
       <InvitationMessage
-        :invitations="invitations.length"
+        :invitations="pendingInvitationsCount"
         :user-type="userType"
       />
       <InvitationRow
-        v-for="invitation in invitations"
+        v-for="invitation in pendingInvitations"
         :key="invitation.id"
-        :team-name="invitation.teamName"
+        :team-name="invitation.team.name"
         :invitation="invitation"
         @updateInvitation="updateInvitation"
       />
@@ -42,10 +42,15 @@
 </template>
 
 <script>
-// import { mapGetters } from "vuex";
 import InvitationMessage from "@/components/InvitationMessage.vue";
 import InvitationRow from "@/components/InvitationRow.vue";
 import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
+
+import { mapGetters, mapActions } from "vuex";
+import { STUDENT_ACTIONS } from "../store/types/actions";
+import { STUDENT_GETTERS } from "../store/types/getters";
+import { UTILS } from "../constants/utils";
+import { TEAM } from "@/utils/constants/team";
 
 export default {
   name: "StudentInvitation",
@@ -71,52 +76,53 @@ export default {
     };
   },
   computed: {
-    // ...mapGetters({
-    //   getUser: "user/getUser",
-    // }),
+    ...mapGetters({
+      getInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_INVITATIONS}`,
+    }),
+    repliedInvitations() {
+      return this.invitations.filter(
+        (invitation) => invitation.status !== TEAM.INVITATION_STATUS.ACCEPTED
+      );
+    },
+    pendingInvitations() {
+      return this.invitations.filter(
+        (invitation) => invitation.status === TEAM.INVITATION_STATUS.PENDING
+      );
+    },
+    pendingInvitationsCount() {
+      return this.pendingInvitations.length;
+    },
   },
   watch: {
-    invitationsFromServer() {
-      this.initialize();
+    getInvitations: {
+      deep: true,
+      handler() {
+        this.setInvitations();
+      },
     },
   },
   methods: {
-    joinTeam(code) {
+    ...mapActions({
+      onUpdateInvitation: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_INVITATION}`,
+    }),
+    setInvitations() {
+      this.invitations = this.getInvitations;
+    },
+    async updateInvitation({ invitationId, status }) {
+      const payload = {
+        id: invitationId,
+        invitation: {
+          status: status,
+        },
+      };
+      try {
+        await this.onUpdateInvitation(payload);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async joinTeam(code) {
       console.log("joinTeam called ", code);
-    },
-    initialize() {
-      this.invitations = [];
-      // this.invitationsFromServer.edges.forEach((edge) => {
-      //   this.invitations.push({
-      //     id: edge.node.id,
-      //     projectId: edge.node.project.id,
-      //     teamName: edge.node.project.teamName,
-      //     description: edge.node.project.description,
-      //     status: edge.node.status,
-      //     createdAt: edge.node.createdAt,
-      //   });
-      // });
-      console.log({ invitations: this.invitations });
-    },
-    async updateInvitation({ invitationId, isAccepted, projectId }) {
-      console.log(invitationId, isAccepted, projectId);
-      // const input = { invitationId, isAccepted, projectId };
-      // try {
-      //   const result = await this.$apollo.mutate({
-      //     mutation: UPDATE_INVITATION,
-      //     variables: { input },
-      //   });
-      //   const invitation = result.data.updateInvitation.invitation;
-      //   if (invitation.status === "ACCEPTED") this.$router.push("/student");
-      //   else if (invitation.status === "DECLINED") {
-      //     // handle decline
-      //   }
-      // } catch (error) {
-      //   console.log(error);
-      // }
-    },
-    removeInvitationFromList() {
-      // remove invitation from list
     },
   },
 };

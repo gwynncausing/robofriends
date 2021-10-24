@@ -1,16 +1,17 @@
 <template>
-  <div class="pending-proposals">
+  <div class="proposals">
     <Research
       :research="research"
-      details-readonly
+      :details-readonly="detailsReadonly"
       show-status
-      show-feedback
+      :show-feedback="showFeedback"
+      feedback-readonly
       @addObjective="addObjective"
       @removeObjective="removeObjective"
     />
-    <div class="button-wrapper">
-      <Button outlined> Return </Button>
-      <Button> Approve </Button>
+    <div v-show="showButtons" class="button-wrapper">
+      <Button outlined> Save </Button>
+      <Button>Submit </Button>
     </div>
   </div>
 </template>
@@ -20,7 +21,7 @@ import Research from "@/components/Research";
 import Button from "@/components/global/Button.vue";
 
 export default {
-  name: "PendingProposals",
+  name: "Proposals",
   components: {
     Research,
     Button,
@@ -43,6 +44,17 @@ export default {
       },
     };
   },
+  computed: {
+    detailsReadonly: function () {
+      return this.research.status === "Returned" ? false : true;
+    },
+    showFeedback: function () {
+      return this.research.status === "Pending" ? false : true;
+    },
+    showButtons: function () {
+      return this.research.status === "Returned" ? true : false;
+    },
+  },
   methods: {
     addObjective() {
       this.research.objectives.push("");
@@ -55,10 +67,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.pending-proposals {
+.proposals {
   padding-top: 24px;
-
   .button-wrapper {
+    padding-top: 24px;
     display: flex;
     flex-direction: row;
     column-gap: 16px;
