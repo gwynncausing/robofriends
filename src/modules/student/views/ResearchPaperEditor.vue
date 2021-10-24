@@ -59,10 +59,10 @@
 
 <script>
 import Button from "@/components/global/Button.vue";
-import EditorText from "@/components/student/EditorText.vue";
-import EditorImage from "@/components/student/EditorImage.vue";
-import EditorToolbar from "@/components/student/EditorToolbar.vue";
-import ActiveUsersList from "@/components/student/ActiveUsersList.vue";
+import EditorText from "@/components/editor/EditorText.vue";
+import EditorImage from "@/components/editor/EditorImage.vue";
+import EditorToolbar from "@/components/editor/EditorToolbar.vue";
+import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 
 export default {
   name: "ResearchPaperEditor",
