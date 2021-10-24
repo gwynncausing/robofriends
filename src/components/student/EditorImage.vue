@@ -29,7 +29,7 @@ import { WebrtcProvider } from "y-webrtc";
 import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
 
 import { mapGetters } from "vuex";
-import { GETTERS } from "@/store/types/getters";
+import { ROOT_GETTERS } from "@/store/types/getters";
 
 // A new Y document
 // const ydoc = new Y.Doc();
@@ -64,7 +64,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      getUser: `${GETTERS.GET_USER}`,
+      getUser: `${ROOT_GETTERS.GET_USER}`,
     }),
   },
 
