@@ -83,6 +83,7 @@
 <script>
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
+import HelperFunctions from "@/utils/helper-functions.js";
 
 import { mapActions } from "vuex";
 import { ROOT_ACTIONS } from "@/store/types/actions";
@@ -178,7 +179,7 @@ export default {
       return input
         .toLowerCase()
         .split(" ")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .map((word) => HelperFunctions.capitalizeFirstLetter(word))
         .join(" ");
     },
     async signup() {
