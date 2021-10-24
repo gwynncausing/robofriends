@@ -19,4 +19,7 @@ export default {
   [STUDENT_GETTERS.GET_HAS_MEMBERSHIPS]({ hasMemberships }) {
     return hasMemberships;
   },
+  [STUDENT_GETTERS.GET_SELECTED_TEAM]({ selectedTeam }) {
+    return selectedTeam;
+  },
 };

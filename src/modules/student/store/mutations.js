@@ -33,4 +33,7 @@ export default {
   [STUDENT_MUTATIONS.SET_HAS_MEMBERSHIPS](state, { hasMemberships }) {
     state.hasMemberships = hasMemberships;
   },
+  [STUDENT_MUTATIONS.SET_SELECTED_TEAM](state, { selectedTeam }) {
+    state.selectedTeam = selectedTeam;
+  },
 };

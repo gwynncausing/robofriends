@@ -103,18 +103,29 @@ export default {
     ...mapGetters({
       getMemberships: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_MEMBERSHIPS}`,
       hasMemberships: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
+      getSelectedTeam: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM}`,
     }),
   },
   async created() {
-    await this.fetchMemberships();
-    this.showKickstartResearchModal();
+    try {
+      await this.fetchMemberships();
+      await this.selectTeam();
+      this.showKickstartResearchModal();
+      console.log("Selected Team", this.getSelectedTeam);
+    } catch (error) {
+      console.log(error);
+    }
   },
   methods: {
     ...mapActions({
       onFetchMemberships: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.FETCH_MEMBERSHIPS}`,
+      onSelectTeam: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.SELECT_TEAM}`,
     }),
     async fetchMemberships() {
       return this.onFetchMemberships();
+    },
+    async selectTeam() {
+      return this.onSelectTeam();
     },
     showKickstartResearchModal() {
       this.kickstartResearchModal = true;

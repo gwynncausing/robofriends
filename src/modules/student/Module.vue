@@ -89,8 +89,12 @@ export default {
       else return this.routes;
     },
   },
-  async mounted() {
-    await this.fetchInvitations();
+  async created() {
+    try {
+      await this.fetchInvitations();
+    } catch (error) {
+      console.log(error);
+    }
   },
   methods: {
     ...mapActions({

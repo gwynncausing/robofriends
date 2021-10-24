@@ -4,5 +4,6 @@ export default () => ({
   sentTeachersInvitations: [],
   invitations: [],
   memberships: [],
+  selectedTeam: {},
   hasMemberships: false,
 });

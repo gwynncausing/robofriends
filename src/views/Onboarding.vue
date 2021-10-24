@@ -222,7 +222,11 @@ export default {
   },
 
   async created() {
-    await this.fetchSchools();
+    try {
+      await this.fetchSchools();
+    } catch (error) {
+      console.log(error);
+    }
   },
 
   methods: {

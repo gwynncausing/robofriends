@@ -59,4 +59,9 @@ export default {
       hasMemberships: memberships.length !== 0 ? true : false,
     });
   },
+  async [STUDENT_ACTIONS.SELECT_TEAM]({ commit, state }) {
+    commit(STUDENT_MUTATIONS.SET_SELECTED_TEAM, {
+      selectedTeam: state.memberships[0] || {},
+    });
+  },
 };
