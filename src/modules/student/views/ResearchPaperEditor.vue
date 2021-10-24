@@ -1,8 +1,8 @@
 <template>
   <div id="editor">
     <div class="editor-heading">
-      <Button text class="neutral-800--text">Version History</Button>
-
+      <Button text class="neutral-800--text mr-auto">Version History</Button>
+      <ActiveUsersList :users="activeUsers" class="mr-4" />
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <Button outlined v-bind="attrs" v-on="on">
@@ -25,62 +25,34 @@
           :key="editor.id"
           class="editor-row"
         >
-          <div class="editor-profile-list">
-            <div
-              v-for="item in editor.users"
-              :key="item"
-              class="profile"
-              :style="{ backgroundColor: userColor }"
-            >
-              <v-avatar size="38">
-                {{ item.split(" ")[0][0] }} {{ item.split(" ")[1][0] }}
-              </v-avatar>
-            </div>
-          </div>
           <div class="editor-content">
             <EditorText
               v-if="editor.blockType === 'text'"
               :editor-data="editor"
+              :user-color="userColor"
               @input="getContent($event, index)"
-              @userFocus="addUser($event)"
-              @userBlur="removeUser($event)"
+              @updateUsers="updateUsers($event)"
             />
+            <!-- @userFocus="addUser($event)"
+              @userBlur="removeUser($event)" -->
             <EditorImage
               v-if="editor.blockType === 'image'"
               :editor-data="editor"
+              :user-color="userColor"
               @input="getContent($event, index)"
-              @userFocus="addUser($event)"
-              @userBlur="removeUser($event)"
+              @updateUsers="updateUsers($event)"
             />
+            <!-- @userFocus="addUser($event)"
+              @userBlur="removeUser($event)" -->
           </div>
         </div>
       </div>
-
-      <div
-        ref="editor-controls-list"
-        class="editor-controls-list"
-        :style="{ top: currentToolbarPosition + 'px' }"
-      >
-        <Button icon @click="addEditor(currentSelectedEditorIndex)">
-          <v-icon class="editor-control-icon">mdi-plus-circle-outline</v-icon>
-        </Button>
-
-        <Button icon @click="addEditor(currentSelectedEditorIndex, 'image')">
-          <v-icon class="editor-control-icon">mdi-image-outline</v-icon>
-        </Button>
-
-        <Button icon @click="testMethod">
-          <v-icon class="editor-control-icon">mdi-application-outline</v-icon>
-        </Button>
-
-        <Button icon @click="testMethod">
-          <v-icon class="editor-control-icon">mdi-comment-text-outline</v-icon>
-        </Button>
-
-        <Button icon @click="removeEditor(currentSelectedEditorIndex)">
-          <v-icon class="editor-control-icon">mdi-delete</v-icon>
-        </Button>
-      </div>
+      <EditorToolbar
+        :current-toolbar-position="currentToolbarPosition"
+        :current-selected-editor-index="currentSelectedEditorIndex"
+        @addEditor="addEditor($event)"
+        @removeEditor="removeEditor($event)"
+      />
     </div>
   </div>
 </template>
@@ -89,6 +61,8 @@
 import Button from "@/components/global/Button.vue";
 import EditorText from "@/components/student/EditorText.vue";
 import EditorImage from "@/components/student/EditorImage.vue";
+import EditorToolbar from "@/components/student/EditorToolbar.vue";
+import ActiveUsersList from "@/components/student/ActiveUsersList.vue";
 
 export default {
   name: "ResearchPaperEditor",
@@ -96,12 +70,15 @@ export default {
     Button,
     EditorText,
     EditorImage,
+    EditorToolbar,
+    ActiveUsersList,
   },
   data() {
     return {
       exportItems: [{ title: "ACM" }, { title: "APA" }, { title: "MLA" }],
       editors: [],
       id: 123,
+      activeUsers: [],
       currentToolbarPosition: 0,
       currentSelectedEditorIndex: 0,
     };
@@ -115,31 +92,39 @@ export default {
 
   mounted() {
     if (!this.editors.length) {
-      this.addEditor(0);
+      this.addEditor({
+        currentSelectedEditorIndex: this.currentSelectedEditorIndex,
+      });
     }
   },
 
   methods: {
-    removeUser(object) {
-      const index = this.editors.map((editor) => editor.id).indexOf(object.id);
-      if (index === -1) return;
+    // * Commented removeUser and addUser methods
+    // * they are used for active users for the block
+    // removeUser(object) {
+    //   const index = this.editors.map((editor) => editor.id).indexOf(object.id);
+    //   if (index === -1) return;
 
-      this.editors[index].users = this.editors[index].users.splice(index, 1);
+    //   this.editors[index].users = this.editors[index].users.splice(index, 1);
 
-      const hasVal = Object.values(this.editors[index].users).includes(
-        object.name
-      );
-      if (hasVal) this.editors[index].users.splice(index, 1);
-    },
-    addUser(object) {
-      const index = this.editors.map((editor) => editor.id).indexOf(object.id);
-      const hasVal = Object.values(this.editors[index].users).includes(
-        object.name
-      );
-      if (!hasVal) this.editors[index].users.push(object.name);
+    //   const hasVal = Object.values(this.editors[index].users).includes(
+    //     object.name
+    //   );
+    //   if (hasVal) this.editors[index].users.splice(index, 1);
+    // },
+    // addUser(object) {
+    //   const index = this.editors.map((editor) => editor.id).indexOf(object.id);
+    //   const hasVal = Object.values(this.editors[index].users).includes(
+    //     object.name
+    //   );
+    //   if (!hasVal) this.editors[index].users.push(object.name);
 
-      this.moveToolbar(object.id, index);
-      this.currentSelectedEditorIndex = index;
+    //   this.moveToolbar(object.id, index);
+    //   this.currentSelectedEditorIndex = index;
+    // },
+    updateUsers(users) {
+      this.activeUsers = users;
+      console.log(users);
     },
     moveToolbar(id, index) {
       const editorID = "editor-" + id;
@@ -158,7 +143,7 @@ export default {
     getContent(event, index) {
       this.editors[index].content = event;
     },
-    addEditor(index = -1, blockType = "text") {
+    addEditor({ currentSelectedEditorIndex: index, blockType = "text" }) {
       if (index === -1) return;
       this.editors.splice(index + 1, 0, {
         id: this.id++,
@@ -167,7 +152,7 @@ export default {
         users: [],
       });
     },
-    removeEditor(index = -1) {
+    removeEditor({ currentSelectedEditorIndex: index = -1 }) {
       this.editors.splice(index, 1);
     },
     getRandomColor() {
@@ -193,41 +178,11 @@ export default {
 
   .editor-heading {
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
   }
 
   .editor-list-wrapper {
     position: relative;
-
-    .editor-controls-list {
-      position: absolute;
-      top: 0;
-      right: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      border: 1px solid $neutral-400;
-      border-radius: 4px;
-      padding: 0.5rem;
-      height: 288px;
-      transition: all 0.5s;
-
-      button {
-        width: 40px;
-
-        .editor-control-icon {
-          color: $neutral-700;
-        }
-
-        &:last-child {
-          margin-top: auto;
-
-          .editor-control-icon {
-            color: $red;
-          }
-        }
-      }
-    }
   }
 
   .editor-list {
@@ -238,23 +193,6 @@ export default {
     .editor-row {
       display: flex;
       gap: 16px;
-
-      .editor-profile-list {
-        width: 52px;
-        display: flex;
-        gap: 10px;
-        flex-direction: column;
-
-        .profile {
-          width: 42px;
-          height: 42px;
-          background-color: $primary;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 50%;
-        }
-      }
 
       .editor-content {
         width: 100%;

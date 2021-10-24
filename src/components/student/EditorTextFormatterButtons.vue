@@ -124,7 +124,7 @@ export default {
     },
     blockType: {
       type: String,
-      default: "text",
+      default: "",
     },
   },
   methods: {

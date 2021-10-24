@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div v-for="user in users" :key="user.id">
-      {{ user.name }}
-    </div>
-    <EditorTextFormatterButtons :editor="editor" />
+    <EditorTextFormatterButtons
+      :editor="editor"
+      :block-type="editorData.blockType"
+    />
     <editor-content :editor="editor" />
   </div>
 </template>
@@ -52,13 +52,16 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    userColor: {
+      type: String,
+      default: "#FFF",
+    },
   },
 
   data() {
     return {
       editor: null,
       content: "",
-      users: [],
     };
   },
 
@@ -66,12 +69,6 @@ export default {
     ...mapGetters({
       getUser: `${ROOT_GETTERS.GET_USER}`,
     }),
-  },
-
-  watch: {
-    content(newVal) {
-      console.log(newVal);
-    },
   },
 
   mounted() {
@@ -111,12 +108,10 @@ export default {
             provider: provider,
             user: {
               name,
-              color: this.getRandomColor(),
+              color: this.userColor,
             },
             onUpdate: (users) => {
-              // Object.assign(this.users, users);
-              this.users = users;
-              // console.log(documentId, " users", users);
+              this.$emit("updateUsers", users);
             },
           }),
         ],
