@@ -6,7 +6,7 @@
       </button>
     </div>
 
-    <div v-else>
+    <div v-else-if="blockType === 'text'">
       <button
         :class="{ 'is-active': editor.isActive('bold') }"
         @click="editor.chain().focus().toggleBold().run()"

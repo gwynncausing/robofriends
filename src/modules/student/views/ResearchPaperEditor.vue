@@ -25,25 +25,35 @@
           :key="editor.id"
           class="editor-row"
         >
-          <div class="editor-content">
+          <div v-if="editor.blockType === 'text'" class="editor-content-text">
             <EditorText
-              v-if="editor.blockType === 'text'"
               :editor-data="editor"
               :user-color="userColor"
               @input="getContent($event, index)"
               @updateUsers="updateUsers($event)"
+              @selectBlock="selectBlock($event)"
             />
-            <!-- @userFocus="addUser($event)"
-              @userBlur="removeUser($event)" -->
+          </div>
+          <div v-if="editor.blockType === 'image'" class="editor-content-image">
             <EditorImage
-              v-if="editor.blockType === 'image'"
               :editor-data="editor"
               :user-color="userColor"
               @input="getContent($event, index)"
               @updateUsers="updateUsers($event)"
+              @selectBlock="selectBlock($event)"
             />
-            <!-- @userFocus="addUser($event)"
-              @userBlur="removeUser($event)" -->
+          </div>
+          <div
+            v-if="editor.blockType === 'section'"
+            class="editor-content-section"
+          >
+            <EditorSection
+              :editor-data="editor"
+              :user-color="userColor"
+              @input="getContent($event, index)"
+              @updateUsers="updateUsers($event)"
+              @selectBlock="selectBlock($event)"
+            />
           </div>
         </div>
       </div>
@@ -61,6 +71,7 @@
 import Button from "@/components/global/Button.vue";
 import EditorText from "@/components/editor/EditorText.vue";
 import EditorImage from "@/components/editor/EditorImage.vue";
+import EditorSection from "@/components/editor/EditorSection.vue";
 import EditorToolbar from "@/components/editor/EditorToolbar.vue";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 
@@ -70,6 +81,7 @@ export default {
     Button,
     EditorText,
     EditorImage,
+    EditorSection,
     EditorToolbar,
     ActiveUsersList,
   },
@@ -125,6 +137,12 @@ export default {
     updateUsers(users) {
       this.activeUsers = users;
       console.log(users);
+    },
+    selectBlock(object) {
+      console.log("selectBlock called");
+      const index = this.editors.map((editor) => editor.id).indexOf(object.id);
+      this.moveToolbar(object.id, index);
+      this.currentSelectedEditorIndex = index;
     },
     moveToolbar(id, index) {
       const editorID = "editor-" + id;
@@ -194,13 +212,21 @@ export default {
       display: flex;
       gap: 16px;
 
-      .editor-content {
+      div[class^="editor-content-"] {
         width: 100%;
         border: 1px solid $neutral-400;
         border-radius: 4px;
-        padding: 0.5rem;
-        min-height: 18rem; // 304px
+        padding: 0.8rem;
         margin-right: 76px;
+      }
+      .editor-content-section {
+        height: 42px;
+        padding: 4px;
+      }
+
+      .editor-content-text,
+      .editor-content-image {
+        min-height: 18rem; // 304px
       }
     }
   }

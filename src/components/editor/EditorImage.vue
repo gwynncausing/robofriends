@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="editor-image">
     <EditorTextFormatterButtons
       :editor="editor"
       :block-type="editorData.blockType"
     />
-    <editor-content :editor="editor" />
+    <editor-content :editor="editor" class="editor-content" />
   </div>
 </template>
 
@@ -117,13 +117,7 @@ export default {
           this.$emit("input", this.editor.getJSON());
         },
         onFocus: () => {
-          this.$emit("userFocus", {
-            name,
-            id: this.editorData.id,
-          });
-        },
-        onBlur: () => {
-          this.$emit("userBlur", {
+          this.$emit("selectBlock", {
             name,
             id: this.editorData.id,
           });
@@ -153,3 +147,12 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.editor-image {
+  height: 93%;
+  .editor-content {
+    height: inherit;
+  }
+}
+</style>

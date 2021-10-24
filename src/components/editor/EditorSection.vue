@@ -1,28 +1,19 @@
 <template>
-  <div class="editor-text">
+  <div>
     <EditorTextFormatterButtons
       :editor="editor"
       :block-type="editorData.blockType"
     />
-    <editor-content :editor="editor" class="editor-content" />
+    <editor-content :editor="editor" />
   </div>
 </template>
 
 <script>
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import Document from "@tiptap/extension-document";
-import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
-import Bold from "@tiptap/extension-bold";
-import Italic from "@tiptap/extension-italic";
-import Strike from "@tiptap/extension-strike";
-import Code from "@tiptap/extension-code";
-import Underline from "@tiptap/extension-underline";
-import Superscript from "@tiptap/extension-superscript";
-import Subscript from "@tiptap/extension-subscript";
 import Heading from "@tiptap/extension-heading";
-import BulletList from "@tiptap/extension-bullet-list";
-import ListItem from "@tiptap/extension-list-item";
+import Placeholder from "@tiptap/extension-placeholder";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
@@ -83,20 +74,18 @@ export default {
       this.editor = new Editor({
         extensions: [
           Document,
-          Paragraph,
           Text,
-          Bold,
-          Italic,
-          Strike,
-          Code,
-          BulletList,
-          ListItem,
-          Underline,
-          Superscript,
-          Subscript,
-          Image,
           Heading.configure({
-            levels: [1, 2, 3, 4],
+            levels: [4],
+          }),
+          Placeholder.configure({
+            placeholder: ({ node }) => {
+              if (node.type.name === "heading") {
+                return "What’s the title?";
+              }
+
+              return "Text in this line will be neglected from exporting. Add an image instead";
+            },
           }),
           Collaboration.configure({
             document: ydoc,
@@ -133,12 +122,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.editor-text {
-  height: 93%;
-  .editor-content {
-    height: inherit;
-  }
-}
-</style>
