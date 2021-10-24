@@ -1,8 +1,8 @@
 <template>
   <div id="editor">
     <div class="editor-heading">
-      <Button text class="neutral-800--text">Version History</Button>
-
+      <Button text class="neutral-800--text mr-auto">Version History</Button>
+      <ActiveUsersList :users="activeUsers" class="mr-4" />
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <Button outlined v-bind="attrs" v-on="on">
@@ -25,33 +25,25 @@
           :key="editor.id"
           class="editor-row"
         >
-          <div class="editor-profile-list">
-            <div
-              v-for="item in editor.users"
-              :key="item"
-              class="profile"
-              :style="{ backgroundColor: userColor }"
-            >
-              <v-avatar size="38">
-                {{ item.split(" ")[0][0] }} {{ item.split(" ")[1][0] }}
-              </v-avatar>
-            </div>
-          </div>
           <div class="editor-content">
             <EditorText
               v-if="editor.blockType === 'text'"
               :editor-data="editor"
+              :user-color="userColor"
               @input="getContent($event, index)"
-              @userFocus="addUser($event)"
-              @userBlur="removeUser($event)"
+              @updateUsers="updateUsers($event)"
             />
+            <!-- @userFocus="addUser($event)"
+              @userBlur="removeUser($event)" -->
             <EditorImage
               v-if="editor.blockType === 'image'"
               :editor-data="editor"
+              :user-color="userColor"
               @input="getContent($event, index)"
-              @userFocus="addUser($event)"
-              @userBlur="removeUser($event)"
+              @updateUsers="updateUsers($event)"
             />
+            <!-- @userFocus="addUser($event)"
+              @userBlur="removeUser($event)" -->
           </div>
         </div>
       </div>
@@ -70,6 +62,7 @@ import Button from "@/components/global/Button.vue";
 import EditorText from "@/components/student/EditorText.vue";
 import EditorImage from "@/components/student/EditorImage.vue";
 import EditorToolbar from "@/components/student/EditorToolbar.vue";
+import ActiveUsersList from "@/components/student/ActiveUsersList.vue";
 
 export default {
   name: "ResearchPaperEditor",
@@ -78,12 +71,14 @@ export default {
     EditorText,
     EditorImage,
     EditorToolbar,
+    ActiveUsersList,
   },
   data() {
     return {
       exportItems: [{ title: "ACM" }, { title: "APA" }, { title: "MLA" }],
       editors: [],
       id: 123,
+      activeUsers: [],
       currentToolbarPosition: 0,
       currentSelectedEditorIndex: 0,
     };
@@ -104,26 +99,32 @@ export default {
   },
 
   methods: {
-    removeUser(object) {
-      const index = this.editors.map((editor) => editor.id).indexOf(object.id);
-      if (index === -1) return;
+    // * Commented removeUser and addUser methods
+    // * they are used for active users for the block
+    // removeUser(object) {
+    //   const index = this.editors.map((editor) => editor.id).indexOf(object.id);
+    //   if (index === -1) return;
 
-      this.editors[index].users = this.editors[index].users.splice(index, 1);
+    //   this.editors[index].users = this.editors[index].users.splice(index, 1);
 
-      const hasVal = Object.values(this.editors[index].users).includes(
-        object.name
-      );
-      if (hasVal) this.editors[index].users.splice(index, 1);
-    },
-    addUser(object) {
-      const index = this.editors.map((editor) => editor.id).indexOf(object.id);
-      const hasVal = Object.values(this.editors[index].users).includes(
-        object.name
-      );
-      if (!hasVal) this.editors[index].users.push(object.name);
+    //   const hasVal = Object.values(this.editors[index].users).includes(
+    //     object.name
+    //   );
+    //   if (hasVal) this.editors[index].users.splice(index, 1);
+    // },
+    // addUser(object) {
+    //   const index = this.editors.map((editor) => editor.id).indexOf(object.id);
+    //   const hasVal = Object.values(this.editors[index].users).includes(
+    //     object.name
+    //   );
+    //   if (!hasVal) this.editors[index].users.push(object.name);
 
-      this.moveToolbar(object.id, index);
-      this.currentSelectedEditorIndex = index;
+    //   this.moveToolbar(object.id, index);
+    //   this.currentSelectedEditorIndex = index;
+    // },
+    updateUsers(users) {
+      this.activeUsers = users;
+      console.log(users);
     },
     moveToolbar(id, index) {
       const editorID = "editor-" + id;
@@ -177,7 +178,7 @@ export default {
 
   .editor-heading {
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
   }
 
   .editor-list-wrapper {
@@ -192,23 +193,6 @@ export default {
     .editor-row {
       display: flex;
       gap: 16px;
-
-      .editor-profile-list {
-        width: 52px;
-        display: flex;
-        gap: 10px;
-        flex-direction: column;
-
-        .profile {
-          width: 42px;
-          height: 42px;
-          background-color: $primary;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 50%;
-        }
-      }
 
       .editor-content {
         width: 100%;
