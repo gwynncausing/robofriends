@@ -1,5 +1,6 @@
 <template>
   <div class="student">
+    <!-- // TODO:  Implement logout functionality -->
     <AppBar
       :routes="updatedRoutes"
       :notifications="notifications"

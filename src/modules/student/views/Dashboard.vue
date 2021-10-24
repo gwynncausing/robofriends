@@ -42,6 +42,7 @@
           <TasksBoard />
         </template>
       </Tabs>
+      <!-- // TODO:  redirect kickstartResearch to create proposal page -->
       <KickstartResearchModal
         :dialog-props="kickstartResearchModal"
         @dialogClose="kickstartResearchModal = $event"

@@ -5,6 +5,7 @@
         :invitations="pendingInvitationsCount"
         :user-type="userType"
       />
+      <!-- // TODO:  enhance invitatiow row when joining/declining invitation -->
       <InvitationRow
         v-for="invitation in pendingInvitations"
         :key="invitation.id"
@@ -33,6 +34,7 @@
         </span>
       </p>
     </div>
+    <!-- // TODO:  to be implemented -->
     <JoinTeamModal
       :dialog-props="joinTeamModal"
       @dialogClose="joinTeamModal = $event"
