@@ -3,7 +3,7 @@ import store from "./store";
 
 const registerModule = (name, module) => {
   if (module.store) {
-    store.registerModule(name, module.store);
+    store.registerModule(name, module.store, { preserveState: true });
   }
 
   if (module.router) {
