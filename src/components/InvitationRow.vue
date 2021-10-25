@@ -30,7 +30,7 @@
 
 <script>
 import Button from "@/components/global/Button.vue";
-import { TEAM } from "@/utils/constants/team";
+import { TEAM } from "@/utils/constants";
 
 export default {
   name: "InvitationMessage",

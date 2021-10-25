@@ -20,7 +20,8 @@ import { mapGetters, mapActions } from "vuex";
 import { STUDENT_GETTERS } from "./store/types/getters";
 import { STUDENT_ACTIONS } from "./store/types/actions";
 import { ROOT_GETTERS } from "@/store/types/getters";
-import { UTILS } from "./constants/utils";
+import { ROOT_ACTIONS } from "@/store/types/actions";
+import { MODULES } from "@/utils/constants";
 import HelperFunctions from "@/utils/helper-functions";
 
 export default {
@@ -75,13 +76,15 @@ export default {
   },
   computed: {
     ...mapGetters({
-      hasMemberships: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
+      hasMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
       getUser: ROOT_GETTERS.GET_USER,
     }),
     userInformation() {
       return {
         ...this.user,
-        name: HelperFunctions.capitalizeFirstLetter(this.getUser.lastName),
+        name: HelperFunctions.capitalizeFirstLetter(
+          this.getUser.lastName || "User"
+        ),
       };
     },
     updatedRoutes() {
@@ -98,13 +101,19 @@ export default {
   },
   methods: {
     ...mapActions({
-      onFetchInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.FETCH_INVITATIONS}`,
+      onFetchInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_INVITATIONS}`,
+      onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
     fetchInvitations() {
       return this.onFetchInvitations();
     },
-    logout() {
-      console.log("Logout User");
+    async logout() {
+      try {
+        await this.onLogoutUser();
+        this.$router.replace({ name: "SignIn" });
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

@@ -1,10 +1,3 @@
-export default () => ({
-  isLoggedIn: false,
-  user: {},
-  userType: "",
-  tokens: {
-    access: "",
-    refresh: "",
-  },
-  schools: {},
-});
+import { rootInititalState } from "@/store/types/state";
+
+export default () => rootInititalState();

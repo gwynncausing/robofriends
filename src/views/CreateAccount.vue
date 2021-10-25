@@ -87,7 +87,7 @@ import HelperFunctions from "@/utils/helper-functions.js";
 
 import { mapActions } from "vuex";
 import { ROOT_ACTIONS } from "@/store/types/actions";
-import { STATUS_CODES } from "@/utils/constants/http-status-codes";
+import { STATUS_CODES } from "@/utils/constants";
 
 export default {
   name: "Signin",

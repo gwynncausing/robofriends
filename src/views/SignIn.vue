@@ -55,8 +55,7 @@ import Button from "@/components/global/Button.vue";
 import { mapActions, mapGetters } from "vuex";
 import { ROOT_GETTERS } from "@/store/types/getters";
 import { ROOT_ACTIONS } from "@/store/types/actions";
-import { USER } from "@/utils/constants/user";
-import { STATUS_CODES } from "@/utils/constants/http-status-codes";
+import { USER, STATUS_CODES } from "@/utils/constants";
 
 export default {
   name: "Signin",

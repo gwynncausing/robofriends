@@ -1,4 +1,5 @@
 import { STUDENT_MUTATIONS } from "./types/mutations";
+import { studentInitialState } from "./types/state";
 
 export default {
   [STUDENT_MUTATIONS.SET_CURRENT_CREATED_TEAM](state, { team }) {
@@ -35,5 +36,8 @@ export default {
   },
   [STUDENT_MUTATIONS.SET_SELECTED_TEAM](state, { selectedTeam }) {
     state.selectedTeam = selectedTeam;
+  },
+  [STUDENT_MUTATIONS.SET_RESET_STUDENT_STATE](state) {
+    Object.assign(state, {}, studentInitialState());
   },
 };

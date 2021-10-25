@@ -1,6 +1,8 @@
 import { ROOT_ACTIONS } from "./types/actions";
 import { ROOT_MUTATIONS } from "./types/mutations";
 import { ROOT_PAYLOADS } from "./types/payloads";
+import { STUDENT_MUTATIONS } from "@/modules/student/store/types/mutations";
+import { MODULES } from "@/utils/constants";
 import Repository from "@/repositories/repository-factory";
 const AuthRepository = Repository.get("auth");
 const UserRepository = Repository.get("user");
@@ -43,5 +45,11 @@ export default {
     const response = await SchoolRepository.get();
     const schools = response.data;
     commit(ROOT_MUTATIONS.SET_SCHOOLS, { schools: schools });
+  },
+  async [ROOT_ACTIONS.LOGOUT_USER]({ commit }) {
+    commit(
+      `${MODULES.STUDENT_MODULE_PATH}${STUDENT_MUTATIONS.SET_RESET_STUDENT_STATE}`
+    );
+    commit(ROOT_MUTATIONS.SET_RESET_ROOT_STATE);
   },
 };

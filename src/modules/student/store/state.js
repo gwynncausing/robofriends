@@ -1,9 +1,3 @@
-export default () => ({
-  currentCreatedTeam: {},
-  sentMembersInvitations: [],
-  sentTeachersInvitations: [],
-  invitations: [],
-  memberships: [],
-  selectedTeam: {},
-  hasMemberships: false,
-});
+import { studentInitialState } from "./types/state";
+
+export default () => studentInitialState();

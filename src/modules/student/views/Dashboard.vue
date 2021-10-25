@@ -63,7 +63,7 @@ import KickstartResearchModal from "@/components/student/KickstartResearchModal.
 import { mapActions, mapGetters } from "vuex";
 import { STUDENT_ACTIONS } from "../store/types/actions";
 import { STUDENT_GETTERS } from "../store/types/getters";
-import { UTILS } from "../constants/utils";
+import { MODULES } from "@/utils/constants";
 
 export default {
   name: "Dashboard",
@@ -101,9 +101,9 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getMemberships: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_MEMBERSHIPS}`,
-      hasMemberships: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
-      getSelectedTeam: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM}`,
+      getMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_MEMBERSHIPS}`,
+      hasMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
+      getSelectedTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM}`,
     }),
   },
   async created() {
@@ -118,8 +118,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      onFetchMemberships: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.FETCH_MEMBERSHIPS}`,
-      onSelectTeam: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.SELECT_TEAM}`,
+      onFetchMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_MEMBERSHIPS}`,
+      onSelectTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SELECT_TEAM}`,
     }),
     async fetchMemberships() {
       return this.onFetchMemberships();

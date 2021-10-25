@@ -51,8 +51,7 @@ import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
 import { mapGetters, mapActions } from "vuex";
 import { STUDENT_ACTIONS } from "../store/types/actions";
 import { STUDENT_GETTERS } from "../store/types/getters";
-import { UTILS } from "../constants/utils";
-import { TEAM } from "@/utils/constants/team";
+import { MODULES, TEAM } from "@/utils/constants";
 
 export default {
   name: "StudentInvitation",
@@ -79,7 +78,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_INVITATIONS}`,
+      getInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_INVITATIONS}`,
     }),
     repliedInvitations() {
       return this.invitations.filter(
@@ -105,7 +104,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      onUpdateInvitation: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_INVITATION}`,
+      onUpdateInvitation: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_INVITATION}`,
     }),
     setInvitations() {
       this.invitations = this.getInvitations;

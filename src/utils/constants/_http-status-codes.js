@@ -1,3 +1,8 @@
+const SUCCESS = {
+  OK: 200,
+  CREATED: 201,
+};
+
 const ERRORS = {
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,
@@ -8,5 +13,6 @@ const ERRORS = {
 };
 
 export const STATUS_CODES = {
+  SUCCESS,
   ERRORS,
 };

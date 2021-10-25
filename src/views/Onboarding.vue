@@ -4,7 +4,7 @@
       :routes="appBar.routes"
       :notifications="appBar.notifications"
       :user="appBar.user"
-      @logout="appBar.logout"
+      @logout="logout"
     />
     <div id="onboarding">
       <div class="onboarding-wrapper">
@@ -132,8 +132,7 @@ import AppBar from "@/components/AppBar.vue";
 import { mapActions, mapGetters } from "vuex";
 import { ROOT_ACTIONS } from "@/store/types/actions";
 import { ROOT_GETTERS } from "@/store/types/getters";
-import { USER } from "@/utils/constants/user";
-import { STATUS_CODES } from "@/utils/constants/http-status-codes";
+import { USER, STATUS_CODES } from "@/utils/constants";
 
 export default {
   name: "OnboardingAccountType",
@@ -233,9 +232,15 @@ export default {
     ...mapActions({
       onFetchSchools: ROOT_ACTIONS.FETCH_SCHOOLS,
       onOnboardUser: ROOT_ACTIONS.ONBOARD_USER,
+      onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
-    logout() {
-      console.log("Logout User");
+    async logout() {
+      try {
+        await this.onLogoutUser();
+        this.$router.replace({ name: "SignIn" });
+      } catch (error) {
+        console.log(error);
+      }
     },
     async fetchSchools() {
       try {
