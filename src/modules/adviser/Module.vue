@@ -2,7 +2,7 @@
   <div class="adviser">
     <AppBar
       :routes="routes"
-      :notifications="notifications"
+      :notification="notification"
       :user="user"
       @logout="logout"
     />
@@ -34,7 +34,7 @@ export default {
       routes: [
         {
           name: "Home",
-          path: { name: "Home" },
+          path: { name: "Adviser Dashboard" },
         },
         {
           name: "Manage Teams",
@@ -45,23 +45,9 @@ export default {
         //   path: { name: "Archive" },
         // },
       ],
-      notifications: [
-        {
-          name: "Notification 1",
-          details: "",
-          path: "",
-        },
-        {
-          name: "Notification 2",
-          details: "",
-          path: "",
-        },
-        {
-          name: "Notification 3",
-          details: "",
-          path: "",
-        },
-      ],
+      notification: {
+        path: { name: "Adviser Invitation" },
+      },
     };
   },
   computed: {

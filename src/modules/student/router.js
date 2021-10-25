@@ -32,7 +32,7 @@ const studentRoutes = [
       },
       {
         path: "invitations",
-        name: "StudentInvitation",
+        name: "Student Invitation",
         component: () => import("@/modules/student/views/Invitation.vue"),
       },
       {

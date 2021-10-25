@@ -3,7 +3,7 @@
     <!-- // TODO:  Implement logout functionality -->
     <AppBar
       :routes="updatedRoutes"
-      :notifications="notifications"
+      :notification="notification"
       :user="userInformation"
       @logout="logout"
     />
@@ -55,23 +55,9 @@ export default {
           path: { name: "Research Paper Editor" },
         },
       ],
-      notifications: [
-        {
-          name: "Notification 1",
-          details: "",
-          path: "",
-        },
-        {
-          name: "Notification 2",
-          details: "",
-          path: "",
-        },
-        {
-          name: "Notification 3",
-          details: "",
-          path: "",
-        },
-      ],
+      notification: {
+        path: { name: "Student Invitation" },
+      },
     };
   },
   computed: {

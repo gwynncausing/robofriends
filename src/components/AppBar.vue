@@ -31,25 +31,9 @@
         </v-list-item>
       </v-list-item-group>
       <v-spacer></v-spacer>
-      <v-menu offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn color="primary" icon v-bind="attrs" v-on="on">
-            <v-icon color="neutral-600">mdi-bell</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item-title
-            v-for="(notification, id) in notifications"
-            :key="id"
-          >
-            <Button text block>
-              <span class="neutral-600--text button-font">{{
-                notification.name
-              }}</span>
-            </Button>
-          </v-list-item-title>
-        </v-list>
-      </v-menu>
+      <v-btn color="primary" icon :to="notification.path" exact-path>
+        <v-icon color="neutral-600">mdi-bell</v-icon>
+      </v-btn>
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -139,9 +123,9 @@ export default {
       type: Array,
       default: () => [],
     },
-    notifications: {
-      type: Array,
-      default: () => [],
+    notification: {
+      type: Object,
+      default: () => {},
     },
     user: {
       type: Object,
