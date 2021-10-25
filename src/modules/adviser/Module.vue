@@ -15,6 +15,11 @@
 <script>
 import AppBar from "@/components/AppBar.vue";
 
+import { mapGetters, mapActions } from "vuex";
+import { ROOT_GETTERS } from "@/store/types/getters";
+import { ROOT_ACTIONS } from "@/store/types/actions";
+import HelperFunctions from "@/utils/helper-functions";
+
 export default {
   name: "Adviser",
   components: { AppBar },
@@ -59,9 +64,30 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapGetters({
+      getUser: ROOT_GETTERS.GET_USER,
+    }),
+    userInformation() {
+      return {
+        ...this.user,
+        name: HelperFunctions.capitalizeFirstLetter(
+          this.getUser.lastName || "User"
+        ),
+      };
+    },
+  },
   methods: {
-    logout() {
-      console.log("Logout User");
+    ...mapActions({
+      onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
+    }),
+    async logout() {
+      try {
+        await this.onLogoutUser();
+        this.$router.replace({ name: "SignIn" });
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
