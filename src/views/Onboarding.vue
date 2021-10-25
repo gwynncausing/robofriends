@@ -294,8 +294,7 @@ export default {
             this.$router.replace({ name: "Dashboard" });
             break;
           case USER.TYPES.TEACHER:
-            //TODO: change to teacher dashboard route
-            console.log("Redirect to teacher's dashboard");
+            this.$router.replace({ name: "Adviser Dashboard" });
             break;
           default:
             console.log("Default");

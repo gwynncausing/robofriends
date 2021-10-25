@@ -18,7 +18,7 @@ const adviserRoutes = [
     children: [
       {
         path: "",
-        name: "Home",
+        name: "Adviser Dashboard",
         component: () => import("@/modules/adviser/views/Home.vue"),
       },
       {
