@@ -22,7 +22,7 @@ import { STUDENT_ACTIONS } from "./store/types/actions";
 import { ROOT_GETTERS } from "@/store/types/getters";
 import { ROOT_ACTIONS } from "@/store/types/actions";
 import { MODULES } from "@/utils/constants";
-import HelperFunctions from "@/utils/helper-functions";
+import { capitalizeFirstLetter } from "@/utils/helpers";
 
 export default {
   name: "Student",
@@ -82,9 +82,7 @@ export default {
     userInformation() {
       return {
         ...this.user,
-        name: HelperFunctions.capitalizeFirstLetter(
-          this.getUser.lastName || "User"
-        ),
+        name: capitalizeFirstLetter(this.getUser.lastName || "User"),
       };
     },
     updatedRoutes() {

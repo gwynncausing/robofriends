@@ -144,12 +144,12 @@
 
 // import ProjectDetails from "@/components/ProjectDetails.vue";
 import DateTimeParser from "@/utils/date-time-parser.js";
-import {
-  parseProjectStatus,
-  PROJECT_ONGOING,
-  PROJECT_FOR_REVISION,
-  PROJECT_FINISHED,
-} from "@/utils/utils.js";
+// import {
+//   parseProjectStatus,
+//   PROJECT_ONGOING,
+//   PROJECT_FOR_REVISION,
+//   PROJECT_FINISHED,
+// } from "@/utils/utils.js";
 // import { mapGetters } from "vuex";
 // import GET_ADVISED_PROJECTS from "@/modules/adviser/graphql/queries/get-advised-projects.gql";
 // import UPDATE_ADVISED_PROJECT from "@/modules/adviser/graphql/mutations/update-advised-project.gql";
@@ -189,11 +189,11 @@ export default {
       previousProjectsLength: 0,
       newAdvisedProjectsLength: 0,
       hasHandledProject: false,
-      projectStatus: {
-        PROJECT_ONGOING: PROJECT_ONGOING,
-        PROJECT_FOR_REVISION: PROJECT_FOR_REVISION,
-        PROJECT_FINISHED: PROJECT_FINISHED,
-      },
+      // projectStatus: {
+      //   PROJECT_ONGOING: PROJECT_ONGOING,
+      //   PROJECT_FOR_REVISION: PROJECT_FOR_REVISION,
+      //   PROJECT_FINISHED: PROJECT_FINISHED,
+      // },
       projects: [
         //sample data format
         // {
@@ -241,27 +241,27 @@ export default {
       if (this.advisedProjectsFromServer.edges.length > 0) {
         this.projects = [];
         this.hasHandledProject = true;
-        const advisedProjects = this.advisedProjectsFromServer.edges.sort(
-          (a, b) => new Date(b.node.updatedAt) - new Date(a.node.updatedAt)
-        );
-        advisedProjects.forEach((edge) => {
-          console.log(edge);
-          let tempProject = {
-            id: edge.node.id,
-            title: edge.node.title,
-            description: edge.node.description,
-            teamName: edge.node.teamName,
-            status: parseProjectStatus(edge.node.status),
-            updatedAt: DateTimeParser.parse(
-              edge.node.updatedAt,
-              "MM/DD/YYYY hh:mm a"
-            ),
-            objectives: this.addObjectivesToProject(edge.node.objectives),
-            categories: this.addCategoriesToProject(edge.node.categories),
-            feedbacks: this.addFeedbackToProject(edge.node.feedbacks),
-          };
-          this.projects.push(tempProject);
-        });
+        // const advisedProjects = this.advisedProjectsFromServer.edges.sort(
+        //   (a, b) => new Date(b.node.updatedAt) - new Date(a.node.updatedAt)
+        // );
+        // advisedProjects.forEach((edge) => {
+        // console.log(edge);
+        // let tempProject = {
+        //   id: edge.node.id,
+        //   title: edge.node.title,
+        //   description: edge.node.description,
+        //   teamName: edge.node.teamName,
+        //   status: parseProjectStatus(edge.node.status),
+        //   updatedAt: DateTimeParser.parse(
+        //     edge.node.updatedAt,
+        //     "MM/DD/YYYY hh:mm a"
+        //   ),
+        //   objectives: this.addObjectivesToProject(edge.node.objectives),
+        //   categories: this.addCategoriesToProject(edge.node.categories),
+        //   feedbacks: this.addFeedbackToProject(edge.node.feedbacks),
+        // };
+        // this.projects.push(tempProject);
+        // });
         if (this.previousProjectsLength != this.newAdvisedProjectsLength) {
           const index = Math.abs(
             this.newAdvisedProjectsLength - this.previousProjectsLength
@@ -281,15 +281,16 @@ export default {
       return categoryList;
     },
     addObjectivesToProject(objectives) {
-      let objectiveList = [];
-      objectives.edges.forEach((edge) => {
-        objectiveList.push({
-          id: edge.node.id,
-          text: edge.node.name,
-          status: parseProjectStatus(edge.node.status),
-        });
-      });
-      return objectiveList;
+      console.log(objectives);
+      // let objectiveList = [];
+      // objectives.edges.forEach((edge) => {
+      //   objectiveList.push({
+      //     id: edge.node.id,
+      //     text: edge.node.name,
+      //     status: parseProjectStatus(edge.node.status),
+      //   });
+      // });
+      // return objectiveList;
     },
     addFeedbackToProject(feedback) {
       let feedbackList = [];

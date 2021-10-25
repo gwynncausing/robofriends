@@ -18,7 +18,7 @@ import AppBar from "@/components/AppBar.vue";
 import { mapGetters, mapActions } from "vuex";
 import { ROOT_GETTERS } from "@/store/types/getters";
 import { ROOT_ACTIONS } from "@/store/types/actions";
-import HelperFunctions from "@/utils/helper-functions";
+import { capitalizeFirstLetter } from "@/utils/helpers";
 
 export default {
   name: "Adviser",
@@ -71,9 +71,7 @@ export default {
     userInformation() {
       return {
         ...this.user,
-        name: HelperFunctions.capitalizeFirstLetter(
-          this.getUser.lastName || "User"
-        ),
+        name: capitalizeFirstLetter(this.getUser.lastName || "User"),
       };
     },
   },
