@@ -1,7 +1,7 @@
 <template>
   <div class="approved-research">
     <div class="version-button-wrapper">
-      <Button outlined> Version History </Button>
+      <Button text class="neutral-800--text"> Version History </Button>
     </div>
     <Research
       :research="research"
