@@ -199,7 +199,7 @@ export default {
     }),
     userInformation() {
       return {
-        ...this.user,
+        ...this.appBar.user,
         name: capitalizeFirstLetter(this.getUser.lastName || "User"),
       };
     },
