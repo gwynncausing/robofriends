@@ -4,6 +4,9 @@
       <v-img :src="require('@/assets/dashboard-no-team.svg')" width="400" />
       <div class="dashboard-cta">
         <h5>Looks like you don’t have a team yet.</h5>
+        <div v-if="error" class="errors">
+          {{ error }}
+        </div>
         <p>
           Do you want to
           <!-- // TODO:  change to go to create team -->
@@ -25,6 +28,7 @@
         </p>
         <JoinTeamModal
           :dialog-props="joinTeamModal"
+          :is-loading="isSubmitTeamCode"
           @dialogClose="joinTeamModal = $event"
           @dialogJoinTeam="joinTeam($event)"
         />
@@ -44,6 +48,7 @@
       </Tabs>
       <!-- // TODO:  redirect kickstartResearch to create proposal page -->
       <KickstartResearchModal
+        :is-loading="isSubmitTeamCode"
         :dialog-props="kickstartResearchModal"
         @dialogClose="kickstartResearchModal = $event"
         @dialogKickstartResearch="kickstartResearch"
@@ -63,7 +68,7 @@ import KickstartResearchModal from "@/components/student/KickstartResearchModal.
 import { mapActions, mapGetters } from "vuex";
 import { STUDENT_ACTIONS } from "../store/types/actions";
 import { STUDENT_GETTERS } from "../store/types/getters";
-import { MODULES } from "@/utils/constants";
+import { MODULES, STATUS_CODES } from "@/utils/constants";
 
 export default {
   name: "Dashboard",
@@ -77,8 +82,10 @@ export default {
   },
   data() {
     return {
+      error: "",
       joinTeamModal: false,
       kickstartResearchModal: false,
+      isSubmitTeamCode: false,
       user: {
         teamList: {},
       },
@@ -120,6 +127,7 @@ export default {
     ...mapActions({
       onFetchMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_MEMBERSHIPS}`,
       onSelectTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SELECT_TEAM}`,
+      onJoinTeamCode: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.JOIN_CODE_TEAM}`,
     }),
     async fetchMemberships() {
       return this.onFetchMemberships();
@@ -130,8 +138,26 @@ export default {
     showKickstartResearchModal() {
       this.kickstartResearchModal = true;
     },
-    joinTeam(code) {
-      console.log("joinTeam called ", code);
+    async joinTeam(code) {
+      try {
+        this.isSubmitTeamCode = true;
+        this.error = "";
+        const payload = { code: code };
+        await this.onJoinTeamCode(payload);
+        this.$router.go();
+      } catch (error) {
+        switch (error?.response?.statusCode) {
+          case STATUS_CODES.NOT_FOUND:
+            this.error = "Team code doesn't exists.";
+            break;
+          default:
+            console.log("Error", error);
+            break;
+        }
+      } finally {
+        this.isSubmitTeamCode = false;
+        this.joinTeamModal = false;
+      }
     },
     kickstartResearch() {
       console.log("kickstartResearch called");
@@ -157,6 +183,12 @@ export default {
     h5 {
       margin-bottom: 16px;
     }
+  }
+  .errors {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--v-error);
   }
 }
 </style>

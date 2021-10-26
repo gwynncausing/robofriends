@@ -64,4 +64,12 @@ export default {
       selectedTeam: state.memberships[0] || {},
     });
   },
+  async [STUDENT_ACTIONS.JOIN_CODE_TEAM](
+    { commit },
+    payload = STUDENT_PAYLOADS.JOIN_CODE_TEAM_PAYLOAD
+  ) {
+    const response = await TeamRepository.joinTeam(payload);
+    console.log(response);
+    console.log(commit);
+  },
 };

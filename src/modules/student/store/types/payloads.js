@@ -14,8 +14,13 @@ const UPDATE_INVITATION = {
   },
 };
 
+const JOIN_CODE_TEAM_PAYLOAD = {
+  code: String,
+};
+
 export const STUDENT_PAYLOADS = {
   CREATE_TEAM,
   SEND_TEAM_INVITATIONS,
   UPDATE_INVITATION,
+  JOIN_CODE_TEAM_PAYLOAD,
 };

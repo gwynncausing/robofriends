@@ -2,8 +2,8 @@
   <div>
     <AppBar
       :routes="appBar.routes"
-      :notifications="appBar.notifications"
-      :user="appBar.user"
+      :notification="appBar.notification"
+      :user="userInformation"
       @logout="logout"
     />
     <div id="onboarding">
@@ -133,6 +133,7 @@ import { mapActions, mapGetters } from "vuex";
 import { ROOT_ACTIONS } from "@/store/types/actions";
 import { ROOT_GETTERS } from "@/store/types/getters";
 import { USER, STATUS_CODES } from "@/utils/constants";
+import { capitalizeFirstLetter } from "@/utils/helpers";
 
 export default {
   name: "OnboardingAccountType",
@@ -157,13 +158,9 @@ export default {
             path: { name: "Archive" },
           },
         ],
-        notifications: [
-          {
-            name: "Notification 1",
-            details: "",
-            path: "",
-          },
-        ],
+        notification: {
+          path: { name: "" },
+        },
       },
       isSubmit: false,
       valid: false,
@@ -200,6 +197,12 @@ export default {
       getUser: ROOT_GETTERS.GET_USER,
       getUserType: ROOT_GETTERS.GET_USER_TYPE,
     }),
+    userInformation() {
+      return {
+        ...this.user,
+        name: capitalizeFirstLetter(this.getUser.lastName || "User"),
+      };
+    },
   },
 
   watch: {

@@ -15,6 +15,9 @@
       />
     </div>
     <div class="invitation-create-or-join-team">
+      <div v-if="error" class="errors">
+        {{ error }}
+      </div>
       <p>
         I want to
         <!-- // TODO:  change to go to create team -->
@@ -37,6 +40,7 @@
     <!-- // TODO:  to be implemented -->
     <JoinTeamModal
       :dialog-props="joinTeamModal"
+      :is-loading="isSubmitTeamCode"
       @dialogClose="joinTeamModal = $event"
       @dialogJoinTeam="joinTeam($event)"
     />
@@ -51,7 +55,7 @@ import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
 import { mapGetters, mapActions } from "vuex";
 import { STUDENT_ACTIONS } from "../store/types/actions";
 import { STUDENT_GETTERS } from "../store/types/getters";
-import { MODULES, TEAM } from "@/utils/constants";
+import { MODULES, TEAM, STATUS_CODES } from "@/utils/constants";
 
 export default {
   name: "StudentInvitation",
@@ -62,7 +66,9 @@ export default {
   },
   data: function () {
     return {
+      error: "",
       joinTeamModal: false,
+      isSubmitTeamCode: false,
       userType: "student",
       invitations: [
         {
@@ -95,19 +101,31 @@ export default {
     },
   },
   watch: {
-    getInvitations: {
-      deep: true,
-      handler() {
-        this.setInvitations();
-      },
+    getInvitations() {
+      console.log("I am here in watch get invitations");
+      this.setInvitations();
     },
+  },
+  async created() {
+    try {
+      await this.fetchInvitations();
+      this.setInvitations();
+    } catch (error) {
+      console.log(error);
+    }
   },
   methods: {
     ...mapActions({
+      onFetchInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_INVITATIONS}`,
       onUpdateInvitation: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_INVITATION}`,
+      onJoinCodeTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.JOIN_CODE_TEAM}`,
     }),
+    fetchInvitations() {
+      return this.onFetchInvitations();
+    },
     setInvitations() {
       this.invitations = this.getInvitations;
+      console.log(this.getInvitations);
     },
     async updateInvitation({ invitationId, status }) {
       const payload = {
@@ -118,12 +136,33 @@ export default {
       };
       try {
         await this.onUpdateInvitation(payload);
+        if (status === TEAM.INVITATION_STATUS.ACCEPTED)
+          this.$router.push({ name: "Dashboard" });
+        this.setInvitations();
       } catch (error) {
         console.log(error);
       }
     },
     async joinTeam(code) {
-      console.log("joinTeam called ", code);
+      try {
+        this.isSubmitTeamCode = true;
+        this.error = "";
+        const payload = { code: code };
+        await this.onJoinCodeTeam(payload);
+        this.$router.push({ name: "Dashboard" });
+      } catch (error) {
+        switch (error?.response?.statusCode) {
+          case STATUS_CODES.NOT_FOUND:
+            this.error = "Team code doesn't exists.";
+            break;
+          default:
+            console.log("Error", error);
+            break;
+        }
+      } finally {
+        this.isSubmitTeamCode = false;
+        this.joinTeamModal = false;
+      }
     },
   },
 };
@@ -140,9 +179,14 @@ export default {
   .invitation-create-or-join-team {
     text-align: center;
   }
-
   .btn-join-team {
     cursor: pointer;
+  }
+  .errors {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--v-error);
   }
 }
 </style>

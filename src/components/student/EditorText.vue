@@ -75,7 +75,6 @@ export default {
     const ydoc = new Y.Doc();
 
     const documentId = this.editorData.id;
-
     const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
     let content = this.editorData.content;
 

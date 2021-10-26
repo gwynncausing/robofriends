@@ -18,7 +18,6 @@ import AppBar from "@/components/AppBar.vue";
 
 import { mapGetters, mapActions } from "vuex";
 import { STUDENT_GETTERS } from "./store/types/getters";
-import { STUDENT_ACTIONS } from "./store/types/actions";
 import { ROOT_GETTERS } from "@/store/types/getters";
 import { ROOT_ACTIONS } from "@/store/types/actions";
 import { MODULES } from "@/utils/constants";
@@ -76,21 +75,11 @@ export default {
       else return this.routes;
     },
   },
-  async created() {
-    try {
-      await this.fetchInvitations();
-    } catch (error) {
-      console.log(error);
-    }
-  },
   methods: {
     ...mapActions({
-      onFetchInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_INVITATIONS}`,
+      onFetchMemberships: ROOT_ACTIONS.FETCH_MEMBERSHIPS,
       onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
-    fetchInvitations() {
-      return this.onFetchInvitations();
-    },
     async logout() {
       try {
         await this.onLogoutUser();

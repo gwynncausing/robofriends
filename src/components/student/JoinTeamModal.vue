@@ -12,7 +12,7 @@
     <template v-slot:footer>
       <v-spacer></v-spacer>
       <Button text @click="closeModal()">Cancel</Button>
-      <Button @click="joinTeam(teamCode)">Submit</Button>
+      <Button :loading="isLoading" @click="joinTeam(teamCode)">Submit</Button>
     </template>
   </Modal>
 </template>
@@ -31,6 +31,10 @@ export default {
   },
   props: {
     dialogProps: {
+      type: Boolean,
+      default: false,
+    },
+    isLoading: {
       type: Boolean,
       default: false,
     },
