@@ -1,7 +1,9 @@
 <template>
   <v-app :style="cssProps">
     <v-main>
-      <router-view />
+      <transition name="fade" mode="out-in">
+        <router-view />
+      </transition>
     </v-main>
   </v-app>
 </template>
@@ -25,6 +27,7 @@ export default {
 
 <style lang="scss">
 @import "@/styles/_global-styles.scss";
+@import "@/styles/_transitions.scss";
 @import "@/styles/prosemirror.scss";
 .container {
   max-width: 1251px !important;

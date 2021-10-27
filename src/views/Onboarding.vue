@@ -364,20 +364,4 @@ export default {
   text-align: center;
   color: var(--v-error);
 }
-.slide-fade-enter-active {
-  transition: all 0.8s ease;
-}
-.slide-fade-leave-active {
-  transition: all 0.8s ease;
-  // cubic-bezier(1, 0.5, 0.8, 1)
-}
-.slide-fade-enter {
-  transform: translatey(50px);
-  opacity: 0;
-}
-
-.slide-fade-leave-to {
-  transform: translatey(-50px);
-  opacity: 0;
-}
 </style>

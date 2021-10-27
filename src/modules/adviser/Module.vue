@@ -7,7 +7,9 @@
       @logout="logout"
     />
     <v-container>
-      <router-view class="mt-5" />
+      <transition name="fade" mode="out-in">
+        <router-view class="mt-5" />
+      </transition>
     </v-container>
   </div>
 </template>
