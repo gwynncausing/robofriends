@@ -136,10 +136,8 @@ export default {
     // },
     updateUsers(users) {
       this.activeUsers = users;
-      console.log(users);
     },
     selectBlock(object) {
-      console.log("selectBlock called");
       const index = this.editors.map((editor) => editor.id).indexOf(object.id);
       this.moveToolbar(object.id, index);
       this.currentSelectedEditorIndex = index;

@@ -70,51 +70,69 @@ export default {
 
     const provider = new WebrtcProvider(documentId + "", ydoc);
 
-    try {
-      this.editor = new Editor({
-        extensions: [
-          Document,
-          Text,
-          Heading.configure({
-            levels: [4],
-          }),
-          Placeholder.configure({
-            placeholder: ({ node }) => {
-              if (node.type.name === "heading") {
-                return "What’s the title?";
-              }
+    this.editor = new Editor({
+      extensions: [
+        Document,
+        Text,
+        Heading.configure({
+          levels: [4],
+          HTMLAttributes: {
+            class: "editor-section-block-title",
+          },
+        }),
+        Placeholder.configure({
+          placeholder: ({ node }) => {
+            if (node.type.name === "heading") {
+              return "What’s the title?";
+            }
 
-              return "Text in this line will be neglected from exporting. Add an image instead";
-            },
-          }),
-          Collaboration.configure({
-            document: ydoc,
-          }),
-          CollaborationCursor.configure({
-            provider: provider,
-            user: {
-              name,
-              color: this.userColor,
-            },
-            onUpdate: (users) => {
-              this.$emit("updateUsers", users);
-            },
-          }),
-        ],
-        content: content,
-        onUpdate: () => {
-          this.$emit("input", this.editor.getJSON());
-        },
-        onFocus: () => {
-          this.$emit("selectBlock", {
+            return "Text in this line will be neglected from exporting. Add an image instead";
+          },
+        }),
+        Collaboration.configure({
+          document: ydoc,
+        }),
+        CollaborationCursor.configure({
+          provider: provider,
+          user: {
             name,
-            id: this.editorData.id,
-          });
-        },
-      });
-    } catch (e) {
-      console.log(e);
-    }
+            color: this.userColor,
+          },
+          onUpdate: (users) => {
+            this.$emit("updateUsers", users);
+          },
+        }),
+      ],
+      content: content,
+      onUpdate: () => {
+        this.$emit("input", this.editor.getJSON());
+      },
+      onFocus: () => {
+        this.$emit("selectBlock", {
+          name,
+          id: this.editorData.id,
+        });
+      },
+    });
+
+    this.disableEnter();
+  },
+
+  methods: {
+    disableEnter() {
+      setTimeout(() => {
+        // disables the enter
+        const elements = document.getElementsByClassName(
+          "editor-section-block-title"
+        );
+        let parent = elements[elements.length - 1].parentNode;
+        parent.addEventListener("keydown", function (event) {
+          if (event.keyCode == 13) {
+            this.editor.commands.undo();
+          }
+        });
+      }, 10);
+    },
   },
 
   beforeUnmount() {
