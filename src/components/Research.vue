@@ -118,12 +118,11 @@ export default {
       addObjectiveActive: false,
       statusColors: {
         Pending: "yellow",
-        Returned: "red",
+        NeedsRevision: "red",
         Approved: "primary",
       },
     };
   },
-
   methods: {
     addItem() {
       this.$emit("addObjective");
@@ -151,6 +150,7 @@ export default {
   .feedback {
     display: flex;
     flex-direction: column;
+    padding-bottom: 24px;
 
     .research-title-label-wrapper {
       display: flex;

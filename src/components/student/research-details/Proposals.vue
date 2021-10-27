@@ -10,8 +10,7 @@
       @removeObjective="removeObjective"
     />
     <div v-show="showButtons" class="button-wrapper">
-      <Button outlined> Save </Button>
-      <Button>Submit </Button>
+      <Button>Edit</Button>
     </div>
   </div>
 </template>
@@ -33,7 +32,7 @@ export default {
         title: "title",
         description: "description",
         teamName: "Cary & Co.",
-        status: "Pending", // ? values: Pending, Approved, Returned
+        status: "NeedsRevision", // ? values: Pending, Approved, Needs Revision
         objectives: ["obj1", "obj2"],
         feedback: {
           id: "1",
@@ -46,13 +45,13 @@ export default {
   },
   computed: {
     detailsReadonly: function () {
-      return this.research.status === "Returned" ? false : true;
+      return this.research.status === "NeedsRevision" ? false : true;
     },
     showFeedback: function () {
       return this.research.status === "Pending" ? false : true;
     },
     showButtons: function () {
-      return this.research.status === "Returned" ? true : false;
+      return this.research.status === "NeedsRevision" ? true : false;
     },
   },
   methods: {
