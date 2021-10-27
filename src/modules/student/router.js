@@ -21,8 +21,13 @@ const studentRoutes = [
         component: () => import("@/modules/student/views/Dashboard.vue"),
       },
       {
+        path: "settings",
+        name: "Account Settings",
+        component: () => import("@/views/AccountSettings.vue"),
+      },
+      {
         path: "teamlist",
-        name: "TeamList",
+        name: "Team List",
         component: () => import("@/modules/student/views/TeamList.vue"),
       },
       {
