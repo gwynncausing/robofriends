@@ -9,7 +9,6 @@
         </div>
         <p>
           Do you want to
-          <!-- // TODO:  change to go to create team -->
           <router-link class="primary--text" :to="{ name: 'Create Team' }">
             <strong>create</strong>
           </router-link>
@@ -118,7 +117,6 @@ export default {
       await this.fetchMemberships();
       await this.selectTeam();
       this.showKickstartResearchModal();
-      console.log("Selected Team", this.getSelectedTeam);
     } catch (error) {
       console.log(error);
     }

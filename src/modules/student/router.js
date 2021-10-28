@@ -22,7 +22,7 @@ const studentRoutes = [
       },
       {
         path: "settings",
-        name: "Account Settings",
+        name: "Student Account Settings",
         component: () => import("@/views/AccountSettings.vue"),
       },
       {
