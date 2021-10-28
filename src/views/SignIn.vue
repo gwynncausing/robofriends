@@ -53,8 +53,7 @@ import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import { ROOT_GETTERS } from "@/store/types/getters";
-import { ROOT_ACTIONS } from "@/store/types/actions";
+import { ROOT_GETTERS, ROOT_ACTIONS } from "@/store/types";
 import { USER, STATUS_CODES } from "@/utils/constants";
 
 export default {

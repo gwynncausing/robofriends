@@ -65,8 +65,7 @@ import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
 import KickstartResearchModal from "@/components/student/KickstartResearchModal.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import { STUDENT_ACTIONS } from "../store/types/actions";
-import { STUDENT_GETTERS } from "../store/types/getters";
+import { STUDENT_ACTIONS, STUDENT_GETTERS } from "../store/types";
 import { MODULES, STATUS_CODES } from "@/utils/constants";
 
 export default {

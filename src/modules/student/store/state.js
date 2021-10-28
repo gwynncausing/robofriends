@@ -1,3 +1,3 @@
-import { studentInitialState } from "./types/state";
+import { studentInitialState } from "./types";
 
 export default () => studentInitialState();

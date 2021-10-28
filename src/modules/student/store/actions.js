@@ -1,6 +1,4 @@
-import { STUDENT_ACTIONS } from "./types/actions";
-import { STUDENT_MUTATIONS } from "./types/mutations";
-import { STUDENT_PAYLOADS } from "./types/payloads";
+import { STUDENT_ACTIONS, STUDENT_MUTATIONS, STUDENT_PAYLOADS } from "./types";
 import Repository from "../repositories/repository-factory";
 const TeamRepository = Repository.get("team");
 

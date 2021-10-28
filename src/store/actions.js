@@ -1,7 +1,5 @@
-import { ROOT_ACTIONS } from "./types/actions";
-import { ROOT_MUTATIONS } from "./types/mutations";
-import { ROOT_PAYLOADS } from "./types/payloads";
-import { STUDENT_MUTATIONS } from "@/modules/student/store/types/mutations";
+import { ROOT_ACTIONS, ROOT_MUTATIONS, ROOT_PAYLOADS } from "./types";
+import { STUDENT_MUTATIONS } from "@/modules/student/store/types";
 import { ADVISER_MUTATIONS } from "@/modules/adviser/store/types";
 import { MODULES } from "@/utils/constants";
 import Repository from "@/repositories/repository-factory";

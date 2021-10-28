@@ -50,8 +50,7 @@ import InvitationRow from "@/components/InvitationRow.vue";
 import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
 
 import { mapGetters, mapActions } from "vuex";
-import { STUDENT_ACTIONS } from "../store/types/actions";
-import { STUDENT_GETTERS } from "../store/types/getters";
+import { STUDENT_ACTIONS, STUDENT_GETTERS } from "../store/types";
 import { MODULES, TEAM, STATUS_CODES } from "@/utils/constants";
 
 export default {
@@ -99,7 +98,6 @@ export default {
   },
   watch: {
     getInvitations() {
-      console.log("I am here in watch get invitations");
       this.setInvitations();
     },
   },
@@ -122,7 +120,6 @@ export default {
     },
     setInvitations() {
       this.invitations = this.getInvitations;
-      console.log(this.getInvitations);
     },
     async updateInvitation({ invitationId, status }) {
       const payload = {

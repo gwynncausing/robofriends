@@ -1,3 +1,3 @@
-import { rootInititalState } from "@/store/types/state";
+import { rootInititalState } from "@/store/types";
 
 export default () => rootInititalState();

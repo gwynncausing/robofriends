@@ -1,5 +1,4 @@
-import { STUDENT_MUTATIONS } from "./types/mutations";
-import { studentInitialState } from "./types/state";
+import { STUDENT_MUTATIONS, studentInitialState } from "./types";
 
 export default {
   [STUDENT_MUTATIONS.SET_CURRENT_CREATED_TEAM](state, { team }) {

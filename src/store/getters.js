@@ -1,4 +1,4 @@
-import { ROOT_GETTERS } from "./types/getters";
+import { ROOT_GETTERS } from "./types";
 
 export default {
   [ROOT_GETTERS.GET_USER]({ user }) {

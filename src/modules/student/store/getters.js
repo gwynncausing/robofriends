@@ -1,4 +1,4 @@
-import { STUDENT_GETTERS } from "./types/getters";
+import { STUDENT_GETTERS } from "./types";
 
 export default {
   [STUDENT_GETTERS.GET_CURRENT_CREATED_TEAM]({ currentCreatedTeam }) {

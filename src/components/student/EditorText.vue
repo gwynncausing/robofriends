@@ -34,7 +34,7 @@ import { WebrtcProvider } from "y-webrtc";
 import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
 
 import { mapGetters } from "vuex";
-import { ROOT_GETTERS } from "@/store/types/getters";
+import { ROOT_GETTERS } from "@/store/types";
 
 // A new Y document
 // const ydoc = new Y.Doc();
