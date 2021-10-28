@@ -63,8 +63,7 @@ import Modal from "@/components/Modal.vue";
 import ArchiveCategories from "@/components/ArchiveCategories.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import { ROOT_ACTIONS } from "@/store/types/actions";
-import { ROOT_GETTERS } from "@/store/types/getters";
+import { ROOT_ACTIONS, ROOT_GETTERS } from "@/store/types";
 import { capitalizeFirstLetter } from "@/utils/helpers";
 
 export default {
