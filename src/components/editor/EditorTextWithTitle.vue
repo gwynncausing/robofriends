@@ -98,7 +98,6 @@ export default {
           Underline,
           Superscript,
           Subscript,
-          Image,
           Placeholder.configure({
             placeholder: ({ node }) => {
               if (node.type.name === "heading") {

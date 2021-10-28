@@ -7,7 +7,7 @@
       <EditorTextWithTitle
         :editor-data="editor"
         :user-color="userColor"
-        :is-editable="true"
+        is-editable
         @input="getContent($event)"
         @updateUsers="updateUsers($event)"
       />
@@ -47,6 +47,10 @@ export default {
   },
 
   methods: {
+    getTitle() {
+      console.log(this.editor.content.content[0].content[0].text);
+      // console.log(document.getElementById("research-title").value);
+    },
     updateUsers(users) {
       this.activeUsers = users;
       // console.log(users);
