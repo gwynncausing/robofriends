@@ -1,25 +1,28 @@
 <template>
   <div class="approved-research">
-    <Research :research="research" details-readonly />
+    <div class="editor-wrapper">
+      <EditorTextWithTitleReadonly
+        :editor-data="{ id: 123, content: research.content }"
+        @input="getContent($event)"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-import Research from "@/components/Research";
+import EditorTextWithTitleReadonly from "@/components/editor/EditorTextWithTitleReadonly";
+
 export default {
   name: "ApprovedResearch",
   components: {
-    Research,
+    EditorTextWithTitleReadonly,
   },
   data() {
     return {
       research: {
         id: "1",
         title: "title",
-        description: "description",
-        teamName: "Cary & Co.",
-        status: "Pending", // ? values: Pending, Approved, Returned
-        objectives: ["obj1", "obj2"],
+        content: `aaaaa`,
         feedback: {
           id: "1",
           date: "1/1/2021",
@@ -35,5 +38,11 @@ export default {
 <style lang="scss" scoped>
 .approved-research {
   padding-top: 24px;
+  .editor-wrapper {
+    width: 100%;
+    border: 1px solid $neutral-400;
+    border-radius: 4px;
+    padding: 0.8rem;
+  }
 }
 </style>
