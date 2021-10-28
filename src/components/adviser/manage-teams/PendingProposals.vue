@@ -1,28 +1,33 @@
 <template>
   <div class="pending-proposals">
-    <Research
-      :research="research"
-      details-readonly
-      show-status
-      show-feedback
-      @addObjective="addObjective"
-      @removeObjective="removeObjective"
-    />
+    <div class="editor-wrapper">
+      <EditorTextWithTitleReadonly
+        :editor-data="{ id: 123, content: research.content }"
+        @input="getContent($event)"
+      />
+    </div>
+    <div class="feedback-wrapper">
+      <div class="feedback-label font-semi-bold">Feedback</div>
+      <Textarea v-model="research.feedback.text" readonly />
+    </div>
     <div class="button-wrapper">
-      <Button outlined> Return </Button>
       <Button> Approve </Button>
+      <Button color="red" dark> Reject </Button>
+      <Button color="yellow" dark> Ask to Revise </Button>
     </div>
   </div>
 </template>
 
 <script>
-import Research from "@/components/Research";
+import EditorTextWithTitleReadonly from "@/components/editor/EditorTextWithTitleReadonly";
 import Button from "@/components/global/Button.vue";
+import Textarea from "@/components/global/Textarea.vue";
 
 export default {
   name: "PendingProposals",
   components: {
-    Research,
+    Textarea,
+    EditorTextWithTitleReadonly,
     Button,
   },
   data() {
@@ -30,10 +35,7 @@ export default {
       research: {
         id: "1",
         title: "title",
-        description: "description",
-        teamName: "Cary & Co.",
-        status: "Pending", // ? values: Pending, Approved, Returned
-        objectives: ["obj1", "obj2"],
+        content: `aaaaa`,
         feedback: {
           id: "1",
           date: "1/1/2021",
@@ -43,26 +45,27 @@ export default {
       },
     };
   },
-  methods: {
-    addObjective() {
-      this.research.objectives.push("");
-    },
-    removeObjective(index) {
-      this.research.objectives.splice(index, 1);
-    },
-  },
 };
 </script>
 
 <style lang="scss" scoped>
 .pending-proposals {
   padding-top: 24px;
-
+  .editor-wrapper {
+    width: 100%;
+    border: 1px solid $neutral-400;
+    border-radius: 4px;
+    padding: 0.8rem;
+  }
+  .feedback-wrapper {
+    padding-top: 24px;
+  }
   .button-wrapper {
     display: flex;
     flex-direction: row;
     column-gap: 16px;
     justify-content: flex-end;
+    padding-top: 10px;
   }
 }
 </style>
