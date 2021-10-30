@@ -1,10 +1,17 @@
 <template>
   <div class="create-new">
-    <Research
-      :research="research"
-      @addObjective="addObjective"
-      @removeObjective="removeObjective"
-    />
+    <div class="editor-heading">
+      <ActiveUsersList :users="activeUsers" />
+    </div>
+    <div class="editor-wrapper">
+      <EditorTextWithTitle
+        :editor-data="editor"
+        :user-color="userColor"
+        is-editable
+        @input="getContent($event)"
+        @updateUsers="updateUsers($event)"
+      />
+    </div>
     <div class="button-wrapper">
       <Button> Submit </Button>
     </div>
@@ -12,38 +19,53 @@
 </template>
 
 <script>
-import Research from "@/components/Research";
 import Button from "@/components/global/Button.vue";
+import EditorTextWithTitle from "@/components/editor/EditorTextWithTitle";
+import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
+
 export default {
   name: "CreateNew",
   components: {
     Button,
-    Research,
+    EditorTextWithTitle,
+    ActiveUsersList,
   },
   data() {
     return {
-      research: {
-        id: "",
-        title: "",
-        description: "",
-        teamName: "",
-        status: "",
-        objectives: [""],
-        feedback: {
-          id: "",
-          date: "",
-          time: "",
-          text: "",
-        },
+      editor: {
+        id: "create-new",
+        content: ``,
+        users: [],
       },
+      activeUsers: [],
     };
   },
-  methods: {
-    addObjective() {
-      this.research.objectives.push("");
+  computed: {
+    userColor() {
+      return this.getRandomColor();
     },
-    removeObjective(index) {
-      this.research.objectives.splice(index, 1);
+  },
+
+  methods: {
+    getTitle() {
+      console.log(this.editor.content.content[0].content[0].text);
+      // console.log(document.getElementById("research-title").value);
+    },
+    updateUsers(users) {
+      this.activeUsers = users;
+      // console.log(users);
+    },
+    getContent(event) {
+      this.editor.content = event;
+      console.log(event);
+    },
+    getRandomColor() {
+      let letters = "0123456789ABCDEF";
+      let color = "#";
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
     },
   },
 };
@@ -52,8 +74,20 @@ export default {
 <style lang="scss" scoped>
 .create-new {
   padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 24px;
+  .editor-heading {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .editor-wrapper {
+    width: 100%;
+    border: 1px solid $neutral-400;
+    border-radius: 4px;
+    padding: 0.8rem;
+  }
   .button-wrapper {
-    padding-top: 24px;
     display: flex;
     justify-content: flex-end;
   }

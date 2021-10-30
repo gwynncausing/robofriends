@@ -51,11 +51,6 @@ const studentRoutes = [
         component: () =>
           import("@/modules/student/views/ResearchPaperEditor.vue"),
       },
-      {
-        path: "archive",
-        name: "Archive",
-        component: () => import("@/modules/student/views/Archive.vue"),
-      },
     ],
   },
 ];
