@@ -23,7 +23,7 @@ const adviserRoutes = [
       },
       {
         path: "settings",
-        name: "Account Settings",
+        name: "Adviser Account Settings",
         component: () => import("@/views/AccountSettings.vue"),
       },
       {

@@ -47,8 +47,24 @@
             :categories="categories"
             @getSelectedCategory="selectedCategory = $event"
           />
+          <ArchiveDate
+            label="Start Date"
+            :date="startDate"
+            @update-date="startDate = $event"
+          />
+          <ArchiveDate
+            label="End Date"
+            :date="endDate"
+            :allowed-dates="allowedDates"
+            @update-date="endDate = $event"
+          />
         </aside>
-        <section class="research-archive-wrapper">card</section>
+        <section class="research-archive-wrapper">
+          <ArchiveCard />
+          <ArchiveCard />
+          <ArchiveCard />
+          <ArchiveCard />
+        </section>
       </div>
     </div>
   </div>
@@ -60,7 +76,9 @@ import Button from "@/components/global/Button.vue";
 
 import AppBar from "@/components/AppBar.vue";
 import Modal from "@/components/Modal.vue";
-import ArchiveCategories from "@/components/ArchiveCategories.vue";
+import ArchiveCategories from "@/components/archive/ArchiveCategories.vue";
+import ArchiveDate from "@/components/archive/ArchiveDate.vue";
+import ArchiveCard from "@/components/archive/ArchiveCard.vue";
 
 import { mapActions, mapGetters } from "vuex";
 import { ROOT_ACTIONS } from "@/store/types/actions";
@@ -75,6 +93,8 @@ export default {
     AppBar,
     Modal,
     ArchiveCategories,
+    ArchiveDate,
+    ArchiveCard,
   },
   data() {
     return {
@@ -102,6 +122,8 @@ export default {
       filterDialog: false,
       categories: ["All Categories"],
       selectedCategory: [],
+      startDate: "",
+      endDate: "",
     };
   },
 
@@ -125,9 +147,11 @@ export default {
         this.filterDialog = false;
       }
     },
-    selectedCategory() {
-      console.log("it works!", this.selectedCategory);
-    },
+  },
+
+  created() {
+    this.setStartDateOneYearAgo();
+    this.endDate = new Date().toISOString().substr(0, 7);
   },
 
   mounted() {
@@ -137,6 +161,16 @@ export default {
   },
 
   methods: {
+    allowedDates(val) {
+      return Date.parse(val) > Date.now();
+    },
+    setStartDateOneYearAgo() {
+      this.startDate = new Date(
+        new Date().setFullYear(new Date().getFullYear() - 1)
+      )
+        .toISOString()
+        .substr(0, 7);
+    },
     ...mapActions({
       onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
@@ -162,7 +196,14 @@ export default {
   display: flex;
   flex-direction: row;
   aside {
-    width: 14rem;
+    width: 13rem;
+  }
+  section.research-archive-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+    gap: 1rem;
   }
 }
 </style>

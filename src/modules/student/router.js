@@ -22,7 +22,7 @@ const studentRoutes = [
       },
       {
         path: "settings",
-        name: "Account Settings",
+        name: "Student Account Settings",
         component: () => import("@/views/AccountSettings.vue"),
       },
       {
@@ -50,11 +50,6 @@ const studentRoutes = [
         name: "Research Paper Editor",
         component: () =>
           import("@/modules/student/views/ResearchPaperEditor.vue"),
-      },
-      {
-        path: "archive",
-        name: "Archive",
-        component: () => import("@/modules/student/views/Archive.vue"),
       },
     ],
   },
