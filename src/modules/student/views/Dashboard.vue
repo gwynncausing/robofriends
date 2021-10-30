@@ -9,7 +9,6 @@
         </div>
         <p>
           Do you want to
-          <!-- // TODO:  change to go to create team -->
           <router-link class="primary--text" :to="{ name: 'Create Team' }">
             <strong>create</strong>
           </router-link>
@@ -66,8 +65,7 @@ import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
 import KickstartResearchModal from "@/components/student/KickstartResearchModal.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import { STUDENT_ACTIONS } from "../store/types/actions";
-import { STUDENT_GETTERS } from "../store/types/getters";
+import { STUDENT_ACTIONS, STUDENT_GETTERS } from "../store/types";
 import { MODULES, STATUS_CODES } from "@/utils/constants";
 
 export default {
@@ -118,7 +116,6 @@ export default {
       await this.fetchMemberships();
       await this.selectTeam();
       this.showKickstartResearchModal();
-      console.log("Selected Team", this.getSelectedTeam);
     } catch (error) {
       console.log(error);
     }

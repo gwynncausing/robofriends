@@ -130,8 +130,7 @@ import Button from "@/components/global/Button.vue";
 import AppBar from "@/components/AppBar.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import { ROOT_ACTIONS } from "@/store/types/actions";
-import { ROOT_GETTERS } from "@/store/types/getters";
+import { ROOT_ACTIONS, ROOT_GETTERS } from "@/store/types";
 import { USER, STATUS_CODES } from "@/utils/constants";
 import { capitalizeFirstLetter } from "@/utils/helpers";
 
@@ -226,6 +225,7 @@ export default {
   async created() {
     try {
       await this.fetchSchools();
+      this.schools = this.getSchools;
     } catch (error) {
       console.log(error);
     }
@@ -245,13 +245,8 @@ export default {
         console.log(error);
       }
     },
-    async fetchSchools() {
-      try {
-        await this.onFetchSchools();
-        this.schools = this.getSchools;
-      } catch (error) {
-        console.log(error);
-      }
+    fetchSchools() {
+      return this.onFetchSchools();
     },
     selectUserType(item) {
       this.chooseUserTypeClick = false;

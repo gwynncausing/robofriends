@@ -32,10 +32,9 @@ const adviserRoutes = [
         component: () => import("@/modules/adviser/views/ManageTeams.vue"),
       },
       {
-        path: "invite",
+        path: "invitations",
         name: "Adviser Invitation",
-        component: () =>
-          import("@/modules/adviser/views/AdviserInvitation.vue"),
+        component: () => import("@/modules/adviser/views/Invitation.vue"),
       },
     ],
   },

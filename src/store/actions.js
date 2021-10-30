@@ -1,7 +1,6 @@
-import { ROOT_ACTIONS } from "./types/actions";
-import { ROOT_MUTATIONS } from "./types/mutations";
-import { ROOT_PAYLOADS } from "./types/payloads";
-import { STUDENT_MUTATIONS } from "@/modules/student/store/types/mutations";
+import { ROOT_ACTIONS, ROOT_MUTATIONS, ROOT_PAYLOADS } from "./types";
+import { STUDENT_MUTATIONS } from "@/modules/student/store/types";
+import { ADVISER_MUTATIONS } from "@/modules/adviser/store/types";
 import { MODULES } from "@/utils/constants";
 import Repository from "@/repositories/repository-factory";
 const AuthRepository = Repository.get("auth");
@@ -49,6 +48,9 @@ export default {
   async [ROOT_ACTIONS.LOGOUT_USER]({ commit }) {
     commit(
       `${MODULES.STUDENT_MODULE_PATH}${STUDENT_MUTATIONS.SET_RESET_STUDENT_STATE}`
+    );
+    commit(
+      `${MODULES.ADVISER_MODULE_PATH}${ADVISER_MUTATIONS.SET_RESET_ADVISER_STATE}`
     );
     commit(ROOT_MUTATIONS.SET_RESET_ROOT_STATE);
   },

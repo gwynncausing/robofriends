@@ -18,8 +18,7 @@
 import AppBar from "@/components/AppBar.vue";
 
 import { mapGetters, mapActions } from "vuex";
-import { ROOT_GETTERS } from "@/store/types/getters";
-import { ROOT_ACTIONS } from "@/store/types/actions";
+import { ROOT_GETTERS, ROOT_ACTIONS } from "@/store/types";
 import { capitalizeFirstLetter } from "@/utils/helpers";
 
 export default {

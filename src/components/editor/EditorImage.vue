@@ -1,28 +1,20 @@
 <template>
-  <div>
+  <div class="editor-image">
     <EditorTextFormatterButtons
       :editor="editor"
       :block-type="editorData.blockType"
     />
-    <editor-content :editor="editor" />
+    <editor-content :editor="editor" class="editor-content" />
   </div>
 </template>
 
 <script>
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import Document from "@tiptap/extension-document";
-import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
-import Bold from "@tiptap/extension-bold";
-import Italic from "@tiptap/extension-italic";
-import Strike from "@tiptap/extension-strike";
-import Code from "@tiptap/extension-code";
-import Underline from "@tiptap/extension-underline";
-import Superscript from "@tiptap/extension-superscript";
-import Subscript from "@tiptap/extension-subscript";
+import Paragraph from "@tiptap/extension-paragraph";
 import Heading from "@tiptap/extension-heading";
-import BulletList from "@tiptap/extension-bullet-list";
-import ListItem from "@tiptap/extension-list-item";
+import Placeholder from "@tiptap/extension-placeholder";
 import Image from "@tiptap/extension-image";
 import Dropcursor from "@tiptap/extension-dropcursor";
 
@@ -34,14 +26,19 @@ import { WebrtcProvider } from "y-webrtc";
 import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
 
 import { mapGetters } from "vuex";
-import { ROOT_GETTERS } from "@/store/types/getters";
+import { ROOT_GETTERS } from "@/store/types";
 
 // A new Y document
 // const ydoc = new Y.Doc();
 // Registered with a WebRTC provider
 // new WebrtcProvider("bud-test-1", ydoc);
 
+const CustomDocument = Document.extend({
+  content: "heading block*",
+});
+
 export default {
+  name: "EditorImage",
   components: {
     EditorTextFormatterButtons,
     EditorContent,
@@ -75,6 +72,7 @@ export default {
     const ydoc = new Y.Doc();
 
     const documentId = this.editorData.id;
+
     const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
     let content = this.editorData.content;
 
@@ -83,22 +81,22 @@ export default {
     try {
       this.editor = new Editor({
         extensions: [
-          Document,
-          Paragraph,
+          CustomDocument,
           Text,
-          Bold,
-          Italic,
-          Strike,
-          Code,
-          BulletList,
-          ListItem,
-          Underline,
-          Superscript,
-          Subscript,
-          Dropcursor,
+          Paragraph,
           Image,
+          Dropcursor,
           Heading.configure({
-            levels: [1, 2, 3, 4],
+            levels: [4],
+          }),
+          Placeholder.configure({
+            placeholder: ({ node }) => {
+              if (node.type.name === "heading") {
+                return "What’s the title?";
+              }
+
+              return "Text in this line will be neglected from exporting. Add an image instead";
+            },
           }),
           Collaboration.configure({
             document: ydoc,
@@ -119,13 +117,7 @@ export default {
           this.$emit("input", this.editor.getJSON());
         },
         onFocus: () => {
-          this.$emit("userFocus", {
-            name,
-            id: this.editorData.id,
-          });
-        },
-        onBlur: () => {
-          this.$emit("userBlur", {
+          this.$emit("selectBlock", {
             name,
             id: this.editorData.id,
           });
@@ -145,6 +137,9 @@ export default {
       }
       return color;
     },
+    testMethod() {
+      console.log("test");
+    },
   },
 
   beforeUnmount() {
@@ -152,3 +147,12 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.editor-image {
+  height: 93%;
+  .editor-content {
+    height: inherit;
+  }
+}
+</style>

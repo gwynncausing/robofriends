@@ -81,8 +81,7 @@ import ArchiveDate from "@/components/archive/ArchiveDate.vue";
 import ArchiveCard from "@/components/archive/ArchiveCard.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import { ROOT_ACTIONS } from "@/store/types/actions";
-import { ROOT_GETTERS } from "@/store/types/getters";
+import { ROOT_ACTIONS, ROOT_GETTERS } from "@/store/types";
 import { capitalizeFirstLetter } from "@/utils/helpers";
 
 export default {

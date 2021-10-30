@@ -134,8 +134,7 @@ import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import { STUDENT_ACTIONS } from "../store/types/actions";
-import { STUDENT_GETTERS } from "../store/types/getters";
+import { STUDENT_ACTIONS, STUDENT_GETTERS } from "../store/types";
 import { MODULES } from "@/utils/constants";
 
 export default {

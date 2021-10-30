@@ -86,7 +86,7 @@ import Button from "@/components/global/Button.vue";
 import { capitalizeFirstLetter } from "@/utils/helpers";
 
 import { mapActions } from "vuex";
-import { ROOT_ACTIONS } from "@/store/types/actions";
+import { ROOT_ACTIONS } from "@/store/types";
 import { STATUS_CODES } from "@/utils/constants";
 
 export default {

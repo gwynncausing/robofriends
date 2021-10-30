@@ -1,5 +1,5 @@
-import { ROOT_MUTATIONS } from "./types/mutations";
-import { rootInititalState } from "./types/state";
+import { ROOT_MUTATIONS } from "./types";
+import { rootInititalState } from "./types";
 
 export default {
   [ROOT_MUTATIONS.SET_USER](state, { user }) {

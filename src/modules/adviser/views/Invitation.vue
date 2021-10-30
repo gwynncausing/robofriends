@@ -19,20 +19,15 @@
       </div>
       <p>
         I want to
-        <router-link class="primary--text" :to="{ name: 'Create Team' }">
-          <strong>create my own team</strong>
-        </router-link>
-        or
-        <span
-          class="secondary--text btn-join-team"
-          @click="
-            {
-              joinTeamModal = true;
-            }
-          "
-        >
-          <strong>join another team</strong>
+        <span class="primary--text pointer" @click="joinAllTeams">
+          <strong>join all teams</strong>
         </span>
+        or
+        <router-link :to="{ name: 'Adviser Dashboard' }">
+          <span class="secondary--text pointer">
+            <strong>leave it for now</strong>
+          </span>
+        </router-link>
       </p>
     </div>
     <JoinTeamModal
@@ -50,11 +45,11 @@ import InvitationRow from "@/components/InvitationRow.vue";
 import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
 
 import { mapGetters, mapActions } from "vuex";
-import { STUDENT_ACTIONS, STUDENT_GETTERS } from "../store/types";
-import { MODULES, TEAM, STATUS_CODES } from "@/utils/constants";
+import { ADVISER_ACTIONS, ADVISER_GETTERS } from "../store/types";
+import { MODULES, TEAM } from "@/utils/constants";
 
 export default {
-  name: "StudentInvitation",
+  name: "AdviserInvitation",
   components: {
     InvitationMessage,
     InvitationRow,
@@ -80,7 +75,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_INVITATIONS}`,
+      getInvitations: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_GETTERS.GET_INVITATIONS}`,
     }),
     repliedInvitations() {
       return this.invitations.filter(
@@ -111,9 +106,9 @@ export default {
   },
   methods: {
     ...mapActions({
-      onFetchInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_INVITATIONS}`,
-      onUpdateInvitation: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_INVITATION}`,
-      onJoinCodeTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.JOIN_CODE_TEAM}`,
+      onFetchInvitations: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_INVITATIONS}`,
+      onUpdateInvitation: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.UPDATE_INVITATION}`,
+      onJoinCodeTeam: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.JOIN_CODE_TEAM}`,
     }),
     fetchInvitations() {
       return this.onFetchInvitations();
@@ -130,32 +125,34 @@ export default {
       };
       try {
         await this.onUpdateInvitation(payload);
-        if (status === TEAM.INVITATION_STATUS.ACCEPTED)
-          this.$router.push({ name: "Dashboard" });
+        if (status === TEAM.INVITATION_STATUS.ACCEPTED);
         this.setInvitations();
       } catch (error) {
         console.log(error);
       }
     },
-    async joinTeam(code) {
+    createUpdateInvitationPromise(payload) {
+      return this.onUpdateInvitation(payload);
+    },
+    async joinAllTeams() {
       try {
-        this.isSubmitTeamCode = true;
-        this.error = "";
-        const payload = { code: code };
-        await this.onJoinCodeTeam(payload);
-        this.$router.push({ name: "Dashboard" });
+        const pendingInvitations = this.invitations.filter(
+          (invitation) => invitation.status === TEAM.INVITATION_STATUS.PENDING
+        );
+        const updateInvitationsPromises = pendingInvitations.map(
+          (invitation) => {
+            const payload = {
+              id: invitation.id,
+              invitation: {
+                status: TEAM.INVITATION_STATUS.ACCEPTED,
+              },
+            };
+            return this.onUpdateInvitation(payload);
+          }
+        );
+        await Promise.all(updateInvitationsPromises);
       } catch (error) {
-        switch (error?.response?.statusCode) {
-          case STATUS_CODES.NOT_FOUND:
-            this.error = "Team code doesn't exists.";
-            break;
-          default:
-            console.log("Error", error);
-            break;
-        }
-      } finally {
-        this.isSubmitTeamCode = false;
-        this.joinTeamModal = false;
+        console.log(error);
       }
     },
   },
@@ -173,7 +170,7 @@ export default {
   .invitation-create-or-join-team {
     text-align: center;
   }
-  .btn-join-team {
+  .pointer {
     cursor: pointer;
   }
   .errors {
