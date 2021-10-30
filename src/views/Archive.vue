@@ -9,7 +9,9 @@
     <div id="archive" class="container">
       <header>
         <div class="archive-header-wrapper">
+          <div class="space d-none d-sm-block"></div>
           <TextField
+            v-model="searchContent"
             placeholder="Seach research paper here"
             append-icon="mdi-magnify"
           />
@@ -61,10 +63,9 @@
           />
         </aside>
         <section class="research-archive-wrapper">
-          <ArchiveCard />
-          <ArchiveCard />
-          <ArchiveCard />
-          <ArchiveCard />
+          <div v-for="(archive, index) in filteredArchives" :key="index">
+            <ArchiveCard :data="archive" />
+          </div>
         </section>
       </div>
     </div>
@@ -124,6 +125,67 @@ export default {
       selectedCategory: [],
       startDate: "",
       endDate: "",
+      archives: [
+        {
+          title: "Capstone Management System with Prescriptive Analytics",
+          imgSrc:
+            "https://th.bing.com/th/id/OIP.RDBwKq9LkMgzZJ3NKwglSgHaFL?pid=ImgDet&rs=1",
+          members: [
+            {
+              firstName: "Juan",
+              lastName: "Cruz",
+            },
+            {
+              firstName: "Bin",
+              lastName: "Ladin",
+            },
+            {
+              firstName: "Oh",
+              lastName: "Ahhhhh",
+            },
+          ],
+          dateFinished: "December 15, 2020",
+        },
+        {
+          title: "Random Ramdom",
+          imgSrc: "https://en.freejpg.com.ar/asset/900/f5/f5c2/F100011137.jpg",
+          members: [
+            {
+              firstName: "Hey",
+              lastName: "Joe",
+            },
+            {
+              firstName: "Bin",
+              lastName: "Ladin",
+            },
+            {
+              firstName: "Oh",
+              lastName: "ahhhhh",
+            },
+          ],
+          dateFinished: "December 15, 2019",
+        },
+        {
+          title: "Mondar Mondar Mondar Mondar",
+          imgSrc: "https://en.freejpg.com.ar/asset/900/f5/f5c2/F100011137.jpg",
+          members: [
+            {
+              firstName: "Hey",
+              lastName: "Joe",
+            },
+            {
+              firstName: "Bin",
+              lastName: "Ladin",
+            },
+            {
+              firstName: "Oh",
+              lastName: "ahhhhh",
+            },
+          ],
+          dateFinished: "",
+        },
+      ],
+      searchContent: "",
     };
   },
 
@@ -139,6 +201,11 @@ export default {
         name: capitalizeFirstLetter(this.getUser.lastName || "User"),
       };
     },
+    filteredArchives() {
+      return this.archives.filter((archive) =>
+        archive.title.toLowerCase().includes(this.searchContent.toLowerCase())
+      );
+    },
   },
 
   watch: {
@@ -150,7 +217,7 @@ export default {
   },
 
   created() {
-    this.setStartDateOneYearAgo();
+    this.setDefaultStartDateOneYearAgo();
     this.endDate = new Date().toISOString().substr(0, 7);
   },
 
@@ -158,7 +225,6 @@ export default {
     this.categories.push("Artificial Intelligence");
     this.categories.push("Data Analytics");
     this.categories.push("Web Application");
-    console.log();
   },
 
   methods: {
@@ -168,7 +234,7 @@ export default {
     allowedEndDate(val) {
       return Date.parse(val) >= new Date(this.startDate);
     },
-    setStartDateOneYearAgo() {
+    setDefaultStartDateOneYearAgo() {
       this.startDate = new Date(
         new Date().setFullYear(new Date().getFullYear() - 1)
       )
@@ -195,10 +261,15 @@ export default {
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
+  .space {
+    width: 13rem;
+    margin-right: 0.2rem;
+  }
 }
 .archive-wrapper {
   display: flex;
   flex-direction: row;
+  gap: 2rem;
   aside {
     width: 13rem;
   }

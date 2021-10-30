@@ -1,26 +1,27 @@
 <template>
-  <v-card class="archive-card" :max-width="maxWidth + 'px'">
-    <!-- max-width="235.75px" -->
-    <v-img
-      height="156"
-      src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-    ></v-img>
+  <v-card class="archive-card" :width="maxWidth + 'px'" height="324px">
+    <div
+      class="image-container"
+      :style="{ backgroundImage: `url('${image}')` }"
+    ></div>
 
-    <header>Capstone Management System with Prescriptive Analyticss</header>
+    <header>{{ data.title }}</header>
 
-    <section class="content">
-      <v-chip label> asd </v-chip>
+    <section v-if="researchFinishYear" class="content">
+      <v-chip label> {{ researchFinishYear }} </v-chip>
     </section>
 
     <footer>
-      <v-avatar size="30" color="red">
-        <span class="white--text">CJ</span>
-      </v-avatar>
-      <v-avatar size="30" color="red">
-        <span class="white--text">CJ</span>
-      </v-avatar>
-      <v-avatar size="30" color="red">
-        <span class="white--text">CJ</span>
+      <v-avatar
+        v-for="(researcher, index) in researchers"
+        :key="index"
+        size="30"
+        color="secondary"
+        :title="`${researcher.firstName} ${researcher.lastName}`"
+      >
+        <span class="white--text"
+          >{{ researcher.firstName[0] }}{{ researcher.lastName[0] }}</span
+        >
       </v-avatar>
     </footer>
   </v-card>
@@ -29,6 +30,12 @@
 <script>
 export default {
   name: "ArchiveCard",
+  props: {
+    data: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
       selection: 1,
@@ -36,14 +43,27 @@ export default {
     };
   },
 
+  computed: {
+    image() {
+      if (this.data?.imgSrc) return this.data.imgSrc;
+      return "https://cdn.vuetifyjs.com/images/cards/cooking.png";
+    },
+    researchFinishYear() {
+      return new Date(this.data?.dateFinished).getFullYear() || "";
+    },
+    researchers() {
+      return this.data?.members || [];
+    },
+  },
+
   watch: {
     "$vuetify.breakpoint.name": {
       immediate: true,
       handler(newVal) {
         if (newVal === "xs") {
-          this.maxWidth = screen.width / 2 - 20;
+          this.maxWidth = window.innerWidth / 2 - 25;
         } else {
-          this.maxWidth = 235.75;
+          this.maxWidth = 239.75;
         }
       },
     },
@@ -57,6 +77,13 @@ export default {
 
 <style lang="scss" scoped>
 .archive-card {
+  display: flex;
+  flex-direction: column;
+
+  .image-container {
+    height: 156px;
+    background-size: cover;
+  }
   header {
     font-size: 1rem;
 
@@ -73,10 +100,15 @@ export default {
   }
   footer {
     padding: 1rem;
+    margin-top: auto;
 
-    .v-avatar:not(:first-child) {
-      margin-left: -0.5rem;
-      outline: 2px solid #fff;
+    .v-avatar {
+      cursor: default;
+
+      &:not(:first-child) {
+        margin-left: -0.4rem;
+        outline: 2px solid #fff;
+      }
     }
   }
 }
