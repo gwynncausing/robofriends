@@ -1,10 +1,11 @@
 <template>
-  <div>
+  <div class="editor-text-with-title">
     <EditorTextFormatterButtons
+      v-show="isEditable"
       :editor="editor"
-      :block-type="editorData.blockType"
+      block-type="text-with-title"
     />
-    <editor-content :editor="editor" />
+    <editor-content :editor="editor" class="editor-content" />
   </div>
 </template>
 
@@ -23,30 +24,28 @@ import Subscript from "@tiptap/extension-subscript";
 import Heading from "@tiptap/extension-heading";
 import BulletList from "@tiptap/extension-bullet-list";
 import ListItem from "@tiptap/extension-list-item";
-import Image from "@tiptap/extension-image";
-import Dropcursor from "@tiptap/extension-dropcursor";
+import Placeholder from "@tiptap/extension-placeholder";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 
-import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
+import EditorTextFormatterButtons from "@/components/editor/EditorTextFormatterButtons";
 
 import { mapGetters } from "vuex";
-import { ROOT_GETTERS } from "@/store/types";
+import { ROOT_GETTERS } from "@/store/types/getters";
 
-// A new Y document
-// const ydoc = new Y.Doc();
-// Registered with a WebRTC provider
-// new WebrtcProvider("bud-test-1", ydoc);
+const CustomDocument = Document.extend({
+  content: "heading block*",
+});
 
 export default {
+  name: "EditorTextWithTitle",
   components: {
     EditorTextFormatterButtons,
     EditorContent,
   },
-
   props: {
     editorData: {
       type: Object,
@@ -56,15 +55,17 @@ export default {
       type: String,
       default: "#FFF",
     },
+    isEditable: {
+      type: Boolean,
+      default: false,
+    },
   },
-
   data() {
     return {
       editor: null,
       content: "",
     };
   },
-
   computed: {
     ...mapGetters({
       getUser: `${ROOT_GETTERS.GET_USER}`,
@@ -75,15 +76,17 @@ export default {
     const ydoc = new Y.Doc();
 
     const documentId = this.editorData.id;
+
     const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
     let content = this.editorData.content;
 
-    const provider = new WebrtcProvider(documentId + "", ydoc);
+    const provider = new WebrtcProvider(documentId, ydoc);
 
     try {
       this.editor = new Editor({
         extensions: [
-          Document,
+          CustomDocument,
+          // Document,
           Paragraph,
           Text,
           Bold,
@@ -95,10 +98,20 @@ export default {
           Underline,
           Superscript,
           Subscript,
-          Dropcursor,
-          Image,
+          Placeholder.configure({
+            placeholder: ({ node }) => {
+              if (node.type.name === "heading") {
+                return "What’s the title?";
+              }
+
+              return "Can you add some further context?";
+            },
+          }),
           Heading.configure({
-            levels: [1, 2, 3, 4],
+            levels: [2],
+            HTMLAttributes: {
+              id: "research-title",
+            },
           }),
           Collaboration.configure({
             document: ydoc,
@@ -115,40 +128,26 @@ export default {
           }),
         ],
         content: content,
+        autofocus: true,
+        editable: this.isEditable,
         onUpdate: () => {
           this.$emit("input", this.editor.getJSON());
-        },
-        onFocus: () => {
-          this.$emit("userFocus", {
-            name,
-            id: this.editorData.id,
-          });
-        },
-        onBlur: () => {
-          this.$emit("userBlur", {
-            name,
-            id: this.editorData.id,
-          });
         },
       });
     } catch (e) {
       console.log(e);
     }
   },
-
-  methods: {
-    getRandomColor() {
-      let letters = "0123456789ABCDEF";
-      let color = "#";
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    },
-  },
-
   beforeUnmount() {
     this.editor.destroy();
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.editor-text-with-title {
+  .editor-content {
+    height: inherit;
+  }
+}
+</style>
