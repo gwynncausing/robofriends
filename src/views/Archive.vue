@@ -106,10 +106,11 @@ export default {
           image:
             "https://pbs.twimg.com/profile_images/516676441291759617/aLOOeXSl_400x400.jpeg",
         },
+        // TODO: make the home dynamic?, when click home, it should return to user type dashboard
         routes: [
           {
             name: "Home",
-            path: { name: "Dashboard" },
+            path: { name: "Student Dashboard" },
           },
           {
             name: "Archive",
