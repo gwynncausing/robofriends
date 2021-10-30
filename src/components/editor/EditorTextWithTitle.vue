@@ -34,7 +34,7 @@ import { WebrtcProvider } from "y-webrtc";
 import EditorTextFormatterButtons from "@/components/editor/EditorTextFormatterButtons";
 
 import { mapGetters } from "vuex";
-import { ROOT_GETTERS } from "@/store/types/getters";
+import { ROOT_GETTERS } from "@/store/types";
 
 const CustomDocument = Document.extend({
   content: "heading block*",
