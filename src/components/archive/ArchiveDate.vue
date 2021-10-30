@@ -22,7 +22,14 @@
         @click:prepend-inner="menu = true"
       ></v-text-field>
     </template>
-    <v-date-picker v-model="myDate" type="month" no-title scrollable>
+
+    <v-date-picker
+      v-model="myDate"
+      :allowed-dates="allowedDates"
+      type="month"
+      no-title
+      scrollable
+    >
       <v-spacer></v-spacer>
       <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
       <v-btn text color="primary" @click="$refs.menu.save(myDate)"> OK </v-btn>
@@ -41,6 +48,12 @@ export default {
     date: {
       type: String,
       default: "",
+    },
+    allowedDates: {
+      type: Function,
+      default: () => {
+        return true;
+      },
     },
   },
   data() {

@@ -50,12 +50,13 @@
           <ArchiveDate
             label="Start Date"
             :date="startDate"
+            :allowed-dates="allowedStartDate"
             @update-date="startDate = $event"
           />
           <ArchiveDate
             label="End Date"
             :date="endDate"
-            :allowed-dates="allowedDates"
+            :allowed-dates="allowedEndDate"
             @update-date="endDate = $event"
           />
         </aside>
@@ -157,11 +158,15 @@ export default {
     this.categories.push("Artificial Intelligence");
     this.categories.push("Data Analytics");
     this.categories.push("Web Application");
+    console.log();
   },
 
   methods: {
-    allowedDates(val) {
-      return Date.parse(val) > Date.now();
+    allowedStartDate(val) {
+      return Date.parse(val) < new Date(this.endDate);
+    },
+    allowedEndDate(val) {
+      return Date.parse(val) >= new Date(this.startDate);
     },
     setStartDateOneYearAgo() {
       this.startDate = new Date(

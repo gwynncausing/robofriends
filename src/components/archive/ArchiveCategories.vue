@@ -13,8 +13,8 @@
           <template v-slot:default>
             <v-list-item-content class="category-item-content">
               <v-list-item-title
-                v-text="item"
                 class="category-item-title"
+                v-text="item"
               ></v-list-item-title>
             </v-list-item-content>
           </template>
