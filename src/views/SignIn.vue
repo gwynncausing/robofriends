@@ -98,7 +98,7 @@ export default {
         await this.onLogin(this.user);
         switch (this.getUserType) {
           case USER.TYPES.STUDENT:
-            this.$router.replace({ name: "Dashboard" });
+            this.$router.replace({ name: "Student Dashboard" });
             break;
           case USER.TYPES.TEACHER:
             this.$router.replace({ name: "Adviser Dashboard" });

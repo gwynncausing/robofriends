@@ -284,6 +284,7 @@ export default {
           },
         };
         //TODO: temporary solution for the error if user is teacher, inform backend later
+        console.log(payload);
         if (this.user.type === "Teacher")
           payload.user.program = this.programs[0];
         await this.onOnboardUser(payload);

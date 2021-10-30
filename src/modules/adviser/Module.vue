@@ -3,9 +3,16 @@
     <AppBar
       :routes="routes"
       :notification="notification"
-      :user="user"
-      @logout="logout"
-    />
+      :user="userInformation"
+      :is-account-menu-dropdown-close-on-click="true"
+    >
+      <template v-slot:account-menu-dropdown>
+        <AppBarMenuDropdownAdviser
+          @goToAccountSettings="goToAccountSettings"
+          @logout="logout"
+        />
+      </template>
+    </AppBar>
     <v-container>
       <transition name="fade" mode="out-in">
         <router-view class="mt-5" />
@@ -16,6 +23,7 @@
 
 <script>
 import AppBar from "@/components/AppBar.vue";
+import AppBarMenuDropdownAdviser from "@/components/adviser/AppBarMenuDropdownAdviser.vue";
 
 import { mapGetters, mapActions } from "vuex";
 import { ROOT_GETTERS, ROOT_ACTIONS } from "@/store/types";
@@ -23,7 +31,7 @@ import { capitalizeFirstLetter } from "@/utils/helpers";
 
 export default {
   name: "Adviser",
-  components: { AppBar },
+  components: { AppBar, AppBarMenuDropdownAdviser },
   data: function () {
     return {
       user: {
@@ -66,6 +74,9 @@ export default {
     ...mapActions({
       onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
+    goToAccountSettings() {
+      this.$router.push({ name: "Adviser Account Settings" });
+    },
     async logout() {
       try {
         await this.onLogoutUser();

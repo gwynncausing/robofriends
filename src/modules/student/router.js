@@ -17,7 +17,7 @@ const studentRoutes = [
     children: [
       {
         path: "",
-        name: "Dashboard",
+        name: "Student Dashboard",
         component: () => import("@/modules/student/views/Dashboard.vue"),
       },
       {
