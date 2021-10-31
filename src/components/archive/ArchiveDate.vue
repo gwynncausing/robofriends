@@ -32,7 +32,7 @@
     >
       <v-spacer></v-spacer>
       <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
-      <v-btn text color="primary" @click="$refs.menu.save(myDate)"> OK </v-btn>
+      <v-btn text color="primary" @click="confirmDate()"> OK </v-btn>
     </v-date-picker>
   </v-menu>
 </template>
@@ -62,13 +62,15 @@ export default {
       menu: false,
     };
   },
-  watch: {
-    myDate(newDate) {
-      this.$emit("update-date", newDate);
-    },
-  },
+  watch: {},
   mounted() {
     this.myDate = this.date;
+  },
+  methods: {
+    confirmDate() {
+      this.$refs.menu.save(this.myDate);
+      this.$emit("update-date", this.myDate);
+    },
   },
 };
 </script>

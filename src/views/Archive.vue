@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- // TODO: Filter Categories not yet implemented -->
     <AppBar
       :routes="appBar.routes"
       :notification="appBar.notification"
@@ -203,9 +204,19 @@ export default {
       };
     },
     filteredArchives() {
-      return this.archives.filter((archive) =>
+      const filteredFromSearch = this.archives.filter((archive) =>
         archive.title.toLowerCase().includes(this.searchContent.toLowerCase())
       );
+
+      const filteredFromStartDate = filteredFromSearch.filter((archive) => {
+        return new Date(archive.dateFinished) > new Date(this.startDate);
+      });
+
+      const filteredFromEndDate = filteredFromStartDate.filter((archive) => {
+        return new Date(archive.dateFinished) < new Date(this.endDate);
+      });
+
+      return filteredFromEndDate;
     },
   },
 
@@ -218,7 +229,7 @@ export default {
   },
 
   created() {
-    this.setDefaultStartDateOneYearAgo();
+    this.setDefaultStartDate();
     this.endDate = new Date().toISOString().substr(0, 7);
   },
 
@@ -235,9 +246,10 @@ export default {
     allowedEndDate(val) {
       return Date.parse(val) >= new Date(this.startDate);
     },
-    setDefaultStartDateOneYearAgo() {
+    setDefaultStartDate() {
+      const yearToDeduct = 3;
       this.startDate = new Date(
-        new Date().setFullYear(new Date().getFullYear() - 1)
+        new Date().setFullYear(new Date().getFullYear() - yearToDeduct)
       )
         .toISOString()
         .substr(0, 7);
