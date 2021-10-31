@@ -264,7 +264,7 @@ export default {
             };
             await this.onSendTeachersInvitations(invitedTeachersPayload);
           }
-          this.$router.push({ name: "Dashboard" });
+          this.$router.push({ name: "Student Dashboard" });
         } catch (error) {
           console.log(error);
         } finally {

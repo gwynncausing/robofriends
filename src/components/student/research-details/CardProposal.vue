@@ -1,31 +1,43 @@
 <template>
   <CustomCard>
-    <div class="team-name font-bold">{{ team.teamName }}</div>
-    <div class="research-title">{{ team.researchTitle }}</div>
-    <div class="members-wrapper">
-      <v-avatar
-        v-for="(member, index) in team.members"
-        :key="index"
-        color="primary"
-        size="24"
-      >
-        <span class="avatar-content caption">{{ getInitials(member) }}</span>
-      </v-avatar>
+    <div @click="$emit('select', index)">
+      <div class="research-title">{{ proposal.researchTitle }}</div>
+      <div class="status-wrapper">
+        <Chip dark :color="statusColors[proposal.status]">
+          {{ proposal.status }}
+        </Chip>
+      </div>
+      <div class="date-time">{{ proposal.dateTime }}</div>
     </div>
-    <div class="date-time">{{ team.dateTime }}</div>
   </CustomCard>
 </template>
 
 <script>
 import CustomCard from "@/components/global/CustomCard";
+import Chip from "@/components/global/Chip.vue";
+
 export default {
   name: "CardTeam",
-  components: { CustomCard },
+  components: { CustomCard, Chip },
   props: {
-    team: {
+    proposal: {
       type: Object,
       default: () => {},
     },
+    index: {
+      type: Number,
+      default: 0,
+    },
+  },
+  data() {
+    return {
+      statusColors: {
+        Pending: "blue",
+        "Needs Revision": "yellow",
+        Rejected: "red",
+        Approved: "primary",
+      },
+    };
   },
   methods: {
     getInitials(member) {

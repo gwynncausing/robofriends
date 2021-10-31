@@ -32,6 +32,10 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    value: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   data() {
     return {
@@ -39,13 +43,24 @@ export default {
       content: "",
     };
   },
+  watch: {
+    value: {
+      handler(value) {
+        this.editor.commands.setContent(value);
+      },
+    },
+  },
   mounted() {
     let content = this.editorData.content;
     try {
       this.editor = new Editor({
         extensions: [
           CustomDocument,
-          Paragraph,
+          Paragraph.configure({
+            HTMLAttributes: {
+              class: "text-justify",
+            },
+          }),
           Text,
           Bold,
           Italic,
@@ -60,6 +75,7 @@ export default {
             levels: [2],
             HTMLAttributes: {
               id: "research-title",
+              class: "pb-4 ",
             },
           }),
         ],

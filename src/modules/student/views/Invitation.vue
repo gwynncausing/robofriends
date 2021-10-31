@@ -131,7 +131,7 @@ export default {
       try {
         await this.onUpdateInvitation(payload);
         if (status === TEAM.INVITATION_STATUS.ACCEPTED)
-          this.$router.push({ name: "Dashboard" });
+          this.$router.push({ name: "Student Dashboard" });
         this.setInvitations();
       } catch (error) {
         console.log(error);

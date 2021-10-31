@@ -71,6 +71,13 @@ export default {
       getUser: `${ROOT_GETTERS.GET_USER}`,
     }),
   },
+  watch: {
+    isEditable: {
+      handler(value) {
+        this.editor.setOptions({ editable: value });
+      },
+    },
+  },
 
   mounted() {
     const ydoc = new Y.Doc();
