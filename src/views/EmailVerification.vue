@@ -4,15 +4,16 @@
 
     <h5>Verify Your Email</h5>
 
-    <div>You will need to verify to complete your registration.</div>
-
     <div>
-      An email has been sent to {{ email }} with a link to verify your account.
+      Please verify your email address to complete creating your account. <br />
+      <br />
+      An email has been sent to <strong>{{ email }} </strong>with a link for
+      verification. <br /><br />
       If you have not received the email after a few minutes, please check your
-      spam folder.
+      spam folder. Otherwise, you may request to resend the email.
     </div>
 
-    <Button @click="resendEmail()"> Resend Email</Button>
+    <Button @click="resendEmail()" class="submit-button"> Resend Email</Button>
   </div>
 </template>
 
@@ -43,12 +44,18 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 729px;
+  max-width: 421px;
   margin-left: auto;
   margin-right: auto;
   gap: 2rem;
   h5 {
     color: $tertiary;
+  }
+  h5 {
+    align-self: start;
+  }
+  .submit-button {
+    align-self: end;
   }
 }
 </style>
