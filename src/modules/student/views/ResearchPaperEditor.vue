@@ -25,7 +25,6 @@
           :key="editor.id"
           class="editor-row"
         >
-          {{ editor.content }}
           <div v-if="editor.blockType === 'text'" class="editor-content-text">
             <EditorText
               :editor-data="editor"
