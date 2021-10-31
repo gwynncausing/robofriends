@@ -49,6 +49,15 @@ export default {
     commit(ROOT_MUTATIONS.SET_USER, { user: updatedUser });
     commit(ROOT_MUTATIONS.SET_USER_TYPE, { type: updatedUser.type });
   },
+  async [ROOT_ACTIONS.UPDATE_USER](
+    { commit },
+    payload = ROOT_PAYLOADS.UPDATE_USER
+  ) {
+    const { id, user } = payload;
+    const response = await UserRepository.update(user, id);
+    const updatedUser = response.data;
+    commit(ROOT_MUTATIONS.SET_USER, { user: updatedUser });
+  },
   async [ROOT_ACTIONS.FETCH_SCHOOLS]({ commit }) {
     const response = await SchoolRepository.get();
     const schools = response.data;

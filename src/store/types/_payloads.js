@@ -19,6 +19,18 @@ const ONBOARD_USER = {
   },
 };
 
+const UPDATE_USER = {
+  id: Number,
+  user: {
+    firstName: String,
+    lastName: String,
+    schoolId: String,
+    collegeId: String,
+    // * only present in student
+    program: String,
+  },
+};
+
 const LOG_IN_USER = {
   email: String,
   password: String,
@@ -31,6 +43,7 @@ const GET_USER_INFO = {
 export const ROOT_PAYLOADS = {
   SIGNUP_USER,
   ONBOARD_USER,
+  UPDATE_USER,
   GET_USER_INFO,
   LOG_IN_USER,
 };

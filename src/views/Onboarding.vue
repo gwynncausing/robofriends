@@ -284,9 +284,6 @@ export default {
             lastName: this.getUser.lastName,
           },
         };
-        //TODO: temporary solution for the error if user is teacher, inform backend later
-        if (this.user.type === "Teacher")
-          payload.user.program = this.programs[0];
         await this.onOnboardUser(payload);
         await this.onGetUserInfo({ id: this.getUser.id });
         switch (this.getUserType) {
