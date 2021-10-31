@@ -24,8 +24,13 @@ const LOG_IN_USER = {
   password: String,
 };
 
+const GET_USER_INFO = {
+  id: Number,
+};
+
 export const ROOT_PAYLOADS = {
   SIGNUP_USER,
   ONBOARD_USER,
+  GET_USER_INFO,
   LOG_IN_USER,
 };

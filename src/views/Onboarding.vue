@@ -235,6 +235,7 @@ export default {
     ...mapActions({
       onFetchSchools: ROOT_ACTIONS.FETCH_SCHOOLS,
       onOnboardUser: ROOT_ACTIONS.ONBOARD_USER,
+      onGetUserInfo: ROOT_ACTIONS.GET_USER_INFO,
       onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
     async logout() {
@@ -284,13 +285,13 @@ export default {
           },
         };
         //TODO: temporary solution for the error if user is teacher, inform backend later
-        console.log(payload);
         if (this.user.type === "Teacher")
           payload.user.program = this.programs[0];
         await this.onOnboardUser(payload);
+        await this.onGetUserInfo({ id: this.getUser.id });
         switch (this.getUserType) {
           case USER.TYPES.STUDENT:
-            this.$router.replace({ name: "Dashboard" });
+            this.$router.replace({ name: "Student Dashboard" });
             break;
           case USER.TYPES.TEACHER:
             this.$router.replace({ name: "Adviser Dashboard" });
@@ -305,6 +306,7 @@ export default {
             this.error = "ID number is already taken";
             break;
           default:
+            console.log(error);
             break;
         }
       } finally {

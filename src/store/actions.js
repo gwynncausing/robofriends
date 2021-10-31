@@ -13,10 +13,10 @@ export default {
     payload = ROOT_PAYLOADS.LOG_IN_USER
   ) {
     const response = await AuthRepository.login(payload);
-    const { user, access_token, refresh_token } = response.data;
+    const { user, token } = response.data;
     commit(ROOT_MUTATIONS.SET_USER, { user: user });
-    commit(ROOT_MUTATIONS.SET_TOKEN_ACCESS, { access: access_token });
-    commit(ROOT_MUTATIONS.SET_TOKEN_REFRESH, { refresh: refresh_token });
+    commit(ROOT_MUTATIONS.SET_TOKEN_ACCESS, { access: token.access });
+    commit(ROOT_MUTATIONS.SET_TOKEN_REFRESH, { refresh: token.refresh });
     commit(ROOT_MUTATIONS.SET_USER_TYPE, { type: user.type });
     commit(ROOT_MUTATIONS.SET_IS_LOGGED_IN, { isLoggedIn: true });
   },
@@ -25,10 +25,19 @@ export default {
     payload = ROOT_PAYLOADS.SIGNUP_USER
   ) {
     const response = await UserRepository.create(payload);
-    const { user, tokens } = response.data;
+    const { user, token } = response.data;
     commit(ROOT_MUTATIONS.SET_USER, { user: user });
-    commit(ROOT_MUTATIONS.SET_TOKEN_ACCESS, { access: tokens.access_token });
-    commit(ROOT_MUTATIONS.SET_TOKEN_REFRESH, { refresh: tokens.refresh_token });
+    commit(ROOT_MUTATIONS.SET_TOKEN_ACCESS, { access: token.access });
+    commit(ROOT_MUTATIONS.SET_TOKEN_REFRESH, { refresh: token.refresh });
+  },
+  async [ROOT_ACTIONS.GET_USER_INFO](
+    { commit },
+    payload = ROOT_PAYLOADS.GET_USER_INFO
+  ) {
+    const { id } = payload;
+    const response = await UserRepository.getUser(id);
+    const user = response.data;
+    commit(ROOT_MUTATIONS.SET_USER, { user: user });
   },
   async [ROOT_ACTIONS.ONBOARD_USER](
     { commit },

@@ -187,6 +187,7 @@ export default {
       if (this.$refs.form.validate()) {
         this.user.firstName = this.toCapitalize(this.user.firstName);
         this.user.lastName = this.toCapitalize(this.user.lastName);
+        this.user.confirmPassword = this.user.password;
         try {
           this.isSubmit = true;
           await this.onSignup(this.user);
@@ -194,9 +195,10 @@ export default {
         } catch (error) {
           switch (error?.response?.status) {
             case STATUS_CODES.ERRORS.BAD_REQUEST:
-              this.error = error.response.data.error[0];
+              this.error = error.response.data.errors[0];
               break;
             default:
+              console.log(error);
               break;
           }
         } finally {
