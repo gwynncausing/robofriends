@@ -78,7 +78,7 @@
         </Button>
       </div>
 
-      <div
+      <!-- <div
         :class="{ active: addMemberActive || addTeacherActive }"
         class="tree-list"
       >
@@ -114,7 +114,7 @@
         >
           A plant is required
         </span>
-      </div>
+      </div> -->
     </v-form>
 
     <div
@@ -233,7 +233,7 @@ export default {
       return emailsArray.filter((email) => email !== "");
     },
     async submit() {
-      if (!this.team.tree) this.isTreeError = true;
+      // if (!this.team.tree) this.isTreeError = true;
       if (this.$refs.form.validate() && !this.isTreeError) {
         try {
           this.isSubmit = true;
