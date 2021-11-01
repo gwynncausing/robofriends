@@ -40,10 +40,20 @@ const GET_USER_INFO = {
   id: Number,
 };
 
+const CHANGE_PASSWORD = {
+  id: Number,
+  passwords: {
+    oldPassword: String,
+    newPassword: String,
+    confirmPassword: String,
+  },
+};
+
 export const ROOT_PAYLOADS = {
   SIGNUP_USER,
   ONBOARD_USER,
   UPDATE_USER,
   GET_USER_INFO,
   LOG_IN_USER,
+  CHANGE_PASSWORD,
 };

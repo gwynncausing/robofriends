@@ -58,6 +58,13 @@ export default {
     const updatedUser = response.data;
     commit(ROOT_MUTATIONS.SET_USER, { user: updatedUser });
   },
+  async [ROOT_ACTIONS.CHANGE_PASSWORD](
+    context,
+    payload = ROOT_PAYLOADS.CHANGE_PASSWORD
+  ) {
+    const { id, passwords } = payload;
+    await UserRepository.changePassword(passwords, id);
+  },
   async [ROOT_ACTIONS.FETCH_SCHOOLS]({ commit }) {
     const response = await SchoolRepository.get();
     const schools = response.data;

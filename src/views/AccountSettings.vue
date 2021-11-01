@@ -106,7 +106,10 @@
     <ModalChangePassword
       :dialog-props="changePasswordModal"
       :is-loading="isChangingPassword"
-      @dialogClose="changePasswordModal = $event"
+      :errors="changePasswordErrors"
+      :success-message="changePasswordSuccessMessage"
+      :reset="isResetChangePassword"
+      @dialogClose="($event) => closeChangePasswordModal($event)"
       @dialogChangePassword="changePassword"
     />
   </div>
@@ -120,7 +123,7 @@ import ModalDeleteAccount from "@/components/ModalDeleteAccount.vue";
 import ModalChangePassword from "@/components/ModalChangePassword.vue";
 import { mapActions, mapGetters } from "vuex";
 import { ROOT_ACTIONS, ROOT_GETTERS } from "@/store/types";
-import { USER } from "@/utils/constants";
+import { USER, STATUS_CODES } from "@/utils/constants";
 
 export default {
   name: "AccountSettings",
@@ -133,10 +136,13 @@ export default {
   },
   data() {
     return {
-      deleteAccountModal: false,
-      isDeletingAccount: false,
       changePasswordModal: false,
       isChangingPassword: false,
+      isResetChangePassword: false,
+      changePasswordErrors: [],
+      changePasswordSuccessMessage: "",
+      deleteAccountModal: false,
+      isDeletingAccount: false,
       user: {
         firstName: "",
         lastName: "",
@@ -192,7 +198,7 @@ export default {
       onOnboardUser: ROOT_ACTIONS.ONBOARD_USER,
       onUpdateUser: ROOT_ACTIONS.UPDATE_USER,
       onGetUserInfo: ROOT_ACTIONS.GET_USER_INFO,
-      onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
+      onChangePassword: ROOT_ACTIONS.CHANGE_PASSWORD,
     }),
     fetchSchools() {
       return this.onFetchSchools();
@@ -205,6 +211,11 @@ export default {
       this.user.schoolId = this.getUser.schoolId;
       this.user.collegeId = this.getUser.collegeId;
       this.user.program = this.getUser?.program;
+    },
+    closeChangePasswordModal(status) {
+      this.changePasswordModal = status;
+      this.changePasswordErrors = [];
+      this.changePasswordSuccessMessage = "";
     },
     async saveChanges() {
       if (!this.$refs["settings-form"].validate()) return;
@@ -227,11 +238,37 @@ export default {
         this.isSavingChanges = false;
       }
     },
+    async changePassword(passwords) {
+      try {
+        this.changePasswordErrors = [];
+        this.isChangingPassword = true;
+        this.changePasswordSuccessMessage = "";
+        const payload = {
+          id: this.getUser.id,
+          passwords: {
+            oldPassword: passwords.old,
+            newPassword: passwords.new,
+            confirmPassword: passwords.confirm,
+          },
+        };
+        await this.onChangePassword(payload);
+        this.isResetChangePassword = true;
+        this.changePasswordSuccessMessage = "Changed password successfully";
+      } catch (error) {
+        switch (error?.response?.status) {
+          case STATUS_CODES.ERRORS.BAD_REQUEST:
+            this.changePasswordErrors.push(error.response.data.errors[0]);
+            break;
+          default:
+            console.log(error);
+            break;
+        }
+      } finally {
+        this.isChangingPassword = false;
+      }
+    },
     deleteAccount() {
       console.log("Delete Account");
-    },
-    changePassword() {
-      console.log("Change Password");
     },
   },
 };

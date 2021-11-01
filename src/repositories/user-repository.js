@@ -14,6 +14,9 @@ export default {
   update(payload, id) {
     return Client.patch(`${resource}/${id}`, payload);
   },
+  changePassword(payload, id) {
+    return Client.patch(`${resource}/change-password/${id}`, payload);
+  },
   delete(id) {
     return Client.delete(`${resource}/${id}`);
   },
