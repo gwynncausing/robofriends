@@ -15,7 +15,13 @@
         <Chip dark :color="statusColors[proposals[activeEl].status]">
           {{ proposals[activeEl].status }}
         </Chip>
-        <Button v-show="showButton(proposals[activeEl])">Edit</Button>
+        <router-link
+          v-slot="{ href, navigate }"
+          to="/student/research-details?tab=create-new"
+          custom
+        >
+          <Button :href="href" @click="navigate">Revise</Button>
+        </router-link>
       </div>
       <div class="editor">
         <EditorTextWithTitleReadonly
@@ -166,9 +172,6 @@ export default {
     padding: 4px;
     overflow-y: auto;
     height: 75vh;
-    .active {
-      background: $neutral-50;
-    }
   }
   .editor-wrapper {
     flex: 3;

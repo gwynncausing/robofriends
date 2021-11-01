@@ -28,6 +28,12 @@ export default {
     EditorTextWithTitle,
     ActiveUsersList,
   },
+  props: {
+    proposal: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
   data() {
     return {
       editor: {
@@ -42,6 +48,12 @@ export default {
     userColor() {
       return this.getRandomColor();
     },
+  },
+
+  beforeMount() {
+    console.log(this.proposal.content);
+    this.proposal.content ??= this.editor.content;
+    console.log(this.proposal.content);
   },
 
   methods: {

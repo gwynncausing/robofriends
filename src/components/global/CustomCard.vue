@@ -23,14 +23,11 @@ export default {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 1px 4px rgba(0, 0, 0, 0.15);
   border-radius: 4px;
   background-color: white;
+  padding: 16px;
+
   &:hover {
     cursor: pointer;
   }
-
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  row-gap: 12px;
 }
 
 .active {
