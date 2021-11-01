@@ -15,7 +15,13 @@
         <Chip dark :color="statusColors[proposals[activeEl].status]">
           {{ proposals[activeEl].status }}
         </Chip>
-        <Button v-show="showButton(proposals[activeEl])">Edit</Button>
+        <router-link
+          v-slot="{ href, navigate }"
+          to="/student/research-details?tab=create-new"
+          custom
+        >
+          <Button :href="href" @click="navigate">Revise</Button>
+        </router-link>
       </div>
       <div class="editor">
         <EditorTextWithTitleReadonly
