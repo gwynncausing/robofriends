@@ -13,7 +13,7 @@
       spam folder. Otherwise, you may request to resend the email.
     </div>
 
-    <Button @click="resendEmail()" class="submit-button"> Resend Email</Button>
+    <Button class="submit-button" @click="resendEmail()"> Resend Email</Button>
   </div>
 </template>
 

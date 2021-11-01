@@ -46,12 +46,13 @@
         </template>
       </Tabs>
       <!-- // TODO:  redirect kickstartResearch to create proposal page -->
-      <KickstartResearchModal
+      <ModalKickstartResearch
+        :user="getUser"
         :is-loading="isSubmitTeamCode"
         :dialog-props="kickstartResearchModal"
         @dialogClose="kickstartResearchModal = $event"
         @dialogKickstartResearch="kickstartResearch"
-      ></KickstartResearchModal>
+      ></ModalKickstartResearch>
     </div>
   </div>
 </template>
@@ -62,9 +63,10 @@ import TasksBoard from "@/components/student/dashboard/TasksBoard";
 import IndividualInsight from "@/components/student/dashboard/IndividualInsight";
 import Tabs from "@/components/Tabs";
 import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
-import KickstartResearchModal from "@/components/student/KickstartResearchModal.vue";
+import ModalKickstartResearch from "@/components/student/ModalKickstartResearch.vue";
 
 import { mapActions, mapGetters } from "vuex";
+import { ROOT_GETTERS } from "@/store/types";
 import { STUDENT_ACTIONS, STUDENT_GETTERS } from "../store/types";
 import { MODULES, STATUS_CODES } from "@/utils/constants";
 
@@ -76,7 +78,7 @@ export default {
     IndividualInsight,
     Tabs,
     JoinTeamModal,
-    KickstartResearchModal,
+    ModalKickstartResearch,
   },
   data() {
     return {
@@ -106,6 +108,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      getUser: `${ROOT_GETTERS.GET_USER}`,
       getMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_MEMBERSHIPS}`,
       hasMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
       getSelectedTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM}`,
@@ -115,10 +118,12 @@ export default {
     try {
       await this.fetchMemberships();
       await this.selectTeam();
-      this.showKickstartResearchModal();
     } catch (error) {
       console.log(error);
     }
+  },
+  mounted() {
+    this.showKickstartResearchModal();
   },
   methods: {
     ...mapActions({
@@ -157,7 +162,10 @@ export default {
       }
     },
     kickstartResearch() {
-      console.log("kickstartResearch called");
+      this.$router.push({
+        name: "Research Details",
+        query: { tab: "create-new" },
+      });
     },
   },
 };

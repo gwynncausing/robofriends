@@ -30,7 +30,10 @@
             name="email"
             :disabled="true"
           />
-          <Button class="align-self-end" text @click="changePasswordModal = true"
+          <Button
+            class="align-self-end"
+            text
+            @click="changePasswordModal = true"
             >Change Password</Button
           >
         </v-col>
