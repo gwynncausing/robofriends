@@ -8,7 +8,10 @@
       <div class="proposal-wrapper">
         <div class="editor-wrapper">
           <EditorTextWithTitleReadonly
-            :editor-data="{ id: 123, content: proposal.content }"
+            :editor-data="{
+              id: 'pending-proposal' + proposal.id,
+              content: proposal.content,
+            }"
             @input="getContent($event)"
           />
         </div>
