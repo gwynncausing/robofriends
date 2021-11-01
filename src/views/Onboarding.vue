@@ -4,8 +4,21 @@
       :routes="appBar.routes"
       :notification="appBar.notification"
       :user="userInformation"
-      @logout="logout"
-    />
+      :is-account-menu-dropdown-close-on-click="
+        isAccountMenuDropdownCloseOnClick
+      "
+    >
+      <template v-slot:account-menu-dropdown>
+        <v-list>
+          <v-list-item class="text-right" active="primary" @click="logout">
+            <v-list-item-content
+              class="button-font neutral-600--text d-flex justify-end"
+              >Log out</v-list-item-content
+            >
+          </v-list-item>
+        </v-list>
+      </template>
+    </AppBar>
     <div id="onboarding">
       <div class="onboarding-wrapper">
         <div class="grid-item-content">
@@ -144,6 +157,7 @@ export default {
   },
   data() {
     return {
+      isAccountMenuDropdownCloseOnClick: true,
       appBar: {
         user: {
           name: "Unknown",
