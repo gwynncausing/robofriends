@@ -1,19 +1,28 @@
 <template>
   <div class="pending-proposals">
-    <div class="editor-wrapper">
-      <EditorTextWithTitleReadonly
-        :editor-data="{ id: 123, content: research.content }"
-        @input="getContent($event)"
-      />
-    </div>
-    <div class="feedback-wrapper">
-      <div class="feedback-label font-semi-bold">Feedback</div>
-      <Textarea v-model="research.feedback.text" readonly />
-    </div>
-    <div class="button-wrapper">
-      <Button> Approve </Button>
-      <Button color="red" dark> Reject </Button>
-      <Button color="yellow" dark> Ask to Revise </Button>
+    <div
+      v-for="(proposal, index) in pendingProposals"
+      :key="proposal.id"
+      class="proposal-list-wrapper"
+    >
+      <div class="proposal-wrapper">
+        <div class="editor-wrapper">
+          <EditorTextWithTitleReadonly
+            :editor-data="{ id: 123, content: proposal.content }"
+            @input="getContent($event)"
+          />
+        </div>
+        <div class="feedback-wrapper">
+          <div class="feedback-label font-semi-bold">Feedback</div>
+          <Textarea v-model="proposal.feedback.text" />
+        </div>
+        <div class="button-wrapper">
+          <Button> Approve </Button>
+          <Button color="red" dark> Reject </Button>
+          <Button color="yellow" dark> Ask to Revise </Button>
+        </div>
+      </div>
+      <hr v-show="index + 1 != pendingProposals.length" />
     </div>
   </div>
 </template>
@@ -29,6 +38,12 @@ export default {
     Textarea,
     EditorTextWithTitleReadonly,
     Button,
+  },
+  props: {
+    pendingProposals: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
@@ -51,21 +66,29 @@ export default {
 <style lang="scss" scoped>
 .pending-proposals {
   padding-top: 24px;
-  .editor-wrapper {
-    width: 100%;
-    border: 1px solid $neutral-400;
-    border-radius: 4px;
-    padding: 0.8rem;
-  }
-  .feedback-wrapper {
-    padding-top: 24px;
-  }
-  .button-wrapper {
+  .proposal-list-wrapper {
     display: flex;
-    flex-direction: row;
-    column-gap: 16px;
-    justify-content: flex-end;
-    padding-top: 10px;
+    flex-direction: column;
+    hr {
+      margin: 40px 0px;
+      border-top: 1px solid $neutral-400;
+    }
+    .editor-wrapper {
+      width: 100%;
+      border: 1px solid $neutral-400;
+      border-radius: 4px;
+      padding: 0.8rem;
+    }
+    .feedback-wrapper {
+      padding-top: 24px;
+    }
+    .button-wrapper {
+      display: flex;
+      flex-direction: row;
+      column-gap: 16px;
+      justify-content: flex-end;
+      padding-top: 10px;
+    }
   }
 }
 </style>

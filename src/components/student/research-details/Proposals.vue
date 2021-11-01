@@ -166,9 +166,6 @@ export default {
     padding: 4px;
     overflow-y: auto;
     height: 75vh;
-    .active {
-      background: $neutral-50;
-    }
   }
   .editor-wrapper {
     flex: 3;
