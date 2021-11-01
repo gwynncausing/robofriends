@@ -25,6 +25,7 @@
           :key="editor.id"
           class="editor-row"
         >
+          {{ editor }}
           <div v-if="editor.blockType === 'text'" class="editor-content-text">
             <EditorText
               :editor-data="editor"
@@ -157,7 +158,7 @@ export default {
       this.currentToolbarPosition = position - blockHeight;
     },
     getContent(event, index) {
-      this.editors[index].content = event;
+      this.editors[index].content = event.content;
     },
     addEditor({ currentSelectedEditorIndex: index, blockType = "text" }) {
       if (index === -1) return;
