@@ -35,35 +35,35 @@ export default {
     console.log(sampleV1);
     console.log(sampleV2);
     console.log(sampleV3);
+    this.createChapterHeading(sampleV2.content[0]);
   },
 
   methods: {
     saveDoc() {
       console.log("saveDoc called");
       let doc = new Document({
-        sections: [
-          {
-            properties: {},
+        sections: [],
+      });
+      doc.addSection({
+        properties: {},
+        children: [
+          new Paragraph({
             children: [
-              new Paragraph({
-                children: [
-                  new TextRun("Sample Text"),
-                  new TextRun({
-                    text: "Sample Text",
-                    bold: true,
-                    italics: true,
-                  }),
-                  new TextRun({
-                    text: "\tSample Text",
-                    bold: true,
-                  }),
-                ],
+              new TextRun("Sample Text"),
+              new TextRun({
+                text: "Sample Text",
+                bold: true,
+                italics: true,
               }),
-              // this.createParagraph(sampleV1.content[0]),
-              // this.createParagraph(sampleV2.content[0]),
-              this.createParagraph(sampleV3.content[0]),
+              new TextRun({
+                text: "\tSample Text",
+                bold: true,
+              }),
             ],
-          },
+          }),
+          // this.createParagraph(sampleV1.content[0]),
+          this.createChapterHeading(sampleV2.content[0]),
+          this.createParagraph(sampleV3.content[0]),
         ],
       });
       Packer.toBlob(doc).then((blob) => {
@@ -95,24 +95,26 @@ export default {
 
       return new Paragraph({
         children: textRuns,
+        alignment: AlignmentType.JUSTIFIED,
       });
     },
 
     createChapterHeading(object) {
-      console.log(object);
-      const headingLevels = {
-        1: "HEADIING_1",
-        2: "HEADIING_2",
-        3: "HEADIING_3",
-        4: "HEADIING_4",
-        5: "HEADIING_5",
-        6: "HEADIING_6",
+      if (object.type !== "heading") return;
+      const HEADING_LEVELS = {
+        1: HeadingLevel.HEADING_1,
+        2: HeadingLevel.HEADING_2,
+        3: HeadingLevel.HEADING_3,
+        4: HeadingLevel.HEADING_4,
+        5: HeadingLevel.HEADING_5,
+        6: HeadingLevel.HEADING_6,
       };
-      console.log(headingLevels);
+      const objectHeadingLevel = HEADING_LEVELS[object.attrs.level];
+
       return new Paragraph({
-        text: "Hello World",
-        heading: HeadingLevel.HEADING_1,
-        alignment: AlignmentType.CENTER,
+        text: object.content[0].text,
+        heading: objectHeadingLevel,
+        alignment: AlignmentType.LEFT,
       });
     },
 
