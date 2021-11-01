@@ -118,12 +118,10 @@ export default {
     try {
       await this.fetchMemberships();
       await this.selectTeam();
+      this.showKickstartResearchModal();
     } catch (error) {
       console.log(error);
     }
-  },
-  mounted() {
-    this.showKickstartResearchModal();
   },
   methods: {
     ...mapActions({
