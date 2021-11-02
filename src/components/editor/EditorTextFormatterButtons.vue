@@ -159,7 +159,7 @@
 </template>
 
 <script>
-import HelperFunctions from "@/utils/helper-functions.js";
+import { uploadFile } from "@/utils/helpers";
 
 export default {
   name: "TextEditorButtons",
@@ -182,7 +182,7 @@ export default {
 
     async selectFiles() {
       const files = this.$refs.fileInput.files;
-      const filesUrl = await HelperFunctions.uploadImage(files);
+      const filesUrl = await uploadFile(files);
       filesUrl.forEach((url) => {
         this.editor.chain().focus().setImage({ src: url }).run();
       });

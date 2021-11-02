@@ -1,10 +1,6 @@
 import { BlobServiceClient } from "@azure/storage-blob";
 
-const capitalizeFirstLetter = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
-const uploadImage = async (files) => {
+export const uploadFile = async (files) => {
   const filesUrl = [];
   try {
     const promises = [];
@@ -27,9 +23,4 @@ const uploadImage = async (files) => {
   } catch (err) {
     console.log(err);
   }
-};
-
-export default {
-  capitalizeFirstLetter,
-  uploadImage,
 };
