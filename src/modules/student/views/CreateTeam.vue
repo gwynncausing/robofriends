@@ -284,8 +284,8 @@ export default {
             await this.onSendTeachersInvitations(invitedTeachersPayload);
           }
           await this.onSelectTeam({ team: this.getCurrentCreatedTeam });
-          this.$router.push({ name: "Student Dashboard" });
-          this.$router.go();
+          await this.$router.push({ name: "Student Dashboard" });
+          await this.$router.go();
         } catch (error) {
           console.log(error);
         } finally {

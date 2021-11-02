@@ -114,6 +114,7 @@ export default {
       onFetchInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_INVITATIONS}`,
       onUpdateInvitation: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_INVITATION}`,
       onJoinCodeTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.JOIN_CODE_TEAM}`,
+      onSelectTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SELECT_TEAM}`,
     }),
     fetchInvitations() {
       return this.onFetchInvitations();
@@ -121,18 +122,20 @@ export default {
     setInvitations() {
       this.invitations = this.getInvitations;
     },
-    async updateInvitation({ invitationId, status }) {
+    async updateInvitation({ invitation, status }) {
       const payload = {
-        id: invitationId,
+        id: invitation.id,
         invitation: {
           status: status,
         },
       };
       try {
+        console.log(invitation.team);
         await this.onUpdateInvitation(payload);
+        await this.setSelectTeam(invitation.team);
         if (status === TEAM.INVITATION_STATUS.ACCEPTED)
-          this.$router.push({ name: "Student Dashboard" });
-        this.setInvitations();
+          await this.$router.push({ name: "Student Dashboard" });
+        await this.$router.go();
       } catch (error) {
         console.log(error);
       }
@@ -157,6 +160,9 @@ export default {
         this.isSubmitTeamCode = false;
         this.joinTeamModal = false;
       }
+    },
+    setSelectTeam(team) {
+      return this.onSelectTeam({ team: team });
     },
   },
 };
