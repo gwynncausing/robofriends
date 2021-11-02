@@ -29,6 +29,9 @@ import { ROOT_GETTERS } from "@/store/types";
 // const ydoc = new Y.Doc();
 // Registered with a WebRTC provider
 // new WebrtcProvider("bud-test-1", ydoc);
+const CustomDocument = Document.extend({
+  content: "heading",
+});
 
 export default {
   components: {
@@ -72,7 +75,7 @@ export default {
 
     this.editor = new Editor({
       extensions: [
-        Document,
+        CustomDocument,
         Text,
         Heading.configure({
           levels: [4],
@@ -114,25 +117,10 @@ export default {
         });
       },
     });
-
-    this.disableEnter();
   },
 
   methods: {
-    disableEnter() {
-      setTimeout(() => {
-        // disables the enter
-        const elements = document.getElementsByClassName(
-          "editor-section-block-title"
-        );
-        let parent = elements[elements.length - 1].parentNode;
-        parent.addEventListener("keydown", function (event) {
-          if (event.keyCode == 13) {
-            this.editor.commands.undo();
-          }
-        });
-      }, 10);
-    },
+    //
   },
 
   beforeUnmount() {

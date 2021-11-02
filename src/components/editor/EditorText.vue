@@ -20,8 +20,8 @@ import Code from "@tiptap/extension-code";
 import Underline from "@tiptap/extension-underline";
 import Superscript from "@tiptap/extension-superscript";
 import Subscript from "@tiptap/extension-subscript";
-import Heading from "@tiptap/extension-heading";
 import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
 import ListItem from "@tiptap/extension-list-item";
 
 import Collaboration from "@tiptap/extension-collaboration";
@@ -90,13 +90,11 @@ export default {
           Code,
           BulletList,
           ListItem,
+          OrderedList,
           Underline,
           Superscript,
           Subscript,
           Image,
-          Heading.configure({
-            levels: [1, 2, 3, 4],
-          }),
           Collaboration.configure({
             document: ydoc,
           }),
