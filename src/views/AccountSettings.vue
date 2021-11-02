@@ -40,18 +40,18 @@
         <v-spacer></v-spacer>
         <v-col cols="12" sm="6" md="5">
           <Select
-            v-model="user.schoolId"
+            v-model="user.school"
             label="School"
             name="school"
             :items="schools"
             item-text="name"
             item-value="id"
             :disabled="false"
-            :rules="rules.schoolId"
+            :rules="rules.school"
           />
 
           <Select
-            v-model="user.collegeId"
+            v-model="user.college"
             label="College"
             name="college"
             :items="colleges"
@@ -59,7 +59,7 @@
             item-value="id"
             outlined
             dense
-            :rules="rules.collegeId"
+            :rules="rules.college"
           />
           <Select
             v-if="getUserType === 'student'"
@@ -147,9 +147,9 @@ export default {
         firstName: "",
         lastName: "",
         email: "",
-        schoolId: "",
+        school: "",
         idNumber: "",
-        collegeId: "",
+        college: "",
         program: "",
       },
       schools: [],
@@ -157,8 +157,8 @@ export default {
       programs: [],
       isSavingChanges: false,
       rules: {
-        schoolId: [(v) => !!v || "School is required"],
-        collegeId: [(v) => !!v || "College is required"],
+        school: [(v) => !!v || "School is required"],
+        college: [(v) => !!v || "College is required"],
         program: [(v) => !!v || "Program is required"],
       },
     };
@@ -171,15 +171,15 @@ export default {
     }),
   },
   watch: {
-    "user.schoolId": function () {
+    "user.school": function () {
       this.colleges = this.schools.find(
-        (school) => school.id === this.user.schoolId
+        (school) => school.id === this.user.school
       ).colleges;
       this.programs = [];
     },
-    "user.collegeId": function () {
+    "user.college": function () {
       this.programs = this.colleges.find(
-        (college) => college.id === this.user.collegeId
+        (college) => college.id === this.user.college
       ).programs;
     },
   },
@@ -208,8 +208,8 @@ export default {
       this.user.lastName = this.getUser.lastName;
       this.user.email = this.getUser.email;
       this.user.idNumber = this.getUser.idNumber;
-      this.user.schoolId = this.getUser.schoolId;
-      this.user.collegeId = this.getUser.collegeId;
+      this.user.school = this.getUser.school;
+      this.user.college = this.getUser.college;
       this.user.program = this.getUser?.program;
     },
     closeChangePasswordModal(status) {
@@ -224,8 +224,8 @@ export default {
         const user = {
           firstName: this.user.firstName,
           lastName: this.user.lastName,
-          schoolId: this.user.schoolId,
-          collegeId: this.user.collegeId,
+          schoolId: this.user.school,
+          collegeId: this.user.college,
         };
         if (this.getUserType === USER.TYPES.STUDENT)
           user.program = this.user.program;
