@@ -16,6 +16,7 @@
           {{ proposals[activeEl].status }}
         </Chip>
         <router-link
+          v-show="showButton(proposals[activeEl])"
           v-slot="{ href, navigate }"
           to="/student/research-details?tab=create-new"
           custom
