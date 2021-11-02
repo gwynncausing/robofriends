@@ -1,6 +1,13 @@
 <template>
   <div v-if="editor" class="formatter-wrapper">
     <div v-if="blockType === 'image'">
+      <input
+        ref="fileInput"
+        type="file"
+        accept="image/png, image/gif, image/jpeg"
+        hidden
+        @change="selectFiles"
+      />
       <button @click="addImage">
         <v-icon>mdi-image-plus</v-icon>
       </button>
@@ -42,40 +49,6 @@
         @click="editor.chain().focus().toggleSuperscript().run()"
       >
         <v-icon> mdi-format-superscript </v-icon>
-      </button>
-
-      <span class="formatter-section-end"></span>
-
-      <button
-        :class="{ 'is-active': editor.isActive('paragraph') }"
-        @click="editor.chain().focus().setParagraph().run()"
-      >
-        <v-icon>mdi-format-paragraph</v-icon>
-      </button>
-
-      <button
-        :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
-        @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
-      >
-        <v-icon>mdi-format-header-1</v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
-        @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
-      >
-        <v-icon>mdi-format-header-2</v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
-        @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
-      >
-        <v-icon>mdi-format-header-3</v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }"
-        @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
-      >
-        <v-icon>mdi-format-header-4</v-icon>
       </button>
 
       <span class="formatter-section-end"></span>
@@ -186,6 +159,8 @@
 </template>
 
 <script>
+import HelperFunctions from "@/utils/helper-functions.js";
+
 export default {
   name: "TextEditorButtons",
   props: {
@@ -198,13 +173,19 @@ export default {
       default: "",
     },
   },
+
   methods: {
     addImage() {
-      const url = window.prompt("URL");
+      const fileInput = this.$refs.fileInput;
+      fileInput.click();
+    },
 
-      if (url) {
+    async selectFiles() {
+      const files = this.$refs.fileInput.files;
+      const filesUrl = await HelperFunctions.uploadImage(files);
+      filesUrl.forEach((url) => {
         this.editor.chain().focus().setImage({ src: url }).run();
-      }
+      });
     },
   },
 };
