@@ -22,6 +22,7 @@ import Superscript from "@tiptap/extension-superscript";
 import Subscript from "@tiptap/extension-subscript";
 import Heading from "@tiptap/extension-heading";
 import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
 import ListItem from "@tiptap/extension-list-item";
 
 import Collaboration from "@tiptap/extension-collaboration";
@@ -89,6 +90,7 @@ export default {
           Strike,
           Code,
           BulletList,
+          OrderedList,
           ListItem,
           Underline,
           Superscript,

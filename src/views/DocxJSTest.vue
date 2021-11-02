@@ -7,6 +7,10 @@
 
 <script>
 import {
+  BorderStyle,
+  FrameAnchorType,
+  HorizontalPositionAlign,
+  VerticalPositionAlign,
   AlignmentType,
   Document,
   HeadingLevel,
@@ -44,6 +48,7 @@ export default {
       let doc = new Document({
         sections: [],
       });
+
       doc.addSection({
         properties: {},
         children: [
@@ -66,6 +71,67 @@ export default {
           this.createParagraph(sampleV3.content[0]),
         ],
       });
+
+      doc.addSection({
+        children: [
+          new Paragraph({
+            frame: {
+              position: {
+                x: 1000,
+                y: 3000,
+              },
+              width: 4000,
+              height: 4000,
+              anchor: {
+                horizontal: FrameAnchorType.MARGIN,
+                vertical: FrameAnchorType.MARGIN,
+              },
+              alignment: {
+                x: HorizontalPositionAlign.CENTER,
+                y: VerticalPositionAlign.TOP,
+              },
+            },
+            border: {
+              top: {
+                color: "auto",
+                space: 1,
+                style: BorderStyle.SINGLE,
+                size: 6,
+              },
+              bottom: {
+                color: "auto",
+                space: 1,
+                style: BorderStyle.SINGLE,
+                size: 6,
+              },
+              left: {
+                color: "auto",
+                space: 1,
+                style: BorderStyle.SINGLE,
+                size: 6,
+              },
+              right: {
+                color: "auto",
+                space: 1,
+                style: BorderStyle.SINGLE,
+                size: 6,
+              },
+            },
+            children: [
+              new TextRun("Hello World"),
+              new TextRun({
+                text: "Foo Bar",
+                bold: true,
+              }),
+              new TextRun({
+                text: "\tGithub is the best",
+                bold: true,
+              }),
+            ],
+          }),
+        ],
+      });
+
       Packer.toBlob(doc).then((blob) => {
         saveAs(blob, "test.docx");
       });
