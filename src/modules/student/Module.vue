@@ -11,6 +11,7 @@
       <template v-slot:account-menu-dropdown>
         <AppBarMenuDropdownStudent
           :teams="teams"
+          :current-selected-team="selectedTeam"
           @goToTeam="goToTeam"
           @goToAccountSettings="goToAccountSettings"
           @goToCreateTeam="goToCreateTeam"
@@ -31,7 +32,7 @@ import AppBar from "@/components/AppBar.vue";
 import AppBarMenuDropdownStudent from "@/components/student/AppBarMenuDropdownStudent.vue";
 
 import { mapGetters, mapActions } from "vuex";
-import { STUDENT_GETTERS } from "./store/types";
+import { STUDENT_GETTERS, STUDENT_ACTIONS } from "./store/types";
 import { ROOT_GETTERS, ROOT_ACTIONS } from "@/store/types";
 import { MODULES } from "@/utils/constants";
 import { capitalizeFirstLetter } from "@/utils/helpers";
@@ -41,6 +42,7 @@ export default {
   components: { AppBar, AppBarMenuDropdownStudent },
   data: function () {
     return {
+      selectedTeam: {},
       isAccountMenuDropdownCloseOnClick: false,
       user: {
         name: "Dodoy",
@@ -48,20 +50,7 @@ export default {
         image:
           "https://pbs.twimg.com/profile_images/516676441291759617/aLOOeXSl_400x400.jpeg",
       },
-      teams: [
-        {
-          id: 1,
-          name: "Bud",
-        },
-        {
-          id: 2,
-          name: "Device",
-        },
-        {
-          id: 3,
-          name: "Worlds",
-        },
-      ],
+      teams: [],
       routes: [
         {
           name: "Home",
@@ -90,7 +79,10 @@ export default {
   computed: {
     ...mapGetters({
       hasMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
+      getMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_MEMBERSHIPS}`,
+      getSelectedTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM}`,
       getUser: ROOT_GETTERS.GET_USER,
+      getIsLoggedIn: ROOT_GETTERS.GET_IS_LOGGED_IN,
     }),
     userInformation() {
       return {
@@ -104,9 +96,21 @@ export default {
       else return this.routes;
     },
   },
+  async created() {
+    try {
+      await this.onFetchMemberships();
+      this.setTeams();
+      if (Object.keys(this.getSelectedTeam).length === 0)
+        await this.setSelectTeam(this.teams[0] || {});
+      this.selectedTeam = this.getSelectedTeam;
+    } catch (error) {
+      console.log(error);
+    }
+  },
   methods: {
     ...mapActions({
-      onFetchMemberships: ROOT_ACTIONS.FETCH_MEMBERSHIPS,
+      onFetchMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_MEMBERSHIPS}`,
+      onSelectTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SELECT_TEAM}`,
       onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
     setIsAccountMenuDropdownCloseOnClick() {
@@ -115,10 +119,23 @@ export default {
         this.isAccountMenuDropdownCloseOnClick = false;
       }, 500);
     },
-    goToTeam(team) {
-      this.setIsAccountMenuDropdownCloseOnClick();
-      this.$router.push({ name: "Student Dashboard" });
-      console.log(team);
+    setTeams() {
+      this.teams = this.getMemberships.map((memberships) => memberships.team);
+    },
+    setSelectTeam(team) {
+      return this.onSelectTeam({ team: team });
+    },
+    async goToTeam(team) {
+      if (!this.getIsLoggedIn) return;
+      try {
+        this.setIsAccountMenuDropdownCloseOnClick();
+        await this.setSelectTeam(team);
+        this.selectedTeam = this.getSelectedTeam;
+        this.$router.push({ name: "Student Dashboard" });
+        this.$router.go();
+      } catch (error) {
+        console.log(error);
+      }
     },
     goToAccountSettings() {
       this.setIsAccountMenuDropdownCloseOnClick();

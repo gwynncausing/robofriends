@@ -29,6 +29,7 @@ export default {
     commit(ROOT_MUTATIONS.SET_USER, { user: user });
     commit(ROOT_MUTATIONS.SET_TOKEN_ACCESS, { access: token.access });
     commit(ROOT_MUTATIONS.SET_TOKEN_REFRESH, { refresh: token.refresh });
+    commit(ROOT_MUTATIONS.SET_IS_LOGGED_IN, { isLoggedIn: true });
   },
   async [ROOT_ACTIONS.GET_USER_INFO](
     { commit },

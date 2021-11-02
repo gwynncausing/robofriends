@@ -57,9 +57,13 @@ export default {
       hasMemberships: memberships.length !== 0 ? true : false,
     });
   },
-  async [STUDENT_ACTIONS.SELECT_TEAM]({ commit, state }) {
+  async [STUDENT_ACTIONS.SELECT_TEAM](
+    { commit },
+    payload = STUDENT_PAYLOADS.SELECT_TEAM
+  ) {
+    const { team } = payload;
     commit(STUDENT_MUTATIONS.SET_SELECTED_TEAM, {
-      selectedTeam: state.memberships[0] || {},
+      selectedTeam: team,
     });
   },
   async [STUDENT_ACTIONS.JOIN_CODE_TEAM](
