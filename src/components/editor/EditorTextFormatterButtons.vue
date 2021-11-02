@@ -1,6 +1,13 @@
 <template>
   <div v-if="editor" class="formatter-wrapper">
     <div v-if="blockType === 'image'">
+      <input
+        ref="fileInput"
+        type="file"
+        accept="image/png, image/gif, image/jpeg"
+        hidden
+        @change="selectFiles"
+      />
       <button @click="addImage">
         <v-icon>mdi-image-plus</v-icon>
       </button>
@@ -152,6 +159,8 @@
 </template>
 
 <script>
+import HelperFunctions from "@/utils/helper-functions.js";
+
 export default {
   name: "TextEditorButtons",
   props: {
@@ -164,13 +173,19 @@ export default {
       default: "",
     },
   },
+
   methods: {
     addImage() {
-      const url = window.prompt("URL");
+      const fileInput = this.$refs.fileInput;
+      fileInput.click();
+    },
 
-      if (url) {
+    async selectFiles() {
+      const files = this.$refs.fileInput.files;
+      const filesUrl = await HelperFunctions.uploadImage(files);
+      filesUrl.forEach((url) => {
         this.editor.chain().focus().setImage({ src: url }).run();
-      }
+      });
     },
   },
 };
