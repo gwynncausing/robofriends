@@ -9,7 +9,7 @@
         <header>
           <h5 class="tertiary--text">{{ team.name }} Settings</h5>
         </header>
-        <div id="members" class="mt-8">
+        <div id="members" class="mt-md-8 mt-12">
           <div class="d-flex mb-8">
             <h6>Members</h6>
             <v-spacer></v-spacer>
@@ -17,20 +17,24 @@
               >Invite Member</Button
             >
           </div>
-          <v-row v-for="(member, index) in team.members" :key="index">
-            <v-col cols="8" class="row-details">
+          <v-row
+            v-for="(member, index) in team.members"
+            :key="index"
+            class="mt-7 mt-md-3"
+          >
+            <v-col cols="12" md="8" class="row-details">
               <TextField
                 :label="member.email"
                 placeholder="Member 1"
                 :disabled="true"
               />
             </v-col>
-            <v-col cols="4" class="row-details">
+            <v-col cols="7" sm="6" md="4" class="row-details">
               <Select label="Role" :items="baseRoles" />
             </v-col>
           </v-row>
         </div>
-        <div id="advisers" class="mt-8">
+        <div id="advisers" class="mt-md-8 mt-12">
           <div class="d-flex mb-8">
             <h6>Adviser</h6>
             <v-spacer></v-spacer>
@@ -39,20 +43,27 @@
             >
           </div>
           <v-row v-for="(adviser, index) in team.advisers" :key="index">
-            <v-col cols="8" class="row-details">
+            <v-col cols="10" md="8" class="row-details">
               <TextField
                 :label="adviser.email"
                 placeholder="Member 1"
                 :disabled="true"
               />
             </v-col>
-            <v-col cols="4" class="row-details">
+            <v-col cols="2" md="4" class="row-details">
               <Button
                 text
-                class="error--text"
-                @click="showRemoveAdviserModal(adviser)"
+                class="error--text d-none d-md-flex"
+                @click="removeAdviserModal = true"
               >
                 Remove Adviser
+              </Button>
+              <Button
+                class="btn-remove-item d-md-none"
+                icon
+                @click="removeAdviserModal = true"
+              >
+                <v-icon color="error">mdi-close</v-icon>
               </Button>
             </v-col>
           </v-row>
@@ -126,7 +137,7 @@ export default {
       isInvitingAdviserModal: false,
       inviteMemberModal: false,
       isInvitingMemberModal: false,
-      baseRoles: [],
+      baseRoles: ["Member", "Leader"],
       team: {
         name: "Cary and Co.",
         members: [
@@ -188,8 +199,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.row-details {
-  margin: 0 !important;
-  padding: 0 0 0 12px !important;
+#account-settings {
+  margin-bottom: 100px;
+  .row-details {
+    margin: 0 !important;
+    padding: 0 0 0 12px !important;
+  }
 }
 </style>
