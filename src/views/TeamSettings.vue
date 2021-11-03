@@ -105,7 +105,7 @@ import ModalInviteAdviser from "@/components/ModalInviteAdviser.vue";
 import ModalInviteMember from "@/components/ModalInviteMember.vue";
 
 export default {
-  name: "AccountSettings",
+  name: "TeamSettings",
   components: {
     TextField,
     Button,

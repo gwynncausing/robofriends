@@ -27,7 +27,7 @@ const studentRoutes = [
       },
       {
         path: "team-settings",
-        name: "Team Setttings",
+        name: "Team Settings",
         component: () => import("@/views/TeamSettings.vue"),
       },
       {

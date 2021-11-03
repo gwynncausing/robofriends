@@ -49,6 +49,16 @@ const CHANGE_PASSWORD = {
   },
 };
 
+const SEND_PASSWORD_RESET_LINK = {
+  email: String,
+};
+
+const RESET_PASSWORD = {
+  token: String,
+  newPassword: String,
+  confirmPassword: String,
+};
+
 export const ROOT_PAYLOADS = {
   SIGNUP_USER,
   ONBOARD_USER,
@@ -56,4 +66,6 @@ export const ROOT_PAYLOADS = {
   GET_USER_INFO,
   LOG_IN_USER,
   CHANGE_PASSWORD,
+  SEND_PASSWORD_RESET_LINK,
+  RESET_PASSWORD,
 };

@@ -70,6 +70,10 @@ export default {
           name: "Research Paper",
           path: { name: "Research Paper Editor" },
         },
+        {
+          name: "Team",
+          path: { name: "Team Settings" },
+        },
       ],
       notification: {
         path: { name: "Student Invitation" },
