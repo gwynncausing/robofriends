@@ -12,6 +12,8 @@ import {
   Packer,
   Paragraph,
   TextRun,
+  Column,
+  PageOrientation,
   // UnderlineType,
 } from "docx";
 import { saveAs } from "file-saver";
@@ -31,7 +33,7 @@ export default {
       description: "A brief example of using docx",
       styles: {
         default: {
-          // * HEADING 1 - OK
+          //* HEADING 1 - OK
           heading1: {
             run: {
               size: "12pt",
@@ -46,7 +48,7 @@ export default {
               },
             },
           },
-          // * HEADING 2 - Capitalized not found
+          //* HEADING 2 - Capitalized not found
           heading2: {
             run: {
               size: "12pt",
@@ -59,7 +61,7 @@ export default {
               },
             },
           },
-          // * HEADING 3 - Capitalized not found
+          //* HEADING 3 - Capitalized not found
           heading3: {
             run: {
               size: "11pt",
@@ -72,7 +74,7 @@ export default {
               },
             },
           },
-          // * HEADING 4 - Capitalized not found
+          //* HEADING 4 - Capitalized not found
           heading4: {
             run: {
               size: "11pt",
@@ -85,7 +87,7 @@ export default {
               },
             },
           },
-          // * HEADING 5 - Capitalized not found
+          //* HEADING 5 - Capitalized not found
           heading5: {
             run: {
               size: "11pt",
@@ -98,7 +100,7 @@ export default {
               },
             },
           },
-          // * HEADING 6 - Capitalized not found
+          //* HEADING 6 - Capitalized not found
           heading6: {
             run: {
               size: "11pt",
@@ -118,11 +120,12 @@ export default {
           },
         },
         paragraphStyles: [
-          // * DEFAULT PARAGRAPH - OK
+          //* DEFAULT PARAGRAPH - OK
           {
             id: "Normal",
             name: "Normal",
             run: {
+              font: "Times New Roman",
               size: "9pt",
               color: "#000000",
             },
@@ -132,7 +135,7 @@ export default {
           },
         ],
       },
-      // * NUMBERING
+      //* NUMBERING
       numbering: {
         config: [
           {
@@ -150,6 +153,32 @@ export default {
       },
       sections: [
         {
+          properties: {
+            //* PAGE MARGINS
+            page: {
+              size: {
+                orientation: PageOrientation.PORTRAIT,
+                height: "27.94cm",
+                width: "21.59cm",
+              },
+              margin: {
+                top: "1.9cm",
+                right: "1.9cm",
+                bottom: "2.54cm",
+                left: "1.9cm",
+              },
+            },
+            //* PAGE COLUMNS
+            column: {
+              count: 2,
+              space: ".83cm",
+              equalWidth: true,
+              children: [
+                new Column({ width: "8.45cm" }),
+                new Column({ width: "8.45cm" }),
+              ],
+            },
+          },
           children: [
             new Paragraph({
               text: "Test heading1, bold and italicized",
