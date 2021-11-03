@@ -154,7 +154,7 @@ export default {
       sections: [
         {
           properties: {
-            //* PAGE MARGINS
+            //* DOCUMENT RULES
             page: {
               size: {
                 orientation: PageOrientation.PORTRAIT,
