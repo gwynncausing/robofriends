@@ -7,10 +7,6 @@
 
 <script>
 import {
-  BorderStyle,
-  FrameAnchorType,
-  HorizontalPositionAlign,
-  VerticalPositionAlign,
   AlignmentType,
   Document,
   HeadingLevel,
@@ -25,6 +21,7 @@ import { saveAs } from "file-saver";
 import sampleV1 from "@/utils/sample-v1.json";
 import sampleV2 from "@/utils/sample-v2.json";
 import sampleV3 from "@/utils/sample-v3.json";
+import sampleV4 from "@/utils/sample-v4.json";
 
 export default {
   data() {
@@ -39,6 +36,7 @@ export default {
     console.log(sampleV1);
     console.log(sampleV2);
     console.log(sampleV3);
+    console.log(sampleV4);
     this.createChapterHeading(sampleV2.content[0]);
   },
 
@@ -72,66 +70,6 @@ export default {
         ],
       });
 
-      doc.addSection({
-        children: [
-          new Paragraph({
-            frame: {
-              position: {
-                x: 1000,
-                y: 3000,
-              },
-              width: 4000,
-              height: 4000,
-              anchor: {
-                horizontal: FrameAnchorType.MARGIN,
-                vertical: FrameAnchorType.MARGIN,
-              },
-              alignment: {
-                x: HorizontalPositionAlign.CENTER,
-                y: VerticalPositionAlign.TOP,
-              },
-            },
-            border: {
-              top: {
-                color: "auto",
-                space: 1,
-                style: BorderStyle.SINGLE,
-                size: 6,
-              },
-              bottom: {
-                color: "auto",
-                space: 1,
-                style: BorderStyle.SINGLE,
-                size: 6,
-              },
-              left: {
-                color: "auto",
-                space: 1,
-                style: BorderStyle.SINGLE,
-                size: 6,
-              },
-              right: {
-                color: "auto",
-                space: 1,
-                style: BorderStyle.SINGLE,
-                size: 6,
-              },
-            },
-            children: [
-              new TextRun("Hello World"),
-              new TextRun({
-                text: "Foo Bar",
-                bold: true,
-              }),
-              new TextRun({
-                text: "\tGithub is the best",
-                bold: true,
-              }),
-            ],
-          }),
-        ],
-      });
-
       Packer.toBlob(doc).then((blob) => {
         saveAs(blob, "test.docx");
       });
@@ -145,9 +83,9 @@ export default {
         hasUnderline = false;
 
       object.content.forEach((item) => {
-        hasBold = this.isBold(item);
-        hasItalic = this.isItalic(item);
-        hasUnderline = this.isUnderline(item);
+        hasBold = this.hasMark(item, "bold");
+        hasItalic = this.hasMark(item, "italic");
+        hasUnderline = this.hasMark(item, "underline");
 
         let textRun = new TextRun({
           text: item.text,
@@ -184,16 +122,8 @@ export default {
       });
     },
 
-    isBold(item) {
-      return item.marks?.some((mark) => mark.type === "bold") || false;
-    },
-
-    isItalic(item) {
-      return item.marks?.some((mark) => mark.type === "italic") || false;
-    },
-
-    isUnderline(item) {
-      return item.marks?.some((mark) => mark.type === "underline") || false;
+    hasMark(item, markType) {
+      return item.marks?.some((mark) => mark.type === markType) || false;
     },
   },
 };
