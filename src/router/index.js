@@ -23,6 +23,7 @@ const routes = [
   {
     path: "/docx",
     name: "Docx",
+    component: () => import("@/views/DocxJSTest.vue"),
   },
   {
     path: "/verify",
