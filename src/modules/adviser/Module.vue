@@ -15,7 +15,7 @@
     </AppBar>
     <v-container>
       <transition name="fade" mode="out-in">
-        <router-view class="mt-5" />
+        <router-view />
       </transition>
     </v-container>
   </div>

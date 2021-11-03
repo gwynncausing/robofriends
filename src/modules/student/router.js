@@ -51,6 +51,12 @@ const studentRoutes = [
         component: () =>
           import("@/modules/student/views/ResearchPaperEditor.vue"),
       },
+      {
+        path: "approved-research-version-history",
+        name: "Approved Research Version History",
+        component: () =>
+          import("@/modules/student/views/ApprovedResearchVersionHistory.vue"),
+      },
     ],
   },
 ];
