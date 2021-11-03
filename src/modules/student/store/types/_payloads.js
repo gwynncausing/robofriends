@@ -18,9 +18,14 @@ const JOIN_CODE_TEAM_PAYLOAD = {
   code: String,
 };
 
+const SELECT_TEAM = {
+  team: Object,
+};
+
 export const STUDENT_PAYLOADS = {
   CREATE_TEAM,
   SEND_TEAM_INVITATIONS,
   UPDATE_INVITATION,
+  SELECT_TEAM,
   JOIN_CODE_TEAM_PAYLOAD,
 };

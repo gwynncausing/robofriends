@@ -71,6 +71,13 @@ export default {
       getUser: `${ROOT_GETTERS.GET_USER}`,
     }),
   },
+  watch: {
+    isEditable: {
+      handler(value) {
+        this.editor.setOptions({ editable: value });
+      },
+    },
+  },
 
   mounted() {
     const ydoc = new Y.Doc();
@@ -87,7 +94,11 @@ export default {
         extensions: [
           CustomDocument,
           // Document,
-          Paragraph,
+          Paragraph.configure({
+            HTMLAttributes: {
+              class: "text-justify",
+            },
+          }),
           Text,
           Bold,
           Italic,
@@ -111,6 +122,7 @@ export default {
             levels: [2],
             HTMLAttributes: {
               id: "research-title",
+              class: "pb-4 ",
             },
           }),
           Collaboration.configure({

@@ -35,7 +35,10 @@
               @selectBlock="selectBlock($event)"
             />
           </div>
-          <div v-if="editor.blockType === 'image'" class="editor-content-image">
+          <div
+            v-else-if="editor.blockType === 'image'"
+            class="editor-content-image"
+          >
             <EditorImage
               :editor-data="editor"
               :user-color="userColor"
@@ -45,7 +48,7 @@
             />
           </div>
           <div
-            v-if="editor.blockType === 'section'"
+            v-else-if="editor.blockType === 'section'"
             class="editor-content-section"
           >
             <EditorSection
@@ -112,29 +115,6 @@ export default {
   },
 
   methods: {
-    // * Commented removeUser and addUser methods
-    // * they are used for active users for the block
-    // removeUser(object) {
-    //   const index = this.editors.map((editor) => editor.id).indexOf(object.id);
-    //   if (index === -1) return;
-
-    //   this.editors[index].users = this.editors[index].users.splice(index, 1);
-
-    //   const hasVal = Object.values(this.editors[index].users).includes(
-    //     object.name
-    //   );
-    //   if (hasVal) this.editors[index].users.splice(index, 1);
-    // },
-    // addUser(object) {
-    //   const index = this.editors.map((editor) => editor.id).indexOf(object.id);
-    //   const hasVal = Object.values(this.editors[index].users).includes(
-    //     object.name
-    //   );
-    //   if (!hasVal) this.editors[index].users.push(object.name);
-
-    //   this.moveToolbar(object.id, index);
-    //   this.currentSelectedEditorIndex = index;
-    // },
     updateUsers(users) {
       this.activeUsers = users;
     },

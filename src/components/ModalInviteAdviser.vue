@@ -1,33 +1,37 @@
 <template>
   <Modal small :dialog="dialog" @closed="closeModal()">
     <template v-slot:title>
-      <h4>Delete account</h4>
+      <h4>Invite an adviser</h4>
+      <span class="subheading1 neutral-500--text">
+        Enter the email address
+      </span>
     </template>
     <template v-slot:content>
-      <div class="pt-3">
-        <span class="subheading-1 neutral-500--text">
-          Are you sure that you want to delete your account?
-        </span>
-      </div>
+      <TextField
+        v-model="email"
+        class="mt-2"
+        placeholder="Email Address"
+        name="email"
+      />
     </template>
     <template v-slot:footer>
       <v-spacer></v-spacer>
-      <Button text class="error--text" @click="deleteAccount"
-        >Delete Account</Button
-      >
-      <Button :loading="isLoading" @click="closeModal()">Keep Account</Button>
+      <Button text @click="closeModal()">Cancel</Button>
+      <Button :loading="isLoading" @click="inviteAdviser">Invite</Button>
     </template>
   </Modal>
 </template>
 
 <script>
 import Modal from "@/components/Modal.vue";
+import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
 export default {
-  name: "ModalDeleteAccount",
+  name: "ModalInviteAdviser",
   components: {
     Modal,
+    TextField,
     Button,
   },
   props: {
@@ -42,7 +46,7 @@ export default {
   },
   data() {
     return {
-      teamCode: "",
+      email: "",
       dialog: false,
     };
   },
@@ -58,9 +62,9 @@ export default {
     closeModal() {
       this.dialog = false;
     },
-    deleteAccount() {
+    inviteAdviser() {
       // this.dialog = false;
-      this.$emit("deleteAccount");
+      this.$emit("dialogInviteAdviser");
     },
   },
 };

@@ -23,7 +23,21 @@ const routes = [
   {
     path: "/docx",
     name: "Docx",
-    component: () => import("@/views/DocxJSTest.vue"),
+  },
+  {
+    path: "/verify",
+    name: "Email Verification",
+    component: () => import("@/views/EmailVerification.vue"),
+  },
+  {
+    path: "/forgot-password",
+    name: "Forgot Password",
+    component: () => import("@/views/ForgotPassword.vue"),
+  },
+  {
+    path: "/reset-password",
+    name: "Reset Password",
+    component: () => import("@/views/ForgotPasswordResetPassword.vue"),
   },
   {
     path: "/test",

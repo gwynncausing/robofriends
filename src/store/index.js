@@ -6,6 +6,9 @@ import getters from "./getters";
 import actions from "./actions";
 import createPersistedState from "vuex-persistedstate";
 
+import studentModule from "@/modules/student/store";
+import adviserModule from "@/modules/adviser/store";
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -14,6 +17,9 @@ export default new Vuex.Store({
   getters,
   actions,
   mutations,
-  modules: {},
+  modules: {
+    student: studentModule,
+    adviser: adviserModule,
+  },
   plugins: [createPersistedState()],
 });

@@ -1,30 +1,26 @@
 <template>
   <CustomCard>
-    <div class="card-team" @click="$emit('select', index)">
-      <div class="team-name font-bold">{{ team.teamName }}</div>
-      <!-- <div class="research-title">{{ team.researchTitle }}</div> -->
-      <div class="members-wrapper">
-        <v-avatar
-          v-for="(member, memberIndex) in team.members"
-          :key="memberIndex"
-          color="primary"
-          size="24"
-        >
-          <span class="avatar-content caption">{{ getInitials(member) }}</span>
-        </v-avatar>
+    <div class="card-proposal" @click="$emit('select', index)">
+      <div class="research-title">{{ proposal.researchTitle }}</div>
+      <div class="status-wrapper">
+        <Chip dark :color="statusColors[proposal.status]">
+          {{ proposal.status }}
+        </Chip>
       </div>
-      <div class="date-time">{{ team.dateTime }}</div>
+      <div class="date-time">{{ proposal.dateTime }}</div>
     </div>
   </CustomCard>
 </template>
 
 <script>
 import CustomCard from "@/components/global/CustomCard";
+import Chip from "@/components/global/Chip.vue";
+
 export default {
   name: "CardTeam",
-  components: { CustomCard },
+  components: { CustomCard, Chip },
   props: {
-    team: {
+    proposal: {
       type: Object,
       default: () => {},
     },
@@ -32,6 +28,16 @@ export default {
       type: Number,
       default: 0,
     },
+  },
+  data() {
+    return {
+      statusColors: {
+        Pending: "blue",
+        "Needs Revision": "yellow",
+        Rejected: "red",
+        Approved: "primary",
+      },
+    };
   },
   methods: {
     getInitials(member) {
@@ -47,7 +53,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.card-team {
+.card-proposal {
   display: flex;
   flex-direction: column;
   row-gap: 12px;
@@ -61,7 +67,7 @@ export default {
   .members-wrapper {
     display: flex;
     flex-direction: row;
-    column-gap: 4px;
+    column-gap: 8px;
 
     .avatar-content {
       color: white;

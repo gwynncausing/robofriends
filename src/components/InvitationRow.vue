@@ -53,14 +53,14 @@ export default {
     },
     deny() {
       const params = {
-        invitationId: this.invitation.id,
+        invitationId: this.invitation,
         status: TEAM.INVITATION_STATUS.DECLINED,
       };
       this.$emit("updateInvitation", params);
     },
     join() {
       const params = {
-        invitationId: this.invitation.id,
+        invitation: this.invitation,
         status: TEAM.INVITATION_STATUS.ACCEPTED,
       };
       this.$emit("updateInvitation", params);

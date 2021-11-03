@@ -4,8 +4,21 @@
       :routes="appBar.routes"
       :notification="appBar.notification"
       :user="userInformation"
-      @logout="logout"
-    />
+      :is-account-menu-dropdown-close-on-click="
+        isAccountMenuDropdownCloseOnClick
+      "
+    >
+      <template v-slot:account-menu-dropdown>
+        <v-list>
+          <v-list-item class="text-right" active="primary" @click="logout">
+            <v-list-item-content
+              class="button-font neutral-600--text d-flex justify-end"
+              >Log out</v-list-item-content
+            >
+          </v-list-item>
+        </v-list>
+      </template>
+    </AppBar>
     <div id="onboarding">
       <div class="onboarding-wrapper">
         <div class="grid-item-content">
@@ -144,6 +157,7 @@ export default {
   },
   data() {
     return {
+      isAccountMenuDropdownCloseOnClick: true,
       appBar: {
         user: {
           name: "Unknown",
@@ -235,6 +249,7 @@ export default {
     ...mapActions({
       onFetchSchools: ROOT_ACTIONS.FETCH_SCHOOLS,
       onOnboardUser: ROOT_ACTIONS.ONBOARD_USER,
+      onGetUserInfo: ROOT_ACTIONS.GET_USER_INFO,
       onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
     async logout() {
@@ -283,14 +298,11 @@ export default {
             lastName: this.getUser.lastName,
           },
         };
-        //TODO: temporary solution for the error if user is teacher, inform backend later
-        console.log(payload);
-        if (this.user.type === "Teacher")
-          payload.user.program = this.programs[0];
         await this.onOnboardUser(payload);
+        await this.onGetUserInfo({ id: this.getUser.id });
         switch (this.getUserType) {
           case USER.TYPES.STUDENT:
-            this.$router.replace({ name: "Dashboard" });
+            this.$router.replace({ name: "Student Dashboard" });
             break;
           case USER.TYPES.TEACHER:
             this.$router.replace({ name: "Adviser Dashboard" });
@@ -305,6 +317,7 @@ export default {
             this.error = "ID number is already taken";
             break;
           default:
+            console.log(error);
             break;
         }
       } finally {

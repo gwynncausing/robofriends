@@ -46,12 +46,13 @@
         </template>
       </Tabs>
       <!-- // TODO:  redirect kickstartResearch to create proposal page -->
-      <KickstartResearchModal
+      <ModalKickstartResearch
+        :user="getUser"
         :is-loading="isSubmitTeamCode"
         :dialog-props="kickstartResearchModal"
         @dialogClose="kickstartResearchModal = $event"
         @dialogKickstartResearch="kickstartResearch"
-      ></KickstartResearchModal>
+      ></ModalKickstartResearch>
     </div>
   </div>
 </template>
@@ -62,9 +63,10 @@ import TasksBoard from "@/components/student/dashboard/TasksBoard";
 import IndividualInsight from "@/components/student/dashboard/IndividualInsight";
 import Tabs from "@/components/Tabs";
 import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
-import KickstartResearchModal from "@/components/student/KickstartResearchModal.vue";
+import ModalKickstartResearch from "@/components/student/ModalKickstartResearch.vue";
 
 import { mapActions, mapGetters } from "vuex";
+import { ROOT_GETTERS } from "@/store/types";
 import { STUDENT_ACTIONS, STUDENT_GETTERS } from "../store/types";
 import { MODULES, STATUS_CODES } from "@/utils/constants";
 
@@ -76,7 +78,7 @@ export default {
     IndividualInsight,
     Tabs,
     JoinTeamModal,
-    KickstartResearchModal,
+    ModalKickstartResearch,
   },
   data() {
     return {
@@ -106,32 +108,20 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_MEMBERSHIPS}`,
+      getUser: `${ROOT_GETTERS.GET_USER}`,
       hasMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
       getSelectedTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM}`,
     }),
   },
-  async created() {
-    try {
-      await this.fetchMemberships();
-      await this.selectTeam();
+  mounted() {
+    setTimeout(() => {
       this.showKickstartResearchModal();
-    } catch (error) {
-      console.log(error);
-    }
+    }, 500);
   },
   methods: {
     ...mapActions({
-      onFetchMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_MEMBERSHIPS}`,
-      onSelectTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SELECT_TEAM}`,
       onJoinTeamCode: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.JOIN_CODE_TEAM}`,
     }),
-    async fetchMemberships() {
-      return this.onFetchMemberships();
-    },
-    async selectTeam() {
-      return this.onSelectTeam();
-    },
     showKickstartResearchModal() {
       this.kickstartResearchModal = true;
     },
@@ -157,7 +147,10 @@ export default {
       }
     },
     kickstartResearch() {
-      console.log("kickstartResearch called");
+      this.$router.push({
+        name: "Research Details",
+        query: { tab: "create-new" },
+      });
     },
   },
 };

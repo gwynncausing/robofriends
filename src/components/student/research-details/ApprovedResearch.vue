@@ -33,23 +33,37 @@ export default {
   },
   data() {
     return {
-      research: {
+      approvedResearch: {
         id: "1",
-        title: "title",
-        description: "description",
-        teamName: "Cary & Co.",
-        status: "Returned", // ? values: Pending, Approved, Returned
-        objectives: ["obj1", "obj2"],
-        feedback: {
-          id: "1",
-          date: "1/1/2021",
-          time: "11:00",
-          text: "Good job!",
+        researchTitle:
+          "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
+        content: {
+          type: "doc",
+          content: [
+            {
+              type: "heading",
+              content: [
+                {
+                  type: "text",
+                  text: "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
+                },
+              ],
+            },
+            {
+              type: "paragraph",
+              content: [
+                {
+                  type: "text",
+                  text: "Bud is a web application that offers a modern solution where research can be fun, hassle-free, and paperless; helping students and teachers with writing research from start to finish. Inside the app, users will have access to a dashboard for monitoring their progress, can use real time collaboration features to work on their research, can utilize an easy-to-use research editor with auto-formatting to standard research formats (e.g. ACM) and can store completed research papers in the research archive. With Bud, research collaboration, tracking and writing will be made easier and enjoyable without using different applications and creating multiple files.",
+                },
+              ],
+            },
+          ],
         },
       },
       editor: {
         id: "approved-research",
-        content: `aa`,
+        content: {},
         users: [],
       },
       activeUsers: [],
@@ -60,6 +74,9 @@ export default {
     userColor() {
       return this.getRandomColor();
     },
+  },
+  beforeMount() {
+    this.editor.content = this.approvedResearch.content;
   },
 
   methods: {

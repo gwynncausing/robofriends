@@ -116,9 +116,9 @@ export default {
     setInvitations() {
       this.invitations = this.getInvitations;
     },
-    async updateInvitation({ invitationId, status }) {
+    async updateInvitation({ invitation, status }) {
       const payload = {
-        id: invitationId,
+        id: invitation.id,
         invitation: {
           status: status,
         },
