@@ -34,7 +34,7 @@ export default {
           // * HEADING 1 - OK
           heading1: {
             run: {
-              size: 28,
+              size: "12pt",
               bold: true,
               allCaps: true,
               color: "000000",
@@ -42,46 +42,46 @@ export default {
             paragraph: {
               alignment: AlignmentType.LEFT,
               spacing: {
-                before: 120,
+                before: "6pt",
               },
             },
           },
           // * HEADING 2 - Capitalized not found
           heading2: {
             run: {
-              size: 24,
+              size: "12pt",
               bold: true,
             },
             paragraph: {
               alignment: AlignmentType.LEFT,
               spacing: {
-                before: 120,
+                before: "6pt",
               },
             },
           },
           // * HEADING 3 - Capitalized not found
           heading3: {
             run: {
-              size: 22,
+              size: "11pt",
               italics: true,
             },
             paragraph: {
               alignment: AlignmentType.LEFT,
               spacing: {
-                before: 120,
+                before: "6pt",
               },
             },
           },
           // * HEADING 4 - Capitalized not found
           heading4: {
             run: {
-              size: 22,
+              size: "11pt",
               italics: true,
             },
             paragraph: {
               alignment: AlignmentType.LEFT,
               spacing: {
-                before: 120,
+                before: "6pt",
               },
             },
           },
