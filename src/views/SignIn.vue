@@ -39,7 +39,7 @@
         </div>
 
         <div class="py-6">
-          <Button text block :to="{ name: 'CreateAccount' }">
+          <Button text block :to="{ name: 'Forgot Password' }">
             I cannot access my account
           </Button>
         </div>

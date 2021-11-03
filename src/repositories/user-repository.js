@@ -17,6 +17,12 @@ export default {
   changePassword(payload, id) {
     return Client.patch(`${resource}/change-password/${id}`, payload);
   },
+  sendResetLink(payload) {
+    return Client.post(`${resource}/send-reset-link`, payload);
+  },
+  resetPassword(payload) {
+    return Client.post(`${resource}/reset-password`, payload);
+  },
   delete(id) {
     return Client.delete(`${resource}/${id}`);
   },
