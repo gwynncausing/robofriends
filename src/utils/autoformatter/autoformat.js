@@ -11,6 +11,8 @@ import {
   Packer,
 } from "docx";
 
+import { numbering } from "./numbering";
+
 import { saveAs } from "file-saver";
 
 // TODO: transfer more functions here from docxjstest.vue
@@ -222,6 +224,7 @@ export const createDocumentProperties = (rules) => {
         },
       ],
     },
+    numbering: numbering,
     sections: [
       {
         properties: createSectionProperties(rules),
