@@ -31,6 +31,16 @@ const routes = [
     component: () => import("@/views/DocxJSTest2.vue"),
   },
   {
+    path: "/docx3",
+    name: "Docx3",
+    component: () => import("@/views/DocxJSTest3.vue"),
+  },
+  {
+    path: "/docx4",
+    name: "Docx4",
+    component: () => import("@/views/DocxJSTest4.vue"),
+  },
+  {
     path: "/verify",
     name: "Email Verification",
     component: () => import("@/views/EmailVerification.vue"),

@@ -8,7 +8,7 @@ import {
   // convertInchesToTwip,
   Document,
   HeadingLevel,
-  LevelFormat,
+  // LevelFormat,
   Packer,
   Paragraph,
   TextRun,
@@ -27,7 +27,7 @@ export default {
   },
 
   mounted() {
-    const doc = new Document({
+    const properties = {
       creator: "Clippy",
       title: "Sample Document",
       description: "A brief example of using docx",
@@ -61,63 +61,6 @@ export default {
               },
             },
           },
-          //* HEADING 3 - Capitalized not found
-          heading3: {
-            run: {
-              size: "11pt",
-              italics: true,
-            },
-            paragraph: {
-              alignment: AlignmentType.LEFT,
-              spacing: {
-                before: "6pt",
-              },
-            },
-          },
-          //* HEADING 4 - Capitalized not found
-          heading4: {
-            run: {
-              size: "11pt",
-              italics: true,
-            },
-            paragraph: {
-              alignment: AlignmentType.LEFT,
-              spacing: {
-                before: "6pt",
-              },
-            },
-          },
-          //* HEADING 5 - Capitalized not found
-          heading5: {
-            run: {
-              size: "11pt",
-              italics: true,
-            },
-            paragraph: {
-              alignment: AlignmentType.LEFT,
-              spacing: {
-                before: "6pt",
-              },
-            },
-          },
-          //* HEADING 6 - Capitalized not found
-          heading6: {
-            run: {
-              size: "11pt",
-              italics: true,
-            },
-            paragraph: {
-              alignment: AlignmentType.LEFT,
-              spacing: {
-                before: "6pt",
-              },
-            },
-          },
-          listParagraph: {
-            run: {
-              color: "#FF0000",
-            },
-          },
         },
         paragraphStyles: [
           //* DEFAULT PARAGRAPH - OK
@@ -132,22 +75,6 @@ export default {
             paragraph: {
               alignment: AlignmentType.JUSTIFIED,
             },
-          },
-        ],
-      },
-      //* NUMBERING
-      numbering: {
-        config: [
-          {
-            reference: "my-crazy-numbering",
-            levels: [
-              {
-                level: 0,
-                format: LevelFormat.LOWER_LETTER,
-                text: "%1)",
-                alignment: AlignmentType.LEFT,
-              },
-            ],
           },
         ],
       },
@@ -193,28 +120,6 @@ export default {
               heading: HeadingLevel.HEADING_2,
             }),
             new Paragraph({
-              text: "Option1",
-              numbering: {
-                reference: "my-crazy-numbering",
-                level: 0,
-              },
-              style: "aside",
-            }),
-            new Paragraph({
-              text: "Option5 -- override 2 to 5",
-              numbering: {
-                reference: "my-crazy-numbering",
-                level: 0,
-              },
-            }),
-            new Paragraph({
-              text: "Option3",
-              numbering: {
-                reference: "my-crazy-numbering",
-                level: 0,
-              },
-            }),
-            new Paragraph({
               children: [
                 new TextRun({
                   text: "Some monospaced content",
@@ -237,41 +142,12 @@ export default {
               // heading: HeadingLevel.HEADING_2,
               style: "wellSpacedHeading",
             }),
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: "This is a bold run,",
-                  bold: true,
-                }),
-                new TextRun(" switching to normal "),
-                new TextRun({
-                  text: "and then underlined ",
-                  underline: {},
-                }),
-                new TextRun({
-                  text: "and then emphasis-mark ",
-                  emphasisMark: {},
-                }),
-                new TextRun({
-                  text: "and back to normal.",
-                }),
-              ],
-            }),
-            new Paragraph({
-              style: "Strong",
-              children: [
-                new TextRun({
-                  text: "Strong Style",
-                }),
-                new TextRun({
-                  text: " - Very strong.",
-                }),
-              ],
-            }),
           ],
         },
       ],
-    });
+    };
+    console.log(properties);
+    const doc = new Document(properties);
 
     Packer.toBlob(doc).then((blob) => {
       saveAs(blob, "test.docx");

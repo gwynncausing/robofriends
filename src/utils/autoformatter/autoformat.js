@@ -1,15 +1,21 @@
+/* eslint-disable */
 import {
   AlignmentType,
-  LevelFormat,
+  // LevelFormat,
   Column,
   PageOrientation,
   HeadingLevel,
   Paragraph,
+  TextRun,
+  Document,
+  Packer,
 } from "docx";
+
+import { saveAs } from "file-saver";
 
 // TODO: transfer more functions here from docxjstest.vue
 
-export const createHeading = (content, level) =>
+export const createHeading = (content, level = HeadingLevel.HEADING_1) =>
   new Paragraph({
     text: content,
     heading: level,
@@ -27,14 +33,39 @@ export const createOrderedList = () => {};
 // TODO: add implementation
 export const createBulletList = () => {};
 
-// TODO: add implementation
-export const createTextRun = () => {};
+// TODO: check implementation
+export const createTextRun = (item) => {
+  const hasBold = hasMark(item, "bold");
+  const hasItalic = hasMark(item, "italic");
+  const hasUnderline = hasMark(item, "underline");
 
-export const createParagraph = (content, style) =>
+  return new TextRun({
+    text: item.text,
+    bold: hasBold,
+    italics: hasItalic,
+    underline: hasUnderline,
+  });
+};
+
+// TODO: check implementation
+const hasMark = (item, markType) =>
+  item.marks?.some((mark) => mark.type === markType) || false;
+
+export const createParagraph = (content, style = "Normal") =>
   new Paragraph({
-    text: content,
+    children: createParagraphChilren(content),
     style: style,
   });
+
+const createParagraphChilren = (content) => {
+  let textRuns = [];
+
+  content.forEach((child) => {
+    textRuns.push(createTextRun(child));
+  });
+
+  return textRuns;
+};
 
 export const createSectionProperties = (rules) => {
   // TODO: extract values from rules and leave no hardcoded values if posible (unless applies to all research, then hard coding is justified)
@@ -51,16 +82,16 @@ export const createSectionProperties = (rules) => {
         right: "1.9cm",
         bottom: "2.54cm",
         left: "1.9cm",
-      }, //* PAGE COLUMNS
-      column: {
-        count: 2,
-        space: ".83cm",
-        equalWidth: true,
-        children: [
-          new Column({ width: "8.45cm" }),
-          new Column({ width: "8.45cm" }),
-        ],
       },
+    },
+    column: {
+      count: 2,
+      space: ".83cm",
+      equalWidth: true,
+      children: [
+        new Column({ width: "8.45cm" }),
+        new Column({ width: "8.45cm" }),
+      ],
     },
   };
   return sectionProperties;
@@ -69,9 +100,9 @@ export const createSectionProperties = (rules) => {
 export const createDocumentProperties = (rules) => {
   // TODO: extract values from rules and leave no hardcoded values if posible (unless applies to all research, then hard coding is justified)
   const properties = {
-    creator: "Clippy",
-    title: "Sample Document",
-    description: "A brief example of using docx",
+    creator: rules.creator,
+    title: rules.title,
+    description: rules.description,
     styles: {
       default: {
         //* HEADING 1 - OK
@@ -154,6 +185,7 @@ export const createDocumentProperties = (rules) => {
             },
           },
         },
+        // TODO: To be Impemented
         listParagraph: {
           run: {
             color: "#FF0000",
@@ -174,21 +206,19 @@ export const createDocumentProperties = (rules) => {
             alignment: AlignmentType.JUSTIFIED,
           },
         },
-      ],
-    },
-    //* NUMBERING
-    numbering: {
-      config: [
         {
-          reference: "my-crazy-numbering",
-          levels: [
-            {
-              level: 0,
-              format: LevelFormat.LOWER_LETTER,
-              text: "%1)",
-              alignment: AlignmentType.LEFT,
+          id: "Heading2Subsequent",
+          name: "Heading2Subsequent",
+          run: {
+            size: "12pt",
+            bold: true,
+          },
+          paragraph: {
+            alignment: AlignmentType.LEFT,
+            spacing: {
+              before: "6pt",
             },
-          ],
+          },
         },
       ],
     },
@@ -208,17 +238,37 @@ export const generateDocument = (rules, content) => {
   const properties = createDocumentProperties(rules);
 
   // TODO: add validation here for section
+  // ! unsay para asa ang validation?
   const sectionChildren = [];
-  // TODO: should loop content here instead of hard coding values, or better if separated into a function called createSectionChildren
-  sectionChildren.push(createHeading("Heading1", HeadingLevel.HEADING_1));
-  sectionChildren.push(createParagraph("Normal content", "Normal"));
+  // TODO: create a function called createSectionChildren and insert the code block below
+  content.forEach((item) => {
+    if (item.blockType === "text") {
+      item.content.forEach((content) => {
+        if (content.type === "paragraph") {
+          sectionChildren.push(createParagraph(content.content));
+        } else if (content.type === "heading") {
+          sectionChildren.push(createHeading(content.content[0].text));
+        }
+      });
+    }
+  });
 
   properties.sections[0].children = sectionChildren;
 
   // TODO: continue here based on pseudo code
 
   // TODO: return a Document object based on above values
+
+  const doc = new Document(properties);
+
+  // * temporary soluton to save
+  // saveDocument(doc);
 };
+
+const saveDocument = (doc) =>
+  Packer.toBlob(doc).then((blob) => {
+    saveAs(blob, "test.docx");
+  });
 
 // TODO: once finalized, make this a promise based implementation, we do not want the web client to pause/uninteractable when dealing with huge documents (might take a while and makes it look like the page is unresponsive, see code blocking here https://nodejs.org/en/docs/guides/blocking-vs-non-blocking/)
 const autoformat = {
