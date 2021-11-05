@@ -242,15 +242,13 @@ export const generateDocument = (rules, content) => {
   const sectionChildren = [];
   // TODO: create a function called createSectionChildren and insert the code block below
   content.forEach((item) => {
-    if (item.blockType === "text") {
-      item.content.forEach((content) => {
-        if (content.type === "paragraph") {
-          sectionChildren.push(createParagraph(content.content));
-        } else if (content.type === "heading") {
-          sectionChildren.push(createHeading(content.content[0].text));
-        }
-      });
-    }
+    item.content.forEach((content) => {
+      if (content.type === "paragraph") {
+        sectionChildren.push(createParagraph(content.content));
+      } else if (content.type === "heading") {
+        sectionChildren.push(createHeading(content.content[0].text));
+      }
+    });
   });
 
   properties.sections[0].children = sectionChildren;
@@ -262,7 +260,7 @@ export const generateDocument = (rules, content) => {
   const doc = new Document(properties);
 
   // * temporary soluton to save
-  // saveDocument(doc);
+  saveDocument(doc);
 };
 
 const saveDocument = (doc) =>
