@@ -11,6 +11,7 @@ export const HEADING_LEVELS = {
 };
 
 export const ALIGNMENT_TYPE = {
+  start: AlignmentType.START,
   left: AlignmentType.LEFT,
   right: AlignmentType.RIGHT,
   justified: AlignmentType.JUSTIFIED,

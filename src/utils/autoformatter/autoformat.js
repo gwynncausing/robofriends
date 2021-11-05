@@ -238,7 +238,7 @@ export const generateDocument = (rules, content) => {
   const properties = createDocumentProperties(rules);
 
   // TODO: add validation here for section
-  // ! unsay para asa ang validation?
+
   const sectionChildren = [];
   // TODO: create a function called createSectionChildren and insert the code block below
   content.forEach((item) => {
@@ -260,7 +260,7 @@ export const generateDocument = (rules, content) => {
   const doc = new Document(properties);
 
   // * temporary soluton to save
-  saveDocument(doc);
+  // saveDocument(doc);
 };
 
 const saveDocument = (doc) =>
