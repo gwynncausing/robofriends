@@ -1,7 +1,8 @@
 <template>
   <div id="reset-password">
     <router-link :to="{ name: 'SignIn' }">
-      <v-img src="@/assets/logo.svg" alt="Bud Logo" height="130" contain> </v-img>
+      <v-img src="@/assets/logo.svg" alt="Bud Logo" height="130" contain>
+      </v-img>
     </router-link>
 
     <h5 class="neutral-700--text">

@@ -38,7 +38,8 @@ const routes = [
   {
     path: "/reset-password-success",
     name: "Reset Password Success",
-    component: () => import("@/views/security/ForgotPasswordResetPasswordSuccess.vue"),
+    component: () =>
+      import("@/views/security/ForgotPasswordResetPasswordSuccess.vue"),
   },
   {
     path: "/test",
