@@ -15,8 +15,6 @@ import { saveAs } from "file-saver";
 import { HEADING_LEVELS } from "./constants";
 import { capitalizeFirstLetter } from "@/utils/helpers";
 
-// TODO: transfer more functions here from docxjstest.vue
-
 export const createHeading = (content, level = 1) => {
   content =
     level === 1 ? content.toUpperCase() : capitalizeFirstLetter(content);
@@ -95,7 +93,6 @@ export const createBulletList = (content, level = 0) => {
   return list;
 };
 
-// TODO: check implementation
 export const createTextRun = (item) => {
   const hasBold = hasMark(item, "bold");
   const hasItalic = hasMark(item, "italic");
@@ -109,7 +106,6 @@ export const createTextRun = (item) => {
   });
 };
 
-// TODO: check implementation
 const hasMark = (item, markType) =>
   item.marks?.some((mark) => mark.type === markType) || false;
 
@@ -130,341 +126,27 @@ const createParagraphChilren = (content) => {
 };
 
 export const createSectionProperties = (rules) => {
-  // TODO: extract values from rules and leave no hardcoded values if posible (unless applies to all research, then hard coding is justified)
   const sectionProperties = {
     //* DOCUMENT RULES
-    page: {
-      size: {
-        orientation: PageOrientation.PORTRAIT,
-        height: "27.94cm",
-        width: "21.59cm",
-      },
-      margin: {
-        top: "1.9cm",
-        right: "1.9cm",
-        bottom: "2.54cm",
-        left: "1.9cm",
-      },
-    },
-    column: {
-      count: 2,
-      space: ".83cm",
-      equalWidth: true,
-      children: [
-        new Column({ width: "8.45cm" }),
-        new Column({ width: "8.45cm" }),
-      ],
-    },
+    // ? i think this should not have default values since it is format specific
+    page: rules.document.page,
+    column: rules.document.page,
   };
   return sectionProperties;
 };
 
 export const createDocumentProperties = (rules) => {
-  // TODO: extract values from rules and leave no hardcoded values if posible (unless applies to all research, then hard coding is justified)
   const properties = {
+    //TODO: should come from content object instead
     creator: rules.creator,
     title: rules.title,
     description: rules.description,
     styles: {
-      default: {
-        //* HEADING 1 - OK
-        heading1: {
-          run: {
-            size: "12pt",
-            bold: true,
-            allCaps: true,
-            color: "000000",
-          },
-          paragraph: {
-            alignment: AlignmentType.LEFT,
-            spacing: {
-              before: "6pt",
-            },
-          },
-        },
-        //* HEADING 2 - Capitalized not found
-        heading2: {
-          run: {
-            size: "12pt",
-            bold: true,
-          },
-          paragraph: {
-            alignment: AlignmentType.LEFT,
-            spacing: {
-              before: "6pt",
-            },
-          },
-        },
-        //* HEADING 3 - Capitalized not found
-        heading3: {
-          run: {
-            size: "11pt",
-            italics: true,
-          },
-          paragraph: {
-            alignment: AlignmentType.LEFT,
-            spacing: {
-              before: "6pt",
-            },
-          },
-        },
-        //* HEADING 4 - Capitalized not found
-        heading4: {
-          run: {
-            size: "11pt",
-            italics: true,
-          },
-          paragraph: {
-            alignment: AlignmentType.LEFT,
-            spacing: {
-              before: "6pt",
-            },
-          },
-        },
-        //* HEADING 5 - Capitalized not found
-        heading5: {
-          run: {
-            size: "11pt",
-            italics: true,
-          },
-          paragraph: {
-            alignment: AlignmentType.LEFT,
-            spacing: {
-              before: "6pt",
-            },
-          },
-        },
-        //* HEADING 6 - Capitalized not found
-        heading6: {
-          run: {
-            size: "11pt",
-            italics: true,
-          },
-          paragraph: {
-            alignment: AlignmentType.LEFT,
-            spacing: {
-              before: "6pt",
-            },
-          },
-        },
-        // TODO: To be Impemented
-        // listParagraph: {
-        //   run: {
-        //     color: "#FF0000",
-        //   },
-        // },
-      },
-      paragraphStyles: [
-        //* DEFAULT PARAGRAPH - OK
-        {
-          id: "Normal",
-          name: "Normal",
-          run: {
-            font: "Times New Roman",
-            size: "9pt",
-            color: "#000000",
-          },
-          paragraph: {
-            alignment: AlignmentType.JUSTIFIED,
-          },
-        },
-        {
-          id: "Heading2Subsequent",
-          name: "Heading2Subsequent",
-          run: {
-            size: "12pt",
-            bold: true,
-          },
-          paragraph: {
-            alignment: AlignmentType.LEFT,
-            spacing: {
-              before: "6pt",
-            },
-          },
-        },
-      ],
+      default: { ...rules.styles.headings },
+      paragraphStyles: rules.styles.paragraphs,
     },
     numbering: {
-      config: [
-        {
-          reference: "decimal",
-          levels: [
-            {
-              level: 0,
-              format: LevelFormat.DECIMAL,
-              text: "%1.",
-              alignment: AlignmentType.START,
-              style: {
-                paragraph: {
-                  indent: {
-                    left: "1.27cm",
-                    hanging: ".45cm",
-                  },
-                },
-              },
-            },
-            {
-              level: 1,
-              format: LevelFormat.DECIMAL,
-              text: "%2.",
-              alignment: AlignmentType.START,
-              style: {
-                paragraph: {
-                  indent: {
-                    left: "2.54cm",
-                    hanging: ".45cm",
-                  },
-                },
-              },
-            },
-            {
-              level: 2,
-              format: LevelFormat.DECIMAL,
-              text: "%3.",
-              alignment: AlignmentType.START,
-              style: {
-                paragraph: {
-                  indent: {
-                    left: "3.81cm",
-                    hanging: ".45cm",
-                  },
-                },
-              },
-            },
-            {
-              level: 3,
-              format: LevelFormat.DECIMAL,
-              text: "%4.",
-              alignment: AlignmentType.START,
-              style: {
-                paragraph: {
-                  indent: {
-                    left: "5.08cm",
-                    hanging: ".45cm",
-                  },
-                },
-              },
-            },
-            {
-              level: 4,
-              format: LevelFormat.DECIMAL,
-              text: "%5.",
-              alignment: AlignmentType.START,
-              style: {
-                paragraph: {
-                  indent: {
-                    left: "6.35cm",
-                    hanging: ".45cm",
-                  },
-                },
-              },
-            },
-            {
-              level: 5,
-              format: LevelFormat.DECIMAL,
-              text: "%6.",
-              alignment: AlignmentType.START,
-              style: {
-                paragraph: {
-                  indent: {
-                    left: "7.62cm",
-                    hanging: ".45cm",
-                  },
-                },
-              },
-            },
-          ],
-        },
-        {
-          reference: "bullet",
-          levels: [
-            {
-              level: 0,
-              format: LevelFormat.BULLET,
-              text: "\u25CF",
-              alignment: AlignmentType.START,
-              style: {
-                paragraph: {
-                  indent: {
-                    left: "1.27cm",
-                    hanging: ".45cm",
-                  },
-                },
-              },
-            },
-            {
-              level: 1,
-              format: LevelFormat.BULLET,
-              text: "\u25CF",
-              alignment: AlignmentType.START,
-              style: {
-                paragraph: {
-                  indent: {
-                    left: "2.54cm",
-                    hanging: ".45cm",
-                  },
-                },
-              },
-            },
-            {
-              level: 2,
-              format: LevelFormat.BULLET,
-              text: "\u25CF",
-              alignment: AlignmentType.START,
-              style: {
-                paragraph: {
-                  indent: {
-                    left: "3.81cm",
-                    hanging: ".45cm",
-                  },
-                },
-              },
-            },
-            {
-              level: 3,
-              format: LevelFormat.BULLET,
-              text: "\u25CF",
-              alignment: AlignmentType.START,
-              style: {
-                paragraph: {
-                  indent: {
-                    left: "5.08cm",
-                    hanging: ".45cm",
-                  },
-                },
-              },
-            },
-            {
-              level: 4,
-              format: LevelFormat.BULLET,
-              text: "\u25CF",
-              alignment: AlignmentType.START,
-              style: {
-                paragraph: {
-                  indent: {
-                    left: "6.35cm",
-                    hanging: ".45cm",
-                  },
-                },
-              },
-            },
-            {
-              level: 5,
-              format: LevelFormat.BULLET,
-              text: "\u25CF",
-              alignment: AlignmentType.START,
-              style: {
-                paragraph: {
-                  indent: {
-                    left: "7.62cm",
-                    hanging: ".45cm",
-                  },
-                },
-              },
-            },
-          ],
-        },
-      ],
+      config: [rules.styles.list.ordered, rules.styles.list.unordered],
     },
     sections: [
       {
@@ -477,12 +159,7 @@ export const createDocumentProperties = (rules) => {
 };
 
 export const generateDocument = (rules, content) => {
-  // TODO: add validation here for rules
-  // TODO: add validation here for content
   const properties = createDocumentProperties(rules);
-
-  // TODO: add validation here for section
-
   const sectionChildren = [];
   // TODO: create a function called createSectionChildren and insert the code block below
   content?.forEach((item) => {
