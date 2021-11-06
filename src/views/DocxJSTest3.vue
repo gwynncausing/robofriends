@@ -4,8 +4,9 @@
 
 <script>
 import autoformat from "@/utils/autoformatter/autoformat";
-import sampleV2 from "@/utils/sample-v2.json";
-import sampleV3 from "@/utils/sample-v3.json";
+import sampleV2 from "@/utils/sample-v2.json"; // Heading
+import sampleV3 from "@/utils/sample-v3.json"; // paragraphs
+import sampleV6 from "@/utils/sample-v6.json"; // lists
 
 export default {
   data() {
@@ -23,7 +24,7 @@ export default {
     // console.log(rules);
     // console.log(sampleV3);
     // console.log(autoformat);
-    autoformat.generateDocument(rules, [sampleV2, sampleV3]);
+    autoformat.generateDocument(rules, [sampleV2, sampleV3, sampleV6]);
   },
 };
 </script>

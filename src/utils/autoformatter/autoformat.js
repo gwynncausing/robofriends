@@ -1,7 +1,7 @@
 /* eslint-disable */
 import {
   AlignmentType,
-  // LevelFormat,
+  LevelFormat,
   Column,
   PageOrientation,
   HeadingLevel,
@@ -11,17 +11,21 @@ import {
   Packer,
 } from "docx";
 
-import { numbering } from "./numbering";
-
 import { saveAs } from "file-saver";
+import { HEADING_LEVELS } from "./constants";
+import { capitalizeFirstLetter } from "@/utils/helpers";
 
 // TODO: transfer more functions here from docxjstest.vue
 
-export const createHeading = (content, level = HeadingLevel.HEADING_1) =>
-  new Paragraph({
+export const createHeading = (content, level = 1) => {
+  content =
+    level === 1 ? content.toUpperCase() : capitalizeFirstLetter(content);
+  console.log(content);
+  return new Paragraph({
     text: content,
-    heading: level,
+    heading: HEADING_LEVELS[level],
   });
+};
 
 // TODO: add implementation
 export const createTable = () => {};
@@ -30,10 +34,66 @@ export const createTable = () => {};
 export const createImage = () => {};
 
 // TODO: add implementation
-export const createOrderedList = () => {};
+export const createOrderedList = (content, level = 0) => {
+  const list = [];
+  content?.forEach((value) => {
+    if (value.type === "listItem") {
+      value.content.forEach((content) => {
+        if (content.type === "paragraph") {
+          list.push(
+            new Paragraph({
+              text: content.content?.[0].text || "",
+              numbering: {
+                reference: "decimal",
+                level: level,
+              },
+            })
+          );
+        } else if (content.type === "orderedList") {
+          const results = createOrderedList(content.content, level + 1);
+          results.forEach((result) => list.push(result));
+        } else if (content.type === "bulletList") {
+          const results = createBulletList(content.content, level + 1);
+          results.forEach((result) => list.push(result));
+        } else {
+          throw "Content is not list";
+        }
+      });
+    }
+  });
+  return list;
+};
 
 // TODO: add implementation
-export const createBulletList = () => {};
+export const createBulletList = (content, level = 0) => {
+  const list = [];
+  content?.forEach((value) => {
+    if (value.type === "listItem") {
+      value.content.forEach((content) => {
+        if (content.type === "paragraph") {
+          list.push(
+            new Paragraph({
+              text: content.content?.[0].text || "",
+              numbering: {
+                reference: "bullet",
+                level: level,
+              },
+            })
+          );
+        } else if (content.type === "orderedList") {
+          const results = createOrderedList(content.content, level + 1);
+          results.forEach((result) => list.push(result));
+        } else if (content.type === "bulletList") {
+          const results = createBulletList(content.content, level + 1);
+          results.forEach((result) => list.push(result));
+        } else {
+          throw "Content is not list";
+        }
+      });
+    }
+  });
+  return list;
+};
 
 // TODO: check implementation
 export const createTextRun = (item) => {
@@ -42,7 +102,7 @@ export const createTextRun = (item) => {
   const hasUnderline = hasMark(item, "underline");
 
   return new TextRun({
-    text: item.text,
+    text: item.text || "",
     bold: hasBold,
     italics: hasItalic,
     underline: hasUnderline,
@@ -62,7 +122,7 @@ export const createParagraph = (content, style = "Normal") =>
 const createParagraphChilren = (content) => {
   let textRuns = [];
 
-  content.forEach((child) => {
+  content?.forEach((child) => {
     textRuns.push(createTextRun(child));
   });
 
@@ -188,11 +248,11 @@ export const createDocumentProperties = (rules) => {
           },
         },
         // TODO: To be Impemented
-        listParagraph: {
-          run: {
-            color: "#FF0000",
-          },
-        },
+        // listParagraph: {
+        //   run: {
+        //     color: "#FF0000",
+        //   },
+        // },
       },
       paragraphStyles: [
         //* DEFAULT PARAGRAPH - OK
@@ -224,7 +284,188 @@ export const createDocumentProperties = (rules) => {
         },
       ],
     },
-    numbering: numbering,
+    numbering: {
+      config: [
+        {
+          reference: "decimal",
+          levels: [
+            {
+              level: 0,
+              format: LevelFormat.DECIMAL,
+              text: "%1.",
+              alignment: AlignmentType.START,
+              style: {
+                paragraph: {
+                  indent: {
+                    left: "1.27cm",
+                    hanging: ".45cm",
+                  },
+                },
+              },
+            },
+            {
+              level: 1,
+              format: LevelFormat.DECIMAL,
+              text: "%2.",
+              alignment: AlignmentType.START,
+              style: {
+                paragraph: {
+                  indent: {
+                    left: "2.54cm",
+                    hanging: ".45cm",
+                  },
+                },
+              },
+            },
+            {
+              level: 2,
+              format: LevelFormat.DECIMAL,
+              text: "%3.",
+              alignment: AlignmentType.START,
+              style: {
+                paragraph: {
+                  indent: {
+                    left: "3.81cm",
+                    hanging: ".45cm",
+                  },
+                },
+              },
+            },
+            {
+              level: 3,
+              format: LevelFormat.DECIMAL,
+              text: "%4.",
+              alignment: AlignmentType.START,
+              style: {
+                paragraph: {
+                  indent: {
+                    left: "5.08cm",
+                    hanging: ".45cm",
+                  },
+                },
+              },
+            },
+            {
+              level: 4,
+              format: LevelFormat.DECIMAL,
+              text: "%5.",
+              alignment: AlignmentType.START,
+              style: {
+                paragraph: {
+                  indent: {
+                    left: "6.35cm",
+                    hanging: ".45cm",
+                  },
+                },
+              },
+            },
+            {
+              level: 5,
+              format: LevelFormat.DECIMAL,
+              text: "%6.",
+              alignment: AlignmentType.START,
+              style: {
+                paragraph: {
+                  indent: {
+                    left: "7.62cm",
+                    hanging: ".45cm",
+                  },
+                },
+              },
+            },
+          ],
+        },
+        {
+          reference: "bullet",
+          levels: [
+            {
+              level: 0,
+              format: LevelFormat.BULLET,
+              text: "\u25CF",
+              alignment: AlignmentType.START,
+              style: {
+                paragraph: {
+                  indent: {
+                    left: "1.27cm",
+                    hanging: ".45cm",
+                  },
+                },
+              },
+            },
+            {
+              level: 1,
+              format: LevelFormat.BULLET,
+              text: "\u25CF",
+              alignment: AlignmentType.START,
+              style: {
+                paragraph: {
+                  indent: {
+                    left: "2.54cm",
+                    hanging: ".45cm",
+                  },
+                },
+              },
+            },
+            {
+              level: 2,
+              format: LevelFormat.BULLET,
+              text: "\u25CF",
+              alignment: AlignmentType.START,
+              style: {
+                paragraph: {
+                  indent: {
+                    left: "3.81cm",
+                    hanging: ".45cm",
+                  },
+                },
+              },
+            },
+            {
+              level: 3,
+              format: LevelFormat.BULLET,
+              text: "\u25CF",
+              alignment: AlignmentType.START,
+              style: {
+                paragraph: {
+                  indent: {
+                    left: "5.08cm",
+                    hanging: ".45cm",
+                  },
+                },
+              },
+            },
+            {
+              level: 4,
+              format: LevelFormat.BULLET,
+              text: "\u25CF",
+              alignment: AlignmentType.START,
+              style: {
+                paragraph: {
+                  indent: {
+                    left: "6.35cm",
+                    hanging: ".45cm",
+                  },
+                },
+              },
+            },
+            {
+              level: 5,
+              format: LevelFormat.BULLET,
+              text: "\u25CF",
+              alignment: AlignmentType.START,
+              style: {
+                paragraph: {
+                  indent: {
+                    left: "7.62cm",
+                    hanging: ".45cm",
+                  },
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
     sections: [
       {
         properties: createSectionProperties(rules),
@@ -244,12 +485,20 @@ export const generateDocument = (rules, content) => {
 
   const sectionChildren = [];
   // TODO: create a function called createSectionChildren and insert the code block below
-  content.forEach((item) => {
-    item.content.forEach((content) => {
+  content?.forEach((item) => {
+    item.content?.forEach((content) => {
       if (content.type === "paragraph") {
         sectionChildren.push(createParagraph(content.content));
       } else if (content.type === "heading") {
-        sectionChildren.push(createHeading(content.content[0].text));
+        sectionChildren.push(
+          createHeading(content.content[0].text, content.attrs.level)
+        );
+      } else if (content.type === "orderedList") {
+        const results = createOrderedList(content.content);
+        results.forEach((result) => sectionChildren.push(result));
+      } else if (content.type === "bulletList") {
+        const results = createBulletList(content.content);
+        results.forEach((result) => sectionChildren.push(result));
       }
     });
   });
