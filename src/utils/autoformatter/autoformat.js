@@ -212,24 +212,77 @@ export const generateDocument = async (rules, content) => {
   const section = createSection({ document: rules.document, children: [] });
   // TODO: create a function called createSectionChildren and insert the code block below
   for (const item of content) {
-    for (const content of item.content) {
-      if (content.type === "paragraph") {
-        section.children.push(createParagraph(content.content));
-      } else if (content.type === "heading") {
-        section.children.push(
-          createHeading(content.content?.[0].text, content.attrs.level)
-        );
-      } else if (content.type === "orderedList") {
-        const results = createOrderedList(content.content);
-        results.forEach((result) => section.children.push(result));
-      } else if (content.type === "bulletList") {
-        const results = createBulletList(content.content);
-        results.forEach((result) => section.children.push(result));
-      } else if (content.type === "image") {
-        const result = await createImage(content.attrs.src);
-        section.children.push(result);
+    if (item.blockType === "section" || item.blockType === "heading") {
+      for (const innerContent of item.content) {
+        if (innerContent.type === "heading") {
+          section.children.push(
+            createHeading(
+              innerContent.content?.[0].text,
+              innerContent.attrs.level
+            )
+          );
+        }
+      }
+    } else if (item.blockType === "text") {
+      for (const innerContent of item.content) {
+        if (innerContent.type === "paragraph") {
+          section.children.push(createParagraph(innerContent.content));
+        } else if (innerContent.type === "orderedList") {
+          const results = createOrderedList(innerContent.content);
+          results.forEach((result) => section.children.push(result));
+        } else if (innerContent.type === "bulletList") {
+          const results = createBulletList(innerContent.content);
+          results.forEach((result) => section.children.push(result));
+        }
+      }
+    } else if (item.blockType === "image") {
+      let tempContent = item.content.reverse();
+      // * Added due to bug that sometimes heading comes first
+      if (tempContent[0].type === "heading")
+        tempContent = item.content.reverse();
+
+      for (const innerContent of tempContent) {
+        if (innerContent.type === "image") {
+          const result = await createImage(innerContent.attrs.src);
+          section.children.push(result);
+        } else if (innerContent.type === "heading") {
+          // * Added due to TextRun probably overrides the bold in paragraph styling
+          let tempContentText = [
+            {
+              type: "text",
+              marks: [{ type: "bold" }],
+              text: innerContent.content[0].text,
+            },
+          ];
+
+          section.children.push(
+            createParagraph(tempContentText, "FigureStyle")
+          );
+        }
       }
     }
+
+    // for (const [innerIndex, innerContent] of item.content.entries()) {
+    //   if (innerContent.type === "paragraph") {
+    //     section.children.push(createParagraph(innerContent.content));
+    //   } else if (innerContent.type === "heading") {
+    //     section.children.push(
+    //       createHeading(
+    //         innerContent.content?.[0].text,
+    //         innerContent.attrs.level
+    //       )
+    //     );
+    //   } else if (innerContent.type === "orderedList") {
+    //     const results = createOrderedList(innerContent.content);
+    //     results.forEach((result) => section.children.push(result));
+    //   } else if (innerContent.type === "bulletList") {
+    //     const results = createBulletList(innerContent.content);
+    //     results.forEach((result) => section.children.push(result));
+    //   } else if (innerContent.type === "image") {
+    //     const result = await createImage(innerContent.attrs.src);
+    //     section.children.push(result);
+    //   }
+    // }
   }
   properties.sections.push(section);
 
@@ -260,7 +313,7 @@ export const generateDocument = async (rules, content) => {
   //   }),
   //   children: [...section.children],
   // };
-  
+
   // *anada section
   // properties.sections.push(newSection);
   // properties.sections.push({

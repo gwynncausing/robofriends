@@ -157,12 +157,11 @@ export const ACM_FORMAT = {
         spacingOptions: { after: "6pt" },
       }),
       createParagraphStyle({
-        id: "Figure",
-        name: "Figure",
+        id: "FigureStyle",
+        name: "Figure Style",
         runOptions: {
           font: "Times New Roman",
           size: "9pt",
-          bold: true,
         },
         alignment: AlignmentType.CENTER,
         spacingOptions: { after: "6pt" },
