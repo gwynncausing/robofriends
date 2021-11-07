@@ -10,6 +10,7 @@ import {
   Document,
   Packer,
   ImageRun,
+  SectionType,
 } from "docx";
 
 import { saveAs } from "file-saver";
@@ -162,14 +163,25 @@ const createParagraphChilren = (content) => {
   return textRuns;
 };
 
-export const createSectionProperties = (rules) => {
+export const createSectionProperties = ({
+  document,
+  type = SectionType.CONTINUOUS,
+}) => {
   const sectionProperties = {
     //* DOCUMENT RULES
     // ? i think this should not have default values since it is format specific
-    page: rules.document.page,
-    column: rules.document.column,
+    page: document?.page,
+    column: document?.column,
+    type: type,
   };
   return sectionProperties;
+};
+
+const createSection = ({ document, children = [] }) => {
+  return {
+    properties: createSectionProperties({ document }),
+    children: children,
+  };
 };
 
 export const createDocumentProperties = (rules) => {
@@ -185,43 +197,93 @@ export const createDocumentProperties = (rules) => {
     numbering: {
       config: [rules.styles.list.ordered, rules.styles.list.unordered],
     },
-    sections: [
-      {
-        properties: createSectionProperties(rules),
-        children: [],
-      },
-    ],
+    sections: [],
   };
   return properties;
 };
 
 export const generateDocument = async (rules, content) => {
   const properties = createDocumentProperties(rules);
-  const sectionChildren = [];
+  const section = createSection({ document: rules.document, children: [] });
   // TODO: create a function called createSectionChildren and insert the code block below
   for (const item of content) {
     for (const content of item.content) {
       if (content.type === "paragraph") {
-        sectionChildren.push(createParagraph(content.content));
+        section.children.push(createParagraph(content.content));
       } else if (content.type === "heading") {
-        sectionChildren.push(
+        section.children.push(
           createHeading(content.content?.[0].text, content.attrs.level)
         );
       } else if (content.type === "orderedList") {
         const results = createOrderedList(content.content);
-        results.forEach((result) => sectionChildren.push(result));
+        results.forEach((result) => section.children.push(result));
       } else if (content.type === "bulletList") {
         const results = createBulletList(content.content);
-        results.forEach((result) => sectionChildren.push(result));
+        results.forEach((result) => section.children.push(result));
       } else if (content.type === "image") {
         const result = await createImage(content.attrs.src);
-        sectionChildren.push(result);
+        section.children.push(result);
       }
     }
   }
+  properties.sections.push(section);
 
-  properties.sections[0].children = sectionChildren;
-
+  //* anadawan
+  // const newSection = {
+  //   properties: createSectionProperties({
+  //     document: {
+  //       page: {
+  //         size: {
+  //           orientation: PageOrientation.PORTRAIT,
+  //           height: "27.94cm",
+  //           width: "21.59cm",
+  //         },
+  //         margin: {
+  //           top: "1.9cm",
+  //           right: "1.9cm",
+  //           bottom: "2.54cm",
+  //           left: "1.9cm",
+  //         },
+  //       },
+  //       column: {
+  //         count: 1,
+  //         space: ".83cm",
+  //         equalWidth: true,
+  //       },
+  //     },
+  //     type: SectionType.CONTINUOUS,
+  //   }),
+  //   children: [...section.children],
+  // };
+  
+  // *anada section
+  // properties.sections.push(newSection);
+  // properties.sections.push({
+  //   properties: createSectionProperties({
+  //     document: {
+  //       page: {
+  //         size: {
+  //           orientation: PageOrientation.PORTRAIT,
+  //           height: "27.94cm",
+  //           width: "21.59cm",
+  //         },
+  //         margin: {
+  //           top: "1.9cm",
+  //           right: "1.9cm",
+  //           bottom: "2.54cm",
+  //           left: "1.9cm",
+  //         },
+  //       },
+  //       column: {
+  //         count: 2,
+  //         space: ".83cm",
+  //         equalWidth: true,
+  //       },
+  //     },
+  //     type: SectionType.CONTINUOUS,
+  //   }),
+  //   children: [...section.children],
+  // });
   // TODO: continue here based on pseudo code
 
   // TODO: return a Document object based on above values
