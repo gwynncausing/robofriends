@@ -17,7 +17,6 @@ import { saveAs } from "file-saver";
 import { HEADING_LEVELS } from "./constants";
 import { capitalizeFirstLetter } from "@/utils/helpers";
 
-// TODO: transfer more functions here from docxjstest.vue
 //  TODO: blank
 export const createHeading = (content = "", level = 1) => {
   content =
@@ -100,7 +99,7 @@ export const createOrderedList = (content, level = 0) => {
   return list;
 };
 
-// TODO: add implementation
+// TODO: polish
 export const createBulletList = (content, level = 0) => {
   const list = [];
   content?.forEach((value) => {
@@ -131,6 +130,7 @@ export const createBulletList = (content, level = 0) => {
   return list;
 };
 
+//* OK
 export const createTextRun = (item) => {
   const hasBold = hasMark(item, "bold");
   const hasItalic = hasMark(item, "italic");
@@ -144,9 +144,11 @@ export const createTextRun = (item) => {
   });
 };
 
+//* OK
 const hasMark = (item, markType) =>
   item.marks?.some((mark) => mark.type === markType) || false;
 
+//TODO: add string to constants instead
 export const createParagraph = (content, style = "Normal") =>
   new Paragraph({
     children: createParagraphChilren(content),
@@ -163,13 +165,13 @@ const createParagraphChilren = (content) => {
   return textRuns;
 };
 
+//*OK
 export const createSectionProperties = ({
   document,
   type = SectionType.CONTINUOUS,
 }) => {
   const sectionProperties = {
     //* DOCUMENT RULES
-    // ? i think this should not have default values since it is format specific
     page: document?.page,
     column: document?.column,
     type: type,
@@ -177,6 +179,7 @@ export const createSectionProperties = ({
   return sectionProperties;
 };
 
+//*OK
 const createSection = ({ document, children = [] }) => {
   return {
     properties: createSectionProperties({ document }),
@@ -184,6 +187,7 @@ const createSection = ({ document, children = [] }) => {
   };
 };
 
+//TODO: polish
 export const createDocumentProperties = (rules) => {
   const properties = {
     //TODO: should come from content object instead
@@ -202,6 +206,7 @@ export const createDocumentProperties = (rules) => {
   return properties;
 };
 
+//TODO: polish text/heading block related functions
 export const generateDocument = async (rules, content) => {
   const properties = createDocumentProperties(rules);
   const section = createSection({ document: rules.document, children: [] });
