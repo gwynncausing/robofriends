@@ -40,13 +40,13 @@
       </button>
       <button
         :class="{ 'is-active': editor.isActive('subscript') }"
-        @click="editor.chain().focus().toggleSubscript().run()"
+        @click="toggleSubscript()"
       >
         <v-icon> mdi-format-subscript </v-icon>
       </button>
       <button
         :class="{ 'is-active': editor.isActive('superscript') }"
-        @click="editor.chain().focus().toggleSuperscript().run()"
+        @click="toggleSuperscript()"
       >
         <v-icon> mdi-format-superscript </v-icon>
       </button>
@@ -175,6 +175,22 @@ export default {
   },
 
   methods: {
+    toggleSubscript() {
+      this.editor.chain().focus().toggleSubscript().run();
+
+      // console.log(this.editor.isActive("superscript"));
+      if (this.editor.isActive("superscript")) {
+        this.editor.chain().focus().toggleSuperscript().run();
+      }
+    },
+    toggleSuperscript() {
+      this.editor.chain().focus().toggleSuperscript().run();
+      // console.log(this.editor.isActive("subscript"));
+
+      if (this.editor.isActive("subscript")) {
+        this.editor.chain().focus().toggleSubscript().run();
+      }
+    },
     addImage() {
       const fileInput = this.$refs.fileInput;
       fileInput.click();
