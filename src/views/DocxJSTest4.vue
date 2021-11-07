@@ -3,342 +3,73 @@
 </template>
 
 <script>
-// import { AlignmentType, Document, LevelFormat, Paragraph, Packer } from "docx";
-// import { saveAs } from "file-saver";
-
-import sampleV6 from "@/utils/sample-v6.json";
+import { Document, Paragraph, ImageRun, Packer } from "docx";
+//ImageRun, Packer
+import { saveAs } from "file-saver";
 
 export default {
-  mounted() {
-    console.log(sampleV6);
-    this.ordered(sampleV6.content[0]);
-    // const doc = new Document({
-    //   numbering: {
-    //     config: [
-    //       {
-    //         reference: "decimal",
-    //         levels: [
-    //           {
-    //             level: 0,
-    //             format: LevelFormat.DECIMAL,
-    //             text: "%1.",
-    //             alignment: AlignmentType.START,
-    //             style: {
-    //               paragraph: {
-    //                 indent: {
-    //                   left: "1.27cm",
-    //                   hanging: ".45cm",
-    //                 },
-    //               },
-    //             },
-    //           },
-    //           {
-    //             level: 1,
-    //             format: LevelFormat.DECIMAL,
-    //             text: "%2.",
-    //             alignment: AlignmentType.START,
-    //             style: {
-    //               paragraph: {
-    //                 indent: {
-    //                   left: "2.54cm",
-    //                   hanging: ".45cm",
-    //                 },
-    //               },
-    //             },
-    //           },
-    //           {
-    //             level: 2,
-    //             format: LevelFormat.DECIMAL,
-    //             text: "%3.",
-    //             alignment: AlignmentType.START,
-    //             style: {
-    //               paragraph: {
-    //                 indent: {
-    //                   left: "3.81cm",
-    //                   hanging: ".45cm",
-    //                 },
-    //               },
-    //             },
-    //           },
-    //           {
-    //             level: 3,
-    //             format: LevelFormat.DECIMAL,
-    //             text: "%4.",
-    //             alignment: AlignmentType.START,
-    //             style: {
-    //               paragraph: {
-    //                 indent: {
-    //                   left: "5.08cm",
-    //                   hanging: ".45cm",
-    //                 },
-    //               },
-    //             },
-    //           },
-    //           {
-    //             level: 4,
-    //             format: LevelFormat.DECIMAL,
-    //             text: "%5.",
-    //             alignment: AlignmentType.START,
-    //             style: {
-    //               paragraph: {
-    //                 indent: {
-    //                   left: "6.35cm",
-    //                   hanging: ".45cm",
-    //                 },
-    //               },
-    //             },
-    //           },
-    //           {
-    //             level: 5,
-    //             format: LevelFormat.DECIMAL,
-    //             text: "%6.",
-    //             alignment: AlignmentType.START,
-    //             style: {
-    //               paragraph: {
-    //                 indent: {
-    //                   left: "7.62cm",
-    //                   hanging: ".45cm",
-    //                 },
-    //               },
-    //             },
-    //           },
-    //         ],
-    //       },
-    //       {
-    //         reference: "bullet",
-    //         levels: [
-    //           {
-    //             level: 0,
-    //             format: LevelFormat.BULLET,
-    //             text: "\u25CF",
-    //             alignment: AlignmentType.START,
-    //             style: {
-    //               paragraph: {
-    //                 indent: {
-    //                   left: "1.27cm",
-    //                   hanging: ".45cm",
-    //                 },
-    //               },
-    //             },
-    //           },
-    //           {
-    //             level: 1,
-    //             format: LevelFormat.BULLET,
-    //             text: "\u25CF",
-    //             alignment: AlignmentType.START,
-    //             style: {
-    //               paragraph: {
-    //                 indent: {
-    //                   left: "2.54cm",
-    //                   hanging: ".45cm",
-    //                 },
-    //               },
-    //             },
-    //           },
-    //           {
-    //             level: 2,
-    //             format: LevelFormat.BULLET,
-    //             text: "\u25CF",
-    //             alignment: AlignmentType.START,
-    //             style: {
-    //               paragraph: {
-    //                 indent: {
-    //                   left: "3.81cm",
-    //                   hanging: ".45cm",
-    //                 },
-    //               },
-    //             },
-    //           },
-    //           {
-    //             level: 3,
-    //             format: LevelFormat.BULLET,
-    //             text: "\u25CF",
-    //             alignment: AlignmentType.START,
-    //             style: {
-    //               paragraph: {
-    //                 indent: {
-    //                   left: "5.08cm",
-    //                   hanging: ".45cm",
-    //                 },
-    //               },
-    //             },
-    //           },
-    //           {
-    //             level: 4,
-    //             format: LevelFormat.BULLET,
-    //             text: "\u25CF",
-    //             alignment: AlignmentType.START,
-    //             style: {
-    //               paragraph: {
-    //                 indent: {
-    //                   left: "6.35cm",
-    //                   hanging: ".45cm",
-    //                 },
-    //               },
-    //             },
-    //           },
-    //           {
-    //             level: 5,
-    //             format: LevelFormat.BULLET,
-    //             text: "\u25CF",
-    //             alignment: AlignmentType.START,
-    //             style: {
-    //               paragraph: {
-    //                 indent: {
-    //                   left: "7.62cm",
-    //                   hanging: ".45cm",
-    //                 },
-    //               },
-    //             },
-    //           },
-    //         ],
-    //       },
-    //     ],
-    //   },
-    //   sections: [
-    //     {
-    //       children: [
-    //         new Paragraph({
-    //           text: "Hey you",
-    //           numbering: {
-    //             reference: "decimal",
-    //             level: 0,
-    //           },
-    //         }),
-    //         new Paragraph({
-    //           text: "What's up fam",
-    //           numbering: {
-    //             reference: "decimal",
-    //             level: 1,
-    //           },
-    //         }),
-    //         new Paragraph({
-    //           text: "Hello World 2",
-    //           numbering: {
-    //             reference: "decimal",
-    //             level: 1,
-    //           },
-    //         }),
-    //         new Paragraph({
-    //           text: "Yeah boi",
-    //           numbering: {
-    //             reference: "decimal",
-    //             level: 2,
-    //           },
-    //         }),
-    //         new Paragraph({
-    //           text: "Yeah boi 3",
-    //           numbering: {
-    //             reference: "decimal",
-    //             level: 3,
-    //           },
-    //         }),
-    //         new Paragraph({
-    //           text: "Yeah boi 4",
-    //           numbering: {
-    //             reference: "decimal",
-    //             level: 4,
-    //           },
-    //         }),
-    //         new Paragraph({
-    //           text: "Hey you",
-    //           numbering: {
-    //             reference: "bullet",
-    //             level: 0,
-    //           },
-    //         }),
-    //         new Paragraph({
-    //           text: "What's up fam",
-    //           numbering: {
-    //             reference: "bullet",
-    //             level: 1,
-    //           },
-    //         }),
-    //         new Paragraph({
-    //           text: "Hello World 2",
-    //           numbering: {
-    //             reference: "bullet",
-    //             level: 1,
-    //           },
-    //         }),
-    //         new Paragraph({
-    //           text: "Yeah boi",
-    //           numbering: {
-    //             reference: "bullet",
-    //             level: 2,
-    //           },
-    //         }),
-    //         new Paragraph({
-    //           text: "Yeah boi 3",
-    //           numbering: {
-    //             reference: "bullet",
-    //             level: 3,
-    //           },
-    //         }),
-    //         new Paragraph({
-    //           text: "Yeah boi 4",
-    //           numbering: {
-    //             reference: "bullet",
-    //             level: 4,
-    //           },
-    //         }),
-    //       ],
-    //     },
-    //   ],
-    // });
+  /* eslint-disable */
 
-    // Packer.toBlob(doc).then((blob) => {
-    //   saveAs(blob, "test.docx");
-    // });
+  dataI() {
+    return {
+      //
+    };
+  },
+
+  mounted() {
+    this.createDoc();
   },
 
   methods: {
-    ordered(obj) {
-      if (obj.type === "orderedList") console.log("orderedList");
-      else {
-        console.log("error");
-        return;
-      }
-      let level1Index = 1;
-      obj.content.forEach((value) => {
-        console.log(level1Index++);
-        if (value.type === "listItem") {
-          value.content.forEach((content) => {
-            if (content.type === "paragraph") {
-              console.log("waw: ", content.content[0].text);
-            } else if (content.type === "orderedList") {
-              this.ordered(content);
-            } else if (content.type === "bulletList") {
-              this.bullet(content);
-            } else {
-              console.log("content:", content);
-            }
-          });
-        }
+    getImageHeightWidth(src) {
+      return new Promise((resolve, reject) => {
+        let img = new Image();
+        img.onload = () => resolve({ height: img.height, width: img.width });
+        img.onerror = reject;
+        img.src = src;
       });
     },
-    bullet(obj) {
-      if (obj.type === "bulletList") console.log("bulletList");
-      else {
-        console.log("error");
-        return;
-      }
-      let level1Index = 1;
-      obj.content.forEach((value) => {
-        console.log(level1Index++);
-        if (value.type === "listItem") {
-          value.content.forEach((content) => {
-            if (content.type === "paragraph") {
-              console.log("waw: ", content.content[0].text);
-            } else if (content.type === "orderedList") {
-              this.ordered(content);
-            } else if (content.type === "bulletList") {
-              this.bullet(content);
-            } else {
-              console.log("content:", content);
-            }
-          });
-        }
+    async createImageRun(imgUrl, targetWidth = 319.37007874) {
+      let height = 0,
+        width = 0;
+      await this.getImageHeightWidth(imgUrl).then((obj) => {
+        console.log(obj);
+        height = obj.height;
+        width = obj.width;
+      });
+
+      const originalAspectRatio = width / height;
+
+      width = targetWidth;
+      height = width / originalAspectRatio;
+      return new ImageRun({
+        data: await fetch(imgUrl).then((response) => response.blob()),
+        transformation: {
+          width: width,
+          height: height,
+        },
+      });
+    },
+    async createDoc() {
+      const doc = new Document({
+        sections: [
+          {
+            children: [
+              new Paragraph("Hello World"),
+              new Paragraph({
+                children: [
+                  await this.createImageRun(
+                    "https://images.pexels.com/photos/9882510/pexels-photo-9882510.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260"
+                  ),
+                ],
+              }),
+            ],
+          },
+        ],
+      });
+
+      Packer.toBlob(doc).then((blob) => {
+        saveAs(blob, "test.docx");
       });
     },
   },

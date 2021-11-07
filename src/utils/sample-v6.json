@@ -2,15 +2,21 @@
   "id": 123,
   "content": [
     {
-      "type": "orderedList",
-      "attrs": { "start": 1 },
+      "type": "bulletList",
       "content": [
         {
           "type": "listItem",
           "content": [
             {
               "type": "paragraph",
-              "content": [{ "type": "text", "text": "Testing 1" }]
+              "content": [
+                {
+                  "type": "text",
+                  "marks": [{ "type": "bold" }],
+                  "text": "Testing "
+                },
+                { "type": "text", "marks": [{ "type": "italic" }], "text": "1" }
+              ]
             },
             {
               "type": "bulletList",
@@ -20,7 +26,14 @@
                   "content": [
                     {
                       "type": "paragraph",
-                      "content": [{ "type": "text", "text": "Testing 2" }]
+                      "content": [
+                        {
+                          "type": "text",
+                          "marks": [{ "type": "italic" }],
+                          "text": "Testing "
+                        },
+                        { "type": "text", "text": "2" }
+                      ]
                     }
                   ]
                 }
@@ -33,7 +46,14 @@
           "content": [
             {
               "type": "paragraph",
-              "content": [{ "type": "text", "text": "Testing 3" }]
+              "content": [
+                {
+                  "type": "text",
+                  "marks": [{ "type": "underline" }],
+                  "text": "Testing "
+                },
+                { "type": "text", "text": "3" }
+              ]
             },
             {
               "type": "orderedList",
@@ -44,7 +64,18 @@
                   "content": [
                     {
                       "type": "paragraph",
-                      "content": [{ "type": "text", "text": "Testing 4" }]
+                      "content": [
+                        {
+                          "type": "text",
+                          "marks": [
+                            { "type": "bold" },
+                            { "type": "italic" },
+                            { "type": "underline" }
+                          ],
+                          "text": "Testing "
+                        },
+                        { "type": "text", "text": "4" }
+                      ]
                     }
                   ]
                 },
@@ -53,7 +84,18 @@
                   "content": [
                     {
                       "type": "paragraph",
-                      "content": [{ "type": "text", "text": "Testing 5" }]
+                      "content": [
+                        {
+                          "type": "text",
+                          "marks": [
+                            { "type": "bold" },
+                            { "type": "italic" },
+                            { "type": "underline" }
+                          ],
+                          "text": "Testing "
+                        },
+                        { "type": "text", "text": "5" }
+                      ]
                     }
                   ]
                 },
@@ -87,7 +129,7 @@
                                     {
                                       "type": "paragraph",
                                       "content": [
-                                        { "type": "text", "text": "Tesing 7" }
+                                        { "type": "text", "text": "Testing 7" }
                                       ]
                                     }
                                   ]
@@ -109,21 +151,6 @@
           "content": [
             {
               "type": "paragraph",
-              "content": [{ "type": "text", "text": "Testing 8" }]
-            }
-          ]
-        }
-      ]
-    },
-    { "type": "paragraph" },
-    {
-      "type": "bulletList",
-      "content": [
-        {
-          "type": "listItem",
-          "content": [
-            {
-              "type": "paragraph",
               "content": [{ "type": "text", "text": "Testing 10" }]
             }
           ]
@@ -133,7 +160,18 @@
           "content": [
             {
               "type": "paragraph",
-              "content": [{ "type": "text", "text": "Testing 11" }]
+              "content": [
+                {
+                  "type": "text",
+                  "marks": [
+                    { "type": "bold" },
+                    { "type": "italic" },
+                    { "type": "underline" }
+                  ],
+                  "text": "Testing "
+                },
+                { "type": "text", "text": "11" }
+              ]
             },
             {
               "type": "bulletList",
@@ -143,7 +181,14 @@
                   "content": [
                     {
                       "type": "paragraph",
-                      "content": [{ "type": "text", "text": "Testing 12" }]
+                      "content": [
+                        {
+                          "type": "text",
+                          "marks": [{ "type": "italic" }],
+                          "text": "Testing "
+                        },
+                        { "type": "text", "text": "12" }
+                      ]
                     },
                     {
                       "type": "bulletList",
@@ -154,7 +199,12 @@
                             {
                               "type": "paragraph",
                               "content": [
-                                { "type": "text", "text": "Testing 13" }
+                                {
+                                  "type": "text",
+                                  "marks": [{ "type": "bold" }],
+                                  "text": "Testing"
+                                },
+                                { "type": "text", "text": " 13" }
                               ]
                             }
                           ]
@@ -168,7 +218,14 @@
                   "content": [
                     {
                       "type": "paragraph",
-                      "content": [{ "type": "text", "text": "Testing 14" }]
+                      "content": [
+                        {
+                          "type": "text",
+                          "marks": [{ "type": "underline" }],
+                          "text": "Testing"
+                        },
+                        { "type": "text", "text": " 14" }
+                      ]
                     }
                   ]
                 },
@@ -190,22 +247,6 @@
                               "content": [
                                 { "type": "text", "text": "Testing 16" }
                               ]
-                            },
-                            {
-                              "type": "bulletList",
-                              "content": [
-                                {
-                                  "type": "listItem",
-                                  "content": [
-                                    {
-                                      "type": "paragraph",
-                                      "content": [
-                                        { "type": "text", "text": "Testing 17" }
-                                      ]
-                                    }
-                                  ]
-                                }
-                              ]
                             }
                           ]
                         }
@@ -214,15 +255,6 @@
                   ]
                 }
               ]
-            }
-          ]
-        },
-        {
-          "type": "listItem",
-          "content": [
-            {
-              "type": "paragraph",
-              "content": [{ "type": "text", "text": "Testing 19" }]
             }
           ]
         }
