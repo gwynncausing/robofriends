@@ -147,14 +147,24 @@ export const ACM_FORMAT = {
     paragraphs: [
       //* DEFAULT PARAGRAPH - OK
       createParagraphStyle({
-        id: "Normal", //
+        id: "Normal",
         name: "Normal",
         runOptions: {
           font: "Times New Roman",
           size: "9pt",
-          color: "#000000",
         },
         alignment: AlignmentType.JUSTIFIED,
+        spacingOptions: { after: "6pt" },
+      }),
+      createParagraphStyle({
+        id: "Figure",
+        name: "Figure",
+        runOptions: {
+          font: "Times New Roman",
+          size: "9pt",
+          bold: true,
+        },
+        alignment: AlignmentType.CENTER,
         spacingOptions: { after: "6pt" },
       }),
     ],

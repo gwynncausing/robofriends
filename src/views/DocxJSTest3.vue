@@ -27,7 +27,12 @@ export default {
         content: [
           {
             type: "heading",
-            attrs: { level: 1 },
+            attrs: { level: 6 },
+            content: [{ type: "text", text: "TYPESET TEXT" }],
+          },
+          {
+            type: "heading",
+            attrs: { level: 7 },
             content: [{ type: "text", text: "TYPESET TEXT" }],
           },
         ],
