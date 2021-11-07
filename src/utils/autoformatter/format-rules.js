@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Column, PageOrientation, AlignmentType, LevelFormat } from "docx";
 
 //* add more params if necessary
@@ -104,7 +105,7 @@ export const ACM_FORMAT = {
         bold: true,
         allCaps: true,
         alignment: AlignmentType.LEFT,
-        spacingOptions: { before: "6pt" },
+        spacingOptions: { before: "0pt", after: "0pt" },
       }),
       //* HEADING 2
       // TODO: identify default color, currently using "000000" as default
@@ -112,35 +113,35 @@ export const ACM_FORMAT = {
         fontSize: 12,
         bold: true,
         alignment: AlignmentType.LEFT,
-        spacingOptions: { before: "6pt" },
+        spacingOptions: { before: "0pt", after: "0pt" },
       }),
       //* HEADING 3
       heading3: createHeadingStyle({
         fontSize: 11,
         italics: true,
         alignment: AlignmentType.LEFT,
-        spacingOptions: { before: "6pt" },
+        spacingOptions: { before: "0pt", after: "0pt" },
       }),
       //* HEADING 4
       heading4: createHeadingStyle({
         fontSize: 11,
         italics: true,
         alignment: AlignmentType.LEFT,
-        spacingOptions: { before: "6pt" },
+        spacingOptions: { before: "0pt", after: "0pt" },
       }),
       //* HEADING 5
       heading5: createHeadingStyle({
         fontSize: 11,
         italics: true,
         alignment: AlignmentType.LEFT,
-        spacingOptions: { before: "6pt" },
+        spacingOptions: { before: "0pt", after: "0pt" },
       }),
       //* HEADING 6
       heading6: createHeadingStyle({
         fontSize: 11,
         italics: true,
         alignment: AlignmentType.LEFT,
-        spacingOptions: { before: "6pt" },
+        spacingOptions: { before: "0pt", after: "0pt" },
       }),
     },
     paragraphs: [
@@ -154,19 +155,7 @@ export const ACM_FORMAT = {
           color: "#000000",
         },
         alignment: AlignmentType.JUSTIFIED,
-      }),
-      // ! is this for testing only? i think it should be defined in headings
-      createParagraphStyle({
-        id: "Heading2Subsequent", //
-        name: "Heading2Subsequent",
-        runOptions: {
-          size: "12pt",
-          color: "#000000",
-        },
-        alignment: AlignmentType.LEFT,
-        spacingOptions: {
-          before: "6pt",
-        },
+        spacingOptions: { after: "6pt" },
       }),
     ],
     list: {

@@ -15,7 +15,6 @@ import {
 import { saveAs } from "file-saver";
 import { HEADING_LEVELS } from "./constants";
 import { capitalizeFirstLetter } from "@/utils/helpers";
-import { ACM_FORMAT } from "./format-rules";
 
 // TODO: transfer more functions here from docxjstest.vue
 //  TODO: blank
@@ -168,7 +167,7 @@ export const createSectionProperties = (rules) => {
     //* DOCUMENT RULES
     // ? i think this should not have default values since it is format specific
     page: rules.document.page,
-    column: rules.document.page,
+    column: rules.document.column,
   };
   return sectionProperties;
 };
