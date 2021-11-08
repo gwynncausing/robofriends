@@ -1,5 +1,5 @@
 <template>
-  <div class="home">Adviser Dashboardd</div>
+  <div class="home">Adviser Dashboard</div>
 </template>
 
 <script>

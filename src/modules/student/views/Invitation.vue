@@ -158,9 +158,10 @@ export default {
       try {
         await this.onUpdateInvitation(payload);
         await this.setSelectTeam(invitation.team);
-        if (status === TEAM.INVITATION_STATUS.ACCEPTED)
+        if (status === TEAM.INVITATION_STATUS.ACCEPTED) {
           await this.$router.push({ name: "Student Dashboard" });
-        else {
+          await this.$router.go();
+        } else {
           this.isSnackbarShown = true;
           this.teamName = invitation.team.name;
         }
@@ -174,7 +175,8 @@ export default {
         this.error = "";
         const payload = { code: code };
         await this.onJoinCodeTeam(payload);
-        this.$router.push({ name: "Dashboard" });
+        await this.$router.push({ name: "Student Dashboard" });
+        await this.$router.go();
       } catch (error) {
         switch (error?.response?.statusCode) {
           case STATUS_CODES.NOT_FOUND:
