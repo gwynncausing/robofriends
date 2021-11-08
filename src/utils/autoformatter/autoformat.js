@@ -135,12 +135,18 @@ export const createTextRun = (item) => {
   const hasBold = hasMark(item, "bold");
   const hasItalic = hasMark(item, "italic");
   const hasUnderline = hasMark(item, "underline");
+  const hasSubScript = hasMark(item, "subscript");
+  const hasSuperScript = hasMark(item, "superscript");
+  const hasStrike = hasMark(item, "strike");
 
   return new TextRun({
     text: item.text || "",
     bold: hasBold,
     italics: hasItalic,
     underline: hasUnderline,
+    subScript: hasSubScript,
+    superScript: hasSuperScript,
+    strike: hasStrike,
   });
 };
 

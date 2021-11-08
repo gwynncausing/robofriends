@@ -1,0 +1,36 @@
+{
+  "id": 123,
+  "content": [
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "Testing" },
+        {
+          "type": "text",
+          "marks": [{ "type": "superscript" }],
+          "text": "1asd"
+        },
+        { "type": "text", "text": "asd" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "Testing" },
+        { "type": "text", "marks": [{ "type": "subscript" }], "text": "2asd" },
+        { "type": "text", "marks": [{ "type": "superscript" }], "text": "asd" },
+        { "type": "text", "text": "asd" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        { "type": "text", "text": "as" },
+        { "type": "text", "marks": [{ "type": "strike" }], "text": "das" },
+        { "type": "text", "text": "d" }
+      ]
+    }
+  ],
+  "blockType": "text",
+  "users": []
+}

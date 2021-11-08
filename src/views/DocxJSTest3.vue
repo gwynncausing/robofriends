@@ -8,6 +8,7 @@ import sampleV2 from "@/utils/sample-v2.json"; // Heading
 import sampleV3 from "@/utils/sample-v3.json"; // paragraphs
 import sampleV4 from "@/utils/sample-v4.json"; // image
 import sampleV6 from "@/utils/sample-v6.json"; // lists
+import sampleV7 from "@/utils/sample-v7.json"; // lists
 import { ACM_FORMAT } from "@/utils/autoformatter/format-rules";
 
 export default {
@@ -73,6 +74,7 @@ export default {
       sampleV3,
       sampleV4,
       sampleV6,
+      sampleV7,
     ]);
   },
 };
