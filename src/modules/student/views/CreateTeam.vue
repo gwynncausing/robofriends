@@ -5,9 +5,10 @@
         <div class="team-name-wrapper">
           <span class="team-name-label">Team Name</span>
           <TextField
-            v-model="team.teamName"
+            v-model="team.name"
             name="team-name"
             :rules="rules.teamName"
+            placeholder="Group Name"
           />
         </div>
       </div>
@@ -23,7 +24,8 @@
             v-model="team.teacher[index]"
             name="teachers"
             :items="teachersList"
-            :rules="rules.teamName"
+            :rules="rules.email"
+            placeholder="teacher.teacher@email.com"
           />
           <v-btn
             v-if="index !== 0"
@@ -54,7 +56,8 @@
           <TextField
             v-model="team.member[index]"
             name="member"
-            :rules="rules.teamName"
+            :rules="rules.email"
+            placeholder="member.member@email.com"
           />
           <v-btn
             v-if="index !== 0"
@@ -75,7 +78,7 @@
         </Button>
       </div>
 
-      <div
+      <!-- <div
         :class="{ active: addMemberActive || addTeacherActive }"
         class="tree-list"
       >
@@ -111,15 +114,23 @@
         >
           A plant is required
         </span>
-      </div>
+      </div> -->
     </v-form>
 
     <div
       :class="{ active: addMemberActive || addTeacherActive }"
       class="submit-wrapper"
     >
-      <Button class="ml-auto" @click="submit"> Submit</Button>
+      <Button class="ml-auto" :loading="isSubmit" @click="submit"
+        >Submit</Button
+      >
     </div>
+    <ModalCreateYourTeam
+      :user="getUser"
+      :dialog-props="createYourTeamModal"
+      @dialogClose="createYourTeamModal = $event"
+      @dialogCreateYourTeam="createYourTeam"
+    ></ModalCreateYourTeam>
   </div>
 </template>
 
@@ -127,7 +138,12 @@
 import Combobox from "@/components/global/Combobox.vue";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
-// import { mapGetters } from "vuex";
+import ModalCreateYourTeam from "@/components/student/ModalCreateYourTeam.vue";
+
+import { mapActions, mapGetters } from "vuex";
+import { ROOT_GETTERS } from "@/store/types";
+import { STUDENT_ACTIONS, STUDENT_GETTERS } from "../store/types";
+import { MODULES } from "@/utils/constants";
 
 export default {
   name: "CreateTeam",
@@ -135,18 +151,25 @@ export default {
     Combobox,
     TextField,
     Button,
+    ModalCreateYourTeam,
   },
   data() {
     return {
+      createYourTeamModal: false,
+      isSubmit: false,
       rules: {
         teamName: [(v) => !!v || "Team Name is required"],
+        email: [
+          (v) =>
+            v.trim() === "" || /.+@.+\..+/.test(v) || "E-mail must be valid",
+        ],
       },
       addTeacherActive: false,
       addMemberActive: false,
       treeList: [],
       teachersList: ["Juan", "Thoo", "Thri"],
       team: {
-        teamName: "",
+        name: "",
         teacher: [""],
         member: [""],
         tree: "",
@@ -156,28 +179,44 @@ export default {
   },
 
   computed: {
-    // ...mapGetters({
-    //   getUser: "user/getUser",
-    // }),
+    ...mapGetters({
+      getCurrentCreatedTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_CURRENT_CREATED_TEAM}`,
+      getSentMembersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SENT_MEMBERS_INVITATIONS}`,
+      getSentTeachersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SENT_TEACHERS_INVITATIONS}`,
+      getUser: `${ROOT_GETTERS.GET_USER}`,
+    }),
   },
-
-  created() {
-    const images = this.importAllImages(
-      require.context("@/assets/", true, /\.svg$/)
-    );
-    const imagesArray = Object.values(images);
-    imagesArray.forEach((element) => {
-      if (element.includes("tree")) {
-        let newElement = element.replaceAll("/img/", "").split(".");
-        this.treeList.push({
-          src: `${newElement[0]}.${newElement[2]}`,
-          title: newElement[0].split("-")[1],
-        });
-      }
-    });
+  async created() {
+    // const images = this.importAllImages(
+    //   require.context("@/assets/", true, /\.svg$/)
+    // );
+    // const imagesArray = Object.values(images);
+    // imagesArray.forEach((element) => {
+    //   if (element.includes("tree")) {
+    //     let newElement = element.replaceAll("/img/", "").split(".");
+    //     this.treeList.push({
+    //       src: `${newElement[0]}.${newElement[2]}`,
+    //       title: newElement[0].split("-")[1],
+    //     });
+    //   }
+    // });
   },
-
+  mounted() {
+    this.showCreateYourTeamModal();
+  },
   methods: {
+    ...mapActions({
+      onCreateTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.CREATE_TEAM}`,
+      onSendMembersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_MEMBERS_INVITATIONS}`,
+      onSendTeachersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_TEACHERS_INVITATIONS}`,
+      onSelectTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SELECT_TEAM}`,
+    }),
+    showCreateYourTeamModal() {
+      this.createYourTeamModal = true;
+    },
+    createYourTeam() {
+      this.createYourTeamModal = false;
+    },
     removeItem(item = 0, user = []) {
       user.splice(item, 1);
     },
@@ -188,7 +227,6 @@ export default {
       return item.charAt(0).toUpperCase() + item.slice(1);
     },
     addItem(user = [], userActive) {
-      console.log(user, userActive);
       user.push("");
       if (userActive === "addMemberActive") {
         this.addMemberActive = !this.addMemberActive;
@@ -210,10 +248,49 @@ export default {
       }
       this.team.tree = "";
     },
-    submit() {
-      if (!this.team.tree) this.isTreeError = true;
+    cleanEmailsArray(emailsArray) {
+      return emailsArray.filter((email) => email !== "");
+    },
+    async submit() {
+      // if (!this.team.tree) this.isTreeError = true;
       if (this.$refs.form.validate() && !this.isTreeError) {
-        console.log("success", this.team);
+        try {
+          this.isSubmit = true;
+          const cleanedMembersEmail = this.cleanEmailsArray(this.team.member);
+          const cleanedTeachersEmail = this.cleanEmailsArray(this.team.teacher);
+          const createTeamPayload = {
+            name: this.team.name,
+            description: "random",
+          };
+          await this.onCreateTeam(createTeamPayload);
+          if (cleanedMembersEmail.length > 0) {
+            const invitedMembersPayload = {
+              id: this.getCurrentCreatedTeam.id,
+              emails: {
+                invitedEmails: cleanedMembersEmail,
+                baseRole: "member",
+              },
+            };
+            await this.onSendMembersInvitations(invitedMembersPayload);
+          }
+          if (cleanedTeachersEmail.length > 0) {
+            const invitedTeachersPayload = {
+              id: this.getCurrentCreatedTeam.id,
+              emails: {
+                invitedEmails: cleanedTeachersEmail,
+                baseRole: "adviser",
+              },
+            };
+            await this.onSendTeachersInvitations(invitedTeachersPayload);
+          }
+          await this.onSelectTeam({ team: this.getCurrentCreatedTeam });
+          await this.$router.push({ name: "Student Dashboard" });
+          await this.$router.go();
+        } catch (error) {
+          console.log(error);
+        } finally {
+          this.isSubmit = false;
+        }
       }
     },
   },

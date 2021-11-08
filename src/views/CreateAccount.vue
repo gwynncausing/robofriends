@@ -46,6 +46,9 @@
             @keydown.enter="signup()"
           >
           </TextField>
+          <div v-if="error" class="errors">
+            {{ error }}
+          </div>
           <div>
             <ul class="password-rules">
               <li>Must contain the following:</li>
@@ -80,8 +83,11 @@
 <script>
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
+import { capitalizeFirstLetter } from "@/utils/helpers";
 
 import { mapActions } from "vuex";
+import { ROOT_ACTIONS } from "@/store/types";
+import { STATUS_CODES } from "@/utils/constants";
 
 export default {
   name: "Signin",
@@ -92,7 +98,7 @@ export default {
   data: function () {
     return {
       user: {},
-      errors: [],
+      error: "",
       isSubmit: false,
       rules: {
         firstName: [
@@ -166,29 +172,40 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      onSignup: ROOT_ACTIONS.SIGNUP_USER,
+    }),
     toCapitalize(input = "") {
       return input
         .toLowerCase()
         .split(" ")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .map((word) => capitalizeFirstLetter(word))
         .join(" ");
     },
     async signup() {
-      console.log("signup", this.$refs);
-      this.errors = [];
-      this.isSubmit = true;
+      this.error = "";
       if (this.$refs.form.validate()) {
         this.user.firstName = this.toCapitalize(this.user.firstName);
         this.user.lastName = this.toCapitalize(this.user.lastName);
-        this.isSubmit = false;
-      } else {
-        console.log("Validation raised");
-        this.isSubmit = false;
+        this.user.confirmPassword = this.user.password;
+        try {
+          this.isSubmit = true;
+          await this.onSignup(this.user);
+          this.$router.replace({ name: "Onboarding" });
+        } catch (error) {
+          switch (error?.response?.status) {
+            case STATUS_CODES.ERRORS.BAD_REQUEST:
+              this.error = error.response.data.errors[0];
+              break;
+            default:
+              console.log(error);
+              break;
+          }
+        } finally {
+          this.isSubmit = false;
+        }
       }
     },
-    ...mapActions({
-      onRegister: "user/register",
-    }),
   },
 };
 </script>
@@ -214,6 +231,12 @@ export default {
 .grid-item-content {
   grid-column: 1 / 5;
   height: fit-content;
+}
+.errors {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--v-error);
 }
 .password-rules {
   list-style-type: none;

@@ -1,0 +1,102 @@
+<template>
+  <div class="create-new">
+    <div class="editor-heading">
+      <ActiveUsersList :users="activeUsers" />
+      <Button> Submit </Button>
+    </div>
+    <div class="editor-wrapper">
+      <EditorTextWithTitle
+        :editor-data="editor"
+        :user-color="userColor"
+        is-editable
+        @input="getContent($event)"
+        @updateUsers="updateUsers($event)"
+      />
+    </div>
+  </div>
+</template>
+
+<script>
+import Button from "@/components/global/Button.vue";
+import EditorTextWithTitle from "@/components/editor/EditorTextWithTitle";
+import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
+
+export default {
+  name: "CreateNew",
+  components: {
+    Button,
+    EditorTextWithTitle,
+    ActiveUsersList,
+  },
+  props: {
+    proposal: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  data() {
+    return {
+      editor: {
+        id: "create-new",
+        content: ``,
+        users: [],
+      },
+      activeUsers: [],
+    };
+  },
+  computed: {
+    userColor() {
+      return this.getRandomColor();
+    },
+  },
+
+  beforeMount() {
+    console.log(this.proposal.content);
+    this.proposal.content ??= this.editor.content;
+    console.log(this.proposal.content);
+  },
+
+  methods: {
+    getTitle() {
+      console.log(this.editor.content.content[0].content[0].text);
+      // console.log(document.getElementById("research-title").value);
+    },
+    updateUsers(users) {
+      this.activeUsers = users;
+      // console.log(users);
+    },
+    getContent(event) {
+      this.editor.content = event;
+      console.log(event);
+    },
+    getRandomColor() {
+      let letters = "0123456789ABCDEF";
+      let color = "#";
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.create-new {
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 24px;
+  .editor-heading {
+    display: flex;
+    column-gap: 32px;
+    justify-content: flex-end;
+  }
+  .editor-wrapper {
+    width: 100%;
+    border: 1px solid $neutral-400;
+    border-radius: 4px;
+    padding: 0.8rem;
+  }
+}
+</style>

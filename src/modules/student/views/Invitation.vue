@@ -2,21 +2,23 @@
   <div class="invitation">
     <div class="invitation-wrapper">
       <InvitationMessage
-        :invitations="invitations.length"
+        :invitations="pendingInvitationsCount"
         :user-type="userType"
       />
       <InvitationRow
-        v-for="invitation in invitations"
+        v-for="invitation in pendingInvitations"
         :key="invitation.id"
-        :team-name="invitation.teamName"
+        :team-name="invitation.team.name"
         :invitation="invitation"
         @updateInvitation="updateInvitation"
       />
     </div>
     <div class="invitation-create-or-join-team">
+      <div v-if="error" class="errors">
+        {{ error }}
+      </div>
       <p>
         I want to
-        <!-- // TODO:  change to go to create team -->
         <router-link class="primary--text" :to="{ name: 'Create Team' }">
           <strong>create my own team</strong>
         </router-link>
@@ -35,6 +37,7 @@
     </div>
     <JoinTeamModal
       :dialog-props="joinTeamModal"
+      :is-loading="isSubmitTeamCode"
       @dialogClose="joinTeamModal = $event"
       @dialogJoinTeam="joinTeam($event)"
     />
@@ -42,10 +45,13 @@
 </template>
 
 <script>
-// import { mapGetters } from "vuex";
 import InvitationMessage from "@/components/InvitationMessage.vue";
 import InvitationRow from "@/components/InvitationRow.vue";
-import JoinTeamModal from "../components/JoinTeamModal.vue";
+import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
+
+import { mapGetters, mapActions } from "vuex";
+import { STUDENT_ACTIONS, STUDENT_GETTERS } from "../store/types";
+import { MODULES, TEAM, STATUS_CODES } from "@/utils/constants";
 
 export default {
   name: "StudentInvitation",
@@ -56,7 +62,9 @@ export default {
   },
   data: function () {
     return {
+      error: "",
       joinTeamModal: false,
+      isSubmitTeamCode: false,
       userType: "student",
       invitations: [
         {
@@ -71,52 +79,90 @@ export default {
     };
   },
   computed: {
-    // ...mapGetters({
-    //   getUser: "user/getUser",
-    // }),
+    ...mapGetters({
+      getInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_INVITATIONS}`,
+    }),
+    repliedInvitations() {
+      return this.invitations.filter(
+        (invitation) => invitation.status !== TEAM.INVITATION_STATUS.ACCEPTED
+      );
+    },
+    pendingInvitations() {
+      return this.invitations.filter(
+        (invitation) => invitation.status === TEAM.INVITATION_STATUS.PENDING
+      );
+    },
+    pendingInvitationsCount() {
+      return this.pendingInvitations.length;
+    },
   },
   watch: {
-    invitationsFromServer() {
-      this.initialize();
+    getInvitations() {
+      this.setInvitations();
     },
   },
+  async created() {
+    try {
+      await this.fetchInvitations();
+      this.setInvitations();
+    } catch (error) {
+      console.log(error);
+    }
+  },
   methods: {
-    joinTeam(code) {
-      console.log("joinTeam called ", code);
+    ...mapActions({
+      onFetchInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_INVITATIONS}`,
+      onUpdateInvitation: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_INVITATION}`,
+      onJoinCodeTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.JOIN_CODE_TEAM}`,
+      onSelectTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SELECT_TEAM}`,
+    }),
+    fetchInvitations() {
+      return this.onFetchInvitations();
     },
-    initialize() {
-      this.invitations = [];
-      // this.invitationsFromServer.edges.forEach((edge) => {
-      //   this.invitations.push({
-      //     id: edge.node.id,
-      //     projectId: edge.node.project.id,
-      //     teamName: edge.node.project.teamName,
-      //     description: edge.node.project.description,
-      //     status: edge.node.status,
-      //     createdAt: edge.node.createdAt,
-      //   });
-      // });
-      console.log({ invitations: this.invitations });
+    setInvitations() {
+      this.invitations = this.getInvitations;
     },
-    async updateInvitation({ invitationId, isAccepted, projectId }) {
-      console.log(invitationId, isAccepted, projectId);
-      // const input = { invitationId, isAccepted, projectId };
-      // try {
-      //   const result = await this.$apollo.mutate({
-      //     mutation: UPDATE_INVITATION,
-      //     variables: { input },
-      //   });
-      //   const invitation = result.data.updateInvitation.invitation;
-      //   if (invitation.status === "ACCEPTED") this.$router.push("/student");
-      //   else if (invitation.status === "DECLINED") {
-      //     // handle decline
-      //   }
-      // } catch (error) {
-      //   console.log(error);
-      // }
+    async updateInvitation({ invitation, status }) {
+      const payload = {
+        id: invitation.id,
+        invitation: {
+          status: status,
+        },
+      };
+      try {
+        console.log(invitation.team);
+        await this.onUpdateInvitation(payload);
+        await this.setSelectTeam(invitation.team);
+        if (status === TEAM.INVITATION_STATUS.ACCEPTED)
+          await this.$router.push({ name: "Student Dashboard" });
+        await this.$router.go();
+      } catch (error) {
+        console.log(error);
+      }
     },
-    removeInvitationFromList() {
-      // remove invitation from list
+    async joinTeam(code) {
+      try {
+        this.isSubmitTeamCode = true;
+        this.error = "";
+        const payload = { code: code };
+        await this.onJoinCodeTeam(payload);
+        this.$router.push({ name: "Dashboard" });
+      } catch (error) {
+        switch (error?.response?.statusCode) {
+          case STATUS_CODES.NOT_FOUND:
+            this.error = "Team code doesn't exists.";
+            break;
+          default:
+            console.log("Error", error);
+            break;
+        }
+      } finally {
+        this.isSubmitTeamCode = false;
+        this.joinTeamModal = false;
+      }
+    },
+    setSelectTeam(team) {
+      return this.onSelectTeam({ team: team });
     },
   },
 };
@@ -133,9 +179,14 @@ export default {
   .invitation-create-or-join-team {
     text-align: center;
   }
-
   .btn-join-team {
     cursor: pointer;
+  }
+  .errors {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--v-error);
   }
 }
 </style>

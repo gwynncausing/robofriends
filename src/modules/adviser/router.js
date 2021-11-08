@@ -18,14 +18,23 @@ const adviserRoutes = [
     children: [
       {
         path: "",
-        name: "Home",
+        name: "Adviser Dashboard",
         component: () => import("@/modules/adviser/views/Home.vue"),
       },
       {
-        path: "invite",
-        name: "AdviserInvitation",
-        component: () =>
-          import("@/modules/adviser/views/AdviserInvitation.vue"),
+        path: "settings",
+        name: "Adviser Account Settings",
+        component: () => import("@/views/AccountSettings.vue"),
+      },
+      {
+        path: "manage-teams",
+        name: "Manage Teams",
+        component: () => import("@/modules/adviser/views/ManageTeams.vue"),
+      },
+      {
+        path: "invitations",
+        name: "Adviser Invitation",
+        component: () => import("@/modules/adviser/views/Invitation.vue"),
       },
     ],
   },

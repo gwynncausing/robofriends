@@ -1,10 +1,9 @@
-import BlogRepository from "./blog-repository";
-import PostRepository from "./post-Repository";
+import TeamRepository from "./team-repository";
 
 const repositories = {
-  blogs: BlogRepository,
-  posts: PostRepository,
+  team: TeamRepository,
 };
+
 export default {
   get: (name) => repositories[name],
 };

@@ -1,3 +1,3 @@
-export default () => ({
-  // place state here
-});
+import { studentInitialState } from "./types";
+
+export default () => studentInitialState();

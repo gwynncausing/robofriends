@@ -39,7 +39,7 @@
         </div>
 
         <div class="py-6">
-          <Button text block :to="{ name: 'CreateAccount' }">
+          <Button text block :to="{ name: 'Forgot Password' }">
             I cannot access my account
           </Button>
         </div>
@@ -53,10 +53,8 @@ import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import { GETTERS } from "@/store/types/getters";
-import { ACTIONS } from "@/store/types/actions";
-import { USER } from "@/utils/constants/user";
-import { STATUS_CODES } from "@/utils/constants/http-status-codes";
+import { ROOT_GETTERS, ROOT_ACTIONS } from "@/store/types";
+import { USER, STATUS_CODES } from "@/utils/constants";
 
 export default {
   name: "Signin",
@@ -75,11 +73,14 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getUser: GETTERS.GET_USER,
-      getUserType: GETTERS.GET_USER_TYPE,
+      getUser: ROOT_GETTERS.GET_USER,
+      getUserType: ROOT_GETTERS.GET_USER_TYPE,
     }),
   },
   methods: {
+    ...mapActions({
+      onLogin: ROOT_ACTIONS.LOGIN_USER,
+    }),
     verifyEmailPassword() {
       return !/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
         this.user.email
@@ -97,11 +98,10 @@ export default {
         await this.onLogin(this.user);
         switch (this.getUserType) {
           case USER.TYPES.STUDENT:
-            this.$router.replace({ name: "Dashboard" });
+            this.$router.replace({ name: "Student Dashboard" });
             break;
           case USER.TYPES.TEACHER:
-            //TODO: change to teacher dashboard route
-            console.log("Redirect to teacher's dashboard");
+            this.$router.replace({ name: "Adviser Dashboard" });
             break;
           default:
             this.$router.replace({ name: "Onboarding" });
@@ -110,7 +110,10 @@ export default {
       } catch (error) {
         switch (error?.response?.status) {
           case STATUS_CODES.ERRORS.UNAUTHORIZED:
-            this.error = "Incorrect email or password";
+            this.error = "No user found for this email/password";
+            break;
+          case STATUS_CODES.ERRORS.NOT_FOUND:
+            this.error = "No user found for this email/password";
             break;
           default:
             break;
@@ -119,9 +122,6 @@ export default {
         this.isSubmit = false;
       }
     },
-    ...mapActions({
-      onLogin: ACTIONS.LOGIN_USER,
-    }),
   },
 };
 </script>
