@@ -11,7 +11,6 @@
         </header>
         <div id="members" class="mt-md-8 mt-12">
           <div class="d-flex mb-8">
-            <h6>Team Code</h6>
             <v-spacer></v-spacer>
             <span class="neutral-600--text">{{ getSelectedTeam.code }}</span>
           </div>
@@ -23,19 +22,23 @@
             >
           </div>
           <v-row
-            v-for="(member, index) in team.members"
+            v-for="(member, index) in members"
             :key="index"
             class="mt-7 mt-md-3"
           >
             <v-col cols="12" md="8" class="row-details">
               <TextField
-                :label="member.email"
+                :label="member.user.email"
                 placeholder="Member 1"
                 :disabled="true"
               />
             </v-col>
             <v-col cols="7" sm="6" md="4" class="row-details">
-              <Select label="Role" :items="baseRoles" />
+              <Select
+                v-model="member.baseRole"
+                label="Role"
+                :items="baseRoles"
+              />
             </v-col>
           </v-row>
         </div>
@@ -47,10 +50,10 @@
               >Invite Adviser</Button
             >
           </div>
-          <v-row v-for="(adviser, index) in team.advisers" :key="index">
+          <v-row v-for="(adviser, index) in advisers" :key="index">
             <v-col cols="10" md="8" class="row-details">
               <TextField
-                :label="adviser.email"
+                :label="adviser.user.email"
                 placeholder="Member 1"
                 :disabled="true"
               />
@@ -70,6 +73,11 @@
               >
                 <v-icon color="error">mdi-close</v-icon>
               </Button>
+            </v-col>
+          </v-row>
+          <v-row v-if="advisers.length === 0">
+            <v-col class="text-center">
+              Your team doesn't have any adviser yet.
             </v-col>
           </v-row>
         </div>
@@ -125,7 +133,7 @@ import {
   STUDENT_ACTIONS,
   STUDENT_GETTERS,
 } from "@/modules/student/store/types";
-import { MODULES } from "@/utils/constants";
+import { MODULES, TEAM } from "@/utils/constants";
 
 export default {
   name: "TeamSettings",
@@ -149,7 +157,7 @@ export default {
       isInvitingAdviserModal: false,
       inviteMemberModal: false,
       isInvitingMemberModal: false,
-      baseRoles: ["Member", "Leader"],
+      baseRoles: ["member", "leader"],
       team: {
         name: "Cary and Co.",
         members: [
@@ -191,10 +199,30 @@ export default {
   computed: {
     ...mapGetters({
       getSelectedTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM}`,
+      getSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM_DETAILS}`,
     }),
+    members() {
+      return this.team.members.filter(
+        (member) => member.baseRole !== TEAM.ROLES.ADVISER
+      );
+    },
+    advisers() {
+      return this.team.members.filter(
+        (member) => member.baseRole === TEAM.ROLES.ADVISER
+      );
+    },
+  },
+  async created() {
+    try {
+      await this.onSelectedTeamDetails({ id: this.getSelectedTeam.id });
+      this.team = this.getSelectedTeamDetails;
+    } catch (error) {
+      console.log(error);
+    }
   },
   methods: {
     ...mapActions({
+      onSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
       onSendMembersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_MEMBERS_INVITATIONS}`,
       onSendTeachersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_TEACHERS_INVITATIONS}`,
     }),
