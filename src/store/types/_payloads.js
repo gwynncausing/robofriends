@@ -59,6 +59,14 @@ const RESET_PASSWORD = {
   confirmPassword: String,
 };
 
+const VERIFY_ACCOUNT = {
+  token: String,
+};
+
+const RESEND_VERIFICATION_LINK = {
+  token: String,
+};
+
 export const ROOT_PAYLOADS = {
   SIGNUP_USER,
   ONBOARD_USER,
@@ -68,4 +76,6 @@ export const ROOT_PAYLOADS = {
   CHANGE_PASSWORD,
   SEND_PASSWORD_RESET_LINK,
   RESET_PASSWORD,
+  VERIFY_ACCOUNT,
+  RESEND_VERIFICATION_LINK,
 };

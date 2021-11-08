@@ -23,6 +23,12 @@ export default {
   resetPassword(payload) {
     return Client.post(`${resource}/reset-password`, payload);
   },
+  verifyAccount(payload) {
+    return Client.post(`${resource}/verify-account`, payload);
+  },
+  sendVerificationLink(payload) {
+    return Client.post(`${resource}/send-verification-link`, payload);
+  },
   delete(id) {
     return Client.delete(`${resource}/${id}`);
   },
