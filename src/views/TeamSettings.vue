@@ -7,9 +7,14 @@
     >
       <div id="account-settings-wrapper" class="mt-6">
         <header>
-          <h5 class="tertiary--text">{{ team.name }} Settings</h5>
+          <h5 class="tertiary--text">{{ getSelectedTeam.name }} Settings</h5>
         </header>
         <div id="members" class="mt-md-8 mt-12">
+          <div class="d-flex mb-8">
+            <h6>Team Code</h6>
+            <v-spacer></v-spacer>
+            <span class="neutral-600--text">{{ getSelectedTeam.code }}</span>
+          </div>
           <div class="d-flex mb-8">
             <h6>Members</h6>
             <v-spacer></v-spacer>
@@ -115,6 +120,13 @@ import ModalRemoveAdviser from "@/components/ModalRemoveAdviser.vue";
 import ModalInviteAdviser from "@/components/ModalInviteAdviser.vue";
 import ModalInviteMember from "@/components/ModalInviteMember.vue";
 
+import { mapActions, mapGetters } from "vuex";
+import {
+  STUDENT_ACTIONS,
+  STUDENT_GETTERS,
+} from "@/modules/student/store/types";
+import { MODULES } from "@/utils/constants";
+
 export default {
   name: "TeamSettings",
   components: {
@@ -176,8 +188,16 @@ export default {
       },
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters({
+      getSelectedTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM}`,
+    }),
+  },
   methods: {
+    ...mapActions({
+      onSendMembersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_MEMBERS_INVITATIONS}`,
+      onSendTeachersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_TEACHERS_INVITATIONS}`,
+    }),
     showRemoveAdviserModal(adviser) {
       this.removeAdviserModal = true;
       this.selectedAdviser = adviser;
@@ -188,8 +208,23 @@ export default {
     removeAdviser() {
       console.log("Remove Adviser");
     },
-    inviteAdviser() {
+    async inviteAdviser(payload) {
+      const { email } = payload;
       console.log("Invite Adviser");
+      try {
+        const invitedTeachersPayload = {
+          id: this.getCurrentCreatedTeam.id,
+          emails: {
+            invitedEmails: [email],
+            baseRole: "adviser",
+          },
+        };
+        await this.onSendTeachersInvitations(invitedTeachersPayload);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.isSubmit = false;
+      }
     },
     inviteMember() {
       console.log("Invite Member");
