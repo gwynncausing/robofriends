@@ -41,6 +41,30 @@
       @dialogClose="joinTeamModal = $event"
       @dialogJoinTeam="joinTeam($event)"
     />
+    <v-snackbar
+      v-model="isSnackbarShown"
+      :timeout="3000"
+      elevation="24"
+      color="white"
+      class="mb-3"
+      content-class="neutral-800--text"
+    >
+      You have
+      <span class="secondary--text font-weight-bold">declined</span> team
+      <span class="font-weight-bold">{{ teamName }}</span
+      >'s invitation.
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="error"
+          text
+          v-bind="attrs"
+          icon
+          @click="isSnackbarShown = false"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -62,6 +86,8 @@ export default {
   },
   data: function () {
     return {
+      isSnackbarShown: false,
+      teamName: "Hello",
       error: "",
       joinTeamModal: false,
       isSubmitTeamCode: false,
@@ -134,6 +160,10 @@ export default {
         await this.setSelectTeam(invitation.team);
         if (status === TEAM.INVITATION_STATUS.ACCEPTED)
           await this.$router.push({ name: "Student Dashboard" });
+        else {
+          this.isSnackbarShown = true;
+          this.teamName = invitation.team.name;
+        }
       } catch (error) {
         console.log(error);
       }
