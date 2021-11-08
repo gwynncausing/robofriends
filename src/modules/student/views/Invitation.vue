@@ -130,12 +130,10 @@ export default {
         },
       };
       try {
-        console.log(invitation.team);
         await this.onUpdateInvitation(payload);
         await this.setSelectTeam(invitation.team);
         if (status === TEAM.INVITATION_STATUS.ACCEPTED)
           await this.$router.push({ name: "Student Dashboard" });
-        await this.$router.go();
       } catch (error) {
         console.log(error);
       }
