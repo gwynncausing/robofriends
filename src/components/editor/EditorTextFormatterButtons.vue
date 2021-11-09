@@ -65,12 +65,6 @@
       >
         <v-icon>mdi-format-list-numbered</v-icon>
       </button>
-      <button
-        :class="{ 'is-active': editor.isActive('code') }"
-        @click="editor.chain().focus().toggleCode().run()"
-      >
-        <v-icon>mdi-code-tags</v-icon>
-      </button>
 
       <span class="formatter-section-end"></span>
 
@@ -80,9 +74,112 @@
       <button @click="editor.chain().focus().undo().run()">
         <v-icon>mdi-undo</v-icon>
       </button>
-      <button @click="editor.chain().focus().clearNodes().run()">
+      <button
+        @click="
+          {
+            editor.chain().focus().clearNodes().run(),
+              editor.chain().focus().unsetAllMarks().run();
+          }
+        "
+      >
         <v-icon>mdi-cancel</v-icon>
       </button>
+
+      <button
+        @click="
+          editor
+            .chain()
+            .focus()
+            .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+            .run()
+        "
+      >
+        insertTable
+      </button>
+      <button
+        :disabled="!editor.can().addColumnBefore()"
+        @click="editor.chain().focus().addColumnBefore().run()"
+      >
+        addColumnBefore
+      </button>
+      <button
+        :disabled="!editor.can().addColumnAfter()"
+        @click="editor.chain().focus().addColumnAfter().run()"
+      >
+        addColumnAfter
+      </button>
+      <button
+        :disabled="!editor.can().deleteColumn()"
+        @click="editor.chain().focus().deleteColumn().run()"
+      >
+        deleteColumn
+      </button>
+      <button
+        :disabled="!editor.can().addRowBefore()"
+        @click="editor.chain().focus().addRowBefore().run()"
+      >
+        addRowBefore
+      </button>
+      <button
+        :disabled="!editor.can().addRowAfter()"
+        @click="editor.chain().focus().addRowAfter().run()"
+      >
+        addRowAfter
+      </button>
+      <button
+        :disabled="!editor.can().deleteRow()"
+        @click="editor.chain().focus().deleteRow().run()"
+      >
+        deleteRow
+      </button>
+      <button
+        :disabled="!editor.can().deleteTable()"
+        @click="editor.chain().focus().deleteTable().run()"
+      >
+        deleteTable
+      </button>
+      <button
+        :disabled="!editor.can().mergeCells()"
+        @click="editor.chain().focus().mergeCells().run()"
+      >
+        mergeCells
+      </button>
+      <button
+        :disabled="!editor.can().splitCell()"
+        @click="editor.chain().focus().splitCell().run()"
+      >
+        splitCell
+      </button>
+      <button
+        :disabled="!editor.can().toggleHeaderColumn()"
+        @click="editor.chain().focus().toggleHeaderColumn().run()"
+      >
+        toggleHeaderColumn
+      </button>
+      <button
+        :disabled="!editor.can().toggleHeaderRow()"
+        @click="editor.chain().focus().toggleHeaderRow().run()"
+      >
+        toggleHeaderRow
+      </button>
+      <button
+        :disabled="!editor.can().toggleHeaderCell()"
+        @click="editor.chain().focus().toggleHeaderCell().run()"
+      >
+        toggleHeaderCell
+      </button>
+      <!-- <button
+        :disabled="!editor.can().setCellAttribute('backgroundColor', '#FAF594')"
+        @click="
+          editor
+            .chain()
+            .focus()
+            .setCellAttribute('backgroundColor', '#FAF594')
+            .run()
+        "
+      >
+        setCellAttribute
+      </button> -->
     </div>
     <div v-else-if="blockType === 'text-with-title'">
       <button
@@ -135,12 +232,6 @@
         @click="editor.chain().focus().toggleOrderedList().run()"
       >
         <v-icon>mdi-format-list-numbered</v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('code') }"
-        @click="editor.chain().focus().toggleCode().run()"
-      >
-        <v-icon>mdi-code-tags</v-icon>
       </button>
 
       <span class="formatter-section-end"></span>
