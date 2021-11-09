@@ -1,10 +1,9 @@
-/* eslint-disable */
 import {
-  AlignmentType,
-  LevelFormat,
-  Column,
-  PageOrientation,
-  HeadingLevel,
+  // AlignmentType,
+  // LevelFormat,
+  // Column,
+  // PageOrientation,
+  // HeadingLevel,
   Paragraph,
   TextRun,
   Document,
@@ -68,61 +67,28 @@ export const createImage = async (url) => {
   });
 };
 
-// TODO: create 1 list function to merge bullet and ordered list
-export const createOrderedList = (content, level = 0) => {
+export const createList = (parentContent, parentType, level = 0) => {
   const list = [];
-  content?.forEach((value) => {
-    if (value.type === "listItem") {
-      value.content.forEach((content) => {
-        if (content.type === "paragraph") {
+  parentContent?.forEach((childContent) => {
+    if (childContent.type === "listItem") {
+      childContent.content.forEach((grandChild) => {
+        if (grandChild.type === "paragraph") {
           list.push(
             new Paragraph({
-              children: createParagraphChilren(content.content),
+              children: createParagraphChilren(grandChild.content),
               numbering: {
-                reference: "decimal",
+                reference: parentType === "orderedList" ? "decimal" : "bullet",
                 level: level,
               },
             })
           );
-        } else if (content.type === "orderedList") {
-          const results = createOrderedList(content.content, level + 1);
-          results.forEach((result) => list.push(result));
-        } else if (content.type === "bulletList") {
-          const results = createBulletList(content.content, level + 1);
-          results.forEach((result) => list.push(result));
         } else {
-          throw "Content is not list";
-        }
-      });
-    }
-  });
-  return list;
-};
-
-// TODO: polish
-export const createBulletList = (content, level = 0) => {
-  const list = [];
-  content?.forEach((value) => {
-    if (value.type === "listItem") {
-      value.content.forEach((content) => {
-        if (content.type === "paragraph") {
-          list.push(
-            new Paragraph({
-              children: createParagraphChilren(content.content),
-              numbering: {
-                reference: "bullet",
-                level: level,
-              },
-            })
+          const results = createList(
+            grandChild.content,
+            grandChild.type,
+            level + 1
           );
-        } else if (content.type === "orderedList") {
-          const results = createOrderedList(content.content, level + 1);
           results.forEach((result) => list.push(result));
-        } else if (content.type === "bulletList") {
-          const results = createBulletList(content.content, level + 1);
-          results.forEach((result) => list.push(result));
-        } else {
-          throw "Content is not list";
         }
       });
     }
@@ -233,11 +199,11 @@ export const generateDocument = async (rules, content) => {
       for (const innerContent of item.content) {
         if (innerContent.type === "paragraph") {
           section.children.push(createParagraph(innerContent.content));
-        } else if (innerContent.type === "orderedList") {
-          const results = createOrderedList(innerContent.content);
-          results.forEach((result) => section.children.push(result));
-        } else if (innerContent.type === "bulletList") {
-          const results = createBulletList(innerContent.content);
+        } else if (
+          innerContent.type === "orderedList" ||
+          innerContent.type === "bulletList"
+        ) {
+          const results = createList(innerContent.content, innerContent.type);
           results.forEach((result) => section.children.push(result));
         }
       }
