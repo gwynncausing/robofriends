@@ -1,0 +1,147 @@
+{
+  "id": 123,
+  "content": [
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableHeader",
+              "attrs": { "colspan": 1, "rowspan": 1, "colwidth": null },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{ "type": "text", "text": "header 1" }]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "attrs": { "colspan": 1, "rowspan": 1, "colwidth": null },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{ "type": "text", "text": "header 2" }]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "attrs": { "colspan": 1, "rowspan": 1, "colwidth": null },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{ "type": "text", "text": "header 3" }]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "attrs": {
+                "colspan": 1,
+                "rowspan": 1,
+                "colwidth": null,
+                "backgroundColor": null
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{ "type": "text", "text": "text 1" }]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "attrs": {
+                "colspan": 1,
+                "rowspan": 1,
+                "colwidth": null,
+                "backgroundColor": null
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{ "type": "text", "text": "text 2" }]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "attrs": {
+                "colspan": 1,
+                "rowspan": 1,
+                "colwidth": null,
+                "backgroundColor": null
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{ "type": "text", "text": "text 3" }]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "attrs": {
+                "colspan": 1,
+                "rowspan": 1,
+                "colwidth": null,
+                "backgroundColor": null
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{ "type": "text", "text": "text 4" }]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "attrs": {
+                "colspan": 1,
+                "rowspan": 1,
+                "colwidth": null,
+                "backgroundColor": null
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{ "type": "text", "text": "text 5" }]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "attrs": {
+                "colspan": 1,
+                "rowspan": 1,
+                "colwidth": null,
+                "backgroundColor": null
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{ "type": "text", "text": "text 6" }]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "blockType": "text",
+  "users": []
+}

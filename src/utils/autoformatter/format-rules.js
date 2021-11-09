@@ -67,6 +67,10 @@ export const createListLevelOptions = ({
           left: `${baseIndentOptions.left * (level + 1)}cm`,
           hanging: `${baseIndentOptions.hanging}cm`,
         },
+        spacing: {
+          before: "0cm",
+          after: "0cm",
+        },
       },
     },
   };
@@ -160,16 +164,6 @@ export const ACM_FORMAT = {
         alignment: AlignmentType.JUSTIFIED,
         spacingOptions: { after: "6pt" },
       }),
-      // TODO: find out why this does not work
-      // createParagraphStyle({
-      //   id: "NoSpacing",
-      //   name: "NoSpacing",
-      //   runOptions: {
-      //     font: "Times New Roman",
-      //     size: "9pt",
-      //   },
-      //   alignment: AlignmentType.JUSTIFIED,
-      // }),
       createParagraphStyle({
         id: "FigureStyle",
         name: "Figure Style",
