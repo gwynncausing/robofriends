@@ -23,6 +23,10 @@ import Subscript from "@tiptap/extension-subscript";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import ListItem from "@tiptap/extension-list-item";
+import Table from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
+import TableCell from "@tiptap/extension-table-cell";
+import TableHeader from "@tiptap/extension-table-header";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
@@ -38,6 +42,26 @@ import { ROOT_GETTERS } from "@/store/types/getters";
 // const ydoc = new Y.Doc();
 // Registered with a WebRTC provider
 // new WebrtcProvider("bud-test-1", ydoc);
+const CustomTableCell = TableCell.extend({
+  addAttributes() {
+    return {
+      // extend the existing attributes …
+      ...this.parent?.(),
+
+      // and add a new one …
+      backgroundColor: {
+        default: null,
+        parseHTML: (element) => element.getAttribute("data-background-color"),
+        renderHTML: (attributes) => {
+          return {
+            "data-background-color": attributes.backgroundColor,
+            style: `background-color: ${attributes.backgroundColor}`,
+          };
+        },
+      },
+    };
+  },
+});
 
 export default {
   components: {
@@ -96,6 +120,12 @@ export default {
           Superscript,
           Subscript,
           Image,
+          Table.configure({
+            resizable: true,
+          }),
+          TableRow,
+          TableHeader,
+          CustomTableCell,
           Collaboration.configure({
             document: ydoc,
           }),
