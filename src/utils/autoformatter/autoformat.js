@@ -16,6 +16,23 @@ import { saveAs } from "file-saver";
 import { HEADING_LEVELS } from "./constants";
 import { capitalizeFirstLetter } from "@/utils/helpers";
 
+export const getHeadingNumber = (numberList = [], level, isNested = false) => {
+  isNaN(numberList[level - 1])
+    ? (numberList[level - 1] = 1)
+    : numberList[level - 1]++;
+  for (let i = level; i < numberList.length; i++) {
+    numberList[i] = 0;
+  }
+  let number = "";
+  if (isNested) {
+    for (let i = 0; i < level; i++) {
+      number += numberList[i] + ".";
+    }
+  } else number = numberList[level - 1];
+
+  return number;
+};
+
 //  TODO: blank
 export const createHeading = (content = "", level = 1) => {
   content =
@@ -180,6 +197,7 @@ export const createDocumentProperties = (rules) => {
 
 //TODO: polish text/heading block related functions
 export const generateDocument = async (rules, content) => {
+  const numberList = [];
   const properties = createDocumentProperties(rules);
   const section = createSection({ document: rules.document, children: [] });
   // TODO: create a function called createSectionChildren and insert the code block below
@@ -187,12 +205,17 @@ export const generateDocument = async (rules, content) => {
     if (item.blockType === "section" || item.blockType === "heading") {
       for (const innerContent of item.content) {
         if (innerContent.type === "heading") {
-          section.children.push(
-            createHeading(
-              innerContent.content?.[0].text,
-              innerContent.attrs.level
-            )
-          );
+          let headingText = innerContent.content?.[0].text;
+          const level = innerContent.attrs.level;
+          if (rules.headingOptions.isNumbered) {
+            // * add numbers to heading
+            headingText = `${getHeadingNumber(
+              numberList,
+              level,
+              rules.headingOptions.isNestedNumbers
+            )} ${headingText}`;
+          }
+          section.children.push(createHeading(headingText, level));
         }
       }
     } else if (item.blockType === "text") {
@@ -257,63 +280,6 @@ export const generateDocument = async (rules, content) => {
     // }
   }
   properties.sections.push(section);
-
-  //* anadawan
-  // const newSection = {
-  //   properties: createSectionProperties({
-  //     document: {
-  //       page: {
-  //         size: {
-  //           orientation: PageOrientation.PORTRAIT,
-  //           height: "27.94cm",
-  //           width: "21.59cm",
-  //         },
-  //         margin: {
-  //           top: "1.9cm",
-  //           right: "1.9cm",
-  //           bottom: "2.54cm",
-  //           left: "1.9cm",
-  //         },
-  //       },
-  //       column: {
-  //         count: 1,
-  //         space: ".83cm",
-  //         equalWidth: true,
-  //       },
-  //     },
-  //     type: SectionType.CONTINUOUS,
-  //   }),
-  //   children: [...section.children],
-  // };
-
-  // *anada section
-  // properties.sections.push(newSection);
-  // properties.sections.push({
-  //   properties: createSectionProperties({
-  //     document: {
-  //       page: {
-  //         size: {
-  //           orientation: PageOrientation.PORTRAIT,
-  //           height: "27.94cm",
-  //           width: "21.59cm",
-  //         },
-  //         margin: {
-  //           top: "1.9cm",
-  //           right: "1.9cm",
-  //           bottom: "2.54cm",
-  //           left: "1.9cm",
-  //         },
-  //       },
-  //       column: {
-  //         count: 2,
-  //         space: ".83cm",
-  //         equalWidth: true,
-  //       },
-  //     },
-  //     type: SectionType.CONTINUOUS,
-  //   }),
-  //   children: [...section.children],
-  // });
   // TODO: continue here based on pseudo code
 
   // TODO: return a Document object based on above values

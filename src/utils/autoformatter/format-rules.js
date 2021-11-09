@@ -73,6 +73,10 @@ export const createListLevelOptions = ({
 };
 
 export const ACM_FORMAT = {
+  headingOptions: {
+    isNumbered: true,
+    isNestedNumbers: true,
+  },
   document: {
     page: {
       size: {
