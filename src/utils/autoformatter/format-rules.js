@@ -160,6 +160,16 @@ export const ACM_FORMAT = {
         alignment: AlignmentType.JUSTIFIED,
         spacingOptions: { after: "6pt" },
       }),
+      // TODO: find out why this does not work
+      // createParagraphStyle({
+      //   id: "NoSpacing",
+      //   name: "NoSpacing",
+      //   runOptions: {
+      //     font: "Times New Roman",
+      //     size: "9pt",
+      //   },
+      //   alignment: AlignmentType.JUSTIFIED,
+      // }),
       createParagraphStyle({
         id: "FigureStyle",
         name: "Figure Style",

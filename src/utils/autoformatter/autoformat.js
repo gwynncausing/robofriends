@@ -96,6 +96,8 @@ export const createList = (parentContent, parentType, level = 0) => {
               numbering: {
                 reference: parentType === "orderedList" ? "decimal" : "bullet",
                 level: level,
+                // TODO: remove spacing after for list
+                // style: "NoSpacing",
               },
             })
           );
