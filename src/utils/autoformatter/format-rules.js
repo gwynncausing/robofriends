@@ -59,7 +59,7 @@ export const createListLevelOptions = ({
   return {
     level: level,
     format: format,
-    text: LevelFormat.BULLET ? "\u25CF" : `%${level + 1}.`,
+    text: format == LevelFormat.BULLET ? "\u25CF" : `%${level + 1}.`,
     alignment: alignment,
     style: {
       paragraph: {
