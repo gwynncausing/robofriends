@@ -72,14 +72,14 @@
               <Button
                 text
                 class="error--text d-none d-md-flex"
-                @click="removeAdviserModal = true"
+                @click="showRemoveAdviserModal(adviser)"
               >
                 Remove Adviser
               </Button>
               <Button
                 class="btn-remove-item d-md-none"
                 icon
-                @click="removeAdviserModal = true"
+                @click="showRemoveAdviserModal(adviser)"
               >
                 <v-icon color="error">mdi-close</v-icon>
               </Button>
@@ -92,7 +92,11 @@
           </v-row>
         </div>
         <div cols="12" class="d-flex mt-15">
-          <Button text class="error--text" @click="leaveTeamModal = true"
+          <Button
+            v-if="currentUserAsMemberDetails.baseRole !== 'leader'"
+            text
+            class="error--text"
+            @click="leaveTeamModal = true"
             >Leave Team</Button
           >
           <v-spacer></v-spacer>
@@ -110,7 +114,7 @@
       @dialogLeaveTeam="leaveTeam"
     />
     <ModalRemoveAdviser
-      :adviser="selectedAdviser"
+      :adviser="selectedAdviser.user"
       :dialog-props="removeAdviserModal"
       :is-loading="isRemovingAdviserModal"
       @dialogClose="removeAdviserModal = $event"
@@ -131,11 +135,11 @@
     <Snackbar
       content-class="neutral-800--text"
       :timeout="4000"
-      :is-snackbar-shown="isSnackbarInvitationShown"
-      @closeSnackbar="isSnackbarInvitationShown = !isSnackbarInvitationShown"
+      :is-snackbar-shown="isSnackbarShown"
+      @closeSnackbar="isSnackbarShown = false"
     >
       <template v-slot:content>
-        {{ invitationMessage }}
+        {{ snackbarMessage }}
       </template>
     </Snackbar>
   </div>
@@ -151,10 +155,12 @@ import ModalInviteAdviser from "@/components/ModalInviteAdviser.vue";
 import ModalInviteMember from "@/components/ModalInviteMember.vue";
 import Snackbar from "@/components/Snackbar";
 
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import { ROOT_GETTERS } from "@/store/types";
 import {
   STUDENT_ACTIONS,
   STUDENT_GETTERS,
+  STUDENT_MUTATIONS,
 } from "@/modules/student/store/types";
 import { MODULES, TEAM, STATUS_CODES } from "@/utils/constants";
 
@@ -172,8 +178,8 @@ export default {
   },
   data() {
     return {
-      isSnackbarInvitationShown: false,
-      invitationMessage: "",
+      isSnackbarShown: false,
+      snackbarMessage: "",
       leaveTeamModal: false,
       isleavingTeamModal: false,
       selectedAdviser: {},
@@ -226,18 +232,24 @@ export default {
   },
   computed: {
     ...mapGetters({
+      getUser: ROOT_GETTERS.GET_USER,
       getSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM_DETAILS}`,
     }),
+    currentUserAsMemberDetails() {
+      return this.team.members.find(
+        (member) => member.user.id === this.getUser.id
+      );
+    },
     teamNameComputed: {
       get() {
-        return this.getSelectedTeamDetails.name;
+        return this.team.name;
       },
       set(value) {
         this.teamName = value;
       },
     },
     teamCode() {
-      return this.getSelectedTeamDetails.code;
+      return this.team.code;
     },
     members() {
       return this.team.members.filter(
@@ -253,24 +265,69 @@ export default {
     },
   },
   async created() {
-    this.team = this.getSelectedTeamDetails;
+    this.initialize();
   },
   methods: {
     ...mapActions({
+      onFetchSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
       onSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
       onSendMembersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_MEMBERS_INVITATIONS}`,
       onSendTeachersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_TEACHERS_INVITATIONS}`,
       onUpdateSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_SELECTED_TEAM_DETAILS}`,
+      onUpdateMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_MEMBERSHIPS}`,
     }),
+    ...mapMutations({
+      setSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_MUTATIONS.SET_SELECTED_TEAM_DETAILS}`,
+    }),
+    initialize() {
+      this.team = this.getSelectedTeamDetails;
+    },
     showRemoveAdviserModal(adviser) {
       this.removeAdviserModal = true;
       this.selectedAdviser = adviser;
     },
-    leaveTeam() {
-      console.log("Leave Team");
+    async leaveTeam() {
+      try {
+        const payload = {
+          id: this.currentUserAsMemberDetails.id,
+          membership: {
+            status: TEAM.MEMBERSHIP_STATUS.TERMINATED,
+          },
+        };
+        await this.onUpdateMemberships(payload);
+        this.setSelectedTeamDetails({ selectedTeamDetails: {} });
+        await this.$router.push({ name: "Student Dashboard" });
+        await this.$router.go();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.isSnackbarShown = true;
+        this.isRemovingAdviserModal = false;
+        this.removeAdviserModal = false;
+      }
     },
-    removeAdviser() {
-      console.log("Remove Adviser");
+    async removeAdviser() {
+      try {
+        this.isRemovingAdviserModal = true;
+        const payload = {
+          id: this.selectedAdviser.id,
+          membership: {
+            status: TEAM.MEMBERSHIP_STATUS.TERMINATED,
+          },
+        };
+        await this.onUpdateMemberships(payload);
+        await this.onFetchSelectedTeamDetails({
+          id: this.getSelectedTeamDetails.id,
+        });
+        this.initialize();
+        this.snackbarMessage = `Adviser ${this.selectedAdviser.user.email} has been removed from the team.`;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.isSnackbarShown = true;
+        this.isRemovingAdviserModal = false;
+        this.removeAdviserModal = false;
+      }
     },
     async inviteAdviser(payload) {
       const { email } = payload;
@@ -284,18 +341,18 @@ export default {
           },
         };
         await this.onSendTeachersInvitations(invitedTeachersPayload);
-        this.invitationMessage = `Invitation to ${email} has been sent.`;
+        this.snackbarMessage = `Invitation to ${email} has been sent.`;
       } catch (error) {
         switch (error?.response?.status) {
           case STATUS_CODES.ERRORS.BAD_REQUEST:
-            this.invitationMessage = error.response.data.error;
+            this.snackbarMessage = error.response.data.error;
             break;
           default:
             console.log(error);
             break;
         }
       } finally {
-        this.isSnackbarInvitationShown = true;
+        this.isSnackbarShown = true;
         this.isInvitingAdviserModal = false;
         this.inviteAdviserModal = false;
       }
@@ -312,18 +369,18 @@ export default {
           },
         };
         await this.onSendMembersInvitations(invitedMemberPayload);
-        this.invitationMessage = `Invitation to ${email} has been sent.`;
+        this.snackbarMessage = `Invitation to ${email} has been sent.`;
       } catch (error) {
         switch (error?.response?.status) {
           case STATUS_CODES.ERRORS.BAD_REQUEST:
-            this.invitationMessage = error.response.data.error;
+            this.snackbarMessage = error.response.data.error;
             break;
           default:
             console.log(error);
             break;
         }
       } finally {
-        this.isSnackbarInvitationShown = true;
+        this.isSnackbarShown = true;
         this.isInvitingMemberModal = false;
         this.inviteMemberModal = false;
       }

@@ -140,7 +140,7 @@ export default {
       onFetchInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_INVITATIONS}`,
       onUpdateInvitation: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_INVITATION}`,
       onJoinCodeTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.JOIN_CODE_TEAM}`,
-      onSelectTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SELECT_TEAM}`,
+      onSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
     }),
     fetchInvitations() {
       return this.onFetchInvitations();
@@ -192,7 +192,7 @@ export default {
       }
     },
     setSelectTeam(team) {
-      return this.onSelectTeam({ team: team });
+      return this.onSelectedTeamDetails({ id: team.id });
     },
   },
 };

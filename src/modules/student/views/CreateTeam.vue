@@ -209,7 +209,7 @@ export default {
       onCreateTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.CREATE_TEAM}`,
       onSendMembersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_MEMBERS_INVITATIONS}`,
       onSendTeachersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_TEACHERS_INVITATIONS}`,
-      onSelectTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SELECT_TEAM}`,
+      onSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
     }),
     showCreateYourTeamModal() {
       this.createYourTeamModal = true;
@@ -283,7 +283,9 @@ export default {
             };
             await this.onSendTeachersInvitations(invitedTeachersPayload);
           }
-          await this.onSelectTeam({ team: this.getCurrentCreatedTeam });
+          await this.onSelectedTeamDetails({
+            id: this.getCurrentCreatedTeam.id,
+          });
           await this.$router.push({ name: "Student Dashboard" });
           await this.$router.go();
         } catch (error) {

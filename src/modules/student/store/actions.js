@@ -91,4 +91,12 @@ export default {
       selectedTeamDetails: teamDetails,
     });
   },
+
+  async [STUDENT_ACTIONS.UPDATE_MEMBERSHIPS](
+    context,
+    payload = STUDENT_PAYLOADS.UPDATE_MEMBERSHIPS
+  ) {
+    const { membership, id } = payload;
+    await TeamRepository.updateMemberships(membership, id);
+  },
 };
