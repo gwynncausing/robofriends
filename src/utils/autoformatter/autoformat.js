@@ -1,14 +1,5 @@
-/* eslint-disable */
-
 import {
-  // AlignmentType,
-  // LevelFormat,
-  // Column,
-  // PageOrientation,
-  // HeadingLevel,
-  convertInchesToTwip,
   Paragraph,
-  TextRun,
   Document,
   Packer,
   ImageRun,
@@ -22,6 +13,7 @@ import {
 import { saveAs } from "file-saver";
 import { createParagraph, createList } from "./text-block";
 import { createHeading, getHeadingNumber } from "./heading-block";
+import { createACMCopyrightSpace } from "./special-elements";
 
 // TODO: add implementation
 const createTableCellsChildren = (content) => {
@@ -167,6 +159,9 @@ export const generateDocument = async (rules, content) => {
   const numberList = [];
   const properties = createDocumentProperties(rules);
   const section = createSection({ document: rules.document, children: [] });
+  // TODO: add indicator to only add this if the user wants to
+  // TODO: add check for format name e.g. if rules.name === ACM
+  section.children.push(createACMCopyrightSpace());
   // TODO: create a function called createSectionChildren and insert the code block below
   for (const item of content) {
     if (item.blockType === "section" || item.blockType === "heading") {
