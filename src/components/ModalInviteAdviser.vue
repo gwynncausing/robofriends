@@ -80,7 +80,8 @@ export default {
     },
     inviteAdviser() {
       // this.dialog = false;
-      if (this.$refs.form.validate()) this.$emit("dialogInviteAdviser");
+      if (this.$refs.form.validate())
+        this.$emit("dialogInviteAdviser", { email: this.email });
     },
     resetForm() {
       this.$refs.form.reset();

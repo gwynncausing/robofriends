@@ -78,7 +78,7 @@ export default {
     },
     inviteMember() {
       // this.dialog = false;
-      if (this.$refs.form.validate()) this.$emit("dialogInviteMmember");
+      if (this.$refs.form.validate()) this.$emit("dialogInviteMmember", { email: this.email });
     },
     resetForm() {
       this.$refs.form.reset();

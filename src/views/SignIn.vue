@@ -120,7 +120,7 @@ export default {
               this.$router.replace({ name: "Onboarding" });
               break;
           }
-        // TODO: try to suggest to backend that if user is deleted, return an 401 error
+          // TODO: try to suggest to backend that if user is deleted, return an 401 error
         } else this.handleErrors(STATUS_CODES.ERRORS.UNAUTHORIZED);
       } catch (error) {
         this.handleErrors(error?.response?.status);

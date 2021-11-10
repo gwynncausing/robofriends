@@ -116,6 +116,16 @@
       @dialogClose="inviteMemberModal = $event"
       @dialogInviteMmember="inviteMember"
     />
+    <Snackbar
+      content-class="neutral-800--text"
+      :timeout="4000"
+      :is-snackbar-shown="isSnackbarInvitationShown"
+      @closeSnackbar="isSnackbarInvitationShown = !isSnackbarInvitationShown"
+    >
+      <template v-slot:content>
+        {{ invitationMessage }}
+      </template>
+    </Snackbar>
   </div>
 </template>
 
@@ -127,13 +137,14 @@ import ModalLeaveTeam from "@/components/ModalLeaveTeam.vue";
 import ModalRemoveAdviser from "@/components/ModalRemoveAdviser.vue";
 import ModalInviteAdviser from "@/components/ModalInviteAdviser.vue";
 import ModalInviteMember from "@/components/ModalInviteMember.vue";
+import Snackbar from "@/components/Snackbar";
 
 import { mapActions, mapGetters } from "vuex";
 import {
   STUDENT_ACTIONS,
   STUDENT_GETTERS,
 } from "@/modules/student/store/types";
-import { MODULES, TEAM } from "@/utils/constants";
+import { MODULES, TEAM, STATUS_CODES } from "@/utils/constants";
 
 export default {
   name: "TeamSettings",
@@ -145,9 +156,12 @@ export default {
     ModalRemoveAdviser,
     ModalInviteAdviser,
     ModalInviteMember,
+    Snackbar,
   },
   data() {
     return {
+      isSnackbarInvitationShown: false,
+      invitationMessage: "",
       leaveTeamModal: false,
       isleavingTeamModal: false,
       selectedAdviser: {},
@@ -238,24 +252,59 @@ export default {
     },
     async inviteAdviser(payload) {
       const { email } = payload;
-      console.log("Invite Adviser");
       try {
+        this.isInvitingAdviserModal = true;
         const invitedTeachersPayload = {
-          id: this.getCurrentCreatedTeam.id,
+          id: this.getSelectedTeam.id,
           emails: {
             invitedEmails: [email],
             baseRole: "adviser",
           },
         };
         await this.onSendTeachersInvitations(invitedTeachersPayload);
+        this.invitationMessage = `Invitation to ${email} has been sent.`;
       } catch (error) {
-        console.log(error);
+        switch (error?.response?.status) {
+          case STATUS_CODES.ERRORS.BAD_REQUEST:
+            this.invitationMessage = error.response.data.error;
+            break;
+          default:
+            console.log(error);
+            break;
+        }
       } finally {
-        this.isSubmit = false;
+        this.isSnackbarInvitationShown = true;
+        this.isInvitingAdviserModal = false;
+        this.inviteAdviserModal = false;
       }
     },
-    inviteMember() {
-      console.log("Invite Member");
+    async inviteMember(payload) {
+      const { email } = payload;
+      try {
+        this.isInvitingMemberModal = true;
+        const invitedMemberPayload = {
+          id: this.getSelectedTeam.id,
+          emails: {
+            invitedEmails: [email],
+            baseRole: "member",
+          },
+        };
+        await this.onSendMembersInvitations(invitedMemberPayload);
+        this.invitationMessage = `Invitation to ${email} has been sent.`;
+      } catch (error) {
+        switch (error?.response?.status) {
+          case STATUS_CODES.ERRORS.BAD_REQUEST:
+            this.invitationMessage = error.response.data.error;
+            break;
+          default:
+            console.log(error);
+            break;
+        }
+      } finally {
+        this.isSnackbarInvitationShown = true;
+        this.isInvitingMemberModal = false;
+        this.inviteMemberModal = false;
+      }
     },
   },
 };
