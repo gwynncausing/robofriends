@@ -26,10 +26,7 @@
     <div v-else id="verify-email">
       <div v-if="isVerifyingEmail">
         <h5 class="mb-3 neutral-600--text">Verifying Account</h5>
-        <v-progress-circular
-          indeterminate
-          color="primary"
-        ></v-progress-circular>
+        <LoaderCircular />
       </div>
       <div v-else id="account-verified" class="d-block">
         <h5 class="mb-1 neutral-600--text">Account Verified</h5>
@@ -48,6 +45,7 @@
 
 <script>
 import Button from "@/components/global/Button.vue";
+import LoaderCircular from "@/components/LoaderCircular.vue";
 
 import { mapActions, mapGetters } from "vuex";
 import { ROOT_ACTIONS, ROOT_GETTERS } from "@/store/types";
@@ -56,6 +54,7 @@ export default {
   name: "EmailVerification",
   components: {
     Button,
+    LoaderCircular,
   },
   data() {
     return {
