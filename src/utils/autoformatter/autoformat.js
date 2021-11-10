@@ -5,7 +5,6 @@ import {
   // PageOrientation,
   // HeadingLevel,
   Paragraph,
-  TextRun,
   Document,
   Packer,
   ImageRun,
@@ -13,36 +12,8 @@ import {
 } from "docx";
 
 import { saveAs } from "file-saver";
-import { HEADING_LEVELS } from "./constants";
-import { capitalizeFirstLetter } from "@/utils/helpers";
-
-//* OK
-export const getHeadingNumber = (numberList = [], level, isNested = false) => {
-  isNaN(numberList[level - 1])
-    ? (numberList[level - 1] = 1)
-    : numberList[level - 1]++;
-  for (let i = level; i < numberList.length; i++) {
-    numberList[i] = 0;
-  }
-  let number = "";
-  if (isNested) {
-    for (let i = 0; i < level; i++) {
-      number += numberList[i] + ".";
-    }
-  } else number = numberList[level - 1];
-
-  return number;
-};
-
-//* OK
-export const createHeading = (content = "", level = 1) => {
-  content =
-    level === 1 ? content.toUpperCase() : capitalizeFirstLetter(content);
-  return new Paragraph({
-    text: content,
-    heading: HEADING_LEVELS[level],
-  });
-};
+import { createParagraph, createList } from "./text-block";
+import { createHeading, getHeadingNumber } from "./heading-block";
 
 // TODO: add implementation
 export const createTable = () => {};
@@ -85,77 +56,6 @@ export const createImage = async (url) => {
   });
 };
 
-//* OK
-export const createList = (parentContent, parentType, level = 0) => {
-  const list = [];
-  parentContent?.forEach((childContent) => {
-    if (childContent.type === "listItem") {
-      childContent.content.forEach((grandChild) => {
-        if (grandChild.type === "paragraph") {
-          list.push(
-            new Paragraph({
-              children: createParagraphChilren(grandChild.content),
-              numbering: {
-                reference: parentType === "orderedList" ? "decimal" : "bullet",
-                level: level,
-              },
-            })
-          );
-        } else {
-          const results = createList(
-            grandChild.content,
-            grandChild.type,
-            level + 1
-          );
-          results.forEach((result) => list.push(result));
-        }
-      });
-    }
-  });
-  return list;
-};
-
-//* OK
-export const createTextRun = (item) => {
-  const hasBold = hasMark(item, "bold");
-  const hasItalic = hasMark(item, "italic");
-  const hasUnderline = hasMark(item, "underline");
-  const hasSubScript = hasMark(item, "subscript");
-  const hasSuperScript = hasMark(item, "superscript");
-  const hasStrike = hasMark(item, "strike");
-
-  return new TextRun({
-    text: item.text || "",
-    bold: hasBold,
-    italics: hasItalic,
-    underline: hasUnderline,
-    subScript: hasSubScript,
-    superScript: hasSuperScript,
-    strike: hasStrike,
-  });
-};
-
-//* OK
-const hasMark = (item, markType) =>
-  item.marks?.some((mark) => mark.type === markType) || false;
-
-//TODO: add string to constants instead
-export const createParagraph = (content, style = "Normal") =>
-  new Paragraph({
-    children: createParagraphChilren(content),
-    style: style,
-  });
-
-const createParagraphChilren = (content) => {
-  let textRuns = [];
-
-  content?.forEach((child) => {
-    textRuns.push(createTextRun(child));
-  });
-
-  return textRuns;
-};
-
 //*OK
 export const createSectionProperties = ({
   document,
@@ -178,7 +78,6 @@ const createSection = ({ document, children = [] }) => {
   };
 };
 
-//TODO: polish
 export const createDocumentProperties = (
   rules,
   //TODO: add these from generated content in editor
@@ -200,7 +99,6 @@ export const createDocumentProperties = (
   return properties;
 };
 
-//TODO: polish text/heading block related functions
 export const generateDocument = async (rules, content) => {
   const numberList = [];
   const properties = createDocumentProperties(rules, {});
