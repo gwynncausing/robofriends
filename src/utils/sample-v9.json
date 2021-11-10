@@ -1,5 +1,5 @@
 {
-  "id": 123,
+  "id": 124,
   "content": [
     {
       "type": "table",
@@ -52,8 +52,50 @@
               },
               "content": [
                 {
+                  "type": "orderedList",
+                  "attrs": { "start": 1 },
+                  "content": [
+                    {
+                      "type": "listItem",
+                      "content": [
+                        {
+                          "type": "paragraph",
+                          "content": [{ "type": "text", "text": "body" }]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                { "type": "paragraph" },
+                {
                   "type": "paragraph",
-                  "content": [{ "type": "text", "text": "text 1" }]
+                  "content": [
+                    {
+                      "type": "text",
+                      "marks": [{ "type": "bold" }],
+                      "text": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "marks": [{ "type": "italic" }],
+                      "text": "italic"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "marks": [{ "type": "underline" }],
+                      "text": "underlined"
+                    }
+                  ]
                 }
               ]
             },
@@ -68,7 +110,50 @@
               "content": [
                 {
                   "type": "paragraph",
-                  "content": [{ "type": "text", "text": "text 2" }]
+                  "content": [{ "type": "text", "text": "body 2" }]
+                },
+                { "type": "paragraph" },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "marks": [
+                        { "type": "bold" },
+                        { "type": "italic" },
+                        { "type": "underline" }
+                      ],
+                      "text": "bold"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "marks": [
+                        { "type": "bold" },
+                        { "type": "italic" },
+                        { "type": "underline" }
+                      ],
+                      "text": "italic"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "marks": [
+                        { "type": "bold" },
+                        { "type": "italic" },
+                        { "type": "underline" }
+                      ],
+                      "text": "underlined"
+                    }
+                  ]
                 }
               ]
             },
@@ -83,7 +168,7 @@
               "content": [
                 {
                   "type": "paragraph",
-                  "content": [{ "type": "text", "text": "text 3" }]
+                  "content": [{ "type": "text", "text": "body 3" }]
                 }
               ]
             }
@@ -103,7 +188,7 @@
               "content": [
                 {
                   "type": "paragraph",
-                  "content": [{ "type": "text", "text": "text 4" }]
+                  "content": [{ "type": "text", "text": "body 4" }]
                 }
               ]
             },
@@ -118,7 +203,7 @@
               "content": [
                 {
                   "type": "paragraph",
-                  "content": [{ "type": "text", "text": "text 5" }]
+                  "content": [{ "type": "text", "text": "body 5" }]
                 }
               ]
             },
@@ -133,7 +218,7 @@
               "content": [
                 {
                   "type": "paragraph",
-                  "content": [{ "type": "text", "text": "text 6" }]
+                  "content": [{ "type": "text", "text": "body 6" }]
                 }
               ]
             }
@@ -142,6 +227,6 @@
       ]
     }
   ],
-  "blockType": "text",
+  "blockType": "table",
   "users": []
 }
