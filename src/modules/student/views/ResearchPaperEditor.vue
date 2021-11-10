@@ -58,6 +58,18 @@
               @selectBlock="selectBlock($event)"
             />
           </div>
+          <div
+            v-else-if="editor.blockType === 'table'"
+            class="editor-content-table"
+          >
+            <EditorText
+              :editor-data="editor"
+              :user-color="userColor"
+              @input="getContent($event, index)"
+              @updateUsers="updateUsers($event)"
+              @selectBlock="selectBlock($event)"
+            />
+          </div>
         </div>
       </div>
       <EditorToolbar
@@ -141,9 +153,30 @@ export default {
     },
     addEditor({ currentSelectedEditorIndex: index, blockType = "text" }) {
       if (index === -1) return;
+      let content = ``;
+      if (blockType === "table")
+        content = `<table>
+          <tbody>
+            <tr>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>`;
       this.editors.splice(index + 1, 0, {
         id: this.id++,
-        content: ``,
+        content: content,
         blockType,
         users: [],
       });

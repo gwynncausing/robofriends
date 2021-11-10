@@ -13,7 +13,7 @@
       </button>
     </div>
 
-    <div v-else-if="blockType === 'text'">
+    <div v-else-if="blockType === 'text' || blockType === 'table'">
       <button
         :class="{ 'is-active': editor.isActive('bold') }"
         @click="editor.chain().focus().toggleBold().run()"
@@ -84,7 +84,9 @@
       >
         <v-icon>mdi-cancel</v-icon>
       </button>
+    </div>
 
+    <div v-if="blockType === 'table'">
       <button
         @click="
           editor
@@ -168,19 +170,8 @@
       >
         toggleHeaderCell
       </button>
-      <!-- <button
-        :disabled="!editor.can().setCellAttribute('backgroundColor', '#FAF594')"
-        @click="
-          editor
-            .chain()
-            .focus()
-            .setCellAttribute('backgroundColor', '#FAF594')
-            .run()
-        "
-      >
-        setCellAttribute
-      </button> -->
     </div>
+
     <div v-else-if="blockType === 'text-with-title'">
       <button
         :class="{ 'is-active': editor.isActive('bold') }"
