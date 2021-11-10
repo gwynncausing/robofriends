@@ -87,7 +87,7 @@
     </div>
 
     <div v-if="blockType === 'table'">
-      <button
+      <!-- <button
         @click="
           editor
             .chain()
@@ -97,7 +97,7 @@
         "
       >
         insertTable
-      </button>
+      </button> -->
       <button
         :disabled="!editor.can().addColumnBefore()"
         @click="editor.chain().focus().addColumnBefore().run()"
@@ -134,12 +134,12 @@
       >
         deleteRow
       </button>
-      <button
+      <!-- <button
         :disabled="!editor.can().deleteTable()"
         @click="editor.chain().focus().deleteTable().run()"
       >
         deleteTable
-      </button>
+      </button> -->
       <button
         :disabled="!editor.can().mergeCells()"
         @click="editor.chain().focus().mergeCells().run()"
