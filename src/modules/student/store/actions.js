@@ -63,16 +63,6 @@ export default {
     });
   },
 
-  async [STUDENT_ACTIONS.SELECT_TEAM](
-    { commit },
-    payload = STUDENT_PAYLOADS.SELECT_TEAM
-  ) {
-    const { team } = payload;
-    commit(STUDENT_MUTATIONS.SET_SELECTED_TEAM, {
-      selectedTeam: team,
-    });
-  },
-
   async [STUDENT_ACTIONS.JOIN_CODE_TEAM](
     { commit },
     payload = STUDENT_PAYLOADS.JOIN_CODE_TEAM_PAYLOAD
@@ -87,6 +77,18 @@ export default {
     const selectedTeamDetails = response.data;
     commit(STUDENT_MUTATIONS.SET_SELECTED_TEAM_DETAILS, {
       selectedTeamDetails: selectedTeamDetails,
+    });
+  },
+
+  async [STUDENT_ACTIONS.UPDATE_SELECTED_TEAM_DETAILS](
+    { commit },
+    payload = STUDENT_PAYLOADS.UPDATE_SELECTED_TEAM_DETAILS
+  ) {
+    const { id, team } = payload;
+    const response = await TeamRepository.update(team, id);
+    const teamDetails = response.data;
+    commit(STUDENT_MUTATIONS.SET_SELECTED_TEAM_DETAILS, {
+      selectedTeamDetails: teamDetails,
     });
   },
 };

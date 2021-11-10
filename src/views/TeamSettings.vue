@@ -7,13 +7,23 @@
     >
       <div id="account-settings-wrapper" class="mt-6">
         <header>
-          <h5 class="tertiary--text">{{ getSelectedTeam.name }} Settings</h5>
+          <h5 class="tertiary--text">{{ teamNameComputed }} Settings</h5>
         </header>
         <div id="members" class="mt-md-8 mt-12">
           <div class="d-flex mb-8">
             <v-spacer></v-spacer>
-            <span class="neutral-600--text">{{ getSelectedTeam.code }}</span>
+            <span class="neutral-600--text">{{ teamCode }}</span>
           </div>
+          <div class="d-flex mb-8">
+            <h6>Team Name</h6>
+          </div>
+          <v-row class="mt-7 mt-md-3">
+            <v-col class="row-details">
+              <TextField v-model="teamNameComputed" placeholder="Team Name" />
+            </v-col>
+          </v-row>
+        </div>
+        <div id="members" class="mt-md-8 mt-12">
           <div class="d-flex mb-8">
             <h6>Members</h6>
             <v-spacer></v-spacer>
@@ -86,7 +96,9 @@
             >Leave Team</Button
           >
           <v-spacer></v-spacer>
-          <Button>Save Changes</Button>
+          <Button :loading="isSavingChanges" @click="saveChanges"
+            >Save Changes</Button
+          >
         </div>
       </div>
     </v-form>
@@ -171,7 +183,9 @@ export default {
       isInvitingAdviserModal: false,
       inviteMemberModal: false,
       isInvitingMemberModal: false,
+      isSavingChanges: false,
       baseRoles: ["member", "leader"],
+      teamName: "",
       team: {
         name: "Cary and Co.",
         members: [
@@ -212,9 +226,19 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getSelectedTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM}`,
       getSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM_DETAILS}`,
     }),
+    teamNameComputed: {
+      get() {
+        return this.getSelectedTeamDetails.name;
+      },
+      set(value) {
+        this.teamName = value;
+      },
+    },
+    teamCode() {
+      return this.getSelectedTeamDetails.code;
+    },
     members() {
       return this.team.members.filter(
         (member) => member.baseRole !== TEAM.ROLES.ADVISER
@@ -222,23 +246,21 @@ export default {
     },
     advisers() {
       return this.team.members.filter(
-        (member) => member.baseRole === TEAM.ROLES.ADVISER
+        (member) =>
+          member.baseRole === TEAM.ROLES.ADVISER &&
+          member.status !== TEAM.MEMBERSHIP_STATUS.TERMINATED
       );
     },
   },
   async created() {
-    try {
-      await this.onSelectedTeamDetails({ id: this.getSelectedTeam.id });
-      this.team = this.getSelectedTeamDetails;
-    } catch (error) {
-      console.log(error);
-    }
+    this.team = this.getSelectedTeamDetails;
   },
   methods: {
     ...mapActions({
       onSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
       onSendMembersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_MEMBERS_INVITATIONS}`,
       onSendTeachersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_TEACHERS_INVITATIONS}`,
+      onUpdateSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_SELECTED_TEAM_DETAILS}`,
     }),
     showRemoveAdviserModal(adviser) {
       this.removeAdviserModal = true;
@@ -255,7 +277,7 @@ export default {
       try {
         this.isInvitingAdviserModal = true;
         const invitedTeachersPayload = {
-          id: this.getSelectedTeam.id,
+          id: this.getSelectedTeamDetails.id,
           emails: {
             invitedEmails: [email],
             baseRole: "adviser",
@@ -283,7 +305,7 @@ export default {
       try {
         this.isInvitingMemberModal = true;
         const invitedMemberPayload = {
-          id: this.getSelectedTeam.id,
+          id: this.getSelectedTeamDetails.id,
           emails: {
             invitedEmails: [email],
             baseRole: "member",
@@ -304,6 +326,22 @@ export default {
         this.isSnackbarInvitationShown = true;
         this.isInvitingMemberModal = false;
         this.inviteMemberModal = false;
+      }
+    },
+    async saveChanges() {
+      try {
+        this.isSavingChanges = true;
+        const payload = {
+          id: this.getSelectedTeamDetails.id,
+          team: {
+            name: this.teamName,
+          },
+        };
+        await this.onUpdateSelectedTeamDetails(payload);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.isSavingChanges = false;
       }
     },
   },

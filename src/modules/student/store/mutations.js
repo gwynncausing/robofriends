@@ -44,7 +44,10 @@ export default {
     state.selectedTeam = selectedTeam;
   },
 
-  [STUDENT_MUTATIONS.SET_SELECTED_TEAM_DETAILS](state, { selectedTeamDetails }) {
+  [STUDENT_MUTATIONS.SET_SELECTED_TEAM_DETAILS](
+    state,
+    { selectedTeamDetails }
+  ) {
     state.selectedTeamDetails = selectedTeamDetails;
   },
 

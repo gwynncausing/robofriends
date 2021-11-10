@@ -12,7 +12,7 @@ export default {
     return Client.post(`${resource}`, payload);
   },
   update(payload, id) {
-    return Client.put(`${resource}/${id}`, payload);
+    return Client.patch(`${resource}/${id}`, payload);
   },
   invite(payload, id) {
     return Client.post(`${resource}/${id}/invite-many`, payload);
@@ -28,6 +28,9 @@ export default {
   },
   getMemberships() {
     return Client.get(`${resource}/memberships`);
+  },
+  updateMemberships(payload, id) {
+    return Client.patch(`${resource}/memberships/${id}`, payload);
   },
   delete(id) {
     return Client.delete(`${resource}/${id}`);

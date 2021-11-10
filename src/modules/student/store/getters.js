@@ -25,10 +25,6 @@ export default {
     return hasMemberships;
   },
 
-  [STUDENT_GETTERS.GET_SELECTED_TEAM]({ selectedTeam }) {
-    return selectedTeam;
-  },
-
   [STUDENT_GETTERS.GET_SELECTED_TEAM_DETAILS]({ selectedTeamDetails }) {
     return selectedTeamDetails;
   },
