@@ -3,25 +3,22 @@
     v-bind="dragOptions"
     class="item-container"
     :list="list"
-    :value="value"
     :empty-insert-threshhold="500"
     tag="v-expansion-panels"
     :component-data="componentData"
-    @input="emitter"
+    handle=".handle"
   >
-    <v-expansion-panel
-      v-for="el in realValue"
-      :key="el.parent"
-      class="item-group"
-    >
+    <v-expansion-panel v-for="el in list" :key="el.parent" class="item-group">
       <v-expansion-panel-header class="item">
+        <v-icon class="handle">mdi-drag-vertical</v-icon>
+
         <template v-slot:actions>
           <v-icon class="icon">$expand</v-icon>
         </template>
         <span class="header"> {{ el.parent }} </span>
       </v-expansion-panel-header>
       <v-expansion-panel-content>
-        <NestedDraggable :list="el.children" class="item-sub" />
+        <NestedExpandableDraggable :list="el.children" class="item-sub" />
       </v-expansion-panel-content>
     </v-expansion-panel>
   </draggable>
@@ -29,16 +26,11 @@
 <script>
 import draggable from "vuedraggable";
 export default {
-  name: "NestedDraggable",
+  name: "NestedExpandableDraggable",
   components: {
     draggable,
   },
   props: {
-    value: {
-      required: false,
-      type: Array,
-      default: null,
-    },
     list: {
       required: false,
       type: Array,
@@ -65,17 +57,8 @@ export default {
         ghostClass: "ghost",
       };
     },
-    // this.value when input = v-model
-    // this.list  when input != v-model
-    realValue() {
-      return this.value ? this.value : this.list;
-    },
   },
-  methods: {
-    emitter(value) {
-      this.$emit("input", value);
-    },
-  },
+  methods: {},
 };
 </script>
 <style lang="scss" scoped>
@@ -89,7 +72,6 @@ export default {
 }
 .item {
   padding: 1rem;
-  border: solid black 1px;
   .icon {
     order: 0;
   }
@@ -99,13 +81,17 @@ export default {
   }
 }
 .item-sub {
-  margin: 0 0 0 1rem;
+  margin: 0;
 }
+
 .sortable-chosen {
   background-color: $neutral-50;
 }
+.v-expansion-panels {
+  background-color: $neutral-50;
+}
 .ghost {
-  background-color: $neutral-50 !important;
+  background-color: $neutral-50;
   opacity: 0%;
 }
 </style>

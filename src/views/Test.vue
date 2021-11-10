@@ -3,39 +3,37 @@
     <div class="row">
       <div class="col-8">
         <h3>Nested draggable</h3>
-        <NestedDraggable :list="list" />
+        <NestedExpandableDraggable :list="list" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import NestedDraggable from "@/components/NestedDraggable";
+import NestedExpandableDraggable from "@/components/NestedExpandableDraggable";
 export default {
   parent: "Test",
   components: {
-    NestedDraggable,
+    NestedExpandableDraggable,
   },
   data() {
     return {
       list: [
         {
           parent: "task 1",
-          children: [
-            {
-              parent: "task 2",
-              children: [],
-            },
-          ],
+          children: [],
+        },
+        {
+          parent: "task 2",
+          children: [],
         },
         {
           parent: "task 3",
-          children: [
-            {
-              parent: "task 4",
-              children: [],
-            },
-          ],
+          children: [],
+        },
+        {
+          parent: "task 4",
+          children: [],
         },
         {
           parent: "task 5",
