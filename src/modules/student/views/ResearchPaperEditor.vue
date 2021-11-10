@@ -48,10 +48,22 @@
             />
           </div>
           <div
-            v-else-if="editor.blockType === 'section'"
-            class="editor-content-section"
+            v-else-if="editor.blockType === 'heading'"
+            class="editor-content-heading"
           >
-            <EditorSection
+            <EditorHeading
+              :editor-data="editor"
+              :user-color="userColor"
+              @input="getContent($event, index)"
+              @updateUsers="updateUsers($event)"
+              @selectBlock="selectBlock($event)"
+            />
+          </div>
+          <div
+            v-else-if="editor.blockType === 'table'"
+            class="editor-content-table"
+          >
+            <EditorText
               :editor-data="editor"
               :user-color="userColor"
               @input="getContent($event, index)"
@@ -75,7 +87,7 @@
 import Button from "@/components/global/Button.vue";
 import EditorText from "@/components/editor/EditorText.vue";
 import EditorImage from "@/components/editor/EditorImage.vue";
-import EditorSection from "@/components/editor/EditorSection.vue";
+import EditorHeading from "@/components/editor/EditorHeading.vue";
 import EditorToolbar from "@/components/editor/EditorToolbar.vue";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 
@@ -85,7 +97,7 @@ export default {
     Button,
     EditorText,
     EditorImage,
-    EditorSection,
+    EditorHeading,
     EditorToolbar,
     ActiveUsersList,
   },
@@ -142,9 +154,30 @@ export default {
     },
     addEditor({ currentSelectedEditorIndex: index, blockType = "text" }) {
       if (index === -1) return;
+      let content = ``;
+      if (blockType === "table")
+        content = `<table>
+          <tbody>
+            <tr>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>`;
       this.editors.splice(index + 1, 0, {
         id: this.id++,
-        content: ``,
+        content: content,
         blockType,
         users: [],
       });
@@ -198,7 +231,7 @@ export default {
         padding: 0.8rem;
         margin-right: 76px;
       }
-      .editor-content-section {
+      .editor-content-heading {
         height: 42px;
         padding: 4px;
       }

@@ -80,7 +80,7 @@ export default {
         Heading.configure({
           levels: [4],
           HTMLAttributes: {
-            class: "editor-section-block-title",
+            class: "editor-heading-block-title",
           },
         }),
         Placeholder.configure({
