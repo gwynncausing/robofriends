@@ -86,6 +86,18 @@ export default {
         this.user.email
       );
     },
+    handleErrors(status) {
+      switch (status) {
+        case STATUS_CODES.ERRORS.UNAUTHORIZED:
+          this.error = "No user found for this email/password";
+          break;
+        case STATUS_CODES.ERRORS.NOT_FOUND:
+          this.error = "No user found for this email/password";
+          break;
+        default:
+          break;
+      }
+    },
     async signin() {
       let isEmailOk = this.verifyEmailPassword();
       if (isEmailOk || !this.user.password) {
@@ -96,28 +108,22 @@ export default {
       this.isSubmit = true;
       try {
         await this.onLogin(this.user);
-        switch (this.getUserType) {
-          case USER.TYPES.STUDENT:
-            this.$router.replace({ name: "Student Dashboard" });
-            break;
-          case USER.TYPES.TEACHER:
-            this.$router.replace({ name: "Adviser Dashboard" });
-            break;
-          default:
-            this.$router.replace({ name: "Onboarding" });
-            break;
-        }
+        if (this.getUser.deletedAt === null) {
+          switch (this.getUserType) {
+            case USER.TYPES.STUDENT:
+              this.$router.replace({ name: "Student Dashboard" });
+              break;
+            case USER.TYPES.TEACHER:
+              this.$router.replace({ name: "Adviser Dashboard" });
+              break;
+            default:
+              this.$router.replace({ name: "Onboarding" });
+              break;
+          }
+        // TODO: try to suggest to backend that if user is deleted, return an 401 error
+        } else this.handleErrors(STATUS_CODES.ERRORS.UNAUTHORIZED);
       } catch (error) {
-        switch (error?.response?.status) {
-          case STATUS_CODES.ERRORS.UNAUTHORIZED:
-            this.error = "No user found for this email/password";
-            break;
-          case STATUS_CODES.ERRORS.NOT_FOUND:
-            this.error = "No user found for this email/password";
-            break;
-          default:
-            break;
-        }
+        this.handleErrors(error?.response?.status);
       } finally {
         this.isSubmit = false;
       }

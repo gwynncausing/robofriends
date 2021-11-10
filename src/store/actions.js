@@ -115,4 +115,12 @@ export default {
   ) {
     await UserRepository.sendVerificationLink(payload);
   },
+
+  async [ROOT_ACTIONS.DELETE_USER](
+    context,
+    payload = ROOT_PAYLOADS.DELETE_USER
+  ) {
+    const { id } = payload;
+    await UserRepository.delete(id);
+  },
 };

@@ -67,6 +67,10 @@ const RESEND_VERIFICATION_LINK = {
   token: String,
 };
 
+const DELETE_USER = {
+  id: Number,
+};
+
 export const ROOT_PAYLOADS = {
   SIGNUP_USER,
   ONBOARD_USER,
@@ -78,4 +82,5 @@ export const ROOT_PAYLOADS = {
   RESET_PASSWORD,
   VERIFY_ACCOUNT,
   RESEND_VERIFICATION_LINK,
+  DELETE_USER,
 };
