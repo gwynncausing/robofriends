@@ -47,10 +47,10 @@
             />
           </div>
           <div
-            v-else-if="editor.blockType === 'section'"
-            class="editor-content-section"
+            v-else-if="editor.blockType === 'heading'"
+            class="editor-content-heading"
           >
-            <EditorSection
+            <EditorHeading
               :editor-data="editor"
               :user-color="userColor"
               @input="getContent($event, index)"
@@ -74,7 +74,7 @@
 import Button from "@/components/global/Button.vue";
 import EditorText from "@/components/editor/EditorText.vue";
 import EditorImage from "@/components/editor/EditorImage.vue";
-import EditorSection from "@/components/editor/EditorSection.vue";
+import EditorHeading from "@/components/editor/EditorHeading.vue";
 import EditorToolbar from "@/components/editor/EditorToolbar.vue";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 
@@ -84,7 +84,7 @@ export default {
     Button,
     EditorText,
     EditorImage,
-    EditorSection,
+    EditorHeading,
     EditorToolbar,
     ActiveUsersList,
   },
@@ -197,7 +197,7 @@ export default {
         padding: 0.8rem;
         margin-right: 76px;
       }
-      .editor-content-section {
+      .editor-content-heading {
         height: 42px;
         padding: 4px;
       }
