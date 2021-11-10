@@ -16,6 +16,7 @@ import { saveAs } from "file-saver";
 import { HEADING_LEVELS } from "./constants";
 import { capitalizeFirstLetter } from "@/utils/helpers";
 
+//* OK
 export const getHeadingNumber = (numberList = [], level, isNested = false) => {
   isNaN(numberList[level - 1])
     ? (numberList[level - 1] = 1)
@@ -33,7 +34,7 @@ export const getHeadingNumber = (numberList = [], level, isNested = false) => {
   return number;
 };
 
-//  TODO: blank
+//* OK
 export const createHeading = (content = "", level = 1) => {
   content =
     level === 1 ? content.toUpperCase() : capitalizeFirstLetter(content);
@@ -76,7 +77,7 @@ const createImageRun = async (imgUrl, targetWidth = 319.37007874) => {
   });
 };
 
-// TODO: add implementation
+// TODO: handle 1 column images
 export const createImage = async (url) => {
   const imagerun = await createImageRun(url);
   return new Paragraph({
@@ -84,6 +85,7 @@ export const createImage = async (url) => {
   });
 };
 
+//* OK
 export const createList = (parentContent, parentType, level = 0) => {
   const list = [];
   parentContent?.forEach((childContent) => {
@@ -177,12 +179,15 @@ const createSection = ({ document, children = [] }) => {
 };
 
 //TODO: polish
-export const createDocumentProperties = (rules) => {
+export const createDocumentProperties = (
+  rules,
+  //TODO: add these from generated content in editor
+  { authors = "Unknown", title = "Untitled", description = "" }
+) => {
   const properties = {
-    //TODO: should come from content object instead
-    creator: rules.creator,
-    title: rules.title,
-    description: rules.description,
+    creator: authors,
+    title: title,
+    description: description,
     styles: {
       default: { ...rules.styles.headings },
       paragraphStyles: rules.styles.paragraphs,
@@ -198,7 +203,7 @@ export const createDocumentProperties = (rules) => {
 //TODO: polish text/heading block related functions
 export const generateDocument = async (rules, content) => {
   const numberList = [];
-  const properties = createDocumentProperties(rules);
+  const properties = createDocumentProperties(rules, {});
   const section = createSection({ document: rules.document, children: [] });
   // TODO: create a function called createSectionChildren and insert the code block below
   for (const item of content) {
