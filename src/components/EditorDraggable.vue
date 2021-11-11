@@ -7,6 +7,7 @@
     tag="v-expansion-panels"
     :component-data="componentData"
     handle=".handle"
+    @end="onEnd($event)"
   >
     <v-expansion-panel
       v-for="(editor, index) in list"
@@ -25,8 +26,9 @@
           <EditorText
             :editor-data="editor"
             :user-color="userColor"
-            @input="getContent($event, index)"
-            @selectBlock="selectBlock($event)"
+            @input="$emit('getContent', $event, index)"
+            @updateUsers="$emit('updateUsers', $event)"
+            @selectBlock="$emit('selectBlock', $event)"
           />
         </div>
         <div
@@ -36,8 +38,9 @@
           <EditorImage
             :editor-data="editor"
             :user-color="userColor"
-            @input="getContent($event, index)"
-            @selectBlock="selectBlock($event)"
+            @input="$emit('getContent', $event, index)"
+            @updateUsers="$emit('updateUsers', $event)"
+            @selectBlock="$emit('selectBlock', $event)"
           />
         </div>
         <div
@@ -47,8 +50,9 @@
           <EditorSection
             :editor-data="editor"
             :user-color="userColor"
-            @input="getContent($event, index)"
-            @selectBlock="selectBlock($event)"
+            @input="$emit('getContent', $event, index)"
+            @updateUsers="$emit('updateUsers', $event)"
+            @selectBlock="$emit('selectBlock', $event)"
           />
         </div>
       </v-expansion-panel-header>
@@ -111,27 +115,9 @@ export default {
     },
   },
   methods: {
-    selectBlock(object) {
-      const index = this.list.map((editor) => editor.id).indexOf(object.id);
-      this.moveToolbar(object.id, index);
-      this.currentSelectedEditorIndex = index;
-    },
-    moveToolbar(id, index) {
-      const editorID = "editor-" + id;
-      let position = 0;
-
-      for (let i = 0; i < this.list.length; i++) {
-        let editorID = "editor-" + this.list[i].id;
-        position += document.getElementById(editorID).clientHeight;
-        if (i === index) break;
-        position += 24;
-      }
-
-      const blockHeight = document.getElementById(editorID).clientHeight;
-      this.currentToolbarPosition = position - blockHeight;
-    },
-    getContent(event, index) {
-      this.list[index].content = event.content;
+    onEnd(event) {
+      console.log(event.oldIndex);
+      this.$emit("dragElement");
     },
   },
 };

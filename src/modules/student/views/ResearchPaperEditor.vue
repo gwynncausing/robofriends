@@ -92,7 +92,10 @@
           <EditorDraggable
             :list="editors"
             :user-color="userColor"
-            :users="activeUsers"
+            @dragElement="testMethod"
+            @input="getContent($event, index)"
+            @updateUsers="updateUsers($event)"
+            @selectBlock="selectBlock($event)"
           />
         </div>
 
@@ -207,28 +210,28 @@ export default {
     updateUsers(users) {
       this.activeUsers = users;
     },
-    // selectBlock(object) {
-    //   const index = this.editors.map((editor) => editor.id).indexOf(object.id);
-    //   this.moveToolbar(object.id, index);
-    //   this.currentSelectedEditorIndex = index;
-    // },
-    // moveToolbar(id, index) {
-    //   const editorID = "editor-" + id;
-    //   let position = 0;
+    selectBlock(object) {
+      const index = this.editors.map((editor) => editor.id).indexOf(object.id);
+      this.moveToolbar(object.id, index);
+      this.currentSelectedEditorIndex = index;
+    },
+    moveToolbar(id, index) {
+      const editorID = "editor-" + id;
+      let position = 0;
 
-    //   for (let i = 0; i < this.editors.length; i++) {
-    //     let editorID = "editor-" + this.editors[i].id;
-    //     position += document.getElementById(editorID).clientHeight;
-    //     if (i === index) break;
-    //     position += 24;
-    //   }
+      for (let i = 0; i < this.editors.length; i++) {
+        let editorID = "editor-" + this.editors[i].id;
+        position += document.getElementById(editorID).clientHeight;
+        if (i === index) break;
+        position += 24;
+      }
 
-    //   const blockHeight = document.getElementById(editorID).clientHeight;
-    //   this.currentToolbarPosition = position - blockHeight;
-    // },
-    // getContent(event, index) {
-    //   this.editors[index].content = event.content;
-    // },
+      const blockHeight = document.getElementById(editorID).clientHeight;
+      this.currentToolbarPosition = position - blockHeight;
+    },
+    getContent(event, index) {
+      this.editors[index].content = event.content;
+    },
     addEditor({ currentSelectedEditorIndex: index, blockType = "section" }) {
       if (index === -1) return;
       this.editors.splice(index + 1, 0, {
