@@ -5,19 +5,10 @@ import VueRouter from "vue-router";
 Vue.use(VueRouter);
 
 const routes = [
-  // {
-  //   path: "/",
-  //   name: "Home",
-  //   component: Home,
-  // },
   {
     path: "/about",
     name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    component: () => import("../views/About.vue"),
   },
   {
     path: "/",
@@ -30,6 +21,27 @@ const routes = [
     component: () => import("@/views/CreateAccount.vue"),
   },
   {
+    path: "/verify",
+    name: "Email Verification",
+    component: () => import("@/views/security/EmailVerification.vue"),
+  },
+  {
+    path: "/forgot-password",
+    name: "Forgot Password",
+    component: () => import("@/views/security/ForgotPassword.vue"),
+  },
+  {
+    path: "/reset-password",
+    name: "Reset Password",
+    component: () => import("@/views/security/ForgotPasswordResetPassword.vue"),
+  },
+  {
+    path: "/reset-password-success",
+    name: "Reset Password Success",
+    component: () =>
+      import("@/views/security/ForgotPasswordResetPasswordSuccess.vue"),
+  },
+  {
     path: "/test",
     name: "Test",
     component: () => import("@/views/Test.vue"),
@@ -38,6 +50,11 @@ const routes = [
     path: "/onboarding",
     name: "Onboarding",
     component: () => import("@/views/Onboarding.vue"),
+  },
+  {
+    path: "/archive",
+    name: "Archive",
+    component: () => import("@/views/Archive.vue"),
   },
   {
     path: "*",

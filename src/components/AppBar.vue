@@ -31,26 +31,13 @@
         </v-list-item>
       </v-list-item-group>
       <v-spacer></v-spacer>
-      <v-menu offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn color="primary" icon v-bind="attrs" v-on="on">
-            <v-icon color="neutral-600">mdi-bell</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item-title
-            v-for="(notification, id) in notifications"
-            :key="id"
-          >
-            <Button text block>
-              <span class="neutral-600--text button-font">{{
-                notification.name
-              }}</span>
-            </Button>
-          </v-list-item-title>
-        </v-list>
-      </v-menu>
-      <v-menu offset-y>
+      <v-btn color="primary" icon :to="notification.path" exact-path>
+        <v-icon color="neutral-600">mdi-bell</v-icon>
+      </v-btn>
+      <v-menu
+        offset-y
+        :close-on-content-click="isAccountMenuDropdownCloseOnClick"
+      >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             v-bind="attrs"
@@ -76,31 +63,7 @@
             </div>
           </v-btn>
         </template>
-        <v-list>
-          <v-list-item-title class="d-flex justify-center">
-            <Button
-              :class="[isBreakpointMdAndUp ? '' : 'd-none']"
-              text
-              block
-              :to="user.profile"
-              disabled
-            >
-              <span class="neutral-600--text button-font">{{
-                user.name
-              }}</span></Button
-            >
-          </v-list-item-title>
-          <v-list-item-title>
-            <Button text block :to="user.profile">
-              <span class="neutral-600--text button-font">Profile</span></Button
-            >
-          </v-list-item-title>
-          <v-list-item-title>
-            <Button text block @click="logout"
-              ><span class="neutral-600--text button-font">Logout</span></Button
-            >
-          </v-list-item-title>
-        </v-list>
+        <slot name="account-menu-dropdown" />
       </v-menu>
     </v-app-bar>
     <v-navigation-drawer
@@ -139,13 +102,17 @@ export default {
       type: Array,
       default: () => [],
     },
-    notifications: {
-      type: Array,
-      default: () => [],
+    notification: {
+      type: Object,
+      default: () => {},
     },
     user: {
       type: Object,
       default: () => {},
+    },
+    isAccountMenuDropdownCloseOnClick: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -158,11 +125,7 @@ export default {
       return this.$vuetify.breakpoint.mdAndUp ? false : true;
     },
   },
-  methods: {
-    logout() {
-      this.$emit("logout");
-    },
-  },
+  methods: {},
 };
 </script>
 

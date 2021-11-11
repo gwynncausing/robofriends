@@ -2,7 +2,10 @@
   <div class="approved-research">
     <div class="editor-wrapper">
       <EditorTextWithTitleReadonly
-        :editor-data="{ id: 123, content: research.content }"
+        :editor-data="{
+          id: 'approved-research',
+          content: approvedResearch.content,
+        }"
         @input="getContent($event)"
       />
     </div>
@@ -16,6 +19,12 @@ export default {
   name: "ApprovedResearch",
   components: {
     EditorTextWithTitleReadonly,
+  },
+  props: {
+    approvedResearch: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   data() {
     return {

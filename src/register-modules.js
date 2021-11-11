@@ -1,10 +1,10 @@
 import router from "./router";
-import store from "./store";
+// import store from "./store";
 
 const registerModule = (name, module) => {
-  if (module.store) {
-    store.registerModule(name, module.store);
-  }
+  // if (module.store) {
+  //   store.registerModule(name, module.store, { preserveState: true });
+  // }
 
   if (module.router) {
     router.addRoute(module.router[0]);

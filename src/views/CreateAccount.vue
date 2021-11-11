@@ -83,11 +83,11 @@
 <script>
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
-import HelperFunctions from "@/utils/helper-functions.js";
+import { capitalizeFirstLetter } from "@/utils/helpers";
 
 import { mapActions } from "vuex";
-import { ROOT_ACTIONS } from "@/store/types/actions";
-import { STATUS_CODES } from "@/utils/constants/http-status-codes";
+import { ROOT_ACTIONS } from "@/store/types";
+import { STATUS_CODES } from "@/utils/constants";
 
 export default {
   name: "Signin",
@@ -179,7 +179,7 @@ export default {
       return input
         .toLowerCase()
         .split(" ")
-        .map((word) => HelperFunctions.capitalizeFirstLetter(word))
+        .map((word) => capitalizeFirstLetter(word))
         .join(" ");
     },
     async signup() {
@@ -187,16 +187,18 @@ export default {
       if (this.$refs.form.validate()) {
         this.user.firstName = this.toCapitalize(this.user.firstName);
         this.user.lastName = this.toCapitalize(this.user.lastName);
+        this.user.confirmPassword = this.user.password;
         try {
           this.isSubmit = true;
           await this.onSignup(this.user);
-          this.$router.replace({ name: "Onboarding" });
+          this.$router.replace({ name: "Email Verification" });
         } catch (error) {
           switch (error?.response?.status) {
             case STATUS_CODES.ERRORS.BAD_REQUEST:
-              this.error = error.response.data.error[0];
+              this.error = error.response.data.errors[0];
               break;
             default:
+              console.log(error);
               break;
           }
         } finally {

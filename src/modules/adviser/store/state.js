@@ -1,3 +1,3 @@
-export default () => ({
-  // place state here
-});
+import { adviserInitialState } from "./types";
+
+export default () => adviserInitialState();

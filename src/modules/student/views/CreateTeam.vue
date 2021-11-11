@@ -78,7 +78,7 @@
         </Button>
       </div>
 
-      <div
+      <!-- <div
         :class="{ active: addMemberActive || addTeacherActive }"
         class="tree-list"
       >
@@ -114,7 +114,7 @@
         >
           A plant is required
         </span>
-      </div>
+      </div> -->
     </v-form>
 
     <div
@@ -125,6 +125,12 @@
         >Submit</Button
       >
     </div>
+    <ModalCreateYourTeam
+      :user="getUser"
+      :dialog-props="createYourTeamModal"
+      @dialogClose="createYourTeamModal = $event"
+      @dialogCreateYourTeam="createYourTeam"
+    ></ModalCreateYourTeam>
   </div>
 </template>
 
@@ -132,13 +138,12 @@
 import Combobox from "@/components/global/Combobox.vue";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
+import ModalCreateYourTeam from "@/components/student/ModalCreateYourTeam.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import { STUDENT_ACTIONS } from "../store/types/actions";
-import { STUDENT_GETTERS } from "../store/types/getters";
-import { UTILS } from "../constants/utils";
-// import { USER } from "@/utils/constants/user";
-// import { STATUS_CODES } from "@/utils/constants/http-status-codes";
+import { ROOT_GETTERS } from "@/store/types";
+import { STUDENT_ACTIONS, STUDENT_GETTERS } from "../store/types";
+import { MODULES } from "@/utils/constants";
 
 export default {
   name: "CreateTeam",
@@ -146,9 +151,11 @@ export default {
     Combobox,
     TextField,
     Button,
+    ModalCreateYourTeam,
   },
   data() {
     return {
+      createYourTeamModal: false,
       isSubmit: false,
       rules: {
         teamName: [(v) => !!v || "Team Name is required"],
@@ -173,34 +180,43 @@ export default {
 
   computed: {
     ...mapGetters({
-      getCurrentCreatedTeam: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_CURRENT_CREATED_TEAM}`,
-      getSentMembersInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_SENT_MEMBERS_INVITATIONS}`,
-      getSentTeachersInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_GETTERS.GET_SENT_TEACHERS_INVITATIONS}`,
+      getCurrentCreatedTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_CURRENT_CREATED_TEAM}`,
+      getSentMembersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SENT_MEMBERS_INVITATIONS}`,
+      getSentTeachersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SENT_TEACHERS_INVITATIONS}`,
+      getUser: `${ROOT_GETTERS.GET_USER}`,
     }),
   },
-
-  created() {
-    const images = this.importAllImages(
-      require.context("@/assets/", true, /\.svg$/)
-    );
-    const imagesArray = Object.values(images);
-    imagesArray.forEach((element) => {
-      if (element.includes("tree")) {
-        let newElement = element.replaceAll("/img/", "").split(".");
-        this.treeList.push({
-          src: `${newElement[0]}.${newElement[2]}`,
-          title: newElement[0].split("-")[1],
-        });
-      }
-    });
+  async created() {
+    // const images = this.importAllImages(
+    //   require.context("@/assets/", true, /\.svg$/)
+    // );
+    // const imagesArray = Object.values(images);
+    // imagesArray.forEach((element) => {
+    //   if (element.includes("tree")) {
+    //     let newElement = element.replaceAll("/img/", "").split(".");
+    //     this.treeList.push({
+    //       src: `${newElement[0]}.${newElement[2]}`,
+    //       title: newElement[0].split("-")[1],
+    //     });
+    //   }
+    // });
   },
-
+  mounted() {
+    this.showCreateYourTeamModal();
+  },
   methods: {
     ...mapActions({
-      onCreateTeam: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.CREATE_TEAM}`,
-      onSendMembersInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.SEND_MEMBERS_INVITATIONS}`,
-      onSendTeachersInvitations: `${UTILS.STORE_MODULE_PATH}${STUDENT_ACTIONS.SEND_TEACHERS_INVITATIONS}`,
+      onCreateTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.CREATE_TEAM}`,
+      onSendMembersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_MEMBERS_INVITATIONS}`,
+      onSendTeachersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_TEACHERS_INVITATIONS}`,
+      onSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
     }),
+    showCreateYourTeamModal() {
+      this.createYourTeamModal = true;
+    },
+    createYourTeam() {
+      this.createYourTeamModal = false;
+    },
     removeItem(item = 0, user = []) {
       user.splice(item, 1);
     },
@@ -211,7 +227,6 @@ export default {
       return item.charAt(0).toUpperCase() + item.slice(1);
     },
     addItem(user = [], userActive) {
-      console.log(user, userActive);
       user.push("");
       if (userActive === "addMemberActive") {
         this.addMemberActive = !this.addMemberActive;
@@ -237,7 +252,7 @@ export default {
       return emailsArray.filter((email) => email !== "");
     },
     async submit() {
-      if (!this.team.tree) this.isTreeError = true;
+      // if (!this.team.tree) this.isTreeError = true;
       if (this.$refs.form.validate() && !this.isTreeError) {
         try {
           this.isSubmit = true;
@@ -268,7 +283,11 @@ export default {
             };
             await this.onSendTeachersInvitations(invitedTeachersPayload);
           }
-          this.$router.push({ name: "Dashboard" });
+          await this.onSelectedTeamDetails({
+            id: this.getCurrentCreatedTeam.id,
+          });
+          await this.$router.push({ name: "Student Dashboard" });
+          await this.$router.go();
         } catch (error) {
           console.log(error);
         } finally {

@@ -30,7 +30,7 @@
 
 <script>
 import Button from "@/components/global/Button.vue";
-import { TEAM } from "@/utils/constants/team";
+import { TEAM } from "@/utils/constants";
 
 export default {
   name: "InvitationMessage",
@@ -53,14 +53,14 @@ export default {
     },
     deny() {
       const params = {
-        invitationId: this.invitation.id,
+        invitation: this.invitation,
         status: TEAM.INVITATION_STATUS.DECLINED,
       };
       this.$emit("updateInvitation", params);
     },
     join() {
       const params = {
-        invitationId: this.invitation.id,
+        invitation: this.invitation,
         status: TEAM.INVITATION_STATUS.ACCEPTED,
       };
       this.$emit("updateInvitation", params);

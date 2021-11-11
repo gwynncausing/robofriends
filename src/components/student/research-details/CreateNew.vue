@@ -2,6 +2,7 @@
   <div class="create-new">
     <div class="editor-heading">
       <ActiveUsersList :users="activeUsers" />
+      <Button> Submit </Button>
     </div>
     <div class="editor-wrapper">
       <EditorTextWithTitle
@@ -11,9 +12,6 @@
         @input="getContent($event)"
         @updateUsers="updateUsers($event)"
       />
-    </div>
-    <div class="button-wrapper">
-      <Button> Submit </Button>
     </div>
   </div>
 </template>
@@ -30,6 +28,12 @@ export default {
     EditorTextWithTitle,
     ActiveUsersList,
   },
+  props: {
+    proposal: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
   data() {
     return {
       editor: {
@@ -44,6 +48,12 @@ export default {
     userColor() {
       return this.getRandomColor();
     },
+  },
+
+  beforeMount() {
+    console.log(this.proposal.content);
+    this.proposal.content ??= this.editor.content;
+    console.log(this.proposal.content);
   },
 
   methods: {
@@ -79,6 +89,7 @@ export default {
   row-gap: 24px;
   .editor-heading {
     display: flex;
+    column-gap: 32px;
     justify-content: flex-end;
   }
   .editor-wrapper {
@@ -86,10 +97,6 @@ export default {
     border: 1px solid $neutral-400;
     border-radius: 4px;
     padding: 0.8rem;
-  }
-  .button-wrapper {
-    display: flex;
-    justify-content: flex-end;
   }
 }
 </style>

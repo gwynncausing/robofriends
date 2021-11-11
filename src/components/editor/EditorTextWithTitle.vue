@@ -34,7 +34,7 @@ import { WebrtcProvider } from "y-webrtc";
 import EditorTextFormatterButtons from "@/components/editor/EditorTextFormatterButtons";
 
 import { mapGetters } from "vuex";
-import { ROOT_GETTERS } from "@/store/types/getters";
+import { ROOT_GETTERS } from "@/store/types";
 
 const CustomDocument = Document.extend({
   content: "heading block*",
@@ -71,6 +71,13 @@ export default {
       getUser: `${ROOT_GETTERS.GET_USER}`,
     }),
   },
+  watch: {
+    isEditable: {
+      handler(value) {
+        this.editor.setOptions({ editable: value });
+      },
+    },
+  },
 
   watch: {
     "editor.storage.collaborationCursor.users": function (newValue) {
@@ -93,7 +100,11 @@ export default {
         extensions: [
           CustomDocument,
           // Document,
-          Paragraph,
+          Paragraph.configure({
+            HTMLAttributes: {
+              class: "text-justify",
+            },
+          }),
           Text,
           Bold,
           Italic,
@@ -117,6 +128,7 @@ export default {
             levels: [2],
             HTMLAttributes: {
               id: "research-title",
+              class: "pb-4 ",
             },
           }),
           Collaboration.configure({

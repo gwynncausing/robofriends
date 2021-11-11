@@ -17,13 +17,18 @@ const studentRoutes = [
     children: [
       {
         path: "",
-        name: "Dashboard",
+        name: "Student Dashboard",
         component: () => import("@/modules/student/views/Dashboard.vue"),
       },
       {
-        path: "teamlist",
-        name: "TeamList",
-        component: () => import("@/modules/student/views/TeamList.vue"),
+        path: "settings",
+        name: "Student Account Settings",
+        component: () => import("@/views/AccountSettings.vue"),
+      },
+      {
+        path: "team-settings",
+        name: "Team Settings",
+        component: () => import("@/views/TeamSettings.vue"),
       },
       {
         path: "create-team",
@@ -32,7 +37,7 @@ const studentRoutes = [
       },
       {
         path: "invitations",
-        name: "StudentInvitation",
+        name: "Student Invitation",
         component: () => import("@/modules/student/views/Invitation.vue"),
       },
       {
@@ -47,9 +52,10 @@ const studentRoutes = [
           import("@/modules/student/views/ResearchPaperEditor.vue"),
       },
       {
-        path: "archive",
-        name: "Archive",
-        component: () => import("@/modules/student/views/Archive.vue"),
+        path: "approved-research-version-history",
+        name: "Approved Research Version History",
+        component: () =>
+          import("@/modules/student/views/ApprovedResearchVersionHistory.vue"),
       },
     ],
   },

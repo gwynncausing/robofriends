@@ -36,7 +36,7 @@ import { WebrtcProvider } from "y-webrtc";
 import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
 
 import { mapGetters } from "vuex";
-import { ROOT_GETTERS } from "@/store/types/getters";
+import { ROOT_GETTERS } from "@/store/types";
 
 // A new Y document
 // const ydoc = new Y.Doc();
@@ -103,7 +103,6 @@ export default {
     const ydoc = new Y.Doc();
 
     const documentId = this.editorData.id;
-
     const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
     let content = this.editorData.content;
 

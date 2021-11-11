@@ -2,10 +2,23 @@
   <div>
     <AppBar
       :routes="appBar.routes"
-      :notifications="appBar.notifications"
-      :user="appBar.user"
-      @logout="appBar.logout"
-    />
+      :notification="appBar.notification"
+      :user="userInformation"
+      :is-account-menu-dropdown-close-on-click="
+        isAccountMenuDropdownCloseOnClick
+      "
+    >
+      <template v-slot:account-menu-dropdown>
+        <v-list>
+          <v-list-item class="text-right" active="primary" @click="logout">
+            <v-list-item-content
+              class="button-font neutral-600--text d-flex justify-end"
+              >Log out</v-list-item-content
+            >
+          </v-list-item>
+        </v-list>
+      </template>
+    </AppBar>
     <div id="onboarding">
       <div class="onboarding-wrapper">
         <div class="grid-item-content">
@@ -130,10 +143,9 @@ import Button from "@/components/global/Button.vue";
 import AppBar from "@/components/AppBar.vue";
 
 import { mapActions, mapGetters } from "vuex";
-import { ROOT_ACTIONS } from "@/store/types/actions";
-import { ROOT_GETTERS } from "@/store/types/getters";
-import { USER } from "@/utils/constants/user";
-import { STATUS_CODES } from "@/utils/constants/http-status-codes";
+import { ROOT_ACTIONS, ROOT_GETTERS } from "@/store/types";
+import { USER, STATUS_CODES } from "@/utils/constants";
+import { capitalizeFirstLetter } from "@/utils/helpers";
 
 export default {
   name: "OnboardingAccountType",
@@ -145,6 +157,7 @@ export default {
   },
   data() {
     return {
+      isAccountMenuDropdownCloseOnClick: true,
       appBar: {
         user: {
           name: "Unknown",
@@ -158,13 +171,9 @@ export default {
             path: { name: "Archive" },
           },
         ],
-        notifications: [
-          {
-            name: "Notification 1",
-            details: "",
-            path: "",
-          },
-        ],
+        notification: {
+          path: { name: "" },
+        },
       },
       isSubmit: false,
       valid: false,
@@ -201,6 +210,12 @@ export default {
       getUser: ROOT_GETTERS.GET_USER,
       getUserType: ROOT_GETTERS.GET_USER_TYPE,
     }),
+    userInformation() {
+      return {
+        ...this.appBar.user,
+        name: capitalizeFirstLetter(this.getUser.lastName || "User"),
+      };
+    },
   },
 
   watch: {
@@ -222,24 +237,31 @@ export default {
   },
 
   async created() {
-    await this.fetchSchools();
+    try {
+      await this.fetchSchools();
+      this.schools = this.getSchools;
+    } catch (error) {
+      console.log(error);
+    }
   },
 
   methods: {
     ...mapActions({
       onFetchSchools: ROOT_ACTIONS.FETCH_SCHOOLS,
       onOnboardUser: ROOT_ACTIONS.ONBOARD_USER,
+      onGetUserInfo: ROOT_ACTIONS.GET_USER_INFO,
+      onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
-    logout() {
-      console.log("Logout User");
-    },
-    async fetchSchools() {
+    async logout() {
       try {
-        await this.onFetchSchools();
-        this.schools = this.getSchools;
+        await this.onLogoutUser();
+        this.$router.replace({ name: "SignIn" });
       } catch (error) {
         console.log(error);
       }
+    },
+    fetchSchools() {
+      return this.onFetchSchools();
     },
     selectUserType(item) {
       this.chooseUserTypeClick = false;
@@ -276,17 +298,14 @@ export default {
             lastName: this.getUser.lastName,
           },
         };
-        //TODO: temporary solution for the error if user is teacher, inform backend later
-        if (this.user.type === "Teacher")
-          payload.user.program = this.programs[0];
         await this.onOnboardUser(payload);
+        await this.onGetUserInfo({ id: this.getUser.id });
         switch (this.getUserType) {
           case USER.TYPES.STUDENT:
-            this.$router.replace({ name: "Dashboard" });
+            this.$router.replace({ name: "Student Dashboard" });
             break;
           case USER.TYPES.TEACHER:
-            //TODO: change to teacher dashboard route
-            console.log("Redirect to teacher's dashboard");
+            this.$router.replace({ name: "Adviser Dashboard" });
             break;
           default:
             console.log("Default");
@@ -298,6 +317,7 @@ export default {
             this.error = "ID number is already taken";
             break;
           default:
+            console.log(error);
             break;
         }
       } finally {
@@ -352,21 +372,5 @@ export default {
   margin-bottom: 20px;
   text-align: center;
   color: var(--v-error);
-}
-.slide-fade-enter-active {
-  transition: all 0.8s ease;
-}
-.slide-fade-leave-active {
-  transition: all 0.8s ease;
-  // cubic-bezier(1, 0.5, 0.8, 1)
-}
-.slide-fade-enter {
-  transform: translatey(50px);
-  opacity: 0;
-}
-
-.slide-fade-leave-to {
-  transform: translatey(-50px);
-  opacity: 0;
 }
 </style>

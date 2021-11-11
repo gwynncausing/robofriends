@@ -1,4 +1,5 @@
-import { ROOT_MUTATIONS } from "./types/mutations";
+import { ROOT_MUTATIONS } from "./types";
+import { rootInititalState } from "./types";
 
 export default {
   [ROOT_MUTATIONS.SET_USER](state, { user }) {
@@ -18,5 +19,8 @@ export default {
   },
   [ROOT_MUTATIONS.SET_SCHOOLS](state, { schools }) {
     state.schools = schools;
+  },
+  [ROOT_MUTATIONS.SET_RESET_ROOT_STATE](state) {
+    Object.assign(state, {}, rootInititalState());
   },
 };

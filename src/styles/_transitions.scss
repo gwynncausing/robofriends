@@ -1,0 +1,27 @@
+// transtion-name: fade
+.fade-enter-active,
+.fade-leave-active {
+  transition-duration: 0.4s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+}
+
+// transtion-name: slide-fade
+.slide-fade-enter-active {
+  transition: all 0.8s ease;
+}
+.slide-fade-leave-active {
+  transition: all 0.8s ease;
+}
+.slide-fade-enter {
+  transform: translatey(50px);
+  opacity: 0;
+}
+.slide-fade-leave-to {
+  transform: translatey(-50px);
+  opacity: 0;
+}
