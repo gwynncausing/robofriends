@@ -8,43 +8,55 @@
         hidden
         @change="selectFiles"
       />
-      <button @click="addImage">
+      <button title="Add Image" @click="addImage">
         <v-icon>mdi-image-plus</v-icon>
       </button>
     </div>
 
-    <div v-else-if="blockType === 'text' || blockType === 'table'">
+    <span
+      v-else-if="
+        blockType === 'text' ||
+        blockType === 'table' ||
+        blockType === 'text-with-title'
+      "
+    >
       <button
+        title="Bold"
         :class="{ 'is-active': editor.isActive('bold') }"
         @click="editor.chain().focus().toggleBold().run()"
       >
         <v-icon> mdi-format-bold </v-icon>
       </button>
       <button
+        title="Italic"
         :class="{ 'is-active': editor.isActive('italic') }"
         @click="editor.chain().focus().toggleItalic().run()"
       >
         <v-icon> mdi-format-italic </v-icon>
       </button>
       <button
+        title="Underline"
         :class="{ 'is-active': editor.isActive('underline') }"
         @click="editor.chain().focus().toggleUnderline().run()"
       >
         <v-icon> mdi-format-underline </v-icon>
       </button>
       <button
+        title="Strikethrough"
         :class="{ 'is-active': editor.isActive('strike') }"
         @click="editor.chain().focus().toggleStrike().run()"
       >
         <v-icon> mdi-format-strikethrough-variant </v-icon>
       </button>
       <button
+        title="Subscript"
         :class="{ 'is-active': editor.isActive('subscript') }"
         @click="toggleSubscript()"
       >
         <v-icon> mdi-format-subscript </v-icon>
       </button>
       <button
+        title="Superscript"
         :class="{ 'is-active': editor.isActive('superscript') }"
         @click="toggleSuperscript()"
       >
@@ -54,12 +66,14 @@
       <span class="formatter-section-end"></span>
 
       <button
+        title="Bullet List"
         :class="{ 'is-active': editor.isActive('bulletList') }"
         @click="editor.chain().focus().toggleBulletList().run()"
       >
         <v-icon>mdi-format-list-bulleted</v-icon>
       </button>
       <button
+        title="Number List"
         :class="{ 'is-active': editor.isActive('orderedList') }"
         @click="editor.chain().focus().toggleOrderedList().run()"
       >
@@ -68,13 +82,14 @@
 
       <span class="formatter-section-end"></span>
 
-      <button @click="editor.chain().focus().redo().run()">
+      <button title="Redo" @click="editor.chain().focus().redo().run()">
         <v-icon>mdi-redo</v-icon>
       </button>
-      <button @click="editor.chain().focus().undo().run()">
+      <button title="Undo" @click="editor.chain().focus().undo().run()">
         <v-icon>mdi-undo</v-icon>
       </button>
       <button
+        title="Clear Formatting"
         @click="
           {
             editor.chain().focus().clearNodes().run(),
@@ -84,159 +99,104 @@
       >
         <v-icon>mdi-cancel</v-icon>
       </button>
-    </div>
+    </span>
+    <span v-if="blockType === 'table'">
+      <span class="formatter-section-end"></span>
 
-    <div v-if="blockType === 'table'">
-      <!-- <button
-        @click="
-          editor
-            .chain()
-            .focus()
-            .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-            .run()
-        "
-      >
-        insertTable
-      </button> -->
       <button
-        :disabled="!editor.can().addColumnBefore()"
-        @click="editor.chain().focus().addColumnBefore().run()"
-      >
-        addColumnBefore
-      </button>
-      <button
-        :disabled="!editor.can().addColumnAfter()"
-        @click="editor.chain().focus().addColumnAfter().run()"
-      >
-        addColumnAfter
-      </button>
-      <button
-        :disabled="!editor.can().deleteColumn()"
-        @click="editor.chain().focus().deleteColumn().run()"
-      >
-        deleteColumn
-      </button>
-      <button
-        :disabled="!editor.can().addRowBefore()"
-        @click="editor.chain().focus().addRowBefore().run()"
-      >
-        addRowBefore
-      </button>
-      <button
-        :disabled="!editor.can().addRowAfter()"
-        @click="editor.chain().focus().addRowAfter().run()"
-      >
-        addRowAfter
-      </button>
-      <button
-        :disabled="!editor.can().deleteRow()"
-        @click="editor.chain().focus().deleteRow().run()"
-      >
-        deleteRow
-      </button>
-      <!-- <button
-        :disabled="!editor.can().deleteTable()"
-        @click="editor.chain().focus().deleteTable().run()"
-      >
-        deleteTable
-      </button> -->
-      <button
+        title="Merge Cells"
         :disabled="!editor.can().mergeCells()"
         @click="editor.chain().focus().mergeCells().run()"
       >
-        mergeCells
+        <v-icon>mdi-table-merge-cells</v-icon>
       </button>
       <button
+        title="Split Cells"
         :disabled="!editor.can().splitCell()"
         @click="editor.chain().focus().splitCell().run()"
       >
-        splitCell
-      </button>
-      <button
-        :disabled="!editor.can().toggleHeaderColumn()"
-        @click="editor.chain().focus().toggleHeaderColumn().run()"
-      >
-        toggleHeaderColumn
-      </button>
-      <button
-        :disabled="!editor.can().toggleHeaderRow()"
-        @click="editor.chain().focus().toggleHeaderRow().run()"
-      >
-        toggleHeaderRow
-      </button>
-      <button
-        :disabled="!editor.can().toggleHeaderCell()"
-        @click="editor.chain().focus().toggleHeaderCell().run()"
-      >
-        toggleHeaderCell
-      </button>
-    </div>
-
-    <div v-else-if="blockType === 'text-with-title'">
-      <button
-        :class="{ 'is-active': editor.isActive('bold') }"
-        @click="editor.chain().focus().toggleBold().run()"
-      >
-        <v-icon> mdi-format-bold </v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('italic') }"
-        @click="editor.chain().focus().toggleItalic().run()"
-      >
-        <v-icon> mdi-format-italic </v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('underline') }"
-        @click="editor.chain().focus().toggleUnderline().run()"
-      >
-        <v-icon> mdi-format-underline </v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('strike') }"
-        @click="editor.chain().focus().toggleStrike().run()"
-      >
-        <v-icon> mdi-format-strikethrough-variant </v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('subscript') }"
-        @click="editor.chain().focus().toggleSubscript().run()"
-      >
-        <v-icon> mdi-format-subscript </v-icon>
-      </button>
-      <button
-        :class="{ 'is-active': editor.isActive('superscript') }"
-        @click="editor.chain().focus().toggleSuperscript().run()"
-      >
-        <v-icon> mdi-format-superscript </v-icon>
+        <v-icon>mdi-table-split-cell</v-icon>
       </button>
 
       <span class="formatter-section-end"></span>
 
       <button
-        :class="{ 'is-active': editor.isActive('bulletList') }"
-        @click="editor.chain().focus().toggleBulletList().run()"
+        title="Add Row Before"
+        :disabled="!editor.can().addRowBefore()"
+        @click="editor.chain().focus().addRowBefore().run()"
       >
-        <v-icon>mdi-format-list-bulleted</v-icon>
+        <v-icon>mdi-table-row-plus-before</v-icon>
       </button>
       <button
-        :class="{ 'is-active': editor.isActive('orderedList') }"
-        @click="editor.chain().focus().toggleOrderedList().run()"
+        title="Add Row After"
+        :disabled="!editor.can().addRowAfter()"
+        @click="editor.chain().focus().addRowAfter().run()"
       >
-        <v-icon>mdi-format-list-numbered</v-icon>
+        <v-icon>mdi-table-row-plus-after</v-icon>
+      </button>
+      <button
+        title="Remove Row"
+        :disabled="!editor.can().deleteRow()"
+        @click="editor.chain().focus().deleteRow().run()"
+      >
+        <v-icon>mdi-table-row-remove</v-icon>
       </button>
 
       <span class="formatter-section-end"></span>
 
-      <button @click="editor.chain().focus().redo().run()">
-        <v-icon>mdi-redo</v-icon>
+      <button
+        title="Add Column Before"
+        :disabled="!editor.can().addColumnBefore()"
+        @click="editor.chain().focus().addColumnBefore().run()"
+      >
+        <v-icon>mdi-table-column-plus-before</v-icon>
       </button>
-      <button @click="editor.chain().focus().undo().run()">
-        <v-icon>mdi-undo</v-icon>
+      <button
+        title="Add Column After"
+        :disabled="!editor.can().addColumnAfter()"
+        @click="editor.chain().focus().addColumnAfter().run()"
+      >
+        <v-icon>mdi-table-column-plus-after</v-icon>
       </button>
-      <button @click="editor.chain().focus().clearNodes().run()">
-        <v-icon>mdi-cancel</v-icon>
+      <button
+        title="Remove Column"
+        :disabled="!editor.can().deleteColumn()"
+        @click="editor.chain().focus().deleteColumn().run()"
+      >
+        <v-icon>mdi-table-column-remove</v-icon>
       </button>
-    </div>
+
+      <span class="formatter-section-end"></span>
+
+      <button
+        title="Align Left"
+        :class="{ 'is-active': editor.isActive({ textAlign: 'left' }) }"
+        @click="editor.chain().focus().setTextAlign('left').run()"
+      >
+        <v-icon>mdi-format-align-left</v-icon>
+      </button>
+      <button
+        title="Align Center"
+        :class="{ 'is-active': editor.isActive({ textAlign: 'center' }) }"
+        @click="editor.chain().focus().setTextAlign('center').run()"
+      >
+        <v-icon>mdi-format-align-center</v-icon>
+      </button>
+      <button
+        title="Align Right"
+        :class="{ 'is-active': editor.isActive({ textAlign: 'right' }) }"
+        @click="editor.chain().focus().setTextAlign('right').run()"
+      >
+        <v-icon>mdi-format-align-right</v-icon>
+      </button>
+      <button
+        title="Justify"
+        :class="{ 'is-active': editor.isActive({ textAlign: 'justify' }) }"
+        @click="editor.chain().focus().setTextAlign('justify').run()"
+      >
+        <v-icon>mdi-format-align-justify</v-icon>
+      </button>
+    </span>
   </div>
 </template>
 
