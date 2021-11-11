@@ -77,9 +77,6 @@ export default {
         this.editor.setOptions({ editable: value });
       },
     },
-  },
-
-  watch: {
     "editor.storage.collaborationCursor.users": function (newValue) {
       this.$emit("updateUsers", newValue);
     },
