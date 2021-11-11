@@ -1,5 +1,5 @@
 <template>
-  <draggable
+  <!-- <draggable
     v-bind="dragOptions"
     class="item-container"
     :list="list"
@@ -21,6 +21,24 @@
         <NestedExpandableDraggable :list="el.children" class="item-sub" />
       </v-expansion-panel-content>
     </v-expansion-panel>
+  </draggable> -->
+  <draggable
+    v-bind="dragOptions"
+    class="item-container"
+    :list="list"
+    :empty-insert-threshhold="500"
+    tag="div"
+    handle=".handle"
+  >
+    <details v-for="el in list" :key="el.parent" class="item-group">
+      <summary class="item">
+        <v-icon class="handle">mdi-drag-vertical</v-icon>
+        <span class="header"> {{ el.parent }} </span>
+      </summary>
+      <div class="content">
+        <NestedExpandableDraggable :list="el.children" class="item-sub" />
+      </div>
+    </details>
   </draggable>
 </template>
 <script>
@@ -39,13 +57,13 @@ export default {
   },
   data() {
     return {
-      componentData: {
-        attrs: {
-          accordion: true,
-          flat: true,
-          tile: true,
-        },
-      },
+      // componentData: {
+      //   attrs: {
+      //     accordion: true,
+      //     flat: true,
+      //     tile: true,
+      //   },
+      // },
     };
   },
   computed: {
@@ -62,6 +80,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.content {
+  height: 100px;
+  margin-left: 20px;
+}
 .handle {
   float: left;
   cursor: grab;
