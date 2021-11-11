@@ -68,6 +68,12 @@ export default {
     }),
   },
 
+  watch: {
+    "editor.storage.collaborationCursor.users": function (newValue) {
+      this.$emit("updateUsers", newValue);
+    },
+  },
+
   mounted() {
     const ydoc = new Y.Doc();
 
@@ -106,9 +112,6 @@ export default {
             user: {
               name,
               color: this.userColor,
-            },
-            onUpdate: (users) => {
-              this.$emit("updateUsers", users);
             },
           }),
         ],
