@@ -44,10 +44,6 @@ import { ROOT_GETTERS } from "@/store/types/getters";
 // Registered with a WebRTC provider
 // new WebrtcProvider("bud-test-1", ydoc);
 
-const CustomDocument = Document.extend({
-  content: "heading paragraph",
-});
-
 const CustomTableCell = TableCell.extend({
   addAttributes() {
     return {
@@ -99,6 +95,12 @@ export default {
     }),
   },
 
+  watch: {
+    "editor.storage.collaborationCursor.users": function (newValue) {
+      this.$emit("updateUsers", newValue);
+    },
+  },
+
   mounted() {
     const ydoc = new Y.Doc();
 
@@ -112,7 +114,7 @@ export default {
     try {
       this.editor = new Editor({
         extensions: [
-          CustomDocument,
+          Document,
           Paragraph,
           Text,
           Bold,
@@ -144,9 +146,6 @@ export default {
               name,
               color: this.userColor,
             },
-            onUpdate: (users) => {
-              this.$emit("updateUsers", users);
-            },
           }),
         ],
         content: content,
@@ -167,6 +166,7 @@ export default {
 
   beforeUnmount() {
     this.editor.destroy();
+    this.provider.destroy();
   },
 };
 </script>

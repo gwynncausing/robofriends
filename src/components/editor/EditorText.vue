@@ -93,6 +93,12 @@ export default {
     }),
   },
 
+  watch: {
+    "editor.storage.collaborationCursor.users": function (newValue) {
+      this.$emit("updateUsers", newValue);
+    },
+  },
+
   mounted() {
     const ydoc = new Y.Doc();
 
@@ -135,14 +141,15 @@ export default {
               name,
               color: this.userColor,
             },
-            onUpdate: (users) => {
-              this.$emit("updateUsers", users);
-            },
           }),
         ],
         content: content,
         onUpdate: () => {
           this.$emit("input", this.editor.getJSON());
+          // console.log(
+          //   "editor.storage.collaborationCursor.users: ",
+          //   this.editor.storage.collaborationCursor.users
+          // );
         },
         onFocus: () => {
           this.$emit("selectBlock", {

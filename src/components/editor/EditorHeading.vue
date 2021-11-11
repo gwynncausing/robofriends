@@ -63,6 +63,12 @@ export default {
     }),
   },
 
+  watch: {
+    "editor.storage.collaborationCursor.users": function (newValue) {
+      this.$emit("updateUsers", newValue);
+    },
+  },
+
   mounted() {
     const ydoc = new Y.Doc();
 
@@ -101,9 +107,6 @@ export default {
             name,
             color: this.userColor,
           },
-          onUpdate: (users) => {
-            this.$emit("updateUsers", users);
-          },
         }),
       ],
       content: content,
@@ -125,6 +128,7 @@ export default {
 
   beforeUnmount() {
     this.editor.destroy();
+    this.provider.destroy();
   },
 };
 </script>
