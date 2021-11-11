@@ -140,6 +140,7 @@ export default {
   },
   beforeUnmount() {
     this.editor.destroy();
+    this.provider.destroy();
   },
 };
 </script>

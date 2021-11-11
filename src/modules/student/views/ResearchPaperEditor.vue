@@ -62,7 +62,7 @@
             v-else-if="editor.blockType === 'table'"
             class="editor-content-table"
           >
-            <EditorText
+            <EditorTable
               :editor-data="editor"
               :user-color="userColor"
               @input="getContent($event, index)"
@@ -87,6 +87,7 @@ import Button from "@/components/global/Button.vue";
 import EditorText from "@/components/editor/EditorText.vue";
 import EditorImage from "@/components/editor/EditorImage.vue";
 import EditorHeading from "@/components/editor/EditorHeading.vue";
+import EditorTable from "@/components/editor/EditorTable.vue";
 import EditorToolbar from "@/components/editor/EditorToolbar.vue";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 
@@ -97,6 +98,7 @@ export default {
     EditorText,
     EditorImage,
     EditorHeading,
+    EditorTable,
     EditorToolbar,
     ActiveUsersList,
   },

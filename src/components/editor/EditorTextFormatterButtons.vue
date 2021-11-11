@@ -171,7 +171,7 @@
       <button
         title="Align Left"
         :class="{ 'is-active': editor.isActive({ textAlign: 'left' }) }"
-        @click="editor.chain().focus().setTextAlign('left').run()"
+        @click="test"
       >
         <v-icon>mdi-format-align-left</v-icon>
       </button>
@@ -217,6 +217,11 @@ export default {
   },
 
   methods: {
+    test() {
+      // this.editor.chain().focus().setTextAlign("left").run();
+      console.log(this.editor.chain().focus());
+    },
+
     toggleSubscript() {
       this.editor.chain().focus().toggleSubscript().run();
 
