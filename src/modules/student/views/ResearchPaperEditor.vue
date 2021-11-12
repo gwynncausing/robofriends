@@ -178,9 +178,9 @@ export default {
         content = `<table>
           <tbody>
             <tr>
-              <td></td>
-              <td></td>
-              <td></td>
+              <th></th>
+              <th></th>
+              <th></th>
             </tr>
             <tr>
               <td></td>
