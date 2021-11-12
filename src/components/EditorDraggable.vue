@@ -142,10 +142,14 @@ export default {
 // }
 
 .v-expansion-panels {
-  margin: 0;
   width: 100%;
   background-color: $neutral-50;
 }
+
+.v-expansion-panel {
+  padding-bottom: 24px;
+}
+
 .v-expansion-panel-header {
   padding: 0;
   .handle {
@@ -160,7 +164,6 @@ export default {
     width: 100%;
   }
   div[class^="editor-content-"] {
-    width: 100%;
     border: 1px solid $neutral-400;
     border-radius: 4px;
     padding: 0.8rem;
@@ -169,6 +172,10 @@ export default {
   .editor-content-text,
   .editor-content-image {
     cursor: text;
+  }
+  .editor-content-text,
+  .editor-content-image {
+    margin-left: 36px;
   }
 
   .editor-content-section {
@@ -182,7 +189,7 @@ export default {
 }
 
 .v-expansion-panel-content {
-  height: 50px;
+  min-height: 24px;
 }
 .chosen,
 .drag {
