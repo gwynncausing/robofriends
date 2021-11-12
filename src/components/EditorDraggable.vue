@@ -15,7 +15,7 @@
       :key="editor.id"
       :aria-expanded="expanded"
     >
-      <v-expansion-panel-header>
+      <v-expansion-panel-header :hide-actions="editor.blockType !== 'section'">
         <v-icon class="handle">mdi-drag-vertical</v-icon>
         <template v-slot:actions>
           <v-btn icon>
@@ -59,7 +59,10 @@
         </div>
       </v-expansion-panel-header>
 
-      <v-expansion-panel-content :class="collapsed">
+      <v-expansion-panel-content
+        v-if="editor.blockType === 'section'"
+        :class="collapsed"
+      >
         <EditorDraggable :list="editor.children" class="item-sub" />
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -187,6 +190,6 @@ export default {
 }
 
 .ghost {
-  background-color: $neutral-50;
+  opacity: 0;
 }
 </style>

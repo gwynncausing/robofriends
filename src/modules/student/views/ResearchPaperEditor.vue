@@ -234,13 +234,22 @@ export default {
     },
     addEditor({ currentSelectedEditorIndex: index, blockType = "section" }) {
       if (index === -1) return;
-      this.editors.splice(index + 1, 0, {
-        id: this.id++,
-        content: ``,
-        blockType,
-        users: [],
-        children: [],
-      });
+      if (blockType === "section") {
+        this.editors.splice(index + 1, 0, {
+          id: this.id++,
+          content: ``,
+          blockType,
+          users: [],
+          children: [],
+        });
+      } else {
+        this.editors.splice(index + 1, 0, {
+          id: this.id++,
+          content: ``,
+          blockType,
+          users: [],
+        });
+      }
     },
     removeEditor({ currentSelectedEditorIndex: index = -1 }) {
       this.editors.splice(index, 1);
