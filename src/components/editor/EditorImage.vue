@@ -3,6 +3,8 @@
     <EditorTextFormatterButtons
       :editor="editor"
       :block-type="editorData.blockType"
+      :column-number="editorData.columnNumber"
+      @setColumnNumber="$emit('setColumnNumber', $event)"
     />
     <editor-content :editor="editor" class="editor-content" />
   </div>

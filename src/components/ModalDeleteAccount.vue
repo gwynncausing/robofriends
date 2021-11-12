@@ -60,7 +60,11 @@ export default {
     },
     deleteAccount() {
       // this.dialog = false;
+<<<<<<< HEAD
       this.$emit("deleteAccount");
+=======
+      this.$emit("dialogDeleteAccount");
+>>>>>>> feature/tiptap
     },
   },
 };

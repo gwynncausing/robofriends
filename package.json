@@ -37,8 +37,11 @@
     "@tiptap/vue-2": "^2.0.0-beta.68",
     "axios": "^0.24.0",
     "core-js": "^3.19.1",
+<<<<<<< HEAD
     "docx": "^7.1.2",
     "file-saver": "^2.0.5",
+=======
+>>>>>>> feature/tiptap
     "firebase": "^9.4.0",
     "moment": "^2.29.1",
     "vue": "^2.6.14",

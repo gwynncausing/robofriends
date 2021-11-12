@@ -21,6 +21,7 @@ const routes = [
     component: () => import("@/views/CreateAccount.vue"),
   },
   {
+<<<<<<< HEAD
     path: "/docx",
     name: "Docx",
     component: () => import("@/views/DocxJSTest.vue"),
@@ -44,16 +45,35 @@ const routes = [
     path: "/verify",
     name: "Email Verification",
     component: () => import("@/views/EmailVerification.vue"),
+=======
+    path: "/verify",
+    name: "Email Verification",
+    component: () => import("@/views/security/EmailVerification.vue"),
+>>>>>>> feature/tiptap
   },
   {
     path: "/forgot-password",
     name: "Forgot Password",
+<<<<<<< HEAD
     component: () => import("@/views/ForgotPassword.vue"),
+=======
+    component: () => import("@/views/security/ForgotPassword.vue"),
+>>>>>>> feature/tiptap
   },
   {
     path: "/reset-password",
     name: "Reset Password",
+<<<<<<< HEAD
     component: () => import("@/views/ForgotPasswordResetPassword.vue"),
+=======
+    component: () => import("@/views/security/ForgotPasswordResetPassword.vue"),
+  },
+  {
+    path: "/reset-password-success",
+    name: "Reset Password Success",
+    component: () =>
+      import("@/views/security/ForgotPasswordResetPasswordSuccess.vue"),
+>>>>>>> feature/tiptap
   },
   {
     path: "/test",

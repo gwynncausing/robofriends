@@ -5,5 +5,9 @@ export const STUDENT_GETTERS = {
   GET_INVITATIONS: "GET_INVITATIONS",
   GET_MEMBERSHIPS: "GET_MEMBERSHIPS",
   GET_HAS_MEMBERSHIPS: "GET_HAS_MEMBERSHIPS",
+<<<<<<< HEAD:src/modules/student/store/types/_getters.js
   GET_SELECTED_TEAM: "GET_SELECTED_TEAM",
+=======
+  GET_SELECTED_TEAM_DETAILS: "GET_TEAM_DETAILS",
+>>>>>>> feature/tiptap:src/modules/student/store/types/getters.js
 };

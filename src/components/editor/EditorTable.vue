@@ -3,6 +3,11 @@
     <EditorTextFormatterButtons
       :editor="editor"
       :block-type="editorData.blockType"
+<<<<<<< HEAD
+=======
+      :column-number="editorData.columnNumber"
+      @setColumnNumber="$emit('setColumnNumber', $event)"
+>>>>>>> feature/tiptap
     />
     <editor-content :editor="editor" class="editor-content" />
   </div>
