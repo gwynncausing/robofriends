@@ -45,10 +45,10 @@
             />
           </div>
           <div
-            v-else-if="editor.blockType === 'section'"
+            v-else-if="editor.blockType === 'heading'"
             class="editor-content-section"
           >
-            <EditorSection
+            <EditorHeading
               :editor-data="editor"
               :user-color="userColor"
               @input="$emit('getContent', $event, index)"
@@ -60,7 +60,7 @@
       </v-expansion-panel-header>
 
       <v-expansion-panel-content
-        v-if="editor.blockType === 'section'"
+        v-if="editor.blockType === 'heading'"
         :class="collapsed"
       >
         <EditorDraggable :list="editor.children" class="item-sub" />
@@ -71,7 +71,7 @@
 <script>
 import EditorText from "@/components/editor/EditorText.vue";
 import EditorImage from "@/components/editor/EditorImage.vue";
-import EditorSection from "@/components/editor/EditorSection.vue";
+import EditorHeading from "@/components/editor/EditorHeading.vue";
 import draggable from "vuedraggable";
 export default {
   name: "EditorDraggable",
@@ -79,7 +79,7 @@ export default {
     draggable,
     EditorText,
     EditorImage,
-    EditorSection,
+    EditorHeading,
   },
   props: {
     list: {
