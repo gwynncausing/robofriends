@@ -15,7 +15,7 @@
       :key="editor.id"
       :aria-expanded="expanded"
     >
-      <v-expansion-panel-header :hide-actions="editor.blockType !== 'section'">
+      <v-expansion-panel-header :hide-actions="editor.blockType !== 'heading'">
         <v-icon class="handle">mdi-drag-vertical</v-icon>
         <template v-slot:actions>
           <v-btn icon>
@@ -46,9 +46,21 @@
           </div>
           <div
             v-else-if="editor.blockType === 'heading'"
-            class="editor-content-section"
+            class="editor-content-heading"
           >
             <EditorHeading
+              :editor-data="editor"
+              :user-color="userColor"
+              @input="$emit('getContent', $event, index)"
+              @updateUsers="$emit('updateUsers', $event)"
+              @selectBlock="$emit('selectBlock', $event)"
+            />
+          </div>
+          <div
+            v-else-if="editor.blockType === 'table'"
+            class="editor-content-table"
+          >
+            <EditorTable
               :editor-data="editor"
               :user-color="userColor"
               @input="$emit('getContent', $event, index)"
@@ -72,6 +84,7 @@
 import EditorText from "@/components/editor/EditorText.vue";
 import EditorImage from "@/components/editor/EditorImage.vue";
 import EditorHeading from "@/components/editor/EditorHeading.vue";
+import EditorTable from "@/components/editor/EditorTable.vue";
 import draggable from "vuedraggable";
 export default {
   name: "EditorDraggable",
@@ -80,6 +93,7 @@ export default {
     EditorText,
     EditorImage,
     EditorHeading,
+    EditorTable,
   },
   props: {
     list: {
@@ -168,18 +182,20 @@ export default {
     border-radius: 4px;
     padding: 0.8rem;
   }
-  .editor-content-section,
+  .editor-content-heading,
   .editor-content-text,
-  .editor-content-image {
+  .editor-content-image,
+  .editor-content-table {
     cursor: text;
   }
   .editor-content-text,
-  .editor-content-image {
+  .editor-content-image,
+  .editor-content-table {
     margin-left: 36px;
   }
 
-  .editor-content-section {
-    height: 42px;
+  .editor-content-heading {
+    height: 98px;
     padding: 4px;
   }
 
