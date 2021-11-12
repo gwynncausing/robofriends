@@ -44,6 +44,7 @@
               @input="getContent($event, index)"
               @updateUsers="updateUsers($event)"
               @selectBlock="selectBlock($event)"
+              @setColumnNumber="setColumnNumber($event, editor)"
             />
           </div>
           <div
@@ -68,6 +69,7 @@
               @input="getContent($event, index)"
               @updateUsers="updateUsers($event)"
               @selectBlock="selectBlock($event)"
+              @setColumnNumber="setColumnNumber($event, editor)"
             />
           </div>
         </div>
@@ -160,9 +162,9 @@ export default {
         content = `<table>
           <tbody>
             <tr>
-              <th></th>
-              <th></th>
-              <th></th>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td></td>
@@ -181,6 +183,7 @@ export default {
         content: content,
         blockType,
         users: [],
+        columnNumber: 1,
       });
     },
     removeEditor({ currentSelectedEditorIndex: index = -1 }) {
@@ -196,6 +199,9 @@ export default {
     },
     testMethod() {
       console.log("testMethod called");
+    },
+    setColumnNumber(columnNumber, editor) {
+      editor.columnNumber = columnNumber;
     },
   },
 };
