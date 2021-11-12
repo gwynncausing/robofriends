@@ -36,46 +36,6 @@
       @dialogClose="joinTeamModal = $event"
       @dialogJoinTeam="joinTeam($event)"
     />
-<<<<<<< HEAD
-=======
-    <v-snackbar
-      v-model="isSnackbarShown"
-      :timeout="3000"
-      elevation="24"
-      color="white"
-      class="mb-3"
-      content-class="neutral-800--text"
-    >
-      <div v-if="invitationAction === 'Deny'">
-        You have
-        <span class="secondary--text font-weight-bold">declined</span> team
-        <span class="font-weight-bold">{{ teamName }}</span
-        >'s invitation.
-      </div>
-      <div v-else-if="invitationAction === 'Join'">
-        You have
-        <span class="primary--text font-weight-bold">accepted</span> team
-        <span class="font-weight-bold">{{ teamName }}</span
-        >'s invitation.
-      </div>
-      <div v-else>
-        You have
-        <span class="primary--text font-weight-bold">accepted the teams'</span>
-        invitation.
-      </div>
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="error"
-          text
-          v-bind="attrs"
-          icon
-          @click="isSnackbarShown = false"
-        >
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
->>>>>>> feature/tiptap
   </div>
 </template>
 
@@ -97,12 +57,6 @@ export default {
   },
   data: function () {
     return {
-<<<<<<< HEAD
-=======
-      isSnackbarShown: false,
-      teamName: "",
-      invitationAction: "Join",
->>>>>>> feature/tiptap
       error: "",
       joinTeamModal: false,
       isSubmitTeamCode: false,
@@ -171,15 +125,7 @@ export default {
       };
       try {
         await this.onUpdateInvitation(payload);
-<<<<<<< HEAD
         if (status === TEAM.INVITATION_STATUS.ACCEPTED);
-=======
-        this.isSnackbarShown = true;
-        this.teamName = invitation.team.name;
-        if (status === TEAM.INVITATION_STATUS.ACCEPTED)
-          this.invitationAction = "Join";
-        else this.invitationAction = "Deny";
->>>>>>> feature/tiptap
         this.setInvitations();
       } catch (error) {
         console.log(error);
@@ -205,11 +151,6 @@ export default {
           }
         );
         await Promise.all(updateInvitationsPromises);
-<<<<<<< HEAD
-=======
-        this.isSnackbarShown = true;
-        this.invitationAction = "Join All";
->>>>>>> feature/tiptap
       } catch (error) {
         console.log(error);
       }

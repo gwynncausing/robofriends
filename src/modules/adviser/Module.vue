@@ -15,11 +15,7 @@
     </AppBar>
     <v-container>
       <transition name="fade" mode="out-in">
-<<<<<<< HEAD
         <router-view class="mt-5" />
-=======
-        <router-view />
->>>>>>> feature/tiptap
       </transition>
     </v-container>
   </div>

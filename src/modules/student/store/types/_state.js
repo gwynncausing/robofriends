@@ -4,10 +4,6 @@ export let studentInitialState = () => ({
   sentTeachersInvitations: [],
   invitations: [],
   memberships: [],
-<<<<<<< HEAD
   selectedTeam: {},
-=======
-  selectedTeamDetails: {},
->>>>>>> feature/tiptap
   hasMemberships: false,
 });

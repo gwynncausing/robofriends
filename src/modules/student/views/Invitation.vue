@@ -41,30 +41,6 @@
       @dialogClose="joinTeamModal = $event"
       @dialogJoinTeam="joinTeam($event)"
     />
-    <v-snackbar
-      v-model="isSnackbarShown"
-      :timeout="3000"
-      elevation="24"
-      color="white"
-      class="mb-3"
-      content-class="neutral-800--text"
-    >
-      You have
-      <span class="secondary--text font-weight-bold">declined</span> team
-      <span class="font-weight-bold">{{ teamName }}</span
-      >'s invitation.
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="error"
-          text
-          v-bind="attrs"
-          icon
-          @click="isSnackbarShown = false"
-        >
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
   </div>
 </template>
 
@@ -86,11 +62,6 @@ export default {
   },
   data: function () {
     return {
-<<<<<<< HEAD
-=======
-      isSnackbarShown: false,
-      teamName: "Hello",
->>>>>>> feature/tiptap
       error: "",
       joinTeamModal: false,
       isSubmitTeamCode: false,
@@ -143,11 +114,7 @@ export default {
       onFetchInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_INVITATIONS}`,
       onUpdateInvitation: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_INVITATION}`,
       onJoinCodeTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.JOIN_CODE_TEAM}`,
-<<<<<<< HEAD
       onSelectTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SELECT_TEAM}`,
-=======
-      onSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
->>>>>>> feature/tiptap
     }),
     fetchInvitations() {
       return this.onFetchInvitations();
@@ -166,19 +133,9 @@ export default {
         console.log(invitation.team);
         await this.onUpdateInvitation(payload);
         await this.setSelectTeam(invitation.team);
-<<<<<<< HEAD
         if (status === TEAM.INVITATION_STATUS.ACCEPTED)
           await this.$router.push({ name: "Student Dashboard" });
         await this.$router.go();
-=======
-        if (status === TEAM.INVITATION_STATUS.ACCEPTED) {
-          await this.$router.push({ name: "Student Dashboard" });
-          await this.$router.go();
-        } else {
-          this.isSnackbarShown = true;
-          this.teamName = invitation.team.name;
-        }
->>>>>>> feature/tiptap
       } catch (error) {
         console.log(error);
       }
@@ -189,12 +146,7 @@ export default {
         this.error = "";
         const payload = { code: code };
         await this.onJoinCodeTeam(payload);
-<<<<<<< HEAD
         this.$router.push({ name: "Dashboard" });
-=======
-        await this.$router.push({ name: "Student Dashboard" });
-        await this.$router.go();
->>>>>>> feature/tiptap
       } catch (error) {
         switch (error?.response?.statusCode) {
           case STATUS_CODES.NOT_FOUND:
@@ -210,11 +162,7 @@ export default {
       }
     },
     setSelectTeam(team) {
-<<<<<<< HEAD
       return this.onSelectTeam({ team: team });
-=======
-      return this.onSelectedTeamDetails({ id: team.id });
->>>>>>> feature/tiptap
     },
   },
 };

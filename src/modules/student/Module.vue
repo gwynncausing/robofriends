@@ -11,11 +11,7 @@
       <template v-slot:account-menu-dropdown>
         <AppBarMenuDropdownStudent
           :teams="teams"
-<<<<<<< HEAD
           :current-selected-team="selectedTeam"
-=======
-          :current-selected-team="selectedTeamDetails"
->>>>>>> feature/tiptap
           @goToTeam="goToTeam"
           @goToAccountSettings="goToAccountSettings"
           @goToCreateTeam="goToCreateTeam"
@@ -25,11 +21,7 @@
     </AppBar>
     <v-container>
       <transition name="fade" mode="out-in">
-<<<<<<< HEAD
         <router-view class="mt-5" />
-=======
-        <router-view />
->>>>>>> feature/tiptap
       </transition>
     </v-container>
   </div>
@@ -50,11 +42,7 @@ export default {
   components: { AppBar, AppBarMenuDropdownStudent },
   data: function () {
     return {
-<<<<<<< HEAD
       selectedTeam: {},
-=======
-      selectedTeamDetails: {},
->>>>>>> feature/tiptap
       isAccountMenuDropdownCloseOnClick: false,
       user: {
         name: "Dodoy",
@@ -82,13 +70,6 @@ export default {
           name: "Research Paper",
           path: { name: "Research Paper Editor" },
         },
-<<<<<<< HEAD
-=======
-        {
-          name: "Team",
-          path: { name: "Team Settings" },
-        },
->>>>>>> feature/tiptap
       ],
       notification: {
         path: { name: "Student Invitation" },
@@ -99,11 +80,7 @@ export default {
     ...mapGetters({
       hasMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
       getMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_MEMBERSHIPS}`,
-<<<<<<< HEAD
       getSelectedTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM}`,
-=======
-      getSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM_DETAILS}`,
->>>>>>> feature/tiptap
       getUser: ROOT_GETTERS.GET_USER,
       getIsLoggedIn: ROOT_GETTERS.GET_IS_LOGGED_IN,
     }),
@@ -123,15 +100,9 @@ export default {
     try {
       await this.onFetchMemberships();
       this.setTeams();
-<<<<<<< HEAD
       if (Object.keys(this.getSelectedTeam).length === 0)
         await this.setSelectTeam(this.teams[0] || {});
       this.selectedTeam = this.getSelectedTeam;
-=======
-      if (Object.keys(this.getSelectedTeamDetails).length === 0)
-        await this.setSelectedTeamDetails(this.teams[0] || {});
-      this.selectedTeamDetails = this.getSelectedTeamDetails;
->>>>>>> feature/tiptap
     } catch (error) {
       console.log(error);
     }
@@ -139,11 +110,7 @@ export default {
   methods: {
     ...mapActions({
       onFetchMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_MEMBERSHIPS}`,
-<<<<<<< HEAD
       onSelectTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SELECT_TEAM}`,
-=======
-      onFetchSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
->>>>>>> feature/tiptap
       onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
     setIsAccountMenuDropdownCloseOnClick() {
@@ -155,26 +122,15 @@ export default {
     setTeams() {
       this.teams = this.getMemberships.map((memberships) => memberships.team);
     },
-<<<<<<< HEAD
     setSelectTeam(team) {
       return this.onSelectTeam({ team: team });
-=======
-    setSelectedTeamDetails(team) {
-      console.log(team);
-      return this.onFetchSelectedTeamDetails({ id: team.id });
->>>>>>> feature/tiptap
     },
     async goToTeam(team) {
       if (!this.getIsLoggedIn) return;
       try {
         this.setIsAccountMenuDropdownCloseOnClick();
-<<<<<<< HEAD
         await this.setSelectTeam(team);
         this.selectedTeam = this.getSelectedTeam;
-=======
-        await this.setSelectedTeamDetails(team);
-        this.selectedTeamDetails = this.getSelectedTeamDetails;
->>>>>>> feature/tiptap
         this.$router.push({ name: "Student Dashboard" });
         this.$router.go();
       } catch (error) {

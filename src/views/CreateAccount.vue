@@ -191,7 +191,7 @@ export default {
         try {
           this.isSubmit = true;
           await this.onSignup(this.user);
-          this.$router.replace({ name: "Email Verification" });
+          this.$router.replace({ name: "Onboarding" });
         } catch (error) {
           switch (error?.response?.status) {
             case STATUS_CODES.ERRORS.BAD_REQUEST:

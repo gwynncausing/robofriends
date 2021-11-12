@@ -6,13 +6,7 @@
     <template v-slot:content>
       <div class="pt-3">
         <span class="subheading1 neutral-500--text">
-<<<<<<< HEAD
           Are you sure that you want to leave {{ team.name }}?
-=======
-          Are you sure that you want to leave team<span class="font-bold">
-            {{ team.name }}?
-          </span>
->>>>>>> feature/tiptap
         </span>
       </div>
     </template>

@@ -11,7 +11,6 @@ export default {
     const team = response.data;
     commit(STUDENT_MUTATIONS.SET_CURRENT_CREATED_TEAM, { team: team });
   },
-
   async [STUDENT_ACTIONS.SEND_MEMBERS_INVITATIONS](
     { commit },
     payload = STUDENT_PAYLOADS.SEND_TEAM_INVITATIONS
@@ -23,7 +22,6 @@ export default {
       sentMembersInvitations: sentMembersInvitations,
     });
   },
-
   async [STUDENT_ACTIONS.SEND_TEACHERS_INVITATIONS](
     { commit },
     payload = STUDENT_PAYLOADS.SEND_TEAM_INVITATIONS
@@ -35,13 +33,11 @@ export default {
       sentTeachersInvitations: sentTeachersInvitations,
     });
   },
-
   async [STUDENT_ACTIONS.FETCH_INVITATIONS]({ commit }) {
     const response = await TeamRepository.getInvitations();
     const invitations = response.data;
     commit(STUDENT_MUTATIONS.SET_INVITATIONS, { invitations: invitations });
   },
-
   async [STUDENT_ACTIONS.UPDATE_INVITATION](
     { commit },
     payload = STUDENT_PAYLOADS.UPDATE_INVITATION
@@ -53,7 +49,6 @@ export default {
       invitation: updatedInvitation,
     });
   },
-
   async [STUDENT_ACTIONS.FETCH_MEMBERSHIPS]({ commit }) {
     const response = await TeamRepository.getMemberships();
     const memberships = response.data;
@@ -62,7 +57,6 @@ export default {
       hasMemberships: memberships.length !== 0 ? true : false,
     });
   },
-<<<<<<< HEAD
   async [STUDENT_ACTIONS.SELECT_TEAM](
     { commit },
     payload = STUDENT_PAYLOADS.SELECT_TEAM
@@ -72,9 +66,6 @@ export default {
       selectedTeam: team,
     });
   },
-=======
-
->>>>>>> feature/tiptap
   async [STUDENT_ACTIONS.JOIN_CODE_TEAM](
     { commit },
     payload = STUDENT_PAYLOADS.JOIN_CODE_TEAM_PAYLOAD
@@ -83,35 +74,4 @@ export default {
     console.log(response);
     console.log(commit);
   },
-<<<<<<< HEAD
-=======
-
-  async [STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS]({ commit }, { id }) {
-    const response = await TeamRepository.getTeam(id);
-    const selectedTeamDetails = response.data;
-    commit(STUDENT_MUTATIONS.SET_SELECTED_TEAM_DETAILS, {
-      selectedTeamDetails: selectedTeamDetails,
-    });
-  },
-
-  async [STUDENT_ACTIONS.UPDATE_SELECTED_TEAM_DETAILS](
-    { commit },
-    payload = STUDENT_PAYLOADS.UPDATE_SELECTED_TEAM_DETAILS
-  ) {
-    const { id, team } = payload;
-    const response = await TeamRepository.update(team, id);
-    const teamDetails = response.data;
-    commit(STUDENT_MUTATIONS.SET_SELECTED_TEAM_DETAILS, {
-      selectedTeamDetails: teamDetails,
-    });
-  },
-
-  async [STUDENT_ACTIONS.UPDATE_MEMBERSHIPS](
-    context,
-    payload = STUDENT_PAYLOADS.UPDATE_MEMBERSHIPS
-  ) {
-    const { membership, id } = payload;
-    await TeamRepository.updateMemberships(membership, id);
-  },
->>>>>>> feature/tiptap
 };

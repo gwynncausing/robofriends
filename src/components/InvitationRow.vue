@@ -53,11 +53,7 @@ export default {
     },
     deny() {
       const params = {
-<<<<<<< HEAD
         invitationId: this.invitation,
-=======
-        invitation: this.invitation,
->>>>>>> feature/tiptap
         status: TEAM.INVITATION_STATUS.DECLINED,
       };
       this.$emit("updateInvitation", params);

@@ -6,11 +6,7 @@
     <template v-slot:content>
       <div class="pt-3">
         <span class="subheading1 neutral-500--text">
-<<<<<<< HEAD
           Are you sure that you want to leave {{ fullName }}?
-=======
-          Are you sure that you want remove {{ fullName }} as your adviser?
->>>>>>> feature/tiptap
         </span>
       </div>
     </template>

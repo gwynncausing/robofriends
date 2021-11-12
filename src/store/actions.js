@@ -20,7 +20,6 @@ export default {
     commit(ROOT_MUTATIONS.SET_USER_TYPE, { type: user.type });
     commit(ROOT_MUTATIONS.SET_IS_LOGGED_IN, { isLoggedIn: true });
   },
-
   async [ROOT_ACTIONS.SIGNUP_USER](
     { commit },
     payload = ROOT_PAYLOADS.SIGNUP_USER
@@ -32,10 +31,6 @@ export default {
     commit(ROOT_MUTATIONS.SET_TOKEN_REFRESH, { refresh: token.refresh });
     commit(ROOT_MUTATIONS.SET_IS_LOGGED_IN, { isLoggedIn: true });
   },
-<<<<<<< HEAD
-=======
-
->>>>>>> feature/tiptap
   async [ROOT_ACTIONS.GET_USER_INFO](
     { commit },
     payload = ROOT_PAYLOADS.GET_USER_INFO
@@ -45,7 +40,6 @@ export default {
     const user = response.data;
     commit(ROOT_MUTATIONS.SET_USER, { user: user });
   },
-
   async [ROOT_ACTIONS.ONBOARD_USER](
     { commit },
     payload = ROOT_PAYLOADS.ONBOARD_USER
@@ -56,10 +50,6 @@ export default {
     commit(ROOT_MUTATIONS.SET_USER, { user: updatedUser });
     commit(ROOT_MUTATIONS.SET_USER_TYPE, { type: updatedUser.type });
   },
-<<<<<<< HEAD
-=======
-
->>>>>>> feature/tiptap
   async [ROOT_ACTIONS.UPDATE_USER](
     { commit },
     payload = ROOT_PAYLOADS.UPDATE_USER
@@ -69,10 +59,6 @@ export default {
     const updatedUser = response.data;
     commit(ROOT_MUTATIONS.SET_USER, { user: updatedUser });
   },
-<<<<<<< HEAD
-=======
-
->>>>>>> feature/tiptap
   async [ROOT_ACTIONS.CHANGE_PASSWORD](
     context,
     payload = ROOT_PAYLOADS.CHANGE_PASSWORD
@@ -80,19 +66,11 @@ export default {
     const { id, passwords } = payload;
     await UserRepository.changePassword(passwords, id);
   },
-<<<<<<< HEAD
-=======
-
->>>>>>> feature/tiptap
   async [ROOT_ACTIONS.FETCH_SCHOOLS]({ commit }) {
     const response = await SchoolRepository.get();
     const schools = response.data;
     commit(ROOT_MUTATIONS.SET_SCHOOLS, { schools: schools });
   },
-<<<<<<< HEAD
-=======
-
->>>>>>> feature/tiptap
   async [ROOT_ACTIONS.LOGOUT_USER]({ commit }) {
     commit(
       `${MODULES.STUDENT_MODULE_PATH}${STUDENT_MUTATIONS.SET_RESET_STUDENT_STATE}`
@@ -102,43 +80,4 @@ export default {
     );
     commit(ROOT_MUTATIONS.SET_RESET_ROOT_STATE);
   },
-<<<<<<< HEAD
-=======
-
-  async [ROOT_ACTIONS.SEND_PASSWORD_RESET_LINK](
-    context,
-    payload = ROOT_PAYLOADS.SEND_PASSWORD_RESET_LINK
-  ) {
-    await UserRepository.sendResetLink(payload);
-  },
-
-  async [ROOT_ACTIONS.RESET_PASSWORD](
-    context,
-    payload = ROOT_PAYLOADS.RESET_PASSWORD
-  ) {
-    await UserRepository.resetPassword(payload);
-  },
-
-  async [ROOT_ACTIONS.VERIFY_ACCOUNT](
-    context,
-    payload = ROOT_PAYLOADS.VERIFY_ACCOUNT
-  ) {
-    await UserRepository.verifyAccount(payload);
-  },
-
-  async [ROOT_ACTIONS.RESEND_VERIFICATION_LINK](
-    context,
-    payload = ROOT_PAYLOADS.RESEND_VERIFICATION_LINK
-  ) {
-    await UserRepository.sendVerificationLink(payload);
-  },
-
-  async [ROOT_ACTIONS.DELETE_USER](
-    context,
-    payload = ROOT_PAYLOADS.DELETE_USER
-  ) {
-    const { id } = payload;
-    await UserRepository.delete(id);
-  },
->>>>>>> feature/tiptap
 };

@@ -112,24 +112,6 @@
       @dialogClose="($event) => closeChangePasswordModal($event)"
       @dialogChangePassword="changePassword"
     />
-    <v-overlay v-if="isDeletingAccount">
-      <LoaderCircular v-show="!isDeleteAccountSuccessful" color="white" />
-      <transition name="fade" mode="out-in">
-        <v-snackbar
-          v-show="isDeleteAccountSuccessful"
-          :timeout="-1"
-          :value="true"
-          centered
-          color="white"
-          content-class="neutral-600--text d-flex flex-column align-center"
-        >
-          <div class="subheading1 font-bold mt-4">
-            Your account has been succesfully deleted.
-          </div>
-          <p class="mt-2">Redirecting to Login page . . .</p>
-        </v-snackbar>
-      </transition>
-    </v-overlay>
   </div>
 </template>
 
@@ -139,8 +121,6 @@ import Button from "@/components/global/Button.vue";
 import Select from "@/components/global/Select.vue";
 import ModalDeleteAccount from "@/components/ModalDeleteAccount.vue";
 import ModalChangePassword from "@/components/ModalChangePassword.vue";
-import LoaderCircular from "@/components/LoaderCircular";
-
 import { mapActions, mapGetters } from "vuex";
 import { ROOT_ACTIONS, ROOT_GETTERS } from "@/store/types";
 import { USER, STATUS_CODES } from "@/utils/constants";
@@ -153,7 +133,6 @@ export default {
     Select,
     ModalDeleteAccount,
     ModalChangePassword,
-    LoaderCircular,
   },
   data() {
     return {
@@ -164,7 +143,6 @@ export default {
       changePasswordSuccessMessage: "",
       deleteAccountModal: false,
       isDeletingAccount: false,
-      isDeleteAccountSuccessful: false,
       user: {
         firstName: "",
         lastName: "",
@@ -221,8 +199,6 @@ export default {
       onUpdateUser: ROOT_ACTIONS.UPDATE_USER,
       onGetUserInfo: ROOT_ACTIONS.GET_USER_INFO,
       onChangePassword: ROOT_ACTIONS.CHANGE_PASSWORD,
-      onDeleteUser: ROOT_ACTIONS.DELETE_USER,
-      onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
     fetchSchools() {
       return this.onFetchSchools();
@@ -291,21 +267,8 @@ export default {
         this.isChangingPassword = false;
       }
     },
-    async deleteAccount() {
-      try {
-        this.deleteAccountModal = false;
-        this.isDeletingAccount = true;
-        await this.onDeleteUser({ id: this.getUser.id });
-        this.isDeleteAccountSuccessful = true;
-        setTimeout(async () => {
-          await this.onLogoutUser();
-          this.$router.replace({ name: "SignIn" });
-        }, 2000);
-      } catch (error) {
-        // TODO: Review possible errors and handle them properly
-        this.isDeleteAccountSuccessful = false;
-        console.log(error);
-      }
+    deleteAccount() {
+      console.log("Delete Account");
     },
   },
 };

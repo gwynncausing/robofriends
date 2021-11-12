@@ -45,7 +45,6 @@
               @input="getContent($event, index)"
               @updateUsers="updateUsers($event)"
               @selectBlock="selectBlock($event)"
-              @setColumnNumber="setColumnNumber($event, editor)"
             />
           </div>
           <div
@@ -53,21 +52,6 @@
             class="editor-content-heading"
           >
             <EditorHeading
-<<<<<<< HEAD
-              :editor-data="editor"
-              :user-color="userColor"
-              @input="getContent($event, index)"
-              @updateUsers="updateUsers($event)"
-              @selectBlock="selectBlock($event)"
-            />
-          </div>
-          <div
-            v-else-if="editor.blockType === 'table'"
-            class="editor-content-table"
-          >
-            <EditorTable
-=======
->>>>>>> feature/tiptap
               :editor-data="editor"
               :user-color="userColor"
               @input="getContent($event, index)"
@@ -85,7 +69,6 @@
               @input="getContent($event, index)"
               @updateUsers="updateUsers($event)"
               @selectBlock="selectBlock($event)"
-              @setColumnNumber="setColumnNumber($event, editor)"
             />
           </div>
         </div>
@@ -199,7 +182,6 @@ export default {
         content: content,
         blockType,
         users: [],
-        columnNumber: 1,
       });
     },
     removeEditor({ currentSelectedEditorIndex: index = -1 }) {
@@ -215,9 +197,6 @@ export default {
     },
     testMethod() {
       console.log("testMethod called");
-    },
-    setColumnNumber(columnNumber, editor) {
-      editor.columnNumber = columnNumber;
     },
   },
 };
@@ -255,11 +234,7 @@ export default {
         margin-right: 76px;
       }
       .editor-content-heading {
-<<<<<<< HEAD
         height: 42px;
-=======
-        height: 98px;
->>>>>>> feature/tiptap
         padding: 4px;
       }
 

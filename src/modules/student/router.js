@@ -27,11 +27,7 @@ const studentRoutes = [
       },
       {
         path: "team-settings",
-<<<<<<< HEAD
         name: "Team Setttings",
-=======
-        name: "Team Settings",
->>>>>>> feature/tiptap
         component: () => import("@/views/TeamSettings.vue"),
       },
       {
@@ -55,15 +51,6 @@ const studentRoutes = [
         component: () =>
           import("@/modules/student/views/ResearchPaperEditor.vue"),
       },
-<<<<<<< HEAD
-=======
-      {
-        path: "approved-research-version-history",
-        name: "Approved Research Version History",
-        component: () =>
-          import("@/modules/student/views/ApprovedResearchVersionHistory.vue"),
-      },
->>>>>>> feature/tiptap
     ],
   },
 ];

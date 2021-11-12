@@ -17,21 +17,6 @@ export default {
   changePassword(payload, id) {
     return Client.patch(`${resource}/change-password/${id}`, payload);
   },
-<<<<<<< HEAD
-=======
-  sendResetLink(payload) {
-    return Client.post(`${resource}/send-reset-link`, payload);
-  },
-  resetPassword(payload) {
-    return Client.post(`${resource}/reset-password`, payload);
-  },
-  verifyAccount(payload) {
-    return Client.post(`${resource}/verify-account`, payload);
-  },
-  sendVerificationLink(payload) {
-    return Client.post(`${resource}/send-verification-link`, payload);
-  },
->>>>>>> feature/tiptap
   delete(id) {
     return Client.delete(`${resource}/${id}`);
   },
