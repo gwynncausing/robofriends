@@ -39,6 +39,12 @@
             <EditorImage
               :editor-data="editor"
               :user-color="userColor"
+              @setColumnNumber="
+                $emit('setColumnNumber', {
+                  columnNumber: $event,
+                  editor: editor,
+                })
+              "
               @input="$emit('getContent', $event, index)"
               @updateUsers="$emit('updateUsers', $event)"
               @selectBlock="$emit('selectBlock', $event)"
@@ -63,6 +69,13 @@
             <EditorTable
               :editor-data="editor"
               :user-color="userColor"
+              :column-number="editor.columnNumber"
+              @setColumnNumber="
+                $emit('setColumnNumber', {
+                  columnNumber: $event,
+                  editor: editor,
+                })
+              "
               @input="$emit('getContent', $event, index)"
               @updateUsers="$emit('updateUsers', $event)"
               @selectBlock="$emit('selectBlock', $event)"
