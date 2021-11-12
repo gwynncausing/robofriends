@@ -13,51 +13,53 @@
       v-for="(editor, index) in list"
       :id="'editor-' + editor.id"
       :key="editor.id"
+      :aria-expanded="expanded"
     >
       <v-expansion-panel-header>
         <v-icon class="handle">mdi-drag-vertical</v-icon>
         <template v-slot:actions>
-          <v-icon class="icon">$expand</v-icon>
+          <v-btn icon>
+            <v-icon class="toggleButton">$expand</v-icon>
+          </v-btn>
         </template>
-        <div
-          v-if="editor.blockType === 'text'"
-          class="editor-content-text header"
-        >
-          <EditorText
-            :editor-data="editor"
-            :user-color="userColor"
-            @input="$emit('getContent', $event, index)"
-            @updateUsers="$emit('updateUsers', $event)"
-            @selectBlock="$emit('selectBlock', $event)"
-          />
-        </div>
-        <div
-          v-else-if="editor.blockType === 'image'"
-          class="editor-content-image header"
-        >
-          <EditorImage
-            :editor-data="editor"
-            :user-color="userColor"
-            @input="$emit('getContent', $event, index)"
-            @updateUsers="$emit('updateUsers', $event)"
-            @selectBlock="$emit('selectBlock', $event)"
-          />
-        </div>
-        <div
-          v-else-if="editor.blockType === 'section'"
-          class="editor-content-section header"
-        >
-          <EditorSection
-            :editor-data="editor"
-            :user-color="userColor"
-            @input="$emit('getContent', $event, index)"
-            @updateUsers="$emit('updateUsers', $event)"
-            @selectBlock="$emit('selectBlock', $event)"
-          />
+        <div class="header">
+          <div v-if="editor.blockType === 'text'" class="editor-content-text">
+            <EditorText
+              :editor-data="editor"
+              :user-color="userColor"
+              @input="$emit('getContent', $event, index)"
+              @updateUsers="$emit('updateUsers', $event)"
+              @selectBlock="$emit('selectBlock', $event)"
+            />
+          </div>
+          <div
+            v-else-if="editor.blockType === 'image'"
+            class="editor-content-image"
+          >
+            <EditorImage
+              :editor-data="editor"
+              :user-color="userColor"
+              @input="$emit('getContent', $event, index)"
+              @updateUsers="$emit('updateUsers', $event)"
+              @selectBlock="$emit('selectBlock', $event)"
+            />
+          </div>
+          <div
+            v-else-if="editor.blockType === 'section'"
+            class="editor-content-section"
+          >
+            <EditorSection
+              :editor-data="editor"
+              :user-color="userColor"
+              @input="$emit('getContent', $event, index)"
+              @updateUsers="$emit('updateUsers', $event)"
+              @selectBlock="$emit('selectBlock', $event)"
+            />
+          </div>
         </div>
       </v-expansion-panel-header>
 
-      <v-expansion-panel-content>
+      <v-expansion-panel-content :class="collapsed">
         <EditorDraggable :list="editor.children" class="item-sub" />
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -105,7 +107,9 @@ export default {
         animation: 0,
         group: "description",
         disabled: false,
-        ghostClass: "ghost",
+        ghostClass: "ghost", // Class name for the drop placeholder
+        chosenClass: "chosen", // Class name for the chosen item
+        dragClass: "drag", // Class name for the dragging item
       };
     },
   },
@@ -119,32 +123,38 @@ export default {
       console.log(event.oldIndex);
       this.$emit("dragElement");
     },
+    // onClick(event) {
+    //   if (event.target.classList.contains("toggleButton")) {
+    //     this.isExpanded = "";
+    //   } else {
+    //     this.expanded = false;
+    //   }
+    // },
   },
 };
 </script>
 <style lang="scss" scoped>
-.handle {
-  cursor: grab;
-}
+// .collapsed {
+//   display: none;
+// }
+
 .v-expansion-panels {
   margin: 0;
   width: 100%;
   background-color: $neutral-50;
 }
-.item-sub {
-  margin: 0 0 0 1rem;
-}
-
 .v-expansion-panel-header {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
   padding: 0;
+  .handle {
+    cursor: grab;
+    width: 24px;
+  }
   .icon {
     order: 0;
   }
   .header {
     order: 1;
+    width: 100%;
   }
   div[class^="editor-content-"] {
     width: 100%;
@@ -167,14 +177,16 @@ export default {
   //   min-height: 18rem; // 304px
   // }
 }
+
 .v-expansion-panel-content {
   height: 50px;
 }
-.sortable-chosen {
-  background-color: $neutral-50;
+.chosen,
+.drag {
+  background-color: white;
 }
+
 .ghost {
   background-color: $neutral-50;
-  opacity: 0%;
 }
 </style>
