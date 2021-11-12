@@ -2,7 +2,9 @@
   <div class="create-new">
     <div class="editor-heading">
       <ActiveUsersList :users="activeUsers" />
-      <Button> Submit </Button>
+      <Button :loading="isSubmittingProposal" @click="submitProposal">
+        Submit
+      </Button>
     </div>
     <div class="editor-wrapper">
       <EditorTextWithTitle
@@ -13,6 +15,16 @@
         @updateUsers="updateUsers($event)"
       />
     </div>
+    <Snackbar
+      content-class="neutral-800--text text-center"
+      :timeout="4000"
+      :is-snackbar-shown="isSnackbarShown"
+      @closeSnackbar="isSnackbarShown = false"
+    >
+      <template v-slot:content>
+        {{ snackbarMessage }}
+      </template>
+    </Snackbar>
   </div>
 </template>
 
@@ -20,6 +32,9 @@
 import Button from "@/components/global/Button.vue";
 import EditorTextWithTitle from "@/components/editor/EditorTextWithTitle";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
+import Snackbar from "@/components/Snackbar";
+
+import { isEmptyOrWhiteSpaces } from "@/utils/helpers";
 
 export default {
   name: "CreateNew",
@@ -27,6 +42,7 @@ export default {
     Button,
     EditorTextWithTitle,
     ActiveUsersList,
+    Snackbar,
   },
   props: {
     proposal: {
@@ -42,6 +58,9 @@ export default {
         users: [],
       },
       activeUsers: [],
+      isSubmittingProposal: false,
+      isSnackbarShown: false,
+      snackbarMessage: "",
     };
   },
   computed: {
@@ -58,8 +77,7 @@ export default {
 
   methods: {
     getTitle() {
-      console.log(this.editor.content.content[0].content[0].text);
-      // console.log(document.getElementById("research-title").value);
+      return this.editor.content?.content?.[0]?.content?.[0]?.text;
     },
     updateUsers(users) {
       this.activeUsers = users;
@@ -76,6 +94,18 @@ export default {
         color += letters[Math.floor(Math.random() * 16)];
       }
       return color;
+    },
+    async submitProposal() {
+      if (!isEmptyOrWhiteSpaces(this.getTitle())) {
+        const payload = {
+          title: this.getTitle(),
+          content: this.editor.content,
+        };
+        this.$emit("submit", payload);
+      } else {
+        this.isSnackbarShown = true;
+        this.snackbarMessage = "Your proposal must have a title.";
+      }
     },
   },
 };

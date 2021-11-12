@@ -12,11 +12,11 @@
     </div>
     <div class="editor-wrapper">
       <div class="editor-heading">
-        <Chip dark :color="statusColors[proposals[activeEl].status]">
-          {{ proposals[activeEl].status }}
+        <Chip dark :color="statusColors[selectedProposal.status]">
+          {{ selectedProposal.status }}
         </Chip>
         <router-link
-          v-show="showButton(proposals[activeEl])"
+          v-show="showButton(selectedProposal)"
           v-slot="{ href, navigate }"
           to="/student/research-details?tab=create-new"
           custom
@@ -30,9 +30,9 @@
           :editor-data="editor"
         />
       </div>
-      <div v-show="showFeedback(proposals[activeEl])" class="feedback-wrapper">
+      <div v-show="showFeedback(selectedProposal)" class="feedback-wrapper">
         <div class="feedback-label font-semi-bold">Feedback</div>
-        <Textarea v-model="proposals[activeEl].feedback.text" readonly />
+        <Textarea v-model="adviserFeedback" readonly />
       </div>
     </div>
   </div>
@@ -44,6 +44,7 @@ import Chip from "@/components/global/Chip.vue";
 import Button from "@/components/global/Button.vue";
 import Textarea from "@/components/global/Textarea.vue";
 import EditorTextWithTitleReadonly from "@/components/editor/EditorTextWithTitleReadonly";
+
 export default {
   name: "Proposals",
   components: {
@@ -53,83 +54,94 @@ export default {
     Textarea,
     EditorTextWithTitleReadonly,
   },
+  props: {
+    proposals: {
+      type: Array,
+      default: () => [],
+    },
+    selectedProposal: {
+      type: Object,
+      default: null,
+    },
+  },
   data() {
     return {
       activeEl: 0,
-      proposals: [
-        {
-          id: "1",
-          researchTitle:
-            "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
-          content: {
-            type: "doc",
-            content: [
-              {
-                type: "heading",
-                content: [
-                  {
-                    type: "text",
-                    text: "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
-                  },
-                ],
-              },
-              {
-                type: "paragraph",
-                content: [
-                  {
-                    type: "text",
-                    text: "Bud is a web application that offers a modern solution where research can be fun, hassle-free, and paperless; helping students and teachers with writing research from start to finish. Inside the app, users will have access to a dashboard for monitoring their progress, can use real time collaboration features to work on their research, can utilize an easy-to-use research editor with auto-formatting to standard research formats (e.g. ACM) and can store completed research papers in the research archive. With Bud, research collaboration, tracking and writing will be made easier and enjoyable without using different applications and creating multiple files.",
-                  },
-                ],
-              },
-            ],
-          },
-          status: "Needs Revision",
-          dateTime: "",
-          feedback: {
-            id: "1",
-            date: "1/1/2021",
-            time: "11:00",
-            text: "Good job!",
-          },
-        },
-        {
-          id: "2",
-          researchTitle:
-            "Isolation and Determination of the Bioremediation Potential of Bunker Sludge Degrading Bacteria from Manila Bay",
-          content: {
-            type: "doc",
-            content: [
-              {
-                type: "heading",
-                content: [
-                  {
-                    type: "text",
-                    text: "Isolation and Determination of the Bioremediation Potential of Bunker Sludge Degrading Bacteria from Manila Bay",
-                  },
-                ],
-              },
-              {
-                type: "paragraph",
-                content: [
-                  {
-                    type: "text",
-                    text: "Bunker sludge degrading microorganisms were isolated using enrichment culture technique from the polluted waters of Manila Bay. Water samples were inoculated using liquid mineral media (LAM). Isolates were tentatively identified as Xanthomonas sp.,Alcaligenes sp, Enterobacter sp. and Flavobacterium sp. Two parameters were tested evaluating the biodegradative abilities of individual isolates to degrade bunker sludge and the effect of chicken manure as added source of nitrates and phosphates. Results revealed no significant difference between pure and mixed cultures in ability to degrade",
-                  },
-                ],
-              },
-            ],
-          },
-          status: "Rejected",
-          dateTimeSubmitted: "",
-          feedback: {
-            id: "1",
-            date: "1/1/2021",
-            time: "11:00",
-            text: "Please brainstorm for another idea.",
-          },
-        },
-      ],
+      feedback: "HEllo world",
+      // proposals: [
+      //   {
+      //     id: "1",
+      //     researchTitle:
+      //       "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
+      //     content: {
+      //       type: "doc",
+      //       content: [
+      //         {
+      //           type: "heading",
+      //           content: [
+      //             {
+      //               type: "text",
+      //               text: "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
+      //             },
+      //           ],
+      //         },
+      //         {
+      //           type: "paragraph",
+      //           content: [
+      //             {
+      //               type: "text",
+      //               text: "Bud is a web application that offers a modern solution where research can be fun, hassle-free, and paperless; helping students and teachers with writing research from start to finish. Inside the app, users will have access to a dashboard for monitoring their progress, can use real time collaboration features to work on their research, can utilize an easy-to-use research editor with auto-formatting to standard research formats (e.g. ACM) and can store completed research papers in the research archive. With Bud, research collaboration, tracking and writing will be made easier and enjoyable without using different applications and creating multiple files.",
+      //             },
+      //           ],
+      //         },
+      //       ],
+      //     },
+      //     status: "Needs Revision",
+      //     dateTime: "",
+      //     feedback: {
+      //       id: "1",
+      //       date: "1/1/2021",
+      //       time: "11:00",
+      //       text: "Good job!",
+      //     },
+      //   },
+      //   {
+      //     id: "2",
+      //     researchTitle:
+      //       "Isolation and Determination of the Bioremediation Potential of Bunker Sludge Degrading Bacteria from Manila Bay",
+      //     content: {
+      //       type: "doc",
+      //       content: [
+      //         {
+      //           type: "heading",
+      //           content: [
+      //             {
+      //               type: "text",
+      //               text: "Isolation and Determination of the Bioremediation Potential of Bunker Sludge Degrading Bacteria from Manila Bay",
+      //             },
+      //           ],
+      //         },
+      //         {
+      //           type: "paragraph",
+      //           content: [
+      //             {
+      //               type: "text",
+      //               text: "Bunker sludge degrading microorganisms were isolated using enrichment culture technique from the polluted waters of Manila Bay. Water samples were inoculated using liquid mineral media (LAM). Isolates were tentatively identified as Xanthomonas sp.,Alcaligenes sp, Enterobacter sp. and Flavobacterium sp. Two parameters were tested evaluating the biodegradative abilities of individual isolates to degrade bunker sludge and the effect of chicken manure as added source of nitrates and phosphates. Results revealed no significant difference between pure and mixed cultures in ability to degrade",
+      //             },
+      //           ],
+      //         },
+      //       ],
+      //     },
+      //     status: "Rejected",
+      //     dateTimeSubmitted: "",
+      //     feedback: {
+      //       id: "1",
+      //       date: "1/1/2021",
+      //       time: "11:00",
+      //       text: "Please brainstorm for another idea.",
+      //     },
+      //   },
+      // ],
       statusColors: {
         Pending: "blue",
         "Needs Revision": "yellow",
@@ -138,17 +150,32 @@ export default {
       },
       editor: {
         id: "proposal",
-        content: ``,
+        content: null,
       },
     };
   },
-  beforeMount() {
-    this.editor.content = this.proposals[this.activeEl].content;
+  computed: {
+    adviserFeedback() {
+      const feedback = this.selectedProposal?.feedback?.text;
+      return feedback ?? "No feedback";
+    },
   },
+  watch: {
+    selectedProposal: {
+      immediate: true,
+      handler() {
+        this.editor.content = this.selectedProposal.content;
+      },
+    },
+  },
+  // beforeMount() {
+  //   this.editor.content = this.proposals[this.activeEl].content;
+  // },
   methods: {
     selectProposal: function (index) {
       this.activeEl = index;
-      this.editor.content = this.proposals[this.activeEl].content;
+      // this.editor.content = this.proposals[this.activeEl].content;
+      this.$emit("selectProposal", this.proposals[index]);
     },
     showFeedback: function (proposal) {
       return proposal.status === "Pending" ? false : true;

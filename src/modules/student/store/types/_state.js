@@ -6,4 +6,8 @@ export let studentInitialState = () => ({
   memberships: [],
   selectedTeamDetails: {},
   hasMemberships: false,
+  submittedProposals: [],
+  selectedProposal: {},
+  approvedProposal: {},
+  approvedProposalDetails: {},
 });

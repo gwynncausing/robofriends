@@ -51,6 +51,25 @@ export default {
     state.selectedTeamDetails = selectedTeamDetails;
   },
 
+  [STUDENT_MUTATIONS.SET_SUBMITTED_PROPOSALS](state, { submittedProposals }) {
+    state.submittedProposals = submittedProposals;
+  },
+
+  [STUDENT_MUTATIONS.SET_SELECTED_PROPOSAL](state, { selectedProposal }) {
+    state.selectedProposal = selectedProposal;
+  },
+
+  [STUDENT_MUTATIONS.SET_APPROVED_PROPOSAL](state, { approvedProposal }) {
+    state.approvedProposal = approvedProposal;
+  },
+
+  [STUDENT_MUTATIONS.SET_APPROVED_PROPOSAL_DETAILS](
+    state,
+    { approvedProposalDetails }
+  ) {
+    state.approvedProposalDetails = approvedProposalDetails;
+  },
+
   [STUDENT_MUTATIONS.SET_RESET_STUDENT_STATE](state) {
     Object.assign(state, {}, studentInitialState());
   },

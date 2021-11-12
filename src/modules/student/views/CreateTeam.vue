@@ -286,8 +286,8 @@ export default {
           await this.onSelectedTeamDetails({
             id: this.getCurrentCreatedTeam.id,
           });
-          await this.$router.push({ name: "Student Dashboard" });
           await this.$router.go();
+          await this.$router.push({ name: "Student Dashboard" });
         } catch (error) {
           console.log(error);
         } finally {

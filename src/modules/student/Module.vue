@@ -127,7 +127,6 @@ export default {
       this.teams = this.getMemberships.map((memberships) => memberships.team);
     },
     setSelectedTeamDetails(team) {
-      console.log(team);
       return this.onFetchSelectedTeamDetails({ id: team.id });
     },
     async goToTeam(team) {
