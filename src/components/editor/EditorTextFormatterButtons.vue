@@ -197,10 +197,32 @@
       </button>
     </span>
 
+    <span v-if="blockType === 'heading'">
+      <button
+        :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
+        @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
+      >
+        <v-icon>mdi-format-header-1</v-icon>
+      </button>
+      <button
+        :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
+        @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+      >
+        <v-icon>mdi-format-header-2</v-icon>
+      </button>
+      <button
+        :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
+        @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
+      >
+        <v-icon>mdi-format-header-3</v-icon>
+      </button>
+    </span>
+
     <span
       v-if="
         blockType === 'text' ||
         blockType === 'table' ||
+        blockType === 'heading' ||
         blockType === 'text-with-title'
       "
     >
@@ -213,6 +235,7 @@
         <v-icon>mdi-undo</v-icon>
       </button>
       <button
+        v-if="blockType !== 'heading'"
         title="Clear Formatting"
         @click="
           {

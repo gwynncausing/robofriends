@@ -239,7 +239,7 @@ export default {
         margin-right: 76px;
       }
       .editor-content-heading {
-        height: 42px;
+        height: 98px;
         padding: 4px;
       }
 
