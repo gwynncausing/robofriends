@@ -78,9 +78,9 @@ export default {
         CustomDocument,
         Text,
         Heading.configure({
-          levels: [4],
+          levels: [1, 2, 3, 4],
           HTMLAttributes: {
-            class: "editor-section-block-title",
+            class: "editor-heading-block-title",
           },
         }),
         Placeholder.configure({
