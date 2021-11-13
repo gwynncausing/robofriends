@@ -17,7 +17,7 @@
         </div>
         <div class="feedback-wrapper">
           <div class="feedback-label font-semi-bold">Feedback</div>
-          <Textarea v-model="proposal.feedback.text" />
+          <!-- <Textarea v-model="proposal.feedback.text" /> -->
         </div>
         <div class="button-wrapper">
           <Button> Approve </Button>
@@ -33,12 +33,12 @@
 <script>
 import EditorTextWithTitleReadonly from "@/components/editor/EditorTextWithTitleReadonly";
 import Button from "@/components/global/Button.vue";
-import Textarea from "@/components/global/Textarea.vue";
+// import Textarea from "@/components/global/Textarea.vue";
 
 export default {
   name: "PendingProposals",
   components: {
-    Textarea,
+    // Textarea,
     EditorTextWithTitleReadonly,
     Button,
   },
@@ -62,6 +62,12 @@ export default {
         },
       },
     };
+  },
+
+  watch: {
+    pendingProposals(newValue) {
+      console.log("newValue", newValue);
+    },
   },
 };
 </script>
