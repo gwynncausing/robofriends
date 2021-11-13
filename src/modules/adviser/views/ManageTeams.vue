@@ -1,8 +1,11 @@
 <template>
   <div id="manage-teams">
-    <ChooseTeamHeading :team="teams[activeEl]" />
+    <ChooseTeamHeading
+      v-show="$vuetify.breakpoint.mdAndDown"
+      :team="teams[activeEl]"
+    />
     <div class="flex-wrapper">
-      <div class="team-list-wrapper">
+      <div v-show="$vuetify.breakpoint.lgAndUp" id="team-list-wrapper">
         <CardTeam
           v-for="(team, index) in teams"
           :key="team.id"
@@ -202,7 +205,7 @@ export default {
     flex-direction: row;
     column-gap: 16px;
 
-    .team-list-wrapper {
+    #team-list-wrapper {
       flex: 1;
       display: flex;
       flex-direction: column;
