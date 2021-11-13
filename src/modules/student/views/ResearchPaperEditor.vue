@@ -70,7 +70,7 @@
   </div> -->
   <div>
     <!-- // * make this hasApprovedProposal to true to check/see the editor -->
-    <div v-if="!hasApprovedProposal">
+    <div v-if="hasApprovedProposal">
       <EmptyDataResearchPaperEditor />
     </div>
     <div v-else id="editor">
@@ -169,7 +169,7 @@
 </template>
 
 <script>
-import EditorDraggable from "@/components/EditorDraggable.vue";
+import EditorDraggable from "@/components/editor/EditorDraggable.vue";
 import Button from "@/components/global/Button.vue";
 // import EditorText from "@/components/editor/EditorText.vue";
 // import EditorImage from "@/components/editor/EditorImage.vue";
