@@ -29,3 +29,22 @@ export const getHeadingNumber = (numberList = [], level, isNested = false) => {
 
   return number;
 };
+
+export const processHeadingBlock = (rules, item, numberList, section) => {
+  for (const childContent of item.content) {
+    if (childContent.type === "heading") {
+      let headingText = childContent.content?.[0].text;
+      const level = childContent.attrs.level;
+      if (rules.headingOptions.isNumbered) {
+        // * add numbers to heading
+        headingText = `${getHeadingNumber(
+          numberList,
+          level,
+          rules.headingOptions.isNestedNumbers
+        )} ${headingText}`;
+      }
+      section.children.push(createHeading(headingText, level));
+    }
+  }
+  return section;
+};

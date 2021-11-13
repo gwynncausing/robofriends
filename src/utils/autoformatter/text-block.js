@@ -70,3 +70,18 @@ export const createList = (parentContent, parentType, level = 0) => {
   });
   return list;
 };
+
+export const processTextBlock = (item, section) => {
+  for (const childContent of item.content) {
+    if (childContent.type === "paragraph") {
+      section.children.push(createParagraph(childContent.content));
+    } else if (
+      childContent.type === "orderedList" ||
+      childContent.type === "bulletList"
+    ) {
+      const results = createList(childContent.content, childContent.type);
+      results.forEach((result) => section.children.push(result));
+    }
+  }
+  return section;
+};
