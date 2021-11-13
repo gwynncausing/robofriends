@@ -57,6 +57,11 @@ const studentRoutes = [
         component: () =>
           import("@/modules/student/views/ApprovedResearchVersionHistory.vue"),
       },
+      {
+        path: "archive",
+        name: "Student Archive",
+        component: () => import("@/modules/student/views/Archive.vue"),
+      },
     ],
   },
 ];

@@ -84,6 +84,7 @@
         <v-icon>mdi-cancel</v-icon>
       </button>
     </div>
+
     <div v-else-if="blockType === 'text-with-title'">
       <button
         :class="{ 'is-active': editor.isActive('bold') }"
@@ -141,6 +142,44 @@
         @click="editor.chain().focus().toggleCode().run()"
       >
         <v-icon>mdi-code-tags</v-icon>
+      </button>
+
+      <span class="formatter-section-end"></span>
+
+      <button @click="editor.chain().focus().redo().run()">
+        <v-icon>mdi-redo</v-icon>
+      </button>
+      <button @click="editor.chain().focus().undo().run()">
+        <v-icon>mdi-undo</v-icon>
+      </button>
+      <button @click="editor.chain().focus().clearNodes().run()">
+        <v-icon>mdi-cancel</v-icon>
+      </button>
+    </div>
+    <div v-else-if="blockType === 'heading'">
+      <button
+        :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
+        @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
+      >
+        <v-icon>mdi-format-header-1</v-icon>
+      </button>
+      <button
+        :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
+        @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+      >
+        <v-icon>mdi-format-header-2</v-icon>
+      </button>
+      <button
+        :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }"
+        @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
+      >
+        <v-icon>mdi-format-header-3</v-icon>
+      </button>
+      <button
+        :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }"
+        @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
+      >
+        <v-icon>mdi-format-header-4</v-icon>
       </button>
 
       <span class="formatter-section-end"></span>

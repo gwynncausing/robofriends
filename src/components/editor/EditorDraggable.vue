@@ -13,9 +13,8 @@
       v-for="(editor, index) in list"
       :id="'editor-' + editor.id"
       :key="editor.id"
-      :aria-expanded="expanded"
     >
-      <v-expansion-panel-header :hide-actions="editor.blockType !== 'section'">
+      <v-expansion-panel-header :hide-actions="editor.blockType !== 'heading'">
         <v-icon class="handle">mdi-drag-vertical</v-icon>
         <template v-slot:actions>
           <v-btn icon>
@@ -45,10 +44,10 @@
             />
           </div>
           <div
-            v-else-if="editor.blockType === 'section'"
-            class="editor-content-section"
+            v-else-if="editor.blockType === 'heading'"
+            class="editor-content-heading"
           >
-            <EditorSection
+            <EditorHeading
               :editor-data="editor"
               :user-color="userColor"
               @input="$emit('getContent', $event, index)"
@@ -59,10 +58,7 @@
         </div>
       </v-expansion-panel-header>
 
-      <v-expansion-panel-content
-        v-if="editor.blockType === 'section'"
-        :class="collapsed"
-      >
+      <v-expansion-panel-content v-if="editor.blockType === 'section'">
         <EditorDraggable :list="editor.children" class="item-sub" />
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -71,7 +67,7 @@
 <script>
 import EditorText from "@/components/editor/EditorText.vue";
 import EditorImage from "@/components/editor/EditorImage.vue";
-import EditorSection from "@/components/editor/EditorSection.vue";
+import EditorHeading from "@/components/editor/EditorHeading.vue";
 import draggable from "vuedraggable";
 export default {
   name: "EditorDraggable",
@@ -79,7 +75,7 @@ export default {
     draggable,
     EditorText,
     EditorImage,
-    EditorSection,
+    EditorHeading,
   },
   props: {
     list: {
@@ -126,21 +122,10 @@ export default {
       console.log(event.oldIndex);
       this.$emit("dragElement");
     },
-    // onClick(event) {
-    //   if (event.target.classList.contains("toggleButton")) {
-    //     this.isExpanded = "";
-    //   } else {
-    //     this.expanded = false;
-    //   }
-    // },
   },
 };
 </script>
 <style lang="scss" scoped>
-// .collapsed {
-//   display: none;
-// }
-
 .v-expansion-panels {
   width: 100%;
   background-color: $neutral-50;
@@ -177,17 +162,11 @@ export default {
   .editor-content-image {
     margin-left: 36px;
   }
-
   .editor-content-section {
     height: 42px;
     padding: 4px;
   }
-
-  // .editor-content-text {
-  //   min-height: 18rem; // 304px
-  // }
 }
-
 .v-expansion-panel-content {
   min-height: 24px;
 }
@@ -195,7 +174,6 @@ export default {
 .drag {
   background-color: white;
 }
-
 .ghost {
   opacity: 0;
 }

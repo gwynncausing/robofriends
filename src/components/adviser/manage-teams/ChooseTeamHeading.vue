@@ -2,7 +2,7 @@
   <div class="choose-team">
     <div class="team-details-wrapper">
       <TextField v-model="teamName" class="team-name" readonly />
-      <div class="members-wrapper">
+      <div v-show="$vuetify.breakpoint.smAndUp" class="members-wrapper">
         <v-avatar
           v-for="index in displayMembers"
           :key="index"
