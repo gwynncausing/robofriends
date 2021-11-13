@@ -13,7 +13,6 @@
       v-for="(editor, index) in list"
       :id="'editor-' + editor.id"
       :key="editor.id"
-      :aria-expanded="expanded"
     >
       <v-expansion-panel-header :hide-actions="editor.blockType !== 'section'">
         <v-icon class="handle">mdi-drag-vertical</v-icon>
@@ -59,10 +58,7 @@
         </div>
       </v-expansion-panel-header>
 
-      <v-expansion-panel-content
-        v-if="editor.blockType === 'section'"
-        :class="collapsed"
-      >
+      <v-expansion-panel-content v-if="editor.blockType === 'section'">
         <EditorDraggable :list="editor.children" class="item-sub" />
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -126,21 +122,10 @@ export default {
       console.log(event.oldIndex);
       this.$emit("dragElement");
     },
-    // onClick(event) {
-    //   if (event.target.classList.contains("toggleButton")) {
-    //     this.isExpanded = "";
-    //   } else {
-    //     this.expanded = false;
-    //   }
-    // },
   },
 };
 </script>
 <style lang="scss" scoped>
-// .collapsed {
-//   display: none;
-// }
-
 .v-expansion-panels {
   width: 100%;
   background-color: $neutral-50;
@@ -177,17 +162,11 @@ export default {
   .editor-content-image {
     margin-left: 36px;
   }
-
   .editor-content-section {
     height: 42px;
     padding: 4px;
   }
-
-  // .editor-content-text {
-  //   min-height: 18rem; // 304px
-  // }
 }
-
 .v-expansion-panel-content {
   min-height: 24px;
 }
@@ -195,7 +174,6 @@ export default {
 .drag {
   background-color: white;
 }
-
 .ghost {
   opacity: 0;
 }
