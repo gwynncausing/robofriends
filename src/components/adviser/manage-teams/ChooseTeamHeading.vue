@@ -9,21 +9,14 @@
           color="primary"
           size="32"
         >
-          <!-- <span class="avatar-content caption">{{
-            getInitials(team.members[index - 1])
-          }}</span> -->
           <span v-if="members.length > 0" class="avatar-content caption">
             {{ members[index - 1].user.firstName[0] }}
             {{ members[index - 1].user.lastName[0] }}
           </span>
         </v-avatar>
-        <!-- <v-avatar
-          v-show="team.members.length > 4"
-          color="neutral-300"
-          size="32"
-        >
+        <v-avatar v-show="members.length > 4" color="neutral-300" size="32">
           <span class="avatar-content caption">+{{ moreMembers }}</span>
-        </v-avatar> -->
+        </v-avatar>
       </div>
     </div>
     <Button outlined class="choose-team-btn"> Choose Team</Button>
@@ -65,7 +58,7 @@ export default {
       }
     },
     moreMembers() {
-      return this.team.members.length - 3;
+      return this.members.length - 3;
     },
   },
 

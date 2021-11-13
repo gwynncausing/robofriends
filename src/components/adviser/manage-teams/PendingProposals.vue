@@ -1,7 +1,7 @@
 <template>
   <div class="pending-proposals">
     <div
-      v-for="(proposal, index) in pendingProposals"
+      v-for="(proposal, index) in proposals"
       :key="proposal.id"
       class="proposal-list-wrapper"
     >
@@ -17,12 +17,16 @@
         </div>
         <div class="feedback-wrapper">
           <div class="feedback-label font-semi-bold">Feedback</div>
-          <!-- <Textarea v-model="proposal.feedback.text" /> -->
+          <Textarea v-model="proposal.feedback" />
         </div>
         <div class="button-wrapper">
-          <Button> Approve </Button>
-          <Button color="red" dark> Reject </Button>
-          <Button color="yellow" dark> Ask to Revise </Button>
+          <Button @click="approve(proposal.feedback)"> Approve </Button>
+          <Button color="red" dark @click="reject(proposal.feedback)">
+            Reject
+          </Button>
+          <Button color="yellow" dark @click="revise(proposal.feedback)">
+            Ask to Revise
+          </Button>
         </div>
       </div>
       <hr v-show="index + 1 != pendingProposals.length" />
@@ -33,12 +37,12 @@
 <script>
 import EditorTextWithTitleReadonly from "@/components/editor/EditorTextWithTitleReadonly";
 import Button from "@/components/global/Button.vue";
-// import Textarea from "@/components/global/Textarea.vue";
+import Textarea from "@/components/global/Textarea.vue";
 
 export default {
   name: "PendingProposals",
   components: {
-    // Textarea,
+    Textarea,
     EditorTextWithTitleReadonly,
     Button,
   },
@@ -50,23 +54,29 @@ export default {
   },
   data() {
     return {
-      research: {
-        id: "1",
-        title: "title",
-        content: `aaaaa`,
-        feedback: {
-          id: "1",
-          date: "1/1/2021",
-          time: "11:00",
-          text: "Good job!",
-        },
-      },
+      textarea: "hello",
+      proposals: {},
     };
   },
 
   watch: {
-    pendingProposals(newValue) {
-      console.log("newValue", newValue);
+    pendingProposals: {
+      handler(newValue) {
+        Object.assign(this.proposals, newValue);
+      },
+      immediate: true,
+    },
+  },
+
+  methods: {
+    approve(value) {
+      console.log("approve", value);
+    },
+    reject(value) {
+      console.log("reject", value);
+    },
+    revise(value) {
+      console.log("revise", value);
     },
   },
 };
