@@ -70,7 +70,7 @@
   </div> -->
   <div>
     <!-- // * make this hasApprovedProposal to true to check/see the editor -->
-    <div v-if="hasApprovedProposal">
+    <div v-if="!hasApprovedProposal">
       <EmptyDataResearchPaperEditor />
     </div>
     <div v-else id="editor">
