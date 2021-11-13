@@ -58,7 +58,7 @@ export default {
         },
         {
           name: "Archive",
-          path: { name: "Archive" },
+          path: { name: "Student Archive" },
         },
       ],
       teamRoutes: [
