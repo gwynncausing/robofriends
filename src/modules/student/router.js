@@ -27,7 +27,7 @@ const studentRoutes = [
       },
       {
         path: "team-settings",
-        name: "Team Setttings",
+        name: "Team Settings",
         component: () => import("@/views/TeamSettings.vue"),
       },
       {
@@ -50,6 +50,12 @@ const studentRoutes = [
         name: "Research Paper Editor",
         component: () =>
           import("@/modules/student/views/ResearchPaperEditor.vue"),
+      },
+      {
+        path: "approved-research-version-history",
+        name: "Approved Research Version History",
+        component: () =>
+          import("@/modules/student/views/ApprovedResearchVersionHistory.vue"),
       },
     ],
   },

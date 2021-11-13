@@ -60,7 +60,7 @@ export default {
     },
     deleteAccount() {
       // this.dialog = false;
-      this.$emit("deleteAccount");
+      this.$emit("dialogDeleteAccount");
     },
   },
 };

@@ -41,6 +41,30 @@
       @dialogClose="joinTeamModal = $event"
       @dialogJoinTeam="joinTeam($event)"
     />
+    <v-snackbar
+      v-model="isSnackbarShown"
+      :timeout="3000"
+      elevation="24"
+      color="white"
+      class="mb-3"
+      content-class="neutral-800--text"
+    >
+      You have
+      <span class="secondary--text font-weight-bold">declined</span> team
+      <span class="font-weight-bold">{{ teamName }}</span
+      >'s invitation.
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="error"
+          text
+          v-bind="attrs"
+          icon
+          @click="isSnackbarShown = false"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -62,6 +86,8 @@ export default {
   },
   data: function () {
     return {
+      isSnackbarShown: false,
+      teamName: "Hello",
       error: "",
       joinTeamModal: false,
       isSubmitTeamCode: false,
@@ -114,7 +140,7 @@ export default {
       onFetchInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_INVITATIONS}`,
       onUpdateInvitation: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_INVITATION}`,
       onJoinCodeTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.JOIN_CODE_TEAM}`,
-      onSelectTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SELECT_TEAM}`,
+      onSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
     }),
     fetchInvitations() {
       return this.onFetchInvitations();
@@ -130,12 +156,15 @@ export default {
         },
       };
       try {
-        console.log(invitation.team);
         await this.onUpdateInvitation(payload);
         await this.setSelectTeam(invitation.team);
-        if (status === TEAM.INVITATION_STATUS.ACCEPTED)
+        if (status === TEAM.INVITATION_STATUS.ACCEPTED) {
           await this.$router.push({ name: "Student Dashboard" });
-        await this.$router.go();
+          await this.$router.go();
+        } else {
+          this.isSnackbarShown = true;
+          this.teamName = invitation.team.name;
+        }
       } catch (error) {
         console.log(error);
       }
@@ -146,7 +175,8 @@ export default {
         this.error = "";
         const payload = { code: code };
         await this.onJoinCodeTeam(payload);
-        this.$router.push({ name: "Dashboard" });
+        await this.$router.push({ name: "Student Dashboard" });
+        await this.$router.go();
       } catch (error) {
         switch (error?.response?.statusCode) {
           case STATUS_CODES.NOT_FOUND:
@@ -162,7 +192,7 @@ export default {
       }
     },
     setSelectTeam(team) {
-      return this.onSelectTeam({ team: team });
+      return this.onSelectedTeamDetails({ id: team.id });
     },
   },
 };

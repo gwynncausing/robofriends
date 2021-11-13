@@ -13,6 +13,7 @@ import { Editor, EditorContent } from "@tiptap/vue-2";
 import Document from "@tiptap/extension-document";
 import Text from "@tiptap/extension-text";
 import Heading from "@tiptap/extension-heading";
+import Paragraph from "@tiptap/extension-paragraph";
 import Placeholder from "@tiptap/extension-placeholder";
 
 import Collaboration from "@tiptap/extension-collaboration";
@@ -83,8 +84,9 @@ export default {
       extensions: [
         CustomDocument,
         Text,
+        Paragraph,
         Heading.configure({
-          levels: [4],
+          levels: [1, 2, 3],
           HTMLAttributes: {
             class: "editor-heading-block-title",
           },

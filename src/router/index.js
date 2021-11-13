@@ -43,17 +43,23 @@ const routes = [
   {
     path: "/verify",
     name: "Email Verification",
-    component: () => import("@/views/EmailVerification.vue"),
+    component: () => import("@/views/security/EmailVerification.vue"),
   },
   {
     path: "/forgot-password",
     name: "Forgot Password",
-    component: () => import("@/views/ForgotPassword.vue"),
+    component: () => import("@/views/security/ForgotPassword.vue"),
   },
   {
     path: "/reset-password",
     name: "Reset Password",
-    component: () => import("@/views/ForgotPasswordResetPassword.vue"),
+    component: () => import("@/views/security/ForgotPasswordResetPassword.vue"),
+  },
+  {
+    path: "/reset-password-success",
+    name: "Reset Password Success",
+    component: () =>
+      import("@/views/security/ForgotPasswordResetPasswordSuccess.vue"),
   },
   {
     path: "/test",

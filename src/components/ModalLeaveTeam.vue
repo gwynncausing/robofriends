@@ -6,7 +6,9 @@
     <template v-slot:content>
       <div class="pt-3">
         <span class="subheading1 neutral-500--text">
-          Are you sure that you want to leave {{ team.name }}?
+          Are you sure that you want to leave team<span class="font-bold">
+            {{ team.name }}?
+          </span>
         </span>
       </div>
     </template>

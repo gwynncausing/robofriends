@@ -4,6 +4,6 @@ export let studentInitialState = () => ({
   sentTeachersInvitations: [],
   invitations: [],
   memberships: [],
-  selectedTeam: {},
+  selectedTeamDetails: {},
   hasMemberships: false,
 });

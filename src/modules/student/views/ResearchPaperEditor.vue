@@ -1,4 +1,87 @@
 <template>
+  <!-- <div id="editor">
+    <div class="editor-heading">
+      <Button text class="neutral-800--text mr-auto">Version History</Button>
+      <ActiveUsersList :users="activeUsers" class="mr-4" />
+      <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <Button outlined v-bind="attrs" v-on="on">
+            Export
+            <v-icon>mdi-chevron-down</v-icon>
+          </Button>
+        </template>
+        <v-list>
+          <v-list-item v-for="(item, index) in exportItems" :key="index" link>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
+    <div class="editor-list-wrapper">
+      <div class="editor-list">
+        <div
+          v-for="(editor, index) in editors"
+          :id="'editor-' + editor.id"
+          :key="editor.id"
+          class="editor-row"
+        >
+          <div v-if="editor.blockType === 'text'" class="editor-content-text">
+            <EditorText
+              :editor-data="editor"
+              :user-color="userColor"
+              @input="getContent($event, index)"
+              @updateUsers="updateUsers($event)"
+              @selectBlock="selectBlock($event)"
+            />
+          </div>
+          <div
+            v-else-if="editor.blockType === 'image'"
+            class="editor-content-image"
+          >
+            <EditorImage
+              :editor-data="editor"
+              :user-color="userColor"
+              @input="getContent($event, index)"
+              @updateUsers="updateUsers($event)"
+              @selectBlock="selectBlock($event)"
+              @setColumnNumber="setColumnNumber($event, editor)"
+            />
+          </div>
+          <div
+            v-else-if="editor.blockType === 'heading'"
+            class="editor-content-heading"
+          >
+            <EditorHeading
+              :editor-data="editor"
+              :user-color="userColor"
+              @input="getContent($event, index)"
+              @updateUsers="updateUsers($event)"
+              @selectBlock="selectBlock($event)"
+            />
+          </div>
+          <div
+            v-else-if="editor.blockType === 'table'"
+            class="editor-content-table"
+          >
+            <EditorTable
+              :editor-data="editor"
+              :user-color="userColor"
+              @input="getContent($event, index)"
+              @updateUsers="updateUsers($event)"
+              @selectBlock="selectBlock($event)"
+              @setColumnNumber="setColumnNumber($event, editor)"
+            />
+          </div>
+        </div>
+      </div>
+      <EditorToolbar
+        :current-toolbar-position="currentToolbarPosition"
+        :current-selected-editor-index="currentSelectedEditorIndex"
+        @addEditor="addEditor($event)"
+        @removeEditor="removeEditor($event)"
+      />
+    </div>
+  </div> -->
   <div id="editor">
     <div class="editor-heading">
       <Button text class="neutral-800--text mr-auto">Version History</Button>
@@ -18,6 +101,29 @@
       </v-menu>
     </div>
     <div class="editor-list-wrapper">
+      <div class="editor-list">
+        <div class="editor-row">
+          <EditorDraggable
+            :list="editors"
+            :user-color="userColor"
+            @setColumnNumber="setColumnNumber($event)"
+            @dragElement="testMethod"
+            @input="getContent($event, index)"
+            @updateUsers="updateUsers($event)"
+            @selectBlock="selectBlock($event)"
+          />
+        </div>
+
+        <EditorToolbar
+          :current-toolbar-position="currentToolbarPosition"
+          :current-selected-editor-index="currentSelectedEditorIndex"
+          @addEditor="addEditor($event)"
+          @removeEditor="removeEditor($event)"
+        />
+      </div>
+    </div>
+
+    <!-- <div class="editor-list-wrapper">
       <div class="editor-list">
         <div
           v-for="(editor, index) in editors"
@@ -79,27 +185,27 @@
         @addEditor="addEditor($event)"
         @removeEditor="removeEditor($event)"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
+import EditorDraggable from "@/components/EditorDraggable.vue";
 import Button from "@/components/global/Button.vue";
-import EditorText from "@/components/editor/EditorText.vue";
-import EditorImage from "@/components/editor/EditorImage.vue";
-import EditorHeading from "@/components/editor/EditorHeading.vue";
-import EditorTable from "@/components/editor/EditorTable.vue";
+// import EditorText from "@/components/editor/EditorText.vue";
+// import EditorImage from "@/components/editor/EditorImage.vue";
+// import EditorSection from "@/components/editor/EditorSection.vue";
 import EditorToolbar from "@/components/editor/EditorToolbar.vue";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 
 export default {
   name: "ResearchPaperEditor",
   components: {
+    EditorDraggable,
     Button,
-    EditorText,
-    EditorImage,
-    EditorHeading,
-    EditorTable,
+    // EditorText,
+    // EditorImage,
+    // EditorSection,
     EditorToolbar,
     ActiveUsersList,
   },
@@ -154,16 +260,16 @@ export default {
     getContent(event, index) {
       this.editors[index].content = event.content;
     },
-    addEditor({ currentSelectedEditorIndex: index, blockType = "text" }) {
+    addEditor({ currentSelectedEditorIndex: index, blockType = "section" }) {
       if (index === -1) return;
       let content = ``;
       if (blockType === "table")
         content = `<table>
           <tbody>
             <tr>
-              <th></th>
-              <th></th>
-              <th></th>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
               <td></td>
@@ -177,12 +283,25 @@ export default {
             </tr>
           </tbody>
         </table>`;
-      this.editors.splice(index + 1, 0, {
-        id: this.id++,
-        content: content,
-        blockType,
-        users: [],
-      });
+
+      if (blockType === "section") {
+        this.editors.splice(index + 1, 0, {
+          id: this.id++,
+          content: content,
+          blockType,
+          users: [],
+          children: [],
+          columnNumber: 1,
+        });
+      } else {
+        this.editors.splice(index + 1, 0, {
+          id: this.id++,
+          content: content,
+          blockType,
+          users: [],
+          columnNumber: 1,
+        });
+      }
     },
     removeEditor({ currentSelectedEditorIndex: index = -1 }) {
       this.editors.splice(index, 1);
@@ -197,6 +316,9 @@ export default {
     },
     testMethod() {
       console.log("testMethod called");
+    },
+    setColumnNumber({ columnNumber, editor }) {
+      editor.columnNumber = columnNumber;
     },
   },
 };
@@ -225,24 +347,26 @@ export default {
     .editor-row {
       display: flex;
       gap: 16px;
-
-      div[class^="editor-content-"] {
-        width: 100%;
-        border: 1px solid $neutral-400;
-        border-radius: 4px;
-        padding: 0.8rem;
-        margin-right: 76px;
-      }
-      .editor-content-heading {
-        height: 42px;
-        padding: 4px;
-      }
-
-      .editor-content-text,
-      .editor-content-image {
-        min-height: 18rem; // 304px
-      }
+      margin-right: 76px;
     }
+
+    //   div[class^="editor-content-"] {
+    //     width: 100%;
+    //     border: 1px solid $neutral-400;
+    //     border-radius: 4px;
+    //     padding: 0.8rem;
+    //     margin-right: 76px;
+    //   }
+    //   .editor-content-section {
+    //     height: 42px;
+    //     padding: 4px;
+    //   }
+
+    //   .editor-content-text,
+    //   .editor-content-image {
+    //     min-height: 18rem; // 304px
+    //   }
+    // }
   }
 }
 </style>
