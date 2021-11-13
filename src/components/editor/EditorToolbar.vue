@@ -8,7 +8,7 @@
       <v-icon class="editor-control-icon">mdi-image-outline</v-icon>
     </Button>
 
-    <Button icon @click="addEditor(currentSelectedEditorIndex, 'section')">
+    <Button icon @click="addEditor(currentSelectedEditorIndex, 'heading')">
       <v-icon class="editor-control-icon">mdi-application-outline</v-icon>
     </Button>
 

@@ -14,7 +14,7 @@
       :id="'editor-' + editor.id"
       :key="editor.id"
     >
-      <v-expansion-panel-header :hide-actions="editor.blockType !== 'section'">
+      <v-expansion-panel-header :hide-actions="editor.blockType !== 'heading'">
         <v-icon class="handle">mdi-drag-vertical</v-icon>
         <template v-slot:actions>
           <v-btn icon>
@@ -44,10 +44,10 @@
             />
           </div>
           <div
-            v-else-if="editor.blockType === 'section'"
-            class="editor-content-section"
+            v-else-if="editor.blockType === 'heading'"
+            class="editor-content-heading"
           >
-            <EditorSection
+            <EditorHeading
               :editor-data="editor"
               :user-color="userColor"
               @input="$emit('getContent', $event, index)"
@@ -67,7 +67,7 @@
 <script>
 import EditorText from "@/components/editor/EditorText.vue";
 import EditorImage from "@/components/editor/EditorImage.vue";
-import EditorSection from "@/components/editor/EditorSection.vue";
+import EditorHeading from "@/components/editor/EditorHeading.vue";
 import draggable from "vuedraggable";
 export default {
   name: "EditorDraggable",
@@ -75,7 +75,7 @@ export default {
     draggable,
     EditorText,
     EditorImage,
-    EditorSection,
+    EditorHeading,
   },
   props: {
     list: {

@@ -273,9 +273,9 @@ export default {
     getContent(event, index) {
       this.editors[index].content = event.content;
     },
-    addEditor({ currentSelectedEditorIndex: index, blockType = "section" }) {
+    addEditor({ currentSelectedEditorIndex: index, blockType = "heading" }) {
       if (index === -1) return;
-      if (blockType === "section") {
+      if (blockType === "heading") {
         this.editors.splice(index + 1, 0, {
           id: this.id++,
           content: ``,
