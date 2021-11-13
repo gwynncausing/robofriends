@@ -1,8 +1,6 @@
 import {
-  Paragraph,
   Document,
   Packer,
-  ImageRun,
   SectionType,
   Table,
   TableCell,
@@ -11,11 +9,12 @@ import {
 } from "docx";
 
 import { saveAs } from "file-saver";
-import { createParagraph, createList } from "./text-block";
-import { createHeading, getHeadingNumber } from "./heading-block";
+import { processTextBlock, createParagraph, createList } from "./text-block";
+import { processHeadingBlock } from "./heading-block";
 import { createACMCopyrightSpace } from "./special-elements";
+import { processImageBlock } from "./image-block";
 
-// TODO: add implementation
+// TODO: add implefmentation
 const createTableCellsChildren = (content) => {
   let children = [];
   for (const childContent of content) {
@@ -73,69 +72,29 @@ export const createTable = (content) => {
   return table;
 };
 
-const getImageHeightWidth = (src) => {
-  return new Promise((resolve, reject) => {
-    let img = new Image();
-    img.onload = () => resolve({ height: img.height, width: img.width });
-    img.onerror = reject;
-    img.src = src;
-  });
-};
-
-// column width 8.45cm converted to px
-// https://www.unitconverters.net/typography/centimeter-to-pixel-x.htm
-const createImageRun = async (imgUrl, targetWidth = 319.37007874) => {
-  let height = 0,
-    width = 0;
-  await getImageHeightWidth(imgUrl).then((obj) => {
-    height = obj.height;
-    width = obj.width;
-  });
-
-  const originalAspectRatio = width / height;
-
-  width = targetWidth;
-  height = width / originalAspectRatio;
-  return new ImageRun({
-    data: await fetch(imgUrl).then((response) => response.blob()),
-    transformation: {
-      width: width,
-      height: height,
-    },
-  });
-};
-
-// TODO: add implementation
-export const createImage = async (url) => {
-  const imagerun = await createImageRun(url);
-  return new Paragraph({
-    children: [imagerun],
-  });
-};
-
 //*OK
-export const createSectionProperties = ({
-  document,
-  type = SectionType.CONTINUOUS,
-}) => {
+export const createSectionProperties = ({ documentOptions, type }) => {
   const sectionProperties = {
-    //* DOCUMENT RULES
-    page: document?.page,
-    column: document?.column,
+    page: documentOptions?.page,
+    column: documentOptions?.column,
     type: type,
   };
   return sectionProperties;
 };
 
 //*OK
-const createSection = ({ document, children = [] }) => {
+export const createSection = ({
+  documentOptions,
+  type = SectionType.CONTINUOUS,
+  children = [],
+}) => {
   return {
-    properties: createSectionProperties({ document }),
+    properties: createSectionProperties({ documentOptions, type }),
     children: children,
   };
 };
 
-//TODO: polish
+//TODO: polish this, and should accept a content for creator, title, description
 export const createDocumentProperties = (rules) => {
   const properties = {
     //TODO: should come from content object instead
@@ -154,117 +113,45 @@ export const createDocumentProperties = (rules) => {
   return properties;
 };
 
-//TODO: polish text/heading block related functions
 export const generateDocument = async (rules, content) => {
   const numberList = [];
   const properties = createDocumentProperties(rules);
-  const section = createSection({ document: rules.document, children: [] });
+  let section = createSection({
+    documentOptions: rules.document,
+    children: [],
+  });
+
   // TODO: add indicator to only add this if the user wants to
   // TODO: add check for format name e.g. if rules.name === ACM
   section.children.push(createACMCopyrightSpace());
-  // TODO: create a function called createSectionChildren and insert the code block below
+
+  //* Process each item
   for (const item of content) {
-    if (item.blockType === "section" || item.blockType === "heading") {
-      for (const childContent of item.content) {
-        if (childContent.type === "heading") {
-          let headingText = childContent.content?.[0].text;
-          const level = childContent.attrs.level;
-          if (rules.headingOptions.isNumbered) {
-            // * add numbers to heading
-            headingText = `${getHeadingNumber(
-              numberList,
-              level,
-              rules.headingOptions.isNestedNumbers
-            )} ${headingText}`;
-          }
-          section.children.push(createHeading(headingText, level));
+    switch (item.blockType) {
+      case "section":
+      case "heading":
+        processHeadingBlock(rules, item, numberList, section);
+        break;
+      case "text":
+        processTextBlock(item, section);
+        break;
+      case "image":
+        section = await processImageBlock(rules, item, properties, section);
+        break;
+      case "table":
+        // TODO: add to separate file
+        for (const childContent of item.content) {
+          if (childContent.type !== "table") break;
+          let table = createTable(childContent.content);
+          section.children.push(table);
         }
-      }
-    } else if (item.blockType === "text") {
-      for (const childContent of item.content) {
-        if (childContent.type === "paragraph") {
-          section.children.push(createParagraph(childContent.content));
-        } else if (
-          childContent.type === "orderedList" ||
-          childContent.type === "bulletList"
-        ) {
-          const results = createList(childContent.content, childContent.type);
-          results.forEach((result) => section.children.push(result));
-        }
-      }
-    } else if (item.blockType === "image") {
-      let tempContent = item.content.reverse();
-      // * Added due to bug that sometimes heading comes first
-      if (tempContent[0].type === "heading")
-        tempContent = item.content.reverse();
-
-      for (const childContent of tempContent) {
-        if (childContent.type === "image") {
-          const result = await createImage(childContent.attrs.src);
-          section.children.push(result);
-        } else if (childContent.type === "heading") {
-          // * Added due to TextRun probably overrides the bold in paragraph styling
-          let tempContentText = [
-            {
-              type: "text",
-              marks: [{ type: "bold" }],
-              text: childContent.content[0].text,
-            },
-          ];
-
-          section.children.push(
-            createParagraph(tempContentText, "FigureStyle")
-          );
-        }
-      }
-    } else if (item.blockType === "table") {
-      for (const childContent of item.content) {
-        if (childContent.type !== "table") break;
-        let table = createTable(childContent.content);
-        section.children.push(table);
-      }
-      // const table = new Table({
-      //   rows: [
-      //     new TableRow({
-      //       children: [
-      //         new TableCell({
-      //           children: [new Paragraph({})],
-      //         }),
-      //       ],
-      //     }),
-      //   ],
-      // });
+        break;
     }
-
-    // for (const [innerIndex, innerContent] of item.content.entries()) {
-    //   if (innerContent.type === "paragraph") {
-    //     section.children.push(createParagraph(innerContent.content));
-    //   } else if (innerContent.type === "heading") {
-    //     section.children.push(
-    //       createHeading(
-    //         innerContent.content?.[0].text,
-    //         innerContent.attrs.level
-    //       )
-    //     );
-    //   } else if (innerContent.type === "orderedList") {
-    //     const results = createOrderedList(innerContent.content);
-    //     results.forEach((result) => section.children.push(result));
-    //   } else if (innerContent.type === "bulletList") {
-    //     const results = createBulletList(innerContent.content);
-    //     results.forEach((result) => section.children.push(result));
-    //   } else if (innerContent.type === "image") {
-    //     const result = await createImage(innerContent.attrs.src);
-    //     section.children.push(result);
-    //   }
-    // }
   }
   properties.sections.push(section);
-  // TODO: continue here based on pseudo code
-
-  // TODO: return a Document object based on above values
 
   const doc = new Document(properties);
-
+  // TODO: return document object
   // * temporary soluton to save
   saveDocument(doc);
 };
@@ -274,7 +161,7 @@ const saveDocument = (doc) =>
     saveAs(blob, "test.docx");
   });
 
-// TODO: once finalized, make this a promise based implementation, we do not want the web client to pause/uninteractable when dealing with huge documents (might take a while and makes it look like the page is unresponsive, see code blocking here https://nodejs.org/en/docs/guides/blocking-vs-non-blocking/)
+// TODO: once finalized, make this a promise based implementation
 const autoformat = {
   generateDocument,
   // TODO: add new function here for saving/downloadingi into docx file

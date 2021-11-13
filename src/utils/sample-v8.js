@@ -639,6 +639,31 @@ export const sample = [
     users: [],
   },
   {
+    id: 124,
+    content: [
+      {
+        type: "heading",
+        attrs: { level: 1 },
+        content: [
+          {
+            type: "text",
+            text: "Figure #. Account Settings – Delete Account",
+          },
+        ],
+      },
+      {
+        type: "image",
+        attrs: {
+          src: "https://budofficial.blob.core.windows.net/images/2.png?sv=2020-08-04&ss=b&srt=co&sp=rwdlacitfx&se=2022-11-03T13:42:32Z&st=2021-11-03T05:42:32Z&spr=https,http&sig=c1Sekrl%2FJyTNakfsH0Vsdwi%2FZNl8MjBRIRC%2F62omkeg%3D",
+          alt: null,
+          title: null,
+        },
+      },
+    ],
+    blockType: "image",
+    users: [],
+  },
+  {
     id: 132,
     content: [
       {
@@ -807,31 +832,6 @@ export const sample = [
         type: "image",
         attrs: {
           src: "https://budofficial.blob.core.windows.net/images/1.png?sv=2020-08-04&ss=b&srt=co&sp=rwdlacitfx&se=2022-11-03T13:42:32Z&st=2021-11-03T05:42:32Z&spr=https,http&sig=c1Sekrl%2FJyTNakfsH0Vsdwi%2FZNl8MjBRIRC%2F62omkeg%3D",
-          alt: null,
-          title: null,
-        },
-      },
-    ],
-    blockType: "image",
-    users: [],
-  },
-  {
-    id: 124,
-    content: [
-      {
-        type: "heading",
-        attrs: { level: 1 },
-        content: [
-          {
-            type: "text",
-            text: "Figure #. Account Settings – Delete Account",
-          },
-        ],
-      },
-      {
-        type: "image",
-        attrs: {
-          src: "https://budofficial.blob.core.windows.net/images/2.png?sv=2020-08-04&ss=b&srt=co&sp=rwdlacitfx&se=2022-11-03T13:42:32Z&st=2021-11-03T05:42:32Z&spr=https,http&sig=c1Sekrl%2FJyTNakfsH0Vsdwi%2FZNl8MjBRIRC%2F62omkeg%3D",
           alt: null,
           title: null,
         },
