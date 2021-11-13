@@ -81,6 +81,9 @@ export const processTextBlock = (item, section) => {
     ) {
       const results = createList(childContent.content, childContent.type);
       results.forEach((result) => section.children.push(result));
+      section.children.push(
+        new Paragraph({ text: "", spacing: { before: "0pt", after: "0pt" } })
+      );
     }
   }
   return section;
