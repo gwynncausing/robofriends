@@ -70,16 +70,14 @@
   </div> -->
   <div>
     <!-- // * make this hasApprovedProposal to true to check/see the editor -->
-    <div v-if="!hasApprovedProposal">
+    <div v-if="hasApprovedProposal">
       <EmptyDataResearchPaperEditor />
     </div>
     <div v-else id="editor">
       <div class="editor-heading">
-        <Button text class="neutral-800--text mr-auto">Version History</Button>
-        <ActiveUsersList :users="activeUsers" class="mr-4" />
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <Button outlined v-bind="attrs" v-on="on">
+            <Button outlined v-bind="attrs" class="mr-4" v-on="on">
               Export
               <v-icon>mdi-chevron-down</v-icon>
             </Button>
@@ -90,6 +88,9 @@
             </v-list-item>
           </v-list>
         </v-menu>
+        <Button text class="neutral-800--text mr-auto">Version History</Button>
+        <ActiveUsersList :users="activeUsers" class="mr-4" />
+        <Button>Save</Button>
       </div>
       <div class="editor-list-wrapper">
         <div class="editor-list">
