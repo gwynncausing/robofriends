@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { Column, PageOrientation, AlignmentType, LevelFormat } from "docx";
+import { convertCMtoPixel } from "../helpers/centimeter-converter";
 
 //* add more params if necessary
 // TODO: review implementation
@@ -99,12 +100,10 @@ export const ACM_FORMAT = {
       count: 2,
       space: ".83cm",
       equalWidth: true,
-      children: [
-        new Column({ width: "8.45cm" }),
-        new Column({ width: "8.45cm" }),
-      ],
+      children: [],
     },
   },
+  defaultContentWidth: convertCMtoPixel("8.45cm"),
   styles: {
     headings: {
       heading1: createHeadingStyle({
@@ -201,6 +200,36 @@ export const ACM_FORMAT = {
           })
         ),
       },
+    },
+  },
+  special: {
+    // TODO: redundant code, to be refactored
+    singleColumnContent: {
+      document: {
+        page: {
+          size: {
+            orientation: PageOrientation.PORTRAIT,
+            height: "27.94cm",
+            width: "21.59cm",
+          },
+          margin: {
+            top: "1.9cm",
+            right: "1.9cm",
+            bottom: "2.54cm",
+            left: "1.9cm",
+          },
+        },
+        column: {
+          count: 1,
+        },
+      },
+      width:
+        //page size
+        convertCMtoPixel("21.59cm") -
+        //left margin
+        convertCMtoPixel("1.9cm") -
+        //right margin
+        convertCMtoPixel("1.9cm"),
     },
   },
 };
