@@ -24,13 +24,10 @@
             :has-approved-proposal="hasApprovedProposal"
             @updateProposal="updateProposals($event)"
           />
-          <!-- :pending-proposals="teams[activeEl].pendingProposals" -->
         </template>
         <template v-slot:body-approved-research>
           <span v-if="approvedProposalsLoading">Loading...</span>
-          <ApprovedResearch v-else />
-          <!--  :pending-research="approvedProposals" -->
-          <!-- :approved-research="teams[activeEl].approvedResearch" -->
+          <ApprovedResearch v-else :approved-research="approvedProposals[0]" />
         </template>
         <template v-slot:body-research-paper>
           <span v-if="!hasApprovedProposal">No Approved Proposal yet</span>
