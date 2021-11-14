@@ -77,6 +77,9 @@ export default {
         this.editor.setOptions({ editable: value });
       },
     },
+    "editor.storage.collaborationCursor.users": function (newValue) {
+      this.$emit("updateUsers", newValue);
+    },
   },
 
   mounted() {
@@ -134,9 +137,6 @@ export default {
               name,
               color: this.userColor,
             },
-            onUpdate: (users) => {
-              this.$emit("updateUsers", users);
-            },
           }),
         ],
         content: content,
@@ -152,6 +152,7 @@ export default {
   },
   beforeUnmount() {
     this.editor.destroy();
+    this.provider.destroy();
   },
 };
 </script>

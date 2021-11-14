@@ -23,6 +23,10 @@ import Subscript from "@tiptap/extension-subscript";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import ListItem from "@tiptap/extension-list-item";
+import Table from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
+import TableCell from "@tiptap/extension-table-cell";
+import TableHeader from "@tiptap/extension-table-header";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
@@ -38,6 +42,26 @@ import { ROOT_GETTERS } from "@/store/types";
 // const ydoc = new Y.Doc();
 // Registered with a WebRTC provider
 // new WebrtcProvider("bud-test-1", ydoc);
+const CustomTableCell = TableCell.extend({
+  addAttributes() {
+    return {
+      // extend the existing attributes …
+      ...this.parent?.(),
+
+      // and add a new one …
+      backgroundColor: {
+        default: null,
+        parseHTML: (element) => element.getAttribute("data-background-color"),
+        renderHTML: (attributes) => {
+          return {
+            "data-background-color": attributes.backgroundColor,
+            style: `background-color: ${attributes.backgroundColor}`,
+          };
+        },
+      },
+    };
+  },
+});
 
 export default {
   components: {
@@ -69,6 +93,12 @@ export default {
     }),
   },
 
+  watch: {
+    "editor.storage.collaborationCursor.users": function (newValue) {
+      this.$emit("updateUsers", newValue);
+    },
+  },
+
   mounted() {
     const ydoc = new Y.Doc();
 
@@ -95,6 +125,12 @@ export default {
           Superscript,
           Subscript,
           Image,
+          Table.configure({
+            resizable: true,
+          }),
+          TableRow,
+          TableHeader,
+          CustomTableCell,
           Collaboration.configure({
             document: ydoc,
           }),
@@ -104,14 +140,15 @@ export default {
               name,
               color: this.userColor,
             },
-            onUpdate: (users) => {
-              this.$emit("updateUsers", users);
-            },
           }),
         ],
         content: content,
         onUpdate: () => {
           this.$emit("input", this.editor.getJSON());
+          // console.log(
+          //   "editor.storage.collaborationCursor.users: ",
+          //   this.editor.storage.collaborationCursor.users
+          // );
         },
         onFocus: () => {
           this.$emit("selectBlock", {

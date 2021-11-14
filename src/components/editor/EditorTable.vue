@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-image">
+  <div class="editor-table">
     <EditorTextFormatterButtons
       :editor="editor"
       :block-type="editorData.blockType"
@@ -13,12 +13,23 @@
 <script>
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import Document from "@tiptap/extension-document";
-import Text from "@tiptap/extension-text";
 import Paragraph from "@tiptap/extension-paragraph";
-import Heading from "@tiptap/extension-heading";
-import Placeholder from "@tiptap/extension-placeholder";
-import Image from "@tiptap/extension-image";
-import Dropcursor from "@tiptap/extension-dropcursor";
+import Text from "@tiptap/extension-text";
+import Bold from "@tiptap/extension-bold";
+import Italic from "@tiptap/extension-italic";
+import Strike from "@tiptap/extension-strike";
+import Code from "@tiptap/extension-code";
+import Underline from "@tiptap/extension-underline";
+import Superscript from "@tiptap/extension-superscript";
+import Subscript from "@tiptap/extension-subscript";
+import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
+import ListItem from "@tiptap/extension-list-item";
+import Table from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
+import TableCell from "@tiptap/extension-table-cell";
+import TableHeader from "@tiptap/extension-table-header";
+import TextAlign from "@tiptap/extension-text-align";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
@@ -35,12 +46,28 @@ import { ROOT_GETTERS } from "@/store/types";
 // Registered with a WebRTC provider
 // new WebrtcProvider("bud-test-1", ydoc);
 
-const CustomDocument = Document.extend({
-  content: "heading image",
+const CustomTableCell = TableCell.extend({
+  addAttributes() {
+    return {
+      // extend the existing attributes …
+      ...this.parent?.(),
+
+      // and add a new one …
+      backgroundColor: {
+        default: null,
+        parseHTML: (element) => element.getAttribute("data-background-color"),
+        renderHTML: (attributes) => {
+          return {
+            "data-background-color": attributes.backgroundColor,
+            style: `background-color: ${attributes.backgroundColor}`,
+          };
+        },
+      },
+    };
+  },
 });
 
 export default {
-  name: "EditorImage",
   components: {
     EditorTextFormatterButtons,
     EditorContent,
@@ -89,23 +116,29 @@ export default {
     try {
       this.editor = new Editor({
         extensions: [
-          CustomDocument,
-          Text,
+          Document,
           Paragraph,
+          Text,
+          Bold,
+          Italic,
+          Strike,
+          Code,
+          BulletList,
+          ListItem,
+          OrderedList,
+          Underline,
+          Superscript,
+          Subscript,
           Image,
-          Dropcursor,
-          Heading.configure({
-            levels: [4],
+          TextAlign.configure({
+            types: ["paragraph"],
           }),
-          Placeholder.configure({
-            placeholder: ({ node }) => {
-              if (node.type.name === "heading") {
-                return "What’s the title?";
-              }
-
-              return "Text in this line will be neglected from exporting. Add an image instead";
-            },
+          Table.configure({
+            resizable: true,
           }),
+          TableRow,
+          TableHeader,
+          CustomTableCell,
           Collaboration.configure({
             document: ydoc,
           }),
@@ -133,20 +166,6 @@ export default {
     }
   },
 
-  methods: {
-    getRandomColor() {
-      let letters = "0123456789ABCDEF";
-      let color = "#";
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    },
-    testMethod() {
-      console.log("test");
-    },
-  },
-
   beforeUnmount() {
     this.editor.destroy();
     this.provider.destroy();
@@ -155,7 +174,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.editor-image {
+.editor-table {
   height: 93%;
   .editor-content {
     height: inherit;

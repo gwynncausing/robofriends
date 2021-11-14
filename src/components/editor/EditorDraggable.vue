@@ -38,6 +38,12 @@
             <EditorImage
               :editor-data="editor"
               :user-color="userColor"
+              @setColumnNumber="
+                $emit('setColumnNumber', {
+                  columnNumber: $event,
+                  editor: editor,
+                })
+              "
               @input="$emit('getContent', $event, index)"
               @updateUsers="$emit('updateUsers', $event)"
               @selectBlock="$emit('selectBlock', $event)"
@@ -55,10 +61,32 @@
               @selectBlock="$emit('selectBlock', $event)"
             />
           </div>
+          <div
+            v-else-if="editor.blockType === 'table'"
+            class="editor-content-table"
+          >
+            <EditorTable
+              :editor-data="editor"
+              :user-color="userColor"
+              :column-number="editor.columnNumber"
+              @setColumnNumber="
+                $emit('setColumnNumber', {
+                  columnNumber: $event,
+                  editor: editor,
+                })
+              "
+              @input="$emit('getContent', $event, index)"
+              @updateUsers="$emit('updateUsers', $event)"
+              @selectBlock="$emit('selectBlock', $event)"
+            />
+          </div>
         </div>
       </v-expansion-panel-header>
 
-      <v-expansion-panel-content v-if="editor.blockType === 'section'">
+      <v-expansion-panel-content
+        v-if="editor.blockType === 'heading'"
+        :class="collapsed"
+      >
         <EditorDraggable :list="editor.children" class="item-sub" />
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -68,6 +96,7 @@
 import EditorText from "@/components/editor/EditorText.vue";
 import EditorImage from "@/components/editor/EditorImage.vue";
 import EditorHeading from "@/components/editor/EditorHeading.vue";
+import EditorTable from "@/components/editor/EditorTable.vue";
 import draggable from "vuedraggable";
 export default {
   name: "EditorDraggable",
@@ -76,6 +105,7 @@ export default {
     EditorText,
     EditorImage,
     EditorHeading,
+    EditorTable,
   },
   props: {
     list: {
@@ -153,17 +183,20 @@ export default {
     border-radius: 4px;
     padding: 0.8rem;
   }
-  .editor-content-section,
+  .editor-content-heading,
   .editor-content-text,
-  .editor-content-image {
+  .editor-content-image,
+  .editor-content-table {
     cursor: text;
   }
   .editor-content-text,
-  .editor-content-image {
+  .editor-content-image,
+  .editor-content-table {
     margin-left: 36px;
   }
-  .editor-content-section {
-    height: 42px;
+
+  .editor-content-heading {
+    height: 98px;
     padding: 4px;
   }
 }

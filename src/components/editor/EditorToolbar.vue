@@ -12,6 +12,10 @@
       <v-icon class="editor-control-icon">mdi-application-outline</v-icon>
     </Button>
 
+    <Button icon @click="addEditor(currentSelectedEditorIndex, 'table')">
+      <v-icon class="editor-control-icon">mdi-table</v-icon>
+    </Button>
+
     <Button icon @click="testMethod">
       <v-icon class="editor-control-icon">mdi-comment-text-outline</v-icon>
     </Button>
