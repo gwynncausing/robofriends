@@ -17,14 +17,29 @@
         </div>
         <div class="feedback-wrapper">
           <div class="feedback-label font-semi-bold">Feedback</div>
-          <Textarea v-model="proposal.feedback" />
+          <Textarea v-model="proposal.feedback.content" />
         </div>
         <div class="button-wrapper">
-          <Button @click="approve(proposal.feedback)"> Approve </Button>
-          <Button color="red" dark @click="reject(proposal.feedback)">
+          <Button
+            :disabled="hasApprovedProposal"
+            @click="updateProposal(proposal.id, proposal.feedback, 'approved')"
+          >
+            Approve
+          </Button>
+          <Button
+            color="red"
+            :dark="!hasApprovedProposal"
+            :disabled="hasApprovedProposal"
+            @click="updateProposal(proposal.id, proposal.feedback, 'rejected')"
+          >
             Reject
           </Button>
-          <Button color="yellow" dark @click="revise(proposal.feedback)">
+          <Button
+            color="yellow"
+            :dark="!hasApprovedProposal"
+            :disabled="hasApprovedProposal"
+            @click="updateProposal(proposal.id, proposal.feedback, 'revise')"
+          >
             Ask to Revise
           </Button>
         </div>
@@ -39,6 +54,8 @@ import EditorTextWithTitleReadonly from "@/components/editor/EditorTextWithTitle
 import Button from "@/components/global/Button.vue";
 import Textarea from "@/components/global/Textarea.vue";
 
+import { PROPOSAL } from "@/utils/constants";
+
 export default {
   name: "PendingProposals",
   components: {
@@ -51,6 +68,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    hasApprovedProposal: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -62,21 +83,32 @@ export default {
   watch: {
     pendingProposals: {
       handler(newValue) {
-        Object.assign(this.proposals, newValue);
+        // console.log(this.hasApprovedProposal);
+        this.proposals = newValue;
+        for (const proposal of this.proposals) {
+          if (!proposal.feedback) proposal.feedback = { content: "" };
+        }
       },
       immediate: true,
     },
   },
 
   methods: {
-    approve(value) {
-      console.log("approve", value);
-    },
-    reject(value) {
-      console.log("reject", value);
-    },
-    revise(value) {
-      console.log("revise", value);
+    updateProposal(id, feedback, status) {
+      switch (status) {
+        case "approved":
+          status = PROPOSAL.STATUS.APPROVED;
+          break;
+        case "rejected":
+          status = PROPOSAL.STATUS.REJECTED;
+          break;
+        case "revise":
+          status = PROPOSAL.STATUS.REVISE;
+          break;
+        default:
+          status = "undefined status";
+      }
+      this.$emit("updateProposal", { id, status, feedback });
     },
   },
 };
