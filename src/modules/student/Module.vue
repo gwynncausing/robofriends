@@ -58,7 +58,7 @@ export default {
         },
         {
           name: "Archive",
-          path: { name: "Archive" },
+          path: { name: "Student Archive" },
         },
       ],
       teamRoutes: [
@@ -117,19 +117,22 @@ export default {
       onFetchSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
       onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
+
     setIsAccountMenuDropdownCloseOnClick() {
       this.isAccountMenuDropdownCloseOnClick = true;
       setTimeout(() => {
         this.isAccountMenuDropdownCloseOnClick = false;
       }, 500);
     },
+
     setTeams() {
       this.teams = this.getMemberships.map((memberships) => memberships.team);
     },
+
     setSelectedTeamDetails(team) {
-      console.log(team);
       return this.onFetchSelectedTeamDetails({ id: team.id });
     },
+
     async goToTeam(team) {
       if (!this.getIsLoggedIn) return;
       try {
@@ -142,14 +145,17 @@ export default {
         console.log(error);
       }
     },
+
     goToAccountSettings() {
       this.setIsAccountMenuDropdownCloseOnClick();
       this.$router.push({ name: "Student Account Settings" });
     },
+
     goToCreateTeam() {
       this.setIsAccountMenuDropdownCloseOnClick();
       this.$router.push({ name: "Create Team" });
     },
+
     async logout() {
       try {
         await this.onLogoutUser();

@@ -10,4 +10,7 @@ export default {
   [ADVISER_GETTERS.GET_HAS_MEMBERSHIPS](state) {
     return state.hasMemberships;
   },
+  [ADVISER_GETTERS.GET_TEAM]({ teams }) {
+    return teams;
+  },
 };

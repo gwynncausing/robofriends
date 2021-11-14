@@ -276,16 +276,23 @@ export default {
       onUpdateSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_SELECTED_TEAM_DETAILS}`,
       onUpdateMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_MEMBERSHIPS}`,
     }),
+
     ...mapMutations({
       setSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_MUTATIONS.SET_SELECTED_TEAM_DETAILS}`,
     }),
-    initialize() {
+
+    async initialize() {
+      await this.onFetchSelectedTeamDetails({
+        id: this.getSelectedTeamDetails.id,
+      });
       this.team = this.getSelectedTeamDetails;
     },
+
     showRemoveAdviserModal(adviser) {
       this.removeAdviserModal = true;
       this.selectedAdviser = adviser;
     },
+
     async leaveTeam() {
       try {
         const payload = {
@@ -306,6 +313,7 @@ export default {
         this.removeAdviserModal = false;
       }
     },
+
     async removeAdviser() {
       try {
         this.isRemovingAdviserModal = true;
@@ -316,9 +324,6 @@ export default {
           },
         };
         await this.onUpdateMemberships(payload);
-        await this.onFetchSelectedTeamDetails({
-          id: this.getSelectedTeamDetails.id,
-        });
         this.initialize();
         this.snackbarMessage = `Adviser ${this.selectedAdviser.user.email} has been removed from the team.`;
       } catch (error) {
@@ -329,6 +334,7 @@ export default {
         this.removeAdviserModal = false;
       }
     },
+
     async inviteAdviser(payload) {
       const { email } = payload;
       try {
@@ -357,6 +363,7 @@ export default {
         this.inviteAdviserModal = false;
       }
     },
+
     async inviteMember(payload) {
       const { email } = payload;
       try {
@@ -385,6 +392,7 @@ export default {
         this.inviteMemberModal = false;
       }
     },
+
     async saveChanges() {
       try {
         this.isSavingChanges = true;

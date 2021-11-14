@@ -83,22 +83,9 @@
     </div>
   </div> -->
   <div id="editor">
-    <div class="editor-heading">
-      <Button text class="neutral-800--text mr-auto">Version History</Button>
-      <ActiveUsersList :users="activeUsers" class="mr-4" />
-      <v-menu offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <Button outlined v-bind="attrs" v-on="on">
-            Export
-            <v-icon>mdi-chevron-down</v-icon>
-          </Button>
-        </template>
-        <v-list>
-          <v-list-item v-for="(item, index) in exportItems" :key="index" link>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+    <!-- // * make this hasApprovedProposal to true to check/see the editor -->
+    <div v-if="hasApprovedProposal">
+      <EmptyDataResearchPaperEditor />
     </div>
     <div class="editor-list-wrapper">
       <div class="editor-list">
@@ -106,7 +93,7 @@
           <EditorDraggable
             :list="editors"
             :user-color="userColor"
-            @setColumnNumber="setColumnNumber($event)"
+            @setColumn="setColumn($event)"
             @dragElement="testMethod"
             @input="getContent($event, index)"
             @updateUsers="updateUsers($event)"
@@ -121,93 +108,90 @@
           @removeEditor="removeEditor($event)"
         />
       </div>
-    </div>
 
-    <!-- <div class="editor-list-wrapper">
-      <div class="editor-list">
-        <div
-          v-for="(editor, index) in editors"
-          :id="'editor-' + editor.id"
-          :key="editor.id"
-          class="editor-row"
-        >
-          {{ editor }}
-          <div v-if="editor.blockType === 'text'" class="editor-content-text">
-            <EditorText
-              :editor-data="editor"
-              :user-color="userColor"
-              @input="getContent($event, index)"
-              @updateUsers="updateUsers($event)"
-              @selectBlock="selectBlock($event)"
-            />
-          </div>
+      <!-- <div class="editor-list-wrapper">
+        <div class="editor-list">
           <div
-            v-else-if="editor.blockType === 'image'"
-            class="editor-content-image"
+            v-for="(editor, index) in editors"
+            :id="'editor-' + editor.id"
+            :key="editor.id"
+            class="editor-row"
           >
-            <EditorImage
-              :editor-data="editor"
-              :user-color="userColor"
-              @input="getContent($event, index)"
-              @updateUsers="updateUsers($event)"
-              @selectBlock="selectBlock($event)"
-            />
-          </div>
-          <div
-            v-else-if="editor.blockType === 'heading'"
-            class="editor-content-heading"
-          >
-            <EditorHeading
-              :editor-data="editor"
-              :user-color="userColor"
-              @input="getContent($event, index)"
-              @updateUsers="updateUsers($event)"
-              @selectBlock="selectBlock($event)"
-            />
-          </div>
-          <div
-            v-else-if="editor.blockType === 'table'"
-            class="editor-content-table"
-          >
-            <EditorTable
-              :editor-data="editor"
-              :user-color="userColor"
-              @input="getContent($event, index)"
-              @updateUsers="updateUsers($event)"
-              @selectBlock="selectBlock($event)"
-            />
+            <div v-if="editor.blockType === 'text'" class="editor-content-text">
+              <EditorText
+                :editor-data="editor"
+                :user-color="userColor"
+                @input="getContent($event, index)"
+                @updateUsers="updateUsers($event)"
+                @selectBlock="selectBlock($event)"
+              />
+            </div>
+            <div
+              v-else-if="editor.blockType === 'image'"
+              class="editor-content-image"
+            >
+              <EditorImage
+                :editor-data="editor"
+                :user-color="userColor"
+                @input="getContent($event, index)"
+                @updateUsers="updateUsers($event)"
+                @selectBlock="selectBlock($event)"
+              />
+            </div>
+            <div
+              v-else-if="editor.blockType === 'section'"
+              class="editor-content-section"
+            >
+              <EditorSection
+                :editor-data="editor"
+                :user-color="userColor"
+                @input="getContent($event, index)"
+                @updateUsers="updateUsers($event)"
+                @selectBlock="selectBlock($event)"
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <EditorToolbar
-        :current-toolbar-position="currentToolbarPosition"
-        :current-selected-editor-index="currentSelectedEditorIndex"
-        @addEditor="addEditor($event)"
-        @removeEditor="removeEditor($event)"
-      />
-    </div> -->
+        <EditorToolbar
+          :current-toolbar-position="currentToolbarPosition"
+          :current-selected-editor-index="currentSelectedEditorIndex"
+          @addEditor="addEditor($event)"
+          @removeEditor="removeEditor($event)"
+        />
+      </div> -->
+    </div>
   </div>
 </template>
 
 <script>
-import EditorDraggable from "@/components/EditorDraggable.vue";
-import Button from "@/components/global/Button.vue";
+import EditorDraggable from "@/components/editor/EditorDraggable.vue";
+// import Button from "@/components/global/Button.vue";
 // import EditorText from "@/components/editor/EditorText.vue";
 // import EditorImage from "@/components/editor/EditorImage.vue";
 // import EditorSection from "@/components/editor/EditorSection.vue";
 import EditorToolbar from "@/components/editor/EditorToolbar.vue";
-import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
+// import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
+import EmptyDataResearchPaperEditor from "@/components/student/EmptyDataResearchPaperEditor";
+
+import { mapActions, mapGetters } from "vuex";
+import {
+  STUDENT_ACTIONS,
+  STUDENT_GETTERS,
+} from "@/modules/student/store/types";
+import { isObjectEmpty } from "@/utils/helpers";
+import { MODULES } from "@/utils/constants";
 
 export default {
   name: "ResearchPaperEditor",
   components: {
     EditorDraggable,
-    Button,
+    // Button,
     // EditorText,
     // EditorImage,
     // EditorSection,
     EditorToolbar,
-    ActiveUsersList,
+    // ActiveUsersList,
+    EmptyDataResearchPaperEditor,
   },
   data() {
     return {
@@ -217,13 +201,22 @@ export default {
       activeUsers: [],
       currentToolbarPosition: 0,
       currentSelectedEditorIndex: 0,
+      hasApprovedProposal: false,
     };
   },
 
   computed: {
+    ...mapGetters({
+      getSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM_DETAILS}`,
+      getApprovedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_APPROVED_PROPOSAL}`,
+    }),
     userColor() {
       return this.getRandomColor();
     },
+  },
+
+  created() {
+    this.setHasApprovedProposal();
   },
 
   mounted() {
@@ -235,6 +228,21 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      onFetchApprovedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_APPROVED_PROPOSAL}`,
+    }),
+    async setHasApprovedProposal() {
+      try {
+        await this.onFetchApprovedProposal({
+          id: this.getSelectedTeamDetails.id,
+        });
+        if (!isObjectEmpty(this.getApprovedProposal))
+          this.hasApprovedProposal = true;
+      } catch (error) {
+        // TODO: Improve api error handling
+        console.log(error);
+      }
+    },
     updateUsers(users) {
       this.activeUsers = users;
     },
@@ -251,7 +259,7 @@ export default {
         let editorID = "editor-" + this.editors[i].id;
         position += document.getElementById(editorID).clientHeight;
         if (i === index) break;
-        position += 24;
+        // position += 24;
       }
 
       const blockHeight = document.getElementById(editorID).clientHeight;
@@ -260,7 +268,7 @@ export default {
     getContent(event, index) {
       this.editors[index].content = event.content;
     },
-    addEditor({ currentSelectedEditorIndex: index, blockType = "section" }) {
+    addEditor({ currentSelectedEditorIndex: index, blockType = "heading" }) {
       if (index === -1) return;
       let content = ``;
       if (blockType === "table")
@@ -284,14 +292,14 @@ export default {
           </tbody>
         </table>`;
 
-      if (blockType === "section") {
+      if (blockType === "heading") {
         this.editors.splice(index + 1, 0, {
           id: this.id++,
           content: content,
           blockType,
           users: [],
           children: [],
-          columnNumber: 1,
+          column: "default",
         });
       } else {
         this.editors.splice(index + 1, 0, {
@@ -299,7 +307,7 @@ export default {
           content: content,
           blockType,
           users: [],
-          columnNumber: 1,
+          column: "default",
         });
       }
     },
@@ -314,11 +322,11 @@ export default {
       }
       return color;
     },
+    setColumn({ column, editor }) {
+      editor.column = column;
+    },
     testMethod() {
       console.log("testMethod called");
-    },
-    setColumnNumber({ columnNumber, editor }) {
-      editor.columnNumber = columnNumber;
     },
   },
 };

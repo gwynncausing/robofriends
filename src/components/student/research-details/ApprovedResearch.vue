@@ -1,21 +1,26 @@
 <template>
-  <div class="approved-research">
-    <div class="editor-heading">
-      <Button text class="neutral-800--text"> Version History </Button>
-      <div class="buttons-users-wrapper">
-        <Button v-show="!isEditable" @click="setEditable()"> Edit </Button>
-        <ActiveUsersList v-show="isEditable" :users="activeUsers" />
-        <Button v-show="isEditable"> Save </Button>
+  <div>
+    <div v-if="hasApprovedResearch" class="approved-research">
+      <div class="editor-heading">
+        <Button text class="neutral-800--text"> Version History </Button>
+        <div class="buttons-users-wrapper">
+          <Button v-show="!isEditable" @click="setEditable"> Edit </Button>
+          <ActiveUsersList v-show="isEditable" :users="activeUsers" />
+          <Button v-show="isEditable"> Save </Button>
+        </div>
+      </div>
+      <div class="editor-wrapper">
+        <EditorTextWithTitle
+          :editor-data="editor"
+          :user-color="userColor"
+          :is-editable="isEditable"
+          @input="getContent($event)"
+          @updateUsers="updateUsers($event)"
+        />
       </div>
     </div>
-    <div class="editor-wrapper">
-      <EditorTextWithTitle
-        :editor-data="editor"
-        :user-color="userColor"
-        :is-editable="isEditable"
-        @input="getContent($event)"
-        @updateUsers="updateUsers($event)"
-      />
+    <div v-else>
+      <EmptyDataApprovedResearch />
     </div>
   </div>
 </template>
@@ -24,43 +29,53 @@
 import EditorTextWithTitle from "@/components/editor/EditorTextWithTitle";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 import Button from "@/components/global/Button.vue";
+import EmptyDataApprovedResearch from "@/components/student/EmptyDataApprovedResearch";
+import { isObjectEmpty } from "@/utils/helpers";
+
 export default {
   name: "ApprovedResearch",
   components: {
     Button,
     EditorTextWithTitle,
     ActiveUsersList,
+    EmptyDataApprovedResearch,
+  },
+  props: {
+    approvedResearch: {
+      type: Object,
+      default: () => {},
+    },
   },
   data() {
     return {
-      approvedResearch: {
-        id: "1",
-        researchTitle:
-          "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
-        content: {
-          type: "doc",
-          content: [
-            {
-              type: "heading",
-              content: [
-                {
-                  type: "text",
-                  text: "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
-                },
-              ],
-            },
-            {
-              type: "paragraph",
-              content: [
-                {
-                  type: "text",
-                  text: "Bud is a web application that offers a modern solution where research can be fun, hassle-free, and paperless; helping students and teachers with writing research from start to finish. Inside the app, users will have access to a dashboard for monitoring their progress, can use real time collaboration features to work on their research, can utilize an easy-to-use research editor with auto-formatting to standard research formats (e.g. ACM) and can store completed research papers in the research archive. With Bud, research collaboration, tracking and writing will be made easier and enjoyable without using different applications and creating multiple files.",
-                },
-              ],
-            },
-          ],
-        },
-      },
+      // approvedResearch: {
+      //   id: "1",
+      //   researchTitle:
+      //     "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
+      //   content: {
+      //     type: "doc",
+      //     content: [
+      //       {
+      //         type: "heading",
+      //         content: [
+      //           {
+      //             type: "text",
+      //             text: "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
+      //           },
+      //         ],
+      //       },
+      //       {
+      //         type: "paragraph",
+      //         content: [
+      //           {
+      //             type: "text",
+      //             text: "Bud is a web application that offers a modern solution where research can be fun, hassle-free, and paperless; helping students and teachers with writing research from start to finish. Inside the app, users will have access to a dashboard for monitoring their progress, can use real time collaboration features to work on their research, can utilize an easy-to-use research editor with auto-formatting to standard research formats (e.g. ACM) and can store completed research papers in the research archive. With Bud, research collaboration, tracking and writing will be made easier and enjoyable without using different applications and creating multiple files.",
+      //           },
+      //         ],
+      //       },
+      //     ],
+      //   },
+      // },
       editor: {
         id: "approved-research",
         content: {},
@@ -74,11 +89,21 @@ export default {
     userColor() {
       return this.getRandomColor();
     },
+    hasApprovedResearch() {
+      return !isObjectEmpty(this.approvedResearch);
+    },
   },
-  beforeMount() {
-    this.editor.content = this.approvedResearch.content;
+  watch: {
+    approvedResearch: {
+      immediate: true,
+      handler() {
+        this.editor.content = this.approvedResearch.content;
+      },
+    },
   },
-
+  // beforeMount() {
+  //   this.editor.content = this.approvedResearch.content;
+  // },
   methods: {
     setEditable() {
       this.isEditable = true;

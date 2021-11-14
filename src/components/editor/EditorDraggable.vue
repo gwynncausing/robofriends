@@ -13,7 +13,6 @@
       v-for="(editor, index) in list"
       :id="'editor-' + editor.id"
       :key="editor.id"
-      :aria-expanded="expanded"
     >
       <v-expansion-panel-header :hide-actions="editor.blockType !== 'heading'">
         <v-icon class="handle">mdi-drag-vertical</v-icon>
@@ -39,9 +38,10 @@
             <EditorImage
               :editor-data="editor"
               :user-color="userColor"
-              @setColumnNumber="
-                $emit('setColumnNumber', {
-                  columnNumber: $event,
+              :column="editor.column"
+              @setColumn="
+                $emit('setColumn', {
+                  column: $event,
                   editor: editor,
                 })
               "
@@ -69,10 +69,10 @@
             <EditorTable
               :editor-data="editor"
               :user-color="userColor"
-              :column-number="editor.columnNumber"
-              @setColumnNumber="
-                $emit('setColumnNumber', {
-                  columnNumber: $event,
+              :column="editor.column"
+              @setColumn="
+                $emit('setColumn', {
+                  column: $event,
                   editor: editor,
                 })
               "
@@ -153,21 +153,10 @@ export default {
       console.log(event.oldIndex);
       this.$emit("dragElement");
     },
-    // onClick(event) {
-    //   if (event.target.classList.contains("toggleButton")) {
-    //     this.isExpanded = "";
-    //   } else {
-    //     this.expanded = false;
-    //   }
-    // },
   },
 };
 </script>
 <style lang="scss" scoped>
-// .collapsed {
-//   display: none;
-// }
-
 .v-expansion-panels {
   width: 100%;
   background-color: $neutral-50;
@@ -211,12 +200,7 @@ export default {
     height: 98px;
     padding: 4px;
   }
-
-  // .editor-content-text {
-  //   min-height: 18rem; // 304px
-  // }
 }
-
 .v-expansion-panel-content {
   min-height: 24px;
 }
@@ -224,7 +208,6 @@ export default {
 .drag {
   background-color: white;
 }
-
 .ghost {
   opacity: 0;
 }

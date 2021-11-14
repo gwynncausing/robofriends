@@ -1,6 +1,8 @@
 import { ADVISER_ACTIONS, ADVISER_MUTATIONS, ADVISER_PAYLOADS } from "./types";
 import Repository from "../repositories/repository-factory";
+import { PROPOSAL } from "@/utils/constants";
 const TeamRepository = Repository.get("team");
+const ProposalRepository = Repository.get("proposals");
 
 export default {
   async [ADVISER_ACTIONS.FETCH_INVITATIONS]({ commit }) {
@@ -25,6 +27,45 @@ export default {
     commit(ADVISER_MUTATIONS.SET_MEMBERSHIPS, { memberships: memberships });
     commit(ADVISER_MUTATIONS.SET_HAS_MEMBERSHIPS, {
       hasMemberships: memberships.length !== 0 ? true : false,
+    });
+  },
+  async [ADVISER_ACTIONS.FETCH_TEAM](
+    { commit },
+    payload = ADVISER_PAYLOADS.FETCH_TEAM
+  ) {
+    const { id } = payload;
+    const response = await TeamRepository.getTeam(id);
+    const team = response.data;
+    commit(ADVISER_MUTATIONS.ADD_TEAM, { team: team });
+  },
+
+  async [ADVISER_ACTIONS.FETCH_PENDING_PROPOSALS](
+    { commit },
+    payload = ADVISER_PAYLOADS.FETCH_PENDING_PROPOSALS
+  ) {
+    const { id } = payload;
+    const response = await ProposalRepository.getProposalsByStatus(
+      PROPOSAL.STATUS.PENDING,
+      id
+    );
+    const proposals = response.data;
+    commit(ADVISER_MUTATIONS.ADD_PENDING_PROPOSAL, {
+      proposals: proposals,
+      id: id,
+    });
+  },
+
+  async [ADVISER_ACTIONS.FETCH_ONE_PENDING_PROPOSAL](
+    { commit },
+    payload = ADVISER_PAYLOADS.FETCH_ONE_PENDING_PROPOSAL
+  ) {
+    const { proposalId, teamId } = payload;
+    const response = await ProposalRepository.getProposal(proposalId);
+    const proposal = response.data;
+    commit(ADVISER_MUTATIONS.UPDATE_ONE_PENDING_PROPOSAL, {
+      proposal: proposal,
+      proposalId: proposalId,
+      teamId: teamId,
     });
   },
 };

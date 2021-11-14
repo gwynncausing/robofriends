@@ -72,11 +72,6 @@ const routes = [
     component: () => import("@/views/Onboarding.vue"),
   },
   {
-    path: "/archive",
-    name: "Archive",
-    component: () => import("@/views/Archive.vue"),
-  },
-  {
     path: "*",
     name: "PageNotFound",
     component: () => import("@/views/PageNotFound.vue"),

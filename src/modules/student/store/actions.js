@@ -1,6 +1,8 @@
 import { STUDENT_ACTIONS, STUDENT_MUTATIONS, STUDENT_PAYLOADS } from "./types";
 import Repository from "../repositories/repository-factory";
+import { PROPOSAL } from "@/utils/constants";
 const TeamRepository = Repository.get("team");
+const ProposalRepository = Repository.get("proposal");
 
 export default {
   async [STUDENT_ACTIONS.CREATE_TEAM](
@@ -98,5 +100,48 @@ export default {
   ) {
     const { membership, id } = payload;
     await TeamRepository.updateMemberships(membership, id);
+  },
+
+  async [STUDENT_ACTIONS.CREATE_PROPOSAL](
+    context,
+    payload = STUDENT_PAYLOADS.CREATE_PROPOSAL
+  ) {
+    const { id, proposal } = payload;
+    await ProposalRepository.create(proposal, id);
+  },
+
+  async [STUDENT_ACTIONS.FETCH_SUBMITTED_PROPOSALS]({ commit }, { id }) {
+    const response = await ProposalRepository.getProposalsByTeam(id);
+    const proposals = response.data;
+    commit(STUDENT_MUTATIONS.SET_SUBMITTED_PROPOSALS, {
+      submittedProposals: proposals,
+    });
+  },
+
+  async [STUDENT_ACTIONS.FETCH_APPROVED_PROPOSAL]({ commit }, { id }) {
+    const response = await ProposalRepository.getProposalsByStatus(
+      PROPOSAL.STATUS.APPROVED,
+      id
+    );
+    const proposal = response.data?.[0] ?? {};
+    commit(STUDENT_MUTATIONS.SET_APPROVED_PROPOSAL, {
+      approvedProposal: proposal,
+    });
+  },
+
+  async [STUDENT_ACTIONS.FETCH_APPROVED_PROPOSAL_DETAILS]({ commit }, { id }) {
+    const response = await ProposalRepository.getProposal(id);
+    const proposal = response.data;
+    commit(STUDENT_MUTATIONS.SET_APPROVED_PROPOSAL_DETAILS, {
+      approvedProposalDetails: proposal,
+    });
+  },
+
+  async [STUDENT_ACTIONS.FETCH_SELECTED_PROPOSAL]({ commit }, { id }) {
+    const response = await ProposalRepository.getProposal(id);
+    const proposal = response.data;
+    commit(STUDENT_MUTATIONS.SET_SELECTED_PROPOSAL, {
+      selectedProposal: proposal,
+    });
   },
 };
