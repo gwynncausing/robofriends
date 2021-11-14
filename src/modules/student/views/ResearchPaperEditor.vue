@@ -263,10 +263,7 @@ export default {
       }
 
       const blockHeight = document.getElementById(editorID).clientHeight;
-      console.log("position: ", position);
-      console.log("blockHeight: ", blockHeight);
       this.currentToolbarPosition = position - blockHeight;
-      console.log("this.currentToolbarPosition: ", this.currentToolbarPosition);
     },
     getContent(event, index) {
       this.editors[index].content = event.content;
