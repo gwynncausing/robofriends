@@ -22,6 +22,7 @@
           </v-btn>
         </template>
         <div class="header">
+          {{ editor }}
           <div v-if="editor.blockType === 'text'" class="editor-content-text">
             <EditorText
               :editor-data="editor"

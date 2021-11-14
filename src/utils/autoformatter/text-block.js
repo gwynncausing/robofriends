@@ -44,9 +44,10 @@ export const createParagraph = (content, style = "Normal") =>
 //* OK
 export const createList = (parentContent, parentType, level = 0) => {
   const list = [];
-  parentContent?.forEach((childContent) => {
+
+  for (let childContent of parentContent) {
     if (childContent.type === "listItem") {
-      childContent.content.forEach((grandChild) => {
+      for (const grandChild of childContent.content) {
         if (grandChild.type === "paragraph") {
           list.push(
             new Paragraph({
@@ -65,9 +66,9 @@ export const createList = (parentContent, parentType, level = 0) => {
           );
           results.forEach((result) => list.push(result));
         }
-      });
+      }
     }
-  });
+  }
   return list;
 };
 
@@ -79,6 +80,7 @@ export const processTextBlock = (item, section) => {
       childContent.type === "orderedList" ||
       childContent.type === "bulletList"
     ) {
+      console.log("childContent.content: ", childContent.content);
       const results = createList(childContent.content, childContent.type);
       results.forEach((result) => section.children.push(result));
       section.children.push(

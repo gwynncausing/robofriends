@@ -69,8 +69,8 @@ export const createListLevelOptions = ({
           hanging: `${baseIndentOptions.hanging}cm`,
         },
         spacing: {
-          before: "0cm",
-          after: "0cm",
+          before: "0pt",
+          after: "0pt",
         },
       },
     },

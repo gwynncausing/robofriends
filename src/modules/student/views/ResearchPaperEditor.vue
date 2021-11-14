@@ -283,7 +283,7 @@ export default {
       this.currentToolbarPosition = position - blockHeight;
     },
     getContent({ content, index }) {
-      this.editors[index].content = content;
+      this.editors[index].content = content.content;
     },
     addEditor({ currentSelectedEditorIndex: index, blockType = "heading" }) {
       if (index === -1) return;

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import {
   Document,
   Packer,
@@ -32,7 +34,6 @@ const createTableCellsChildren = (content) => {
 };
 
 const createTableCells = (content) => {
-  console.log("children:", createTableCellsChildren(content.content));
   const tableCell = new TableCell({
     children: createTableCellsChildren(content.content),
     rowSpan: content.attrs.rowspan,
@@ -153,7 +154,7 @@ export const generateDocument = async (rules, content) => {
   const doc = new Document(properties);
   // TODO: return document object
   // * temporary soluton to save
-  saveDocument(doc);
+  // saveDocument(doc);
 };
 
 const saveDocument = (doc) =>
