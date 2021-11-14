@@ -20,22 +20,27 @@ export default {
     return {
       list: [
         {
+          id: 1,
           parent: "task 1",
           children: [],
         },
         {
+          id: 2,
           parent: "task 2",
           children: [],
         },
         {
+          id: 3,
           parent: "task 3",
           children: [],
         },
         {
+          id: 4,
           parent: "task 4",
           children: [],
         },
         {
+          id: 5,
           parent: "task 5",
           children: [],
         },
