@@ -26,7 +26,7 @@
             <EditorText
               :editor-data="editor"
               :user-color="userColor"
-              @input="$emit('getContent', $event, index)"
+              @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
               @selectBlock="$emit('selectBlock', $event)"
             />
@@ -45,11 +45,12 @@
                   editor: editor,
                 })
               "
-              @input="$emit('getContent', $event, index)"
+              @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
               @selectBlock="$emit('selectBlock', $event)"
             />
           </div>
+
           <div
             v-else-if="editor.blockType === 'heading'"
             class="editor-content-heading"
@@ -57,11 +58,13 @@
             <EditorHeading
               :editor-data="editor"
               :user-color="userColor"
-              @input="$emit('getContent', $event, index)"
+              @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
               @selectBlock="$emit('selectBlock', $event)"
             />
           </div>
+          <!-- @input="$emit('getContent', $event, index)" -->
+
           <div
             v-else-if="editor.blockType === 'table'"
             class="editor-content-table"
@@ -76,7 +79,7 @@
                   editor: editor,
                 })
               "
-              @input="$emit('getContent', $event, index)"
+              @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
               @selectBlock="$emit('selectBlock', $event)"
             />
@@ -152,6 +155,9 @@ export default {
     onEnd(event) {
       console.log(event.oldIndex);
       this.$emit("dragElement");
+    },
+    input(event, index) {
+      this.$emit("getContent", { content: event, index: index });
     },
   },
 };

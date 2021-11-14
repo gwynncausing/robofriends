@@ -83,6 +83,27 @@
     </div>
   </div> -->
   <div id="editor">
+    <div class="editor-heading">
+      <Button text class="neutral-800--text mr-auto">Version History</Button>
+      <ActiveUsersList :users="activeUsers" class="mr-4" />
+      <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <Button outlined v-bind="attrs" v-on="on">
+            Export
+            <v-icon>mdi-chevron-down</v-icon>
+          </Button>
+        </template>
+        <v-list>
+          <v-list-item v-for="(item, index) in exportItems" :key="index" link>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
+    <!-- // * make this hasApprovedProposal to true to check/see the editor -->
+    <div v-if="hasApprovedProposal">
+      <EmptyDataResearchPaperEditor />
+    </div>
     <!-- // * make this hasApprovedProposal to true to check/see the editor -->
     <div v-if="hasApprovedProposal">
       <EmptyDataResearchPaperEditor />
@@ -95,7 +116,7 @@
             :user-color="userColor"
             @setColumn="setColumn($event)"
             @dragElement="testMethod"
-            @input="getContent($event, index)"
+            @getContent="getContent($event)"
             @updateUsers="updateUsers($event)"
             @selectBlock="selectBlock($event)"
           />
@@ -165,12 +186,12 @@
 
 <script>
 import EditorDraggable from "@/components/editor/EditorDraggable.vue";
-// import Button from "@/components/global/Button.vue";
+import Button from "@/components/global/Button.vue";
 // import EditorText from "@/components/editor/EditorText.vue";
 // import EditorImage from "@/components/editor/EditorImage.vue";
 // import EditorSection from "@/components/editor/EditorSection.vue";
 import EditorToolbar from "@/components/editor/EditorToolbar.vue";
-// import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
+import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 import EmptyDataResearchPaperEditor from "@/components/student/EmptyDataResearchPaperEditor";
 
 import { mapActions, mapGetters } from "vuex";
@@ -185,12 +206,12 @@ export default {
   name: "ResearchPaperEditor",
   components: {
     EditorDraggable,
-    // Button,
+    Button,
     // EditorText,
     // EditorImage,
     // EditorSection,
     EditorToolbar,
-    // ActiveUsersList,
+    ActiveUsersList,
     EmptyDataResearchPaperEditor,
   },
   data() {
@@ -265,8 +286,8 @@ export default {
       const blockHeight = document.getElementById(editorID).clientHeight;
       this.currentToolbarPosition = position - blockHeight;
     },
-    getContent(event, index) {
-      this.editors[index].content = event.content;
+    getContent({ content, index }) {
+      this.editors[index].content = content;
     },
     addEditor({ currentSelectedEditorIndex: index, blockType = "heading" }) {
       if (index === -1) return;
