@@ -259,7 +259,7 @@ export default {
         let editorID = "editor-" + this.editors[i].id;
         position += document.getElementById(editorID).clientHeight;
         if (i === index) break;
-        // position += 2;
+        // position += 24;
       }
 
       const blockHeight = document.getElementById(editorID).clientHeight;
