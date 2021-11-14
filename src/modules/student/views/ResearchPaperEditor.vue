@@ -86,7 +86,7 @@
     <div class="editor-heading">
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
-          <Button outlined v-bind="attrs" v-on="on" class="mr-4">
+          <Button outlined v-bind="attrs" class="mr-4" v-on="on">
             Export
             <v-icon>mdi-chevron-down</v-icon>
           </Button>

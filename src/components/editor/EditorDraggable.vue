@@ -209,13 +209,11 @@ export default {
       border: 1px solid $neutral-400;
       border-radius: 4px;
       padding: 0.8rem;
-    }
-    .editor-content-heading,
-    .editor-content-text,
-    .editor-content-image {
       cursor: text;
       width: 100%;
     }
+
+    .editor-content-table,
     .editor-content-text,
     .editor-content-image {
       margin-left: 36px;
