@@ -38,9 +38,10 @@
             <EditorImage
               :editor-data="editor"
               :user-color="userColor"
-              @setColumnNumber="
-                $emit('setColumnNumber', {
-                  columnNumber: $event,
+              :column="editor.column"
+              @setColumn="
+                $emit('setColumn', {
+                  column: $event,
                   editor: editor,
                 })
               "
@@ -68,10 +69,10 @@
             <EditorTable
               :editor-data="editor"
               :user-color="userColor"
-              :column-number="editor.columnNumber"
-              @setColumnNumber="
-                $emit('setColumnNumber', {
-                  columnNumber: $event,
+              :column="editor.column"
+              @setColumn="
+                $emit('setColumn', {
+                  column: $event,
                   editor: editor,
                 })
               "

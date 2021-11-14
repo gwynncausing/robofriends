@@ -182,16 +182,16 @@
       <span class="formatter-section-end"></span>
 
       <button
-        v-if="columnNumber === 2"
-        title="Set to 1 Column"
-        @click="setColumnNumber(1)"
+        v-if="column === 'singleColumnContent'"
+        title="Set to default"
+        @click="setColumn('default')"
       >
         <v-icon>mdi-numeric-1-box</v-icon>
       </button>
       <button
-        v-else-if="columnNumber === 1"
-        title="Set to 2 Column"
-        @click="setColumnNumber(2)"
+        v-else-if="column === 'default'"
+        title="Set to single column"
+        @click="setColumn('singleColumnContent')"
       >
         <v-icon>mdi-numeric-2-box</v-icon>
       </button>
@@ -269,15 +269,15 @@ export default {
       type: String,
       default: "",
     },
-    columnNumber: {
-      type: Number,
-      default: 1,
+    column: {
+      type: String,
+      default: "default",
     },
   },
 
   methods: {
-    setColumnNumber(numberOfColumn) {
-      this.$emit("setColumnNumber", numberOfColumn);
+    setColumn(column) {
+      this.$emit("setColumn", column);
     },
     toggleSubscript() {
       this.editor.chain().focus().toggleSubscript().run();

@@ -93,7 +93,7 @@
           <EditorDraggable
             :list="editors"
             :user-color="userColor"
-            @setColumnNumber="setColumnNumber($event)"
+            @setColumn="setColumn($event)"
             @dragElement="testMethod"
             @input="getContent($event, index)"
             @updateUsers="updateUsers($event)"
@@ -300,7 +300,7 @@ export default {
           blockType,
           users: [],
           children: [],
-          columnNumber: 1,
+          column: "default",
         });
       } else {
         this.editors.splice(index + 1, 0, {
@@ -308,7 +308,7 @@ export default {
           content: content,
           blockType,
           users: [],
-          columnNumber: 1,
+          column: "default",
         });
       }
     },
@@ -323,11 +323,11 @@ export default {
       }
       return color;
     },
+    setColumn({ column, editor }) {
+      editor.column = column;
+    },
     testMethod() {
       console.log("testMethod called");
-    },
-    setColumnNumber({ columnNumber, editor }) {
-      editor.columnNumber = columnNumber;
     },
   },
 };
