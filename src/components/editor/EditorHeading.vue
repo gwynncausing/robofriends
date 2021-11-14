@@ -86,7 +86,7 @@ export default {
         Text,
         Paragraph,
         Heading.configure({
-          levels: [1, 2, 3],
+          levels: [1, 2, 3, 4],
           HTMLAttributes: {
             class: "editor-heading-block-title",
           },
