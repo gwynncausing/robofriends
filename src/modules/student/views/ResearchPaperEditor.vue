@@ -104,10 +104,6 @@
     <div v-if="hasApprovedProposal">
       <EmptyDataResearchPaperEditor />
     </div>
-    <!-- // * make this hasApprovedProposal to true to check/see the editor -->
-    <div v-if="hasApprovedProposal">
-      <EmptyDataResearchPaperEditor />
-    </div>
     <div class="editor-list-wrapper">
       <div class="editor-list">
         <div class="editor-row">
