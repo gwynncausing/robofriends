@@ -95,7 +95,7 @@
             :user-color="userColor"
             @setColumn="setColumn($event)"
             @dragElement="testMethod"
-            @input="getContent($event, index)"
+            @getContent="getContent($event)"
             @updateUsers="updateUsers($event)"
             @selectBlock="selectBlock($event)"
           />
@@ -265,8 +265,8 @@ export default {
       const blockHeight = document.getElementById(editorID).clientHeight;
       this.currentToolbarPosition = position - blockHeight;
     },
-    getContent(event, index) {
-      this.editors[index].content = event.content;
+    getContent({ content, index }) {
+      this.editors[index].content = content;
     },
     addEditor({ currentSelectedEditorIndex: index, blockType = "heading" }) {
       if (index === -1) return;
