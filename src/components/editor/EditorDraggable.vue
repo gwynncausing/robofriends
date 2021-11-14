@@ -1,27 +1,32 @@
 <template>
   <draggable
     v-bind="dragOptions"
-    class="item-container"
+    class="draggable-container"
     :list="list"
     :empty-insert-threshhold="500"
-    tag="v-expansion-panels"
+    tag="div"
     :component-data="componentData"
     handle=".handle"
     @end="onEnd($event)"
   >
-    <v-expansion-panel
+    <div
       v-for="(editor, index) in list"
       :id="'editor-' + editor.id"
       :key="editor.id"
+      class="editor-panels-wrapper"
     >
-      <v-expansion-panel-header :hide-actions="editor.blockType !== 'heading'">
-        <v-icon class="handle">mdi-drag-vertical</v-icon>
-        <template v-slot:actions>
-          <v-btn icon>
-            <v-icon class="toggleButton">$expand</v-icon>
+      <div class="parent-wrapper">
+        <div class="parent">
+          <v-icon class="handle"> mdi-drag-vertical </v-icon>
+          <v-btn
+            v-if="editor.blockType === 'heading'"
+            :id="'toggle-' + editor.id"
+            icon
+            class="toggle"
+            @click="toggleChildren(editor.id)"
+          >
+            <v-icon> mdi-chevron-right </v-icon>
           </v-btn>
-        </template>
-        <div class="header">
           <div v-if="editor.blockType === 'text'" class="editor-content-text">
             <EditorText
               :editor-data="editor"
@@ -85,15 +90,16 @@
             />
           </div>
         </div>
-      </v-expansion-panel-header>
+      </div>
 
-      <v-expansion-panel-content
-        v-if="editor.blockType === 'heading'"
-        :class="collapsed"
+      <div
+        v-show="editor.blockType === 'section'"
+        :id="'children-' + editor.id"
+        class="children"
       >
-        <EditorDraggable :list="editor.children" class="item-sub" />
-      </v-expansion-panel-content>
-    </v-expansion-panel>
+        <EditorDraggable :list="editor.children" />
+      </div>
+    </div>
   </draggable>
 </template>
 <script>
@@ -115,6 +121,7 @@ export default {
     list: {
       required: true,
       type: Array,
+      default: () => [],
     },
     userColor: {
       required: false,
@@ -159,62 +166,78 @@ export default {
     input(event, index) {
       this.$emit("getContent", { content: event, index: index });
     },
+    toggleChildren(id) {
+      let children = document.getElementById("children-" + id);
+      let toggle = document.getElementById("toggle-" + id);
+      if (children.style.display === "block") {
+        children.style.display = "none";
+        toggle.classList.remove("down");
+      } else {
+        children.style.display = "block";
+        toggle.classList.add("down");
+      }
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
-.v-expansion-panels {
+.draggable-container {
   width: 100%;
   background-color: $neutral-50;
 }
-
-.v-expansion-panel {
-  padding-bottom: 24px;
+.editor-panels-wrapper {
+  background-color: white;
 }
-
-.v-expansion-panel-header {
-  padding: 0;
-  .handle {
-    cursor: grab;
-    width: 24px;
-  }
-  .icon {
-    order: 0;
-  }
-  .header {
-    order: 1;
-    width: 100%;
-  }
-  div[class^="editor-content-"] {
-    border: 1px solid $neutral-400;
-    border-radius: 4px;
-    padding: 0.8rem;
-  }
-  .editor-content-heading,
-  .editor-content-text,
-  .editor-content-image,
-  .editor-content-table {
-    cursor: text;
-  }
-  .editor-content-text,
-  .editor-content-image,
-  .editor-content-table {
-    margin-left: 36px;
-  }
-
-  .editor-content-heading {
-    height: 98px;
-    padding: 4px;
+.parent-wrapper {
+  .parent {
+    display: flex;
+    align-items: top;
+    background-color: white;
+    padding-bottom: 24px;
+    .handle {
+      cursor: grab;
+      width: 24px;
+      margin-bottom: auto;
+      margin-top: 8px;
+    }
+    .toggle {
+      &:hover {
+        background-color: $neutral-50;
+      }
+    }
+    div[class^="editor-content-"] {
+      border: 1px solid $neutral-400;
+      border-radius: 4px;
+      padding: 0.8rem;
+    }
+    .editor-content-heading,
+    .editor-content-text,
+    .editor-content-image {
+      cursor: text;
+      width: 100%;
+    }
+    .editor-content-text,
+    .editor-content-image {
+      margin-left: 36px;
+    }
   }
 }
-.v-expansion-panel-content {
-  min-height: 24px;
+.children {
+  min-height: 200px;
+  height: fit-content;
+  margin-left: 50px;
+  display: none;
+}
+.down {
+  -moz-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 .chosen,
 .drag {
   background-color: white;
 }
 .ghost {
-  opacity: 0;
+  opacity: 50%;
 }
 </style>
