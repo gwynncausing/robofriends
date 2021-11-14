@@ -3,9 +3,7 @@
     v-bind="dragOptions"
     class="draggable-container"
     :list="list"
-    :empty-insert-threshhold="500"
     tag="div"
-    :component-data="componentData"
     handle=".handle"
     @end="onEnd($event)"
   >
@@ -131,27 +129,16 @@ export default {
   },
   data() {
     return {
-      componentData: {
-        attrs: {
-          accordion: true,
-          flat: true,
-          tile: true,
-        },
+      dragOptions: {
+        animation: 200,
+        group: "editors",
+        ghostClass: "ghost",
+        chosenClass: "chosen",
+        dragClass: "drag",
+        emptyInsertThreshold: 5,
       },
       id: 123,
     };
-  },
-  computed: {
-    dragOptions() {
-      return {
-        animation: 0,
-        group: "description",
-        disabled: false,
-        ghostClass: "ghost", // Class name for the drop placeholder
-        chosenClass: "chosen", // Class name for the chosen item
-        dragClass: "drag", // Class name for the dragging item
-      };
-    },
   },
   watch: {
     list: function () {
