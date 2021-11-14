@@ -93,7 +93,7 @@
       </div>
 
       <div
-        v-show="editor.blockType === 'section'"
+        v-show="editor.blockType === 'heading'"
         :id="'children-' + editor.id"
         class="children"
       >
