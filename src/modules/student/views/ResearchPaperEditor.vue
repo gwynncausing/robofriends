@@ -82,7 +82,7 @@
       />
     </div>
   </div> -->
-  <div>
+  <div id="editor">
     <!-- // * make this hasApprovedProposal to true to check/see the editor -->
     <div v-if="hasApprovedProposal">
       <EmptyDataResearchPaperEditor />
@@ -107,27 +107,6 @@
           @addEditor="addEditor($event)"
           @removeEditor="removeEditor($event)"
         />
-      </div>
-      <div class="editor-list-wrapper">
-        <div class="editor-list">
-          <div class="editor-row">
-            <EditorDraggable
-              :list="editors"
-              :user-color="userColor"
-              @dragElement="testMethod"
-              @input="getContent($event, index)"
-              @updateUsers="updateUsers($event)"
-              @selectBlock="selectBlock($event)"
-            />
-          </div>
-
-          <EditorToolbar
-            :current-toolbar-position="currentToolbarPosition"
-            :current-selected-editor-index="currentSelectedEditorIndex"
-            @addEditor="addEditor($event)"
-            @removeEditor="removeEditor($event)"
-          />
-        </div>
       </div>
 
       <!-- <div class="editor-list-wrapper">
@@ -280,11 +259,14 @@ export default {
         let editorID = "editor-" + this.editors[i].id;
         position += document.getElementById(editorID).clientHeight;
         if (i === index) break;
-        position += 24;
+        // position += 2;
       }
 
       const blockHeight = document.getElementById(editorID).clientHeight;
+      console.log("position: ", position);
+      console.log("blockHeight: ", blockHeight);
       this.currentToolbarPosition = position - blockHeight;
+      console.log("this.currentToolbarPosition: ", this.currentToolbarPosition);
     },
     getContent(event, index) {
       this.editors[index].content = event.content;
