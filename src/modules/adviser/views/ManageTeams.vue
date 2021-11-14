@@ -50,6 +50,7 @@ import ResearchPaper from "@/components/adviser/manage-teams/ResearchPaper";
 import { mapActions, mapGetters } from "vuex";
 import { ADVISER_ACTIONS, ADVISER_GETTERS } from "../store/types";
 import { MODULES } from "@/utils/constants";
+import { PROPOSAL } from "@/utils/constants";
 
 export default {
   name: "ManageTeams",
@@ -154,7 +155,21 @@ export default {
     },
     async updateProposals({ id, status, feedback }) {
       await this.updateProposal(id, status, feedback);
+      if (status === PROPOSAL.STATUS.APPROVED) {
+        const status = PROPOSAL.STATUS.REJECTED;
+        const feedback = {
+          content: "",
+        };
+        for (let proposal of this.pendingProposals) {
+          if (proposal.id !== id) {
+            await this.updateProposal(proposal.id, status, feedback);
+          }
+        }
+      }
       this.fetchAndUpdateProposals(this.activeEl, this.currentSelectedTeam);
+      this.$router.replace({
+        query: { ...this.$route.query, tab: "approved-research" },
+      });
     },
 
     async fetchAndUpdateProposals(index, team_id) {
