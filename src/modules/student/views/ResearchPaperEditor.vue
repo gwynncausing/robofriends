@@ -1,87 +1,4 @@
 <template>
-  <!-- <div id="editor">
-    <div class="editor-heading">
-      <Button text class="neutral-800--text mr-auto">Version History</Button>
-      <ActiveUsersList :users="activeUsers" class="mr-4" />
-      <v-menu offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <Button outlined v-bind="attrs" v-on="on">
-            Export
-            <v-icon>mdi-chevron-down</v-icon>
-          </Button>
-        </template>
-        <v-list>
-          <v-list-item v-for="(item, index) in exportItems" :key="index" link>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </div>
-    <div class="editor-list-wrapper">
-      <div class="editor-list">
-        <div
-          v-for="(editor, index) in editors"
-          :id="'editor-' + editor.id"
-          :key="editor.id"
-          class="editor-row"
-        >
-          <div v-if="editor.blockType === 'text'" class="editor-content-text">
-            <EditorText
-              :editor-data="editor"
-              :user-color="userColor"
-              @input="getContent($event, index)"
-              @updateUsers="updateUsers($event)"
-              @selectBlock="selectBlock($event)"
-            />
-          </div>
-          <div
-            v-else-if="editor.blockType === 'image'"
-            class="editor-content-image"
-          >
-            <EditorImage
-              :editor-data="editor"
-              :user-color="userColor"
-              @input="getContent($event, index)"
-              @updateUsers="updateUsers($event)"
-              @selectBlock="selectBlock($event)"
-              @setColumnNumber="setColumnNumber($event, editor)"
-            />
-          </div>
-          <div
-            v-else-if="editor.blockType === 'heading'"
-            class="editor-content-heading"
-          >
-            <EditorHeading
-              :editor-data="editor"
-              :user-color="userColor"
-              @input="getContent($event, index)"
-              @updateUsers="updateUsers($event)"
-              @selectBlock="selectBlock($event)"
-            />
-          </div>
-          <div
-            v-else-if="editor.blockType === 'table'"
-            class="editor-content-table"
-          >
-            <EditorTable
-              :editor-data="editor"
-              :user-color="userColor"
-              @input="getContent($event, index)"
-              @updateUsers="updateUsers($event)"
-              @selectBlock="selectBlock($event)"
-              @setColumnNumber="setColumnNumber($event, editor)"
-            />
-          </div>
-        </div>
-      </div>
-      <EditorToolbar
-        :current-toolbar-position="currentToolbarPosition"
-        :current-selected-editor-index="currentSelectedEditorIndex"
-        @addEditor="addEditor($event)"
-        @removeEditor="removeEditor($event)"
-      />
-    </div>
-  </div> -->
   <div id="editor">
     <!-- // * make this hasApprovedProposal to true to check/see the editor -->
     <div v-if="hasApprovedProposal">
@@ -135,9 +52,6 @@
 <script>
 import EditorDraggable from "@/components/editor/EditorDraggable.vue";
 import Button from "@/components/global/Button.vue";
-// import EditorText from "@/components/editor/EditorText.vue";
-// import EditorImage from "@/components/editor/EditorImage.vue";
-// import EditorSection from "@/components/editor/EditorSection.vue";
 import EditorToolbar from "@/components/editor/EditorToolbar.vue";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 import EmptyDataResearchPaperEditor from "@/components/student/EmptyDataResearchPaperEditor";
@@ -155,9 +69,6 @@ export default {
   components: {
     EditorDraggable,
     Button,
-    // EditorText,
-    // EditorImage,
-    // EditorSection,
     EditorToolbar,
     ActiveUsersList,
     EmptyDataResearchPaperEditor,
@@ -327,24 +238,6 @@ export default {
       gap: 16px;
       margin-right: 76px;
     }
-
-    //   div[class^="editor-content-"] {
-    //     width: 100%;
-    //     border: 1px solid $neutral-400;
-    //     border-radius: 4px;
-    //     padding: 0.8rem;
-    //     margin-right: 76px;
-    //   }
-    //   .editor-content-section {
-    //     height: 42px;
-    //     padding: 4px;
-    //   }
-
-    //   .editor-content-text,
-    //   .editor-content-image {
-    //     min-height: 18rem; // 304px
-    //   }
-    // }
   }
 }
 </style>
