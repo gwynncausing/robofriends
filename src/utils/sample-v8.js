@@ -662,6 +662,7 @@ export const sample = [
     ],
     blockType: "image",
     users: [],
+    column: "singleColumnContent",
   },
   {
     id: 132,
@@ -864,5 +865,384 @@ export const sample = [
     ],
     blockType: "image",
     users: [],
+  },
+  {
+    id: 123,
+    content: [
+      {
+        type: "heading",
+        attrs: {
+          level: 1,
+        },
+        content: [
+          {
+            type: "text",
+            text: "Review of Related Software",
+          },
+        ],
+      },
+    ],
+    blockType: "heading",
+    users: [],
+    children: [],
+    column: "default",
+  },
+  {
+    id: 129,
+    content: [
+      {
+        type: "paragraph",
+        content: [
+          {
+            type: "text",
+            text: "This chapter contains the review of related software of the paper with an aim of highlighting the similarities and differences of Bud’s features to the existing applications and services on the market. First are the applications that focus on research. Research-related applications whose features primarily deal with managing, locating and/or sharing of research papers are reviewed in the following figures and paragraphs:",
+          },
+        ],
+      },
+    ],
+    blockType: "text",
+    users: [],
+    column: "default",
+  },
+  {
+    id: 130,
+    content: [
+      {
+        type: "paragraph",
+        content: [
+          {
+            type: "text",
+            text: "Google Scholar indexes an extensive scope of scholarly literature with a free searching feature. In addition, it automatically ranks the search results by relevance and is easy to use for people that are already familiar with Google Search. Unfortunately, it cannot search by material type or subject area, has limited filters and mostly provides articles with no full-text access. Lastly, it has no convenient way to identify sources that are peer reviewed [https://libguides.ucmerced.edu/google_scholar/pros_cons]. A comparison between Bud and Google Scholar is shown in the following table.",
+          },
+        ],
+      },
+    ],
+    blockType: "text",
+    users: [],
+    column: "default",
+  },
+  {
+    id: 124,
+    content: [
+      {
+        type: "table",
+        content: [
+          {
+            type: "tableRow",
+            content: [
+              {
+                type: "tableCell",
+                attrs: {
+                  colspan: 1,
+                  rowspan: 1,
+                  colwidth: null,
+                  backgroundColor: null,
+                },
+                content: [
+                  {
+                    type: "paragraph",
+                    attrs: {
+                      textAlign: "left",
+                    },
+                    content: [
+                      {
+                        type: "text",
+                        marks: [
+                          {
+                            type: "bold",
+                          },
+                        ],
+                        text: "Feature",
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                type: "tableCell",
+                attrs: {
+                  colspan: 1,
+                  rowspan: 1,
+                  colwidth: null,
+                  backgroundColor: null,
+                },
+                content: [
+                  {
+                    type: "paragraph",
+                    attrs: {
+                      textAlign: "left",
+                    },
+                    content: [
+                      {
+                        type: "text",
+                        marks: [
+                          {
+                            type: "bold",
+                          },
+                        ],
+                        text: "Bud",
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                type: "tableCell",
+                attrs: {
+                  colspan: 1,
+                  rowspan: 1,
+                  colwidth: null,
+                  backgroundColor: null,
+                },
+                content: [
+                  {
+                    type: "paragraph",
+                    attrs: {
+                      textAlign: "left",
+                    },
+                    content: [
+                      {
+                        type: "text",
+                        marks: [
+                          {
+                            type: "bold",
+                          },
+                        ],
+                        text: "Google Scholar",
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: "tableRow",
+            content: [
+              {
+                type: "tableCell",
+                attrs: {
+                  colspan: 1,
+                  rowspan: 1,
+                  colwidth: null,
+                  backgroundColor: null,
+                },
+                content: [
+                  {
+                    type: "paragraph",
+                    attrs: {
+                      textAlign: "left",
+                    },
+                    content: [
+                      {
+                        type: "text",
+                        text: "Scope",
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                type: "tableCell",
+                attrs: {
+                  colspan: 1,
+                  rowspan: 1,
+                  colwidth: null,
+                  backgroundColor: null,
+                },
+                content: [
+                  {
+                    type: "paragraph",
+                    attrs: {
+                      textAlign: "left",
+                    },
+                    content: [
+                      {
+                        type: "text",
+                        text: "limited to undergraduate works in the university",
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                type: "tableCell",
+                attrs: {
+                  colspan: 1,
+                  rowspan: 1,
+                  colwidth: null,
+                  backgroundColor: null,
+                },
+                content: [
+                  {
+                    type: "paragraph",
+                    attrs: {
+                      textAlign: "left",
+                    },
+                    content: [
+                      {
+                        type: "text",
+                        text: "extensive index of varying literature",
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: "tableRow",
+            content: [
+              {
+                type: "tableCell",
+                attrs: {
+                  colspan: 1,
+                  rowspan: 1,
+                  colwidth: null,
+                  backgroundColor: null,
+                },
+                content: [
+                  {
+                    type: "paragraph",
+                    attrs: {
+                      textAlign: "left",
+                    },
+                    content: [
+                      {
+                        type: "text",
+                        text: "Searching",
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                type: "tableCell",
+                attrs: {
+                  colspan: 1,
+                  rowspan: 1,
+                  colwidth: null,
+                  backgroundColor: null,
+                },
+                content: [
+                  {
+                    type: "paragraph",
+                    attrs: {
+                      textAlign: "left",
+                    },
+                    content: [
+                      {
+                        type: "text",
+                        text: "simple date and category filters with title-based searching",
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                type: "tableCell",
+                attrs: {
+                  colspan: 1,
+                  rowspan: 1,
+                  colwidth: null,
+                  backgroundColor: null,
+                },
+                content: [
+                  {
+                    type: "paragraph",
+                    attrs: {
+                      textAlign: "left",
+                    },
+                    content: [
+                      {
+                        type: "text",
+                        text: "keyword-based searching with date, relevance, and type filters",
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: "tableRow",
+            content: [
+              {
+                type: "tableCell",
+                attrs: {
+                  colspan: 1,
+                  rowspan: 1,
+                  colwidth: null,
+                  backgroundColor: null,
+                },
+                content: [
+                  {
+                    type: "paragraph",
+                    attrs: {
+                      textAlign: "left",
+                    },
+                    content: [
+                      {
+                        type: "text",
+                        text: "Result Ranking",
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                type: "tableCell",
+                attrs: {
+                  colspan: 1,
+                  rowspan: 1,
+                  colwidth: null,
+                  backgroundColor: null,
+                },
+                content: [
+                  {
+                    type: "paragraph",
+                    attrs: {
+                      textAlign: "left",
+                    },
+                    content: [
+                      {
+                        type: "text",
+                        text: "Results are ranked by similarity with searched title",
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                type: "tableCell",
+                attrs: {
+                  colspan: 1,
+                  rowspan: 1,
+                  colwidth: null,
+                  backgroundColor: null,
+                },
+                content: [
+                  {
+                    type: "paragraph",
+                    attrs: {
+                      textAlign: "left",
+                    },
+                    content: [
+                      {
+                        type: "text",
+                        text: "Results are ranked by multiple factors",
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    blockType: "table",
+    users: [],
+    column: "default",
   },
 ];
