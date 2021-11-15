@@ -45,6 +45,12 @@
           />
         </div>
       </div>
+      <EditorToolbar
+        :current-toolbar-position="currentToolbarPosition"
+        :current-selected-editor-index="currentSelectedEditorIndex"
+        @addEditor="addEditor($event)"
+        @removeEditor="removeEditor($event)"
+      />
     </div>
   </div>
 </template>

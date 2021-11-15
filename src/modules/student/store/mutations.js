@@ -4,14 +4,12 @@ export default {
   [STUDENT_MUTATIONS.SET_CURRENT_CREATED_TEAM](state, { team }) {
     state.currentCreatedTeam = team;
   },
-
   [STUDENT_MUTATIONS.SET_SENT_MEMBERS_INVITATIONS](
     state,
     { sentMembersInvitations }
   ) {
     state.sentMembersInvitations = sentMembersInvitations;
   },
-
   [STUDENT_MUTATIONS.SET_SENT_TEACHERS_INVITATIONS](
     state,
     { sentTeachersInvitations }

@@ -44,7 +44,6 @@ import Chip from "@/components/global/Chip.vue";
 import Button from "@/components/global/Button.vue";
 import Textarea from "@/components/global/Textarea.vue";
 import EditorTextWithTitleReadonly from "@/components/editor/EditorTextWithTitleReadonly";
-
 export default {
   name: "Proposals",
   components: {

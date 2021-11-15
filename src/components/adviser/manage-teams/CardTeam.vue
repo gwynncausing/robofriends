@@ -2,7 +2,6 @@
   <CustomCard>
     <div class="card-team" @click="$emit('select', index)">
       <div class="team-name font-bold">{{ team.name || "" }}</div>
-      <!-- <div class="research-title">{{ team.researchTitle }}</div> -->
       <div class="members-wrapper">
         <v-avatar
           v-for="(member, memberIndex) in members"
@@ -15,10 +14,7 @@
             {{ member.user.lastName[0] }}
           </span>
         </v-avatar>
-        <!-- {{ getInitials(member) }} -->
       </div>
-      <!-- <div class="date-time">asd</div> -->
-      <!-- {{ team.dateTime }} -->
     </div>
   </CustomCard>
 </template>
