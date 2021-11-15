@@ -69,6 +69,8 @@ export const createTable = (content) => {
       size: 100,
       type: WidthType.PERCENTAGE,
     },
+    // TODO: transfer to rules as default cell margins, also allow users to specify this if necessary
+    margins: {top: "0.05cm", right: "0.2cm", bottom: "0.05cm",  left: "0.1cm"}
   });
   return table;
 };
@@ -154,7 +156,7 @@ export const generateDocument = async (rules, content) => {
   const doc = new Document(properties);
   // TODO: return document object
   // * temporary soluton to save
-  // saveDocument(doc);
+  saveDocument(doc);
 };
 
 const saveDocument = (doc) =>
