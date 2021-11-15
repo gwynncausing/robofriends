@@ -71,12 +71,8 @@ export const processImageBlock = async (
   // * Added due to bug that sometimes heading comes first
   if (tempContent[0].type === "heading") tempContent = item.content.reverse();
 
-  // TODO: add better trigger here like item.specialRule !== ""
-  const hasSpecialRule = true;
-  if (hasSpecialRule) {
-    const specialDocumentOptions =
-      // TODO: parameterized the singleColumnContent
-      rules.special["singleColumnContent"].document;
+  if (!!item.column && item.column != "default") {
+    const specialDocumentOptions = rules.special[item.column].document;
     const specialWidth = specialDocumentOptions.width;
 
     //*push current since new section has different config
