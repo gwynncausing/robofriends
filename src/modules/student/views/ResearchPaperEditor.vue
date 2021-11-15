@@ -83,100 +83,51 @@
     </div>
   </div> -->
   <div id="editor">
-    <div class="editor-heading">
-      <v-menu offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <Button outlined v-bind="attrs" class="mr-4" v-on="on">
-            Export
-            <v-icon>mdi-chevron-down</v-icon>
-          </Button>
-        </template>
-        <v-list>
-          <v-list-item v-for="(item, index) in exportItems" :key="index" link>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <Button text class="neutral-800--text mr-auto">Version History</Button>
-      <ActiveUsersList :users="activeUsers" class="mr-4" />
-      <Button>Save</Button>
-    </div>
     <!-- // * make this hasApprovedProposal to true to check/see the editor -->
     <div v-if="hasApprovedProposal">
       <EmptyDataResearchPaperEditor />
     </div>
-    <div class="editor-list-wrapper">
-      <div class="editor-list">
-        <div class="editor-row">
-          <EditorDraggable
-            :list="editors"
-            :user-color="userColor"
-            @setColumn="setColumn($event)"
-            @dragElement="testMethod"
-            @getContent="getContent($event)"
-            @updateUsers="updateUsers($event)"
-            @selectBlock="selectBlock($event)"
+    <div v-else class="editor-wrapper">
+      <div class="editor-heading">
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <Button outlined v-bind="attrs" class="mr-4" v-on="on">
+              Export
+              <v-icon>mdi-chevron-down</v-icon>
+            </Button>
+          </template>
+          <v-list>
+            <v-list-item v-for="(item, index) in exportItems" :key="index" link>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <Button text class="neutral-800--text mr-auto">Version History</Button>
+        <ActiveUsersList :users="activeUsers" class="mr-4" />
+        <Button>Save</Button>
+      </div>
+      <div class="editor-list-wrapper">
+        <div class="editor-list">
+          <div class="editor-row">
+            <EditorDraggable
+              :list="editors"
+              :user-color="userColor"
+              @setColumn="setColumn($event)"
+              @dragElement="testMethod"
+              @getContent="getContent($event)"
+              @updateUsers="updateUsers($event)"
+              @selectBlock="selectBlock($event)"
+            />
+          </div>
+
+          <EditorToolbar
+            :current-toolbar-position="currentToolbarPosition"
+            :current-selected-editor-index="currentSelectedEditorIndex"
+            @addEditor="addEditor($event)"
+            @removeEditor="removeEditor($event)"
           />
         </div>
-
-        <EditorToolbar
-          :current-toolbar-position="currentToolbarPosition"
-          :current-selected-editor-index="currentSelectedEditorIndex"
-          @addEditor="addEditor($event)"
-          @removeEditor="removeEditor($event)"
-        />
       </div>
-
-      <!-- <div class="editor-list-wrapper">
-        <div class="editor-list">
-          <div
-            v-for="(editor, index) in editors"
-            :id="'editor-' + editor.id"
-            :key="editor.id"
-            class="editor-row"
-          >
-            <div v-if="editor.blockType === 'text'" class="editor-content-text">
-              <EditorText
-                :editor-data="editor"
-                :user-color="userColor"
-                @input="getContent($event, index)"
-                @updateUsers="updateUsers($event)"
-                @selectBlock="selectBlock($event)"
-              />
-            </div>
-            <div
-              v-else-if="editor.blockType === 'image'"
-              class="editor-content-image"
-            >
-              <EditorImage
-                :editor-data="editor"
-                :user-color="userColor"
-                @input="getContent($event, index)"
-                @updateUsers="updateUsers($event)"
-                @selectBlock="selectBlock($event)"
-              />
-            </div>
-            <div
-              v-else-if="editor.blockType === 'section'"
-              class="editor-content-section"
-            >
-              <EditorSection
-                :editor-data="editor"
-                :user-color="userColor"
-                @input="getContent($event, index)"
-                @updateUsers="updateUsers($event)"
-                @selectBlock="selectBlock($event)"
-              />
-            </div>
-          </div>
-        </div>
-        <EditorToolbar
-          :current-toolbar-position="currentToolbarPosition"
-          :current-selected-editor-index="currentSelectedEditorIndex"
-          @addEditor="addEditor($event)"
-          @removeEditor="removeEditor($event)"
-        />
-      </div> -->
     </div>
   </div>
 </template>
@@ -353,13 +304,13 @@ export default {
 
 <style lang="scss" scoped>
 #editor {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
+  .editor-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
   .editor-heading {
     display: flex;
-    // justify-content: space-between;
   }
 
   .editor-list-wrapper {
