@@ -1243,6 +1243,6 @@ export const sample = [
     ],
     blockType: "table",
     users: [],
-    column: "default",
+    column: "singleColumnContent",
   },
 ];
