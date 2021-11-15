@@ -4,18 +4,14 @@ import {
   Document,
   Packer,
   SectionType,
-  Table,
-  TableCell,
-  TableRow,
-  WidthType,
 } from "docx";
 
 import { saveAs } from "file-saver";
-import { processTextBlock } from "./text-block";
-import { processHeadingBlock } from "./heading-block";
+import { processTextBlock } from "./blocks/text-block";
+import { processHeadingBlock } from "./blocks/heading-block";
+import { processImageBlock } from "./blocks/image-block";
+import { processTableBlock } from "./blocks/table-block";
 import { createACMCopyrightSpace } from "./special-elements";
-import { processImageBlock } from "./image-block";
-import { processTableBlock } from "./table-block";
 
 //*OK
 export const createSectionProperties = ({ documentOptions, type }) => {

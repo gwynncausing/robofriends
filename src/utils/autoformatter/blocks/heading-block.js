@@ -1,6 +1,6 @@
 import { Paragraph } from "docx";
-import { HEADING_LEVELS } from "./constants";
-import { capitalizeFirstLetter } from "../helpers";
+import { HEADING_LEVELS } from "../constants";
+import { capitalizeFirstLetter } from "../../helpers";
 
 //* OK
 export const createHeading = (content = "", level = 1) => {

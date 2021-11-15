@@ -1,4 +1,4 @@
-import { createSection } from "./autoformat";
+import { createSection } from "../autoformat";
 import { createParagraph } from "./text-block";
 import { Paragraph, ImageRun } from "docx";
 // column width 8.45cm converted to px
