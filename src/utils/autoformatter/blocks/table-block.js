@@ -1,5 +1,6 @@
 import { Table, TableCell, TableRow, WidthType } from "docx";
 import { createParagraph, createList } from "./text-block";
+import { createSection } from "../autoformat";
 
 const createTableCellsChildren = (content) => {
   let children = [];
@@ -59,11 +60,33 @@ export const createTable = (content) => {
   return table;
 };
 
-export const processTableBlock = (item, section) => {
+const processTableBlockChildren = (item, section) => {
   for (const childContent of item.content) {
     if (childContent.type !== "table") break;
     let table = createTable(childContent.content);
     section.children.push(table);
+  }
+};
+
+export const processTableBlock = (rules, item, documentProperty, section) => {
+  if (!!item.column && item.column != "default") {
+    // TODO: add try catch and fall back when current rules do not have such special rule
+    const specialDocumentOptions = rules.special[item.column].document;
+
+    documentProperty.sections.push(section);
+    section = createSection({
+      documentOptions: specialDocumentOptions,
+    });
+
+    processTableBlockChildren(item, section);
+
+    documentProperty.sections.push(section);
+    section = createSection({
+      documentOptions: rules.document,
+      children: [],
+    });
+  } else {
+    processTableBlockChildren(item, section);
   }
   return section;
 };

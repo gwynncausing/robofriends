@@ -80,7 +80,7 @@ export const generateDocument = async (rules, content) => {
         section = await processImageBlock(rules, item, properties, section);
         break;
       case "table":
-        processTableBlock(item, section);
+        section = processTableBlock(rules, item, properties, section);
         break;
     }
   }

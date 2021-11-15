@@ -72,6 +72,7 @@ export const processImageBlock = async (
   if (tempContent[0].type === "heading") tempContent = item.content.reverse();
 
   if (!!item.column && item.column != "default") {
+    // TODO: add try catch and fall back when current rules do not have such special rule
     const specialDocumentOptions = rules.special[item.column].document;
     const specialWidth = specialDocumentOptions.width;
 
