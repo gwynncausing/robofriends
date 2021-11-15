@@ -1,7 +1,7 @@
 <template>
   <div id="editor">
     <!-- // * make this hasApprovedProposal to true to check/see the editor -->
-    <div v-if="!hasApprovedProposal">
+    <div v-if="hasApprovedProposal">
       <EmptyDataResearchPaperEditor />
     </div>
     <div v-else class="editor-wrapper">
@@ -45,12 +45,6 @@
           />
         </div>
       </div>
-      <EditorToolbar
-        :current-toolbar-position="currentToolbarPosition"
-        :current-selected-editor-index="currentSelectedEditorIndex"
-        @addEditor="addEditor($event)"
-        @removeEditor="removeEditor($event)"
-      />
     </div>
   </div>
 </template>
