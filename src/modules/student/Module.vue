@@ -11,7 +11,7 @@
       <template v-slot:account-menu-dropdown>
         <AppBarMenuDropdownStudent
           :teams="teams"
-          :current-selected-team="selectedTeam"
+          :current-selected-team="selectedTeamDetails"
           @goToTeam="goToTeam"
           @goToAccountSettings="goToAccountSettings"
           @goToCreateTeam="goToCreateTeam"
@@ -42,7 +42,7 @@ export default {
   components: { AppBar, AppBarMenuDropdownStudent },
   data: function () {
     return {
-      selectedTeam: {},
+      selectedTeamDetails: {},
       isAccountMenuDropdownCloseOnClick: false,
       user: {
         name: "Dodoy",
@@ -58,7 +58,7 @@ export default {
         },
         {
           name: "Archive",
-          path: { name: "Archive" },
+          path: { name: "Student Archive" },
         },
       ],
       teamRoutes: [
@@ -84,7 +84,7 @@ export default {
     ...mapGetters({
       hasMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
       getMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_MEMBERSHIPS}`,
-      getSelectedTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM}`,
+      getSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM_DETAILS}`,
       getUser: ROOT_GETTERS.GET_USER,
       getIsLoggedIn: ROOT_GETTERS.GET_IS_LOGGED_IN,
     }),
@@ -104,9 +104,9 @@ export default {
     try {
       await this.onFetchMemberships();
       this.setTeams();
-      if (Object.keys(this.getSelectedTeam).length === 0)
-        await this.setSelectTeam(this.teams[0] || {});
-      this.selectedTeam = this.getSelectedTeam;
+      if (Object.keys(this.getSelectedTeamDetails).length === 0)
+        await this.setSelectedTeamDetails(this.teams[0] || {});
+      this.selectedTeamDetails = this.getSelectedTeamDetails;
     } catch (error) {
       console.log(error);
     }
@@ -114,27 +114,31 @@ export default {
   methods: {
     ...mapActions({
       onFetchMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_MEMBERSHIPS}`,
-      onSelectTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SELECT_TEAM}`,
+      onFetchSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
       onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
+
     setIsAccountMenuDropdownCloseOnClick() {
       this.isAccountMenuDropdownCloseOnClick = true;
       setTimeout(() => {
         this.isAccountMenuDropdownCloseOnClick = false;
       }, 500);
     },
+
     setTeams() {
       this.teams = this.getMemberships.map((memberships) => memberships.team);
     },
-    setSelectTeam(team) {
-      return this.onSelectTeam({ team: team });
+
+    setSelectedTeamDetails(team) {
+      return this.onFetchSelectedTeamDetails({ id: team.id });
     },
+
     async goToTeam(team) {
       if (!this.getIsLoggedIn) return;
       try {
         this.setIsAccountMenuDropdownCloseOnClick();
-        await this.setSelectTeam(team);
-        this.selectedTeam = this.getSelectedTeam;
+        await this.setSelectedTeamDetails(team);
+        this.selectedTeamDetails = this.getSelectedTeamDetails;
         this.$router.push({ name: "Student Dashboard" });
         this.$router.go();
       } catch (error) {

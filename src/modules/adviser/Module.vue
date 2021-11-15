@@ -49,10 +49,10 @@ export default {
           name: "Manage Teams",
           path: { name: "Manage Teams" },
         },
-        // {
-        //   name: "Archive",
-        //   path: { name: "Archive" },
-        // },
+        {
+          name: "Archive",
+          path: { name: "Adviser Archive" },
+        },
       ],
       notification: {
         path: { name: "Adviser Invitation" },

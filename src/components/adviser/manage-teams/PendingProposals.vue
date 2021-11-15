@@ -1,7 +1,7 @@
 <template>
   <div class="pending-proposals">
     <div
-      v-for="(proposal, index) in pendingProposals"
+      v-for="(proposal, index) in proposals"
       :key="proposal.id"
       class="proposal-list-wrapper"
     >
@@ -17,12 +17,31 @@
         </div>
         <div class="feedback-wrapper">
           <div class="feedback-label font-semi-bold">Feedback</div>
-          <Textarea v-model="proposal.feedback.text" />
+          <Textarea v-model="proposal.feedback.content" />
         </div>
         <div class="button-wrapper">
-          <Button> Approve </Button>
-          <Button color="red" dark> Reject </Button>
-          <Button color="yellow" dark> Ask to Revise </Button>
+          <Button
+            :disabled="hasApprovedProposal"
+            @click="updateProposal(proposal.id, proposal.feedback, 'approved')"
+          >
+            Approve
+          </Button>
+          <Button
+            color="red"
+            :dark="!hasApprovedProposal"
+            :disabled="hasApprovedProposal"
+            @click="updateProposal(proposal.id, proposal.feedback, 'rejected')"
+          >
+            Reject
+          </Button>
+          <Button
+            color="yellow"
+            :dark="!hasApprovedProposal"
+            :disabled="hasApprovedProposal"
+            @click="updateProposal(proposal.id, proposal.feedback, 'revise')"
+          >
+            Ask to Revise
+          </Button>
         </div>
       </div>
       <hr v-show="index + 1 != pendingProposals.length" />
@@ -34,6 +53,8 @@
 import EditorTextWithTitleReadonly from "@/components/editor/EditorTextWithTitleReadonly";
 import Button from "@/components/global/Button.vue";
 import Textarea from "@/components/global/Textarea.vue";
+
+import { PROPOSAL } from "@/utils/constants";
 
 export default {
   name: "PendingProposals",
@@ -47,21 +68,48 @@ export default {
       type: Array,
       default: () => [],
     },
+    hasApprovedProposal: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
-      research: {
-        id: "1",
-        title: "title",
-        content: `aaaaa`,
-        feedback: {
-          id: "1",
-          date: "1/1/2021",
-          time: "11:00",
-          text: "Good job!",
-        },
-      },
+      textarea: "hello",
+      proposals: {},
     };
+  },
+
+  watch: {
+    pendingProposals: {
+      handler(newValue) {
+        // console.log(this.hasApprovedProposal);
+        this.proposals = newValue;
+        for (const proposal of this.proposals) {
+          if (!proposal.feedback) proposal.feedback = { content: "" };
+        }
+      },
+      immediate: true,
+    },
+  },
+
+  methods: {
+    updateProposal(id, feedback, status) {
+      switch (status) {
+        case "approved":
+          status = PROPOSAL.STATUS.APPROVED;
+          break;
+        case "rejected":
+          status = PROPOSAL.STATUS.REJECTED;
+          break;
+        case "revise":
+          status = PROPOSAL.STATUS.REVISE;
+          break;
+        default:
+          status = "undefined status";
+      }
+      this.$emit("updateProposal", { id, status, feedback });
+    },
   },
 };
 </script>

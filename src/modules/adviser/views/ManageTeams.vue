@@ -1,30 +1,37 @@
 <template>
   <div id="manage-teams">
-    <ChooseTeamHeading :team="teams[activeEl]" />
+    <ChooseTeamHeading
+      v-show="$vuetify.breakpoint.mdAndDown"
+      :team="teams[activeEl]"
+    />
     <div class="flex-wrapper">
-      <div class="team-list-wrapper">
+      <div v-show="$vuetify.breakpoint.lgAndUp" id="team-list-wrapper">
         <CardTeam
           v-for="(team, index) in teams"
           :key="team.id"
           :team="team"
           :index="index"
           :class="{ active: activeEl == index }"
-          @select="selectTeam"
+          @select="selectTeam(index, team.id)"
         />
       </div>
       <Tabs active="pending-proposals" :items="items" class="tabs">
         <template v-slot:body-pending-proposals>
+          <span v-if="pendingProposalsLoading">Loading...</span>
           <PendingProposals
-            :pending-proposals="teams[activeEl].pendingProposals"
+            v-else
+            :pending-proposals="pendingProposals"
+            :has-approved-proposal="hasApprovedProposal"
+            @updateProposal="updateProposals($event)"
           />
         </template>
         <template v-slot:body-approved-research>
-          <ApprovedResearch
-            :approved-research="teams[activeEl].approvedResearch"
-          />
+          <span v-if="approvedProposalsLoading">Loading...</span>
+          <ApprovedResearch v-else :approved-research="approvedProposals[0]" />
         </template>
         <template v-slot:body-research-paper>
-          <ResearchPaper />
+          <span v-if="!hasApprovedProposal">No Approved Proposal yet</span>
+          <ResearchPaper v-else />
         </template>
       </Tabs>
     </div>
@@ -39,6 +46,12 @@ import Tabs from "@/components/Tabs";
 import PendingProposals from "@/components/adviser/manage-teams/PendingProposals";
 import ApprovedResearch from "@/components/adviser/manage-teams/ApprovedResearch";
 import ResearchPaper from "@/components/adviser/manage-teams/ResearchPaper";
+
+import { mapActions, mapGetters } from "vuex";
+import { ADVISER_ACTIONS, ADVISER_GETTERS } from "../store/types";
+import { MODULES } from "@/utils/constants";
+import { PROPOSAL } from "@/utils/constants";
+
 export default {
   name: "ManageTeams",
   components: {
@@ -52,6 +65,7 @@ export default {
   data() {
     return {
       activeEl: 0,
+      currentSelectedTeam: -1,
       items: [
         {
           title: "Pending Proposals",
@@ -66,129 +80,134 @@ export default {
           value: "research-paper",
         },
       ],
-      teams: [
-        {
-          teamName: "Cary & Co.",
-          researchTitle: "",
-          members: [
-            "Cary Legaspi",
-            "Rafale Bacalla",
-            "Hyksos Gwynn Causing",
-            "Wylen Joan Lee",
-            "Joshua Rosalijos",
-            "Someone Else",
-          ],
-          dateTime: "09/05/2021 11:59AM",
-          pendingProposals: [
-            {
-              id: "1",
-              researchTitle:
-                "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
-              content: {
-                type: "doc",
-                content: [
-                  {
-                    type: "heading",
-                    content: [
-                      {
-                        type: "text",
-                        text: "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
-                      },
-                    ],
-                  },
-                  {
-                    type: "paragraph",
-                    content: [
-                      {
-                        type: "text",
-                        text: "Bud is a web application that offers a modern solution where research can be fun, hassle-free, and paperless; helping students and teachers with writing research from start to finish. Inside the app, users will have access to a dashboard for monitoring their progress, can use real time collaboration features to work on their research, can utilize an easy-to-use research editor with auto-formatting to standard research formats (e.g. ACM) and can store completed research papers in the research archive. With Bud, research collaboration, tracking and writing will be made easier and enjoyable without using different applications and creating multiple files.",
-                      },
-                    ],
-                  },
-                ],
-              },
-              status: "Needs Revision",
-              dateTime: "",
-              feedback: {
-                id: "",
-                date: "",
-                time: "",
-                text: "",
-              },
-            },
-            {
-              id: "2",
-              researchTitle:
-                "Isolation and Determination of the Bioremediation Potential of Bunker Sludge Degrading Bacteria from Manila Bay",
-              content: {
-                type: "doc",
-                content: [
-                  {
-                    type: "heading",
-                    content: [
-                      {
-                        type: "text",
-                        text: "Isolation and Determination of the Bioremediation Potential of Bunker Sludge Degrading Bacteria from Manila Bay",
-                      },
-                    ],
-                  },
-                  {
-                    type: "paragraph",
-                    content: [
-                      {
-                        type: "text",
-                        text: "Bunker sludge degrading microorganisms were isolated using enrichment culture technique from the polluted waters of Manila Bay. Water samples were inoculated using liquid mineral media (LAM). Isolates were tentatively identified as Xanthomonas sp.,Alcaligenes sp, Enterobacter sp. and Flavobacterium sp. Two parameters were tested evaluating the biodegradative abilities of individual isolates to degrade bunker sludge and the effect of chicken manure as added source of nitrates and phosphates. Results revealed no significant difference between pure and mixed cultures in ability to degrade",
-                      },
-                    ],
-                  },
-                ],
-              },
-              status: "Rejected",
-              dateTimeSubmitted: "",
-              feedback: {
-                id: "1",
-                date: "",
-                time: "",
-                text: "",
-              },
-            },
-          ],
-          approvedResearch: {
-            id: "1",
-            researchTitle:
-              "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
-            content: {
-              type: "doc",
-              content: [
-                {
-                  type: "heading",
-                  content: [
-                    {
-                      type: "text",
-                      text: "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
-                    },
-                  ],
-                },
-                {
-                  type: "paragraph",
-                  content: [
-                    {
-                      type: "text",
-                      text: "Bud is a web application that offers a modern solution where research can be fun, hassle-free, and paperless; helping students and teachers with writing research from start to finish. Inside the app, users will have access to a dashboard for monitoring their progress, can use real time collaboration features to work on their research, can utilize an easy-to-use research editor with auto-formatting to standard research formats (e.g. ACM) and can store completed research papers in the research archive. With Bud, research collaboration, tracking and writing will be made easier and enjoyable without using different applications and creating multiple files.",
-                    },
-                  ],
-                },
-              ],
-            },
-          },
-        },
-      ],
+      teams: [],
+      memberships: [],
+      pendingProposals: [],
+      pendingProposalsLoading: false,
+      approvedProposals: [],
+      approvedProposalsLoading: false,
+      hasApprovedProposal: false,
     };
   },
+
+  computed: {
+    ...mapGetters({
+      getMemberships: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_GETTERS.GET_MEMBERSHIPS}`,
+      getTeam: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_GETTERS.GET_TEAM}`,
+    }),
+  },
+
+  async created() {
+    await this.fetchMembership();
+
+    this.memberships = await this.getMemberships;
+    this.teams = await this.getTeam;
+
+    for (let membership of this.memberships) {
+      const payload = { id: membership.team.id };
+      await this.fetchTeam(payload);
+    }
+
+    this.selectTeam(0, this.teams[0].id);
+  },
+
   methods: {
-    selectTeam: function (index) {
+    ...mapActions({
+      onFetchMembership: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_MEMBERSHIPS}`,
+      onFetchTeam: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_TEAM}`,
+      onFetchPendingProposals: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_PENDING_PROPOSALS}`,
+      onFetchApprovedProposal: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_APPROVED_PROPOSAL}`,
+      onFetchOnePendingProposal: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_ONE_PENDING_PROPOSAL}`,
+      onFetchOneApprovedProposal: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_ONE_APPROVED_PROPOSAL}`,
+      onUpdateProposal: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.UPDATE_PROPOSAL}`,
+    }),
+    fetchMembership() {
+      return this.onFetchMembership();
+    },
+    fetchTeam(id) {
+      return this.onFetchTeam(id);
+    },
+    fetchPendingProposals(id) {
+      return this.onFetchPendingProposals(id);
+    },
+    fetchApprovedProposal(id) {
+      return this.onFetchApprovedProposal(id);
+    },
+    fetchOnePendingProposal(payload) {
+      return this.onFetchOnePendingProposal(payload);
+    },
+    fetchOneApprovedProposal(payload) {
+      return this.onFetchOneApprovedProposal(payload);
+    },
+    updateProposal(id, status, feedback) {
+      return this.onUpdateProposal({
+        id,
+        status,
+        feedback,
+        teamId: this.currentSelectedTeam,
+      });
+    },
+    selectTeam(index, team_id) {
       this.activeEl = index;
-      console.log(this.activeEl);
+      this.currentSelectedTeam = team_id;
+
+      this.fetchAndUpdateProposals(this.activeEl, this.currentSelectedTeam);
+    },
+    async updateProposals({ id, status, feedback }) {
+      await this.updateProposal(id, status, feedback);
+      if (status === PROPOSAL.STATUS.APPROVED) {
+        const status = PROPOSAL.STATUS.REJECTED;
+        const feedback = {
+          content: "",
+        };
+        for (let proposal of this.pendingProposals) {
+          if (proposal.id !== id) {
+            await this.updateProposal(proposal.id, status, feedback);
+          }
+        }
+      }
+      this.fetchAndUpdateProposals(this.activeEl, this.currentSelectedTeam);
+      this.$router.replace({
+        query: { ...this.$route.query, tab: "approved-research" },
+      });
+    },
+
+    async fetchAndUpdateProposals(index, team_id) {
+      this.pendingProposalsLoading = true;
+      this.approvedProposalsLoading = true;
+
+      const payload = { id: team_id };
+
+      await this.fetchPendingProposals(payload);
+      this.updatePendingProposals(index, team_id);
+
+      await this.fetchApprovedProposal(payload);
+      this.updateApprovedProposals(index, team_id);
+    },
+    async updatePendingProposals(index, team_id) {
+      this.pendingProposals = this.teams[index]?.proposals?.pending;
+      if (this.pendingProposals) {
+        for (let proposal of this.pendingProposals) {
+          const payload = { proposalId: proposal.id, teamId: team_id };
+
+          await this.fetchOnePendingProposal(payload);
+        }
+      }
+
+      this.pendingProposalsLoading = false;
+    },
+    async updateApprovedProposals(index, team_id) {
+      this.approvedProposals = this.teams[index]?.proposals?.approved;
+      if (this.approvedProposals) {
+        for (let proposal of this.approvedProposals) {
+          const payload = { proposalId: proposal.id, teamId: team_id };
+          await this.fetchOneApprovedProposal(payload);
+        }
+      }
+      this.approvedProposalsLoading = false;
+      if (this.approvedProposals.length > 0) {
+        this.hasApprovedProposal = true;
+      }
     },
   },
 };
@@ -202,7 +221,7 @@ export default {
     flex-direction: row;
     column-gap: 16px;
 
-    .team-list-wrapper {
+    #team-list-wrapper {
       flex: 1;
       display: flex;
       flex-direction: column;

@@ -18,14 +18,34 @@ const JOIN_CODE_TEAM_PAYLOAD = {
   code: String,
 };
 
-const SELECT_TEAM = {
-  team: Object,
+const UPDATE_MEMBERSHIPS = {
+  status: String,
+  baseRole: String,
+};
+
+const UPDATE_SELECTED_TEAM_DETAILS = {
+  id: Number,
+  team: {
+    name: String,
+    description: String,
+  },
+};
+
+const CREATE_PROPOSAL = {
+  id: Number,
+  proposal: {
+    title: String,
+    content: Object,
+    teamId: Number,
+  },
 };
 
 export const STUDENT_PAYLOADS = {
   CREATE_TEAM,
   SEND_TEAM_INVITATIONS,
   UPDATE_INVITATION,
-  SELECT_TEAM,
   JOIN_CODE_TEAM_PAYLOAD,
+  UPDATE_MEMBERSHIPS,
+  UPDATE_SELECTED_TEAM_DETAILS,
+  CREATE_PROPOSAL,
 };

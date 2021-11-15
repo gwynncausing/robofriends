@@ -53,7 +53,7 @@ export default {
     },
     deny() {
       const params = {
-        invitationId: this.invitation,
+        invitation: this.invitation,
         status: TEAM.INVITATION_STATUS.DECLINED,
       };
       this.$emit("updateInvitation", params);

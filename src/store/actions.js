@@ -99,7 +99,28 @@ export default {
     context,
     payload = ROOT_PAYLOADS.RESET_PASSWORD
   ) {
-    console.log(payload);
     await UserRepository.resetPassword(payload);
+  },
+
+  async [ROOT_ACTIONS.VERIFY_ACCOUNT](
+    context,
+    payload = ROOT_PAYLOADS.VERIFY_ACCOUNT
+  ) {
+    await UserRepository.verifyAccount(payload);
+  },
+
+  async [ROOT_ACTIONS.RESEND_VERIFICATION_LINK](
+    context,
+    payload = ROOT_PAYLOADS.RESEND_VERIFICATION_LINK
+  ) {
+    await UserRepository.sendVerificationLink(payload);
+  },
+
+  async [ROOT_ACTIONS.DELETE_USER](
+    context,
+    payload = ROOT_PAYLOADS.DELETE_USER
+  ) {
+    const { id } = payload;
+    await UserRepository.delete(id);
   },
 };

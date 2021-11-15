@@ -3,6 +3,8 @@
     <EditorTextFormatterButtons
       :editor="editor"
       :block-type="editorData.blockType"
+      :column="editorData.column"
+      @setColumn="$emit('setColumn', $event)"
     />
     <editor-content :editor="editor" class="editor-content" />
   </div>
@@ -34,7 +36,7 @@ import { ROOT_GETTERS } from "@/store/types";
 // new WebrtcProvider("bud-test-1", ydoc);
 
 const CustomDocument = Document.extend({
-  content: "heading block*",
+  content: "heading image",
 });
 
 export default {
@@ -66,6 +68,12 @@ export default {
     ...mapGetters({
       getUser: `${ROOT_GETTERS.GET_USER}`,
     }),
+  },
+
+  watch: {
+    "editor.storage.collaborationCursor.users": function (newValue) {
+      this.$emit("updateUsers", newValue);
+    },
   },
 
   mounted() {
@@ -107,9 +115,6 @@ export default {
               name,
               color: this.userColor,
             },
-            onUpdate: (users) => {
-              this.$emit("updateUsers", users);
-            },
           }),
         ],
         content: content,
@@ -144,6 +149,7 @@ export default {
 
   beforeUnmount() {
     this.editor.destroy();
+    this.provider.destroy();
   },
 };
 </script>

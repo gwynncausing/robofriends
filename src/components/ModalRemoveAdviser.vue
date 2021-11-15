@@ -6,7 +6,7 @@
     <template v-slot:content>
       <div class="pt-3">
         <span class="subheading1 neutral-500--text">
-          Are you sure that you want to leave {{ fullName }}?
+          Are you sure that you want remove {{ fullName }} as your adviser?
         </span>
       </div>
     </template>

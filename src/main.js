@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 import VueDragscroll from "vue-dragscroll";
+import { VExpansionPanels } from "vuetify/lib";
 
 import studentModule from "@/modules/student";
 import adviserModule from "@/modules/adviser";
@@ -18,7 +19,7 @@ registerModules({
 });
 
 Vue.config.productionTip = false;
-
+Vue.component("v-expansion-panels", VExpansionPanels);
 Vue.use(VueDragscroll);
 
 new Vue({

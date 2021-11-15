@@ -1,19 +1,20 @@
 <template>
   <CustomCard>
     <div class="card-team" @click="$emit('select', index)">
-      <div class="team-name font-bold">{{ team.teamName }}</div>
-      <!-- <div class="research-title">{{ team.researchTitle }}</div> -->
+      <div class="team-name font-bold">{{ team.name || "" }}</div>
       <div class="members-wrapper">
         <v-avatar
-          v-for="(member, memberIndex) in team.members"
+          v-for="(member, memberIndex) in members"
           :key="memberIndex"
           color="primary"
           size="24"
         >
-          <span class="avatar-content caption">{{ getInitials(member) }}</span>
+          <span class="avatar-content caption">
+            {{ member.user.firstName[0] }}
+            {{ member.user.lastName[0] }}
+          </span>
         </v-avatar>
       </div>
-      <div class="date-time">{{ team.dateTime }}</div>
     </div>
   </CustomCard>
 </template>
@@ -33,6 +34,17 @@ export default {
       default: 0,
     },
   },
+
+  computed: {
+    members() {
+      let members = [];
+      this.team.members.forEach((member) => {
+        if (member.baseRole !== "adviser") members.push(member);
+      });
+      return members;
+    },
+  },
+
   methods: {
     getInitials(member) {
       return member

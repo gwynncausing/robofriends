@@ -5,7 +5,7 @@
       </v-img>
     </router-link>
 
-    <h5>Verify Your Email</h5>
+    <h5>Forgot Password</h5>
 
     <div>
       Please enter your email to search for your account and we’ll send you the

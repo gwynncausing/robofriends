@@ -1,23 +1,20 @@
 <template>
   <div class="choose-team">
     <div class="team-details-wrapper">
-      <TextField v-model="team.teamName" readonly class="team-name" />
-      <div class="members-wrapper">
+      <TextField v-model="teamName" class="team-name" readonly />
+      <div v-show="$vuetify.breakpoint.smAndUp" class="members-wrapper">
         <v-avatar
           v-for="index in displayMembers"
           :key="index"
           color="primary"
           size="32"
         >
-          <span class="avatar-content caption">{{
-            getInitials(team.members[index - 1])
-          }}</span>
+          <span v-if="members.length > 0" class="avatar-content caption">
+            {{ members[index - 1].user.firstName[0] }}
+            {{ members[index - 1].user.lastName[0] }}
+          </span>
         </v-avatar>
-        <v-avatar
-          v-show="team.members.length > 4"
-          color="neutral-300"
-          size="32"
-        >
+        <v-avatar v-show="members.length > 4" color="neutral-300" size="32">
           <span class="avatar-content caption">+{{ moreMembers }}</span>
         </v-avatar>
       </div>
@@ -29,8 +26,9 @@
 <script>
 import TextField from "@/components/global/TextField";
 import Button from "@/components/global/Button";
+
 export default {
-  name: "CardTeam",
+  name: "ChooseTeamHeading",
   components: {
     TextField,
     Button,
@@ -41,14 +39,38 @@ export default {
       default: () => {},
     },
   },
+
+  data() {
+    return {
+      members: [],
+      teamName: "",
+    };
+  },
+
   computed: {
     displayMembers() {
-      return this.team.members.length > 5 ? 3 : 5;
+      if (!this.members) return 0;
+      if (this.members.length > 5) {
+        return 3;
+      } else {
+        return this.members?.length;
+      }
     },
     moreMembers() {
-      return this.team.members.length - 3;
+      return this.members.length - 3;
     },
   },
+
+  watch: {
+    team(newValue) {
+      this.members.length = 0;
+      newValue.members.forEach((member) => {
+        if (member.baseRole !== "adviser") this.members.push(member);
+      });
+      this.teamName = newValue.name;
+    },
+  },
+
   methods: {
     getInitials(member) {
       return member

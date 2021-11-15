@@ -1,46 +1,56 @@
 <template>
   <div class="test">
-    <CardTeam :team="team" />
-    <CardProposal :proposal="proposal" />
+    <div class="row">
+      <div class="col-8">
+        <h3>Nested draggable</h3>
+        <NestedExpandableDraggable :list="list" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import CardTeam from "@/components/adviser/manage-teams/CardTeam";
-import CardProposal from "@/components/student/research-details/CardProposal";
+import NestedExpandableDraggable from "@/components/NestedExpandableDraggable";
 export default {
-  name: "Test",
-  components: { CardTeam, CardProposal },
+  parent: "Test",
+  components: {
+    NestedExpandableDraggable,
+  },
   data() {
     return {
-      team: {
-        teamName: "Cary & Co.",
-        researchTitle:
-          "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
-        members: [
-          "Cary Legaspi",
-          "Rafale Bacalla",
-          "Hyksos Gwynn Causing",
-          "Wylen Joan Lee",
-          "Joshua Rosalijos",
-        ],
-        dateTime: "09/05/2021 11:59AM",
-      },
-      proposal: {
-        id: "1",
-        researchTitle:
-          "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
-        content: `<h2>title1</h2><p>paragraph1</p>`,
-        status: "Needs Revision",
-        dateTime: "09/05/2021 11:59AM",
-        feedback: {
-          id: "1",
-          date: "1/1/2021",
-          time: "11:00",
-          text: "Good job!",
+      list: [
+        {
+          id: 1,
+          parent: "task 1",
+          children: [],
         },
-      },
+        {
+          id: 2,
+          parent: "task 2",
+          children: [],
+        },
+        {
+          id: 3,
+          parent: "task 3",
+          children: [],
+        },
+        {
+          id: 4,
+          parent: "task 4",
+          children: [],
+        },
+        {
+          id: 5,
+          parent: "task 5",
+          children: [],
+        },
+      ],
     };
+  },
+  watch: {
+    list: function () {
+      console.log(this.list);
+    },
   },
 };
 </script>

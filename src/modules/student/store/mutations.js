@@ -16,9 +16,11 @@ export default {
   ) {
     state.sentTeachersInvitations = sentTeachersInvitations;
   },
+
   [STUDENT_MUTATIONS.SET_INVITATIONS](state, { invitations }) {
     state.invitations = invitations;
   },
+
   [STUDENT_MUTATIONS.SET_UPDATE_INVITATION](state, { invitation }) {
     const invitations = state.invitations;
     const index = invitations.findIndex(
@@ -27,15 +29,45 @@ export default {
     invitations[index] = invitation;
     state.invitations = Object.assign([], invitations);
   },
+
   [STUDENT_MUTATIONS.SET_MEMBERSHIPS](state, { memberships }) {
     state.memberships = memberships;
   },
+
   [STUDENT_MUTATIONS.SET_HAS_MEMBERSHIPS](state, { hasMemberships }) {
     state.hasMemberships = hasMemberships;
   },
+
   [STUDENT_MUTATIONS.SET_SELECTED_TEAM](state, { selectedTeam }) {
     state.selectedTeam = selectedTeam;
   },
+
+  [STUDENT_MUTATIONS.SET_SELECTED_TEAM_DETAILS](
+    state,
+    { selectedTeamDetails }
+  ) {
+    state.selectedTeamDetails = selectedTeamDetails;
+  },
+
+  [STUDENT_MUTATIONS.SET_SUBMITTED_PROPOSALS](state, { submittedProposals }) {
+    state.submittedProposals = submittedProposals;
+  },
+
+  [STUDENT_MUTATIONS.SET_SELECTED_PROPOSAL](state, { selectedProposal }) {
+    state.selectedProposal = selectedProposal;
+  },
+
+  [STUDENT_MUTATIONS.SET_APPROVED_PROPOSAL](state, { approvedProposal }) {
+    state.approvedProposal = approvedProposal;
+  },
+
+  [STUDENT_MUTATIONS.SET_APPROVED_PROPOSAL_DETAILS](
+    state,
+    { approvedProposalDetails }
+  ) {
+    state.approvedProposalDetails = approvedProposalDetails;
+  },
+
   [STUDENT_MUTATIONS.SET_RESET_STUDENT_STATE](state) {
     Object.assign(state, {}, studentInitialState());
   },
