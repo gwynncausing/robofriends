@@ -68,6 +68,10 @@ export default {
     state.approvedProposalDetails = approvedProposalDetails;
   },
 
+  [STUDENT_MUTATIONS.SET_REVISED_PROPOSAL](state, { revisedProposal }) {
+    state.revisedProposal = revisedProposal;
+  },
+
   [STUDENT_MUTATIONS.SET_RESET_STUDENT_STATE](state) {
     Object.assign(state, {}, studentInitialState());
   },

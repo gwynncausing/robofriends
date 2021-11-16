@@ -44,4 +44,8 @@ export default {
   [STUDENT_GETTERS.GET_SELECTED_TEAM_DETAILS]({ selectedTeamDetails }) {
     return selectedTeamDetails;
   },
+
+  [STUDENT_GETTERS.GET_REVISED_PROPOSAL]({ revisedProposal }) {
+    return revisedProposal;
+  },
 };

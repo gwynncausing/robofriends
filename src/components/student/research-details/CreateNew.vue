@@ -70,9 +70,13 @@ export default {
   },
 
   beforeMount() {
-    console.log(this.proposal.content);
-    this.proposal.content ??= this.editor.content;
-    console.log(this.proposal.content);
+    console.log("I am here");
+    // console.log(this.proposal);
+    this.editor.content = this.proposal;
+    // console.log(this.editor.content);
+    // console.log(this.proposal.content);
+    // this.proposal.content ??= this.editor.content;
+    // console.log(this.proposal.content);
   },
 
   methods: {
