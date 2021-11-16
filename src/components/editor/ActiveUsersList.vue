@@ -1,15 +1,13 @@
 <template>
   <div class="editor-profile-list">
     <div
-      v-for="user in users"
+      v-for="user in newUsers"
       :key="user.id"
       class="profile"
       :style="{ backgroundColor: user.color }"
     >
       <!--  -->
-      <v-avatar size="38">
-        {{ user.name.split(" ")[0][0] }}{{ user.name.split(" ")[1][0] }}
-      </v-avatar>
+      <v-avatar size="38">{{ getUserInitials(user) }}</v-avatar>
     </div>
   </div>
 </template>
@@ -21,6 +19,24 @@ export default {
     users: {
       type: Array,
       default: () => [],
+    },
+  },
+  computed: {
+    newUsers() {
+      let users = [];
+      this.users.forEach((user) => {
+        if (user.name) {
+          users.push(user);
+        }
+      });
+      return users;
+    },
+  },
+  methods: {
+    getUserInitials(user) {
+      const first = user?.name?.split(" ")[0][0];
+      const second = user?.name?.split(" ")[1][0];
+      return first + second;
     },
   },
 };

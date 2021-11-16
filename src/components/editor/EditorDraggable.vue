@@ -196,7 +196,6 @@ export default {
       border: 1px solid $neutral-400;
       border-radius: 4px;
       padding: 0.8rem;
-      cursor: text;
       width: 100%;
     }
 
