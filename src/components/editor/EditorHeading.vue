@@ -143,32 +143,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.ProseMirror-yjs-cursor.ProseMirror-widget {
-  position: relative;
-  margin-left: -1px;
-  margin-right: -1px;
-  border-left: 1px solid #0d0d0d;
-  border-right: 1px solid #0d0d0d;
-  word-break: normal;
-
-  div {
-    white-space: nowrap;
-    position: absolute;
-    top: -1.4em;
-    left: -1px;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 0.2rem;
-    opacity: 0;
-    line-height: normal;
-  }
-
-  &:hover {
-    div {
-      opacity: 1;
-    }
-  }
-}
-</style>
