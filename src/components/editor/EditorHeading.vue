@@ -18,9 +18,9 @@ import Placeholder from "@tiptap/extension-placeholder";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
-import * as Y from "yjs";
+// import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
-import { IndexeddbPersistence } from "y-indexeddb";
+// import { IndexeddbPersistence } from "y-indexeddb";
 
 import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
 
@@ -56,6 +56,7 @@ export default {
     return {
       editor: null,
       content: "",
+      dbPersistence: null,
     };
   },
 
@@ -72,18 +73,14 @@ export default {
   },
 
   mounted() {
-    const ydoc = new Y.Doc();
-    // ydoc.load();
-    // console.clear();
-    // console.log({ ydoc: ydoc });
-
+    const ydoc = this.editorData.ydoc;
     const documentId = this.editorData.id;
 
     const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
     let content = this.editorData.content;
     console.log({ content: content });
-    const persistence = new IndexeddbPersistence(this.documentId, ydoc);
-    persistence.once("synced", () => {
+    this.dbPersistence = this.editorData.persistence;
+    this.dbPersistence.once("synced", () => {
       console.log({ documentId });
       const provider = new WebrtcProvider(documentId, ydoc);
       this.editor = new Editor({
@@ -129,6 +126,11 @@ export default {
         },
       });
     });
+  },
+
+  beforeDestroy() {
+    this.dbPersistence.clearData();
+    console.log({ DB: this.dbPersistence });
   },
 
   methods: {

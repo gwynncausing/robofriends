@@ -124,12 +124,9 @@ export default {
       // this.yDoc.subdocs.forEach((value) => {
       //   console.log({ subDocsValue: value });
       // });
-      folder.forEach((value, index) => {
-        if (value.deleted === undefined || value.deleted) {
-          const persistence = new IndexeddbPersistence(value.id, new Y.Doc());
-          persistence.destroy();
-          folder.delete(index, 1);
-        }
+      folder.forEach((value) => {
+        value.ydoc = new Y.Doc();
+        value.persistence = new IndexeddbPersistence(value.id, value.ydoc);
         this.editors.push(value);
       });
       if (!this.editors.length) {
@@ -147,13 +144,9 @@ export default {
         Y.applyUpdate(this.yDoc, update);
         const folder = this.yDoc.getArray("subdocuments");
         this.editors = [];
-        folder.forEach((value, index) => {
-          console.log({ isDeleted: value.deleted });
-          if (value.deleted === undefined || value.deleted) {
-            const persistence = new IndexeddbPersistence(value.id, new Y.Doc());
-            persistence.destroy();
-            folder.delete(index, 1);
-          }
+        folder.forEach((value) => {
+          value.ydoc = new Y.Doc();
+          value.persistence = new IndexeddbPersistence(value.id, value.ydoc);
           this.editors.push(value);
         });
       });
@@ -228,13 +221,12 @@ export default {
 
       if (blockType === "heading") {
         const objToAdd = {
-          id: this.teamCodeUnique + new Date().getTime(),
+          id: new Date().getTime() + blockType + this.teamCodeUnique,
           content: ``,
           blockType,
           users: [],
           children: [],
           column: "default",
-          deleted: false,
         };
         this.editors.splice(index + 1, 0, objToAdd);
         this.yDoc.transact(() => {
@@ -244,12 +236,11 @@ export default {
         // this.yDoc.subdocs.add(objToAdd);
       } else {
         const objToAdd = {
-          id: this.teamCodeUnique + new Date().getTime(),
+          id: new Date().getTime() + blockType + this.teamCodeUnique,
           content: content,
           blockType,
           users: [],
           column: "default",
-          deleted: false,
         };
         this.editors.splice(index + 1, 0, objToAdd);
         this.yDoc.transact(() => {
@@ -262,9 +253,7 @@ export default {
       // this.editors.splice(index, 1);
       this.yDoc.transact(() => {
         const folder = this.yDoc.getArray("subdocuments");
-        folder.get(index).deleted = true;
-        folder.push([]);
-        console.log({ msg: "SEEEEEEEEND" });
+        folder.delete(index, 1);
       }, this.teamCodeUnique);
     },
     getRandomColor() {
