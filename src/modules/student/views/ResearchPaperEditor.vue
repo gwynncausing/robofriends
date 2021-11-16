@@ -1,7 +1,7 @@
 <template>
   <div id="editor">
     <!-- // * make this hasApprovedProposal to true to check/see the editor -->
-    <div v-if="hasApprovedProposal">
+    <div v-if="!hasApprovedProposal">
       <EmptyDataResearchPaperEditor />
     </div>
     <div v-else class="editor-wrapper">
@@ -63,6 +63,9 @@ import {
 } from "@/modules/student/store/types";
 import { isObjectEmpty } from "@/utils/helpers";
 import { MODULES } from "@/utils/constants";
+import { IndexeddbPersistence } from "y-indexeddb";
+import * as Y from "yjs";
+import { WebrtcProvider } from "y-webrtc";
 
 export default {
   name: "ResearchPaperEditor",
@@ -81,7 +84,10 @@ export default {
       activeUsers: [],
       currentToolbarPosition: 0,
       currentSelectedEditorIndex: 0,
-      hasApprovedProposal: false,
+      hasApprovedProposal: true,
+      yDoc: new Y.Doc({ autoLoad: true }),
+      hasLoadedFromIndexDB: false,
+      teamCodeUnique: "MyT3@mN@m3Unique123123124",
     };
   },
 
@@ -100,11 +106,58 @@ export default {
   },
 
   mounted() {
-    if (!this.editors.length) {
-      this.addEditor({
-        currentSelectedEditorIndex: this.currentSelectedEditorIndex,
+    const persistence = new IndexeddbPersistence(
+      this.teamCodeUnique,
+      this.yDoc
+    );
+    persistence.once("synced", () => {
+      new WebrtcProvider(this.teamCodeUnique, this.yDoc);
+      console.log("initial content loaded");
+      const folder = this.yDoc.getArray("subdocuments");
+      // console.log({ folder: folder.length });
+      // console.log({ value: folder.length });
+      // folder.forEach((value) => {
+      //   const persistence = new IndexeddbPersistence(value.id, new Y.Doc());
+      //   persistence.destroy();
+      // });
+      // folder.delete(0, folder.length);
+      // this.yDoc.subdocs.forEach((value) => {
+      //   console.log({ subDocsValue: value });
+      // });
+      folder.forEach((value, index) => {
+        if (value.deleted === undefined || value.deleted) {
+          const persistence = new IndexeddbPersistence(value.id, new Y.Doc());
+          persistence.destroy();
+          folder.delete(index, 1);
+        }
+        this.editors.push(value);
       });
-    }
+      if (!this.editors.length) {
+        this.addEditor({
+          currentSelectedEditorIndex: this.currentSelectedEditorIndex,
+        });
+      }
+
+      this.hasLoadedFromIndexDB = true;
+      this.yDoc.on("update", (update, origin) => {
+        console.log({ origin });
+        // if (origin == this.teamCodeUnique) {
+        //   return;
+        // }
+        Y.applyUpdate(this.yDoc, update);
+        const folder = this.yDoc.getArray("subdocuments");
+        this.editors = [];
+        folder.forEach((value, index) => {
+          console.log({ isDeleted: value.deleted });
+          if (value.deleted === undefined || value.deleted) {
+            const persistence = new IndexeddbPersistence(value.id, new Y.Doc());
+            persistence.destroy();
+            folder.delete(index, 1);
+          }
+          this.editors.push(value);
+        });
+      });
+    });
   },
 
   methods: {
@@ -174,26 +227,45 @@ export default {
         </table>`;
 
       if (blockType === "heading") {
-        this.editors.splice(index + 1, 0, {
-          id: this.id++,
-          content: content,
+        const objToAdd = {
+          id: this.teamCodeUnique + new Date().getTime(),
+          content: ``,
           blockType,
           users: [],
           children: [],
           column: "default",
-        });
+          deleted: false,
+        };
+        this.editors.splice(index + 1, 0, objToAdd);
+        this.yDoc.transact(() => {
+          const folder = this.yDoc.getArray("subdocuments");
+          folder.push([objToAdd]);
+        }, this.teamCodeUnique);
+        // this.yDoc.subdocs.add(objToAdd);
       } else {
-        this.editors.splice(index + 1, 0, {
-          id: this.id++,
+        const objToAdd = {
+          id: this.teamCodeUnique + new Date().getTime(),
           content: content,
           blockType,
           users: [],
           column: "default",
-        });
+          deleted: false,
+        };
+        this.editors.splice(index + 1, 0, objToAdd);
+        this.yDoc.transact(() => {
+          const folder = this.yDoc.getArray("subdocuments");
+          folder.push([objToAdd]);
+        }, this.teamCodeUnique);
       }
     },
     removeEditor({ currentSelectedEditorIndex: index = -1 }) {
-      this.editors.splice(index, 1);
+      // this.editors.splice(index, 1);
+      this.yDoc.transact(() => {
+        const folder = this.yDoc.getArray("subdocuments");
+        folder.get(index).deleted = true;
+        folder.push([]);
+        console.log({ msg: "SEEEEEEEEND" });
+      }, this.teamCodeUnique);
     },
     getRandomColor() {
       let letters = "0123456789ABCDEF";

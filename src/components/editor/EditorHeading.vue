@@ -20,6 +20,7 @@ import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
+import { IndexeddbPersistence } from "y-indexeddb";
 
 import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
 
@@ -72,55 +73,61 @@ export default {
 
   mounted() {
     const ydoc = new Y.Doc();
+    // ydoc.load();
+    // console.clear();
+    // console.log({ ydoc: ydoc });
 
     const documentId = this.editorData.id;
 
     const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
     let content = this.editorData.content;
+    console.log({ content: content });
+    const persistence = new IndexeddbPersistence(this.documentId, ydoc);
+    persistence.once("synced", () => {
+      console.log({ documentId });
+      const provider = new WebrtcProvider(documentId, ydoc);
+      this.editor = new Editor({
+        extensions: [
+          CustomDocument,
+          Text,
+          Paragraph,
+          Heading.configure({
+            levels: [1, 2, 3, 4],
+            HTMLAttributes: {
+              class: "editor-heading-block-title",
+            },
+          }),
+          Placeholder.configure({
+            placeholder: ({ node }) => {
+              if (node.type.name === "heading") {
+                return "What’s the title?";
+              }
 
-    const provider = new WebrtcProvider(documentId + "", ydoc);
-
-    this.editor = new Editor({
-      extensions: [
-        CustomDocument,
-        Text,
-        Paragraph,
-        Heading.configure({
-          levels: [1, 2, 3, 4],
-          HTMLAttributes: {
-            class: "editor-heading-block-title",
-          },
-        }),
-        Placeholder.configure({
-          placeholder: ({ node }) => {
-            if (node.type.name === "heading") {
-              return "What’s the title?";
-            }
-
-            return "Text in this line will be neglected from exporting. Add an image instead";
-          },
-        }),
-        Collaboration.configure({
-          document: ydoc,
-        }),
-        CollaborationCursor.configure({
-          provider: provider,
-          user: {
+              return "Text in this line will be neglected from exporting. Add an image instead";
+            },
+          }),
+          Collaboration.configure({
+            document: ydoc,
+          }),
+          CollaborationCursor.configure({
+            provider: provider,
+            user: {
+              name,
+              color: this.userColor,
+            },
+          }),
+        ],
+        content: content,
+        onUpdate: () => {
+          this.$emit("input", this.editor.getJSON());
+        },
+        onFocus: () => {
+          this.$emit("selectBlock", {
             name,
-            color: this.userColor,
-          },
-        }),
-      ],
-      content: content,
-      onUpdate: () => {
-        this.$emit("input", this.editor.getJSON());
-      },
-      onFocus: () => {
-        this.$emit("selectBlock", {
-          name,
-          id: this.editorData.id,
-        });
-      },
+            id: this.editorData.id,
+          });
+        },
+      });
     });
   },
 
