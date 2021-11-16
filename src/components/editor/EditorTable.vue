@@ -14,6 +14,8 @@
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
+import Heading from "@tiptap/extension-heading";
+import Placeholder from "@tiptap/extension-placeholder";
 import Text from "@tiptap/extension-text";
 import Bold from "@tiptap/extension-bold";
 import Italic from "@tiptap/extension-italic";
@@ -45,6 +47,10 @@ import { ROOT_GETTERS } from "@/store/types";
 // const ydoc = new Y.Doc();
 // Registered with a WebRTC provider
 // new WebrtcProvider("bud-test-1", ydoc);
+
+const CustomDocument = Document.extend({
+  content: "heading block*",
+});
 
 const CustomTableCell = TableCell.extend({
   addAttributes() {
@@ -116,7 +122,7 @@ export default {
     try {
       this.editor = new Editor({
         extensions: [
-          Document,
+          CustomDocument,
           Paragraph,
           Text,
           Bold,
@@ -130,6 +136,18 @@ export default {
           Superscript,
           Subscript,
           Image,
+          Heading.configure({
+            levels: [2],
+          }),
+          Placeholder.configure({
+            placeholder: ({ node }) => {
+              if (node.type.name === "heading") {
+                return "What’s the title?";
+              }
+
+              return "Text in this line will be neglected from exporting. Add a table instead";
+            },
+          }),
           TextAlign.configure({
             types: ["paragraph"],
           }),

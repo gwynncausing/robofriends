@@ -9,31 +9,27 @@
   pointer-events: none;
   height: 0;
 }
-// Placeholder for image
-.editor-content-image {
+
+// Placeholder
+.editor-content-image,
+.editor-content-heading,
+.editor-content-table {
   .ProseMirror {
-    h2::before {
+    h1::before,
+    h2::before,
+    h3::before,
+    h4::before,
+    p::before {
       content: attr(data-placeholder);
       float: left;
       color: #ced4da;
       pointer-events: none;
       height: 0;
     }
-  }
-}
-
-// Placeholder for image
-.editor-content-heading {
-  .ProseMirror {
-    h1::before,
-    h2::before,
-    h3::before,
-    h4::before {
-      content: attr(data-placeholder);
-      float: left;
-      color: #ced4da;
-      pointer-events: none;
-      height: 0;
+    td {
+      p::before {
+        content: "";
+      }
     }
   }
 }

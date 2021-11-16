@@ -199,7 +199,9 @@ export default {
 
       let content = ``;
       if (blockType === "table")
-        content = `<table>
+        content = `
+        <h2> </h2>
+        <table>
           <tbody>
             <tr>
               <td></td>

@@ -115,6 +115,28 @@
       <span class="formatter-section-end"></span>
 
       <button
+        title="Add Table"
+        @click="
+          editor
+            .chain()
+            .focus()
+            .insertTable({ rows: 3, cols: 3, withHeaderRow: false })
+            .run()
+        "
+      >
+        <v-icon>mdi-table-plus</v-icon>
+      </button>
+
+      <button
+        title="Remove Table"
+        @click="editor.chain().focus().deleteTable().run()"
+      >
+        <v-icon>mdi-table-remove</v-icon>
+      </button>
+
+      <span class="formatter-section-end"></span>
+
+      <button
         title="Merge Cells"
         :disabled="!editor.can().mergeCells()"
         @click="editor.chain().focus().mergeCells().run()"
