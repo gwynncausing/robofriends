@@ -95,7 +95,7 @@ export default {
           Image,
           Dropcursor,
           Heading.configure({
-            levels: [4],
+            levels: [2],
           }),
           Placeholder.configure({
             placeholder: ({ node }) => {
