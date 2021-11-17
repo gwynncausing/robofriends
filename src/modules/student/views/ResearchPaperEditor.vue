@@ -40,6 +40,7 @@
           <EditorToolbar
             :current-toolbar-position="currentToolbarPosition"
             :current-selected-editor-index="currentSelectedEditorIndex"
+            :editor-length="editors.length"
             @addEditor="addEditor($event)"
             @removeEditor="removeEditor($event)"
           />

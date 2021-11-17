@@ -16,12 +16,24 @@
       <v-icon class="editor-control-icon">mdi-table</v-icon>
     </Button>
 
-    <Button icon @click="testMethod">
-      <v-icon class="editor-control-icon">mdi-comment-text-outline</v-icon>
+    <Button icon :disabled="editorLength === 0" @click="testMethod">
+      <v-icon
+        class="editor-control-icon"
+        :class="{ 'disabled-button': editorLength === 0 }"
+        >mdi-comment-text-outline</v-icon
+      >
     </Button>
 
-    <Button icon @click="removeEditor(currentSelectedEditorIndex)">
-      <v-icon class="editor-control-icon">mdi-delete</v-icon>
+    <Button
+      icon
+      :disabled="editorLength === 0"
+      @click="removeEditor(currentSelectedEditorIndex)"
+    >
+      <v-icon
+        class="editor-control-icon"
+        :class="{ 'disabled-button': editorLength === 0 }"
+        >mdi-delete</v-icon
+      >
     </Button>
   </div>
 </template>
@@ -38,7 +50,18 @@ export default {
       type: Number,
       default: 0,
     },
+    editorLength: {
+      type: Number,
+      required: true,
+    },
   },
+
+  watch: {
+    editorLength(newValue) {
+      console.log(newValue);
+    },
+  },
+
   methods: {
     addEditor(currentSelectedEditorIndex, blockType = "text") {
       this.$emit("addEditor", { currentSelectedEditorIndex, blockType });
@@ -80,6 +103,9 @@ export default {
       .editor-control-icon {
         color: $red;
       }
+    }
+    .disabled-button {
+      color: $neutral-200 !important;
     }
   }
 }

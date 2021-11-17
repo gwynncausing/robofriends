@@ -142,7 +142,7 @@ export default {
           Placeholder.configure({
             placeholder: ({ node }) => {
               if (node.type.name === "heading") {
-                return "What’s the title?";
+                return "What’s the label?";
               }
 
               return "Text in this line will be neglected from exporting. Add a table instead";
