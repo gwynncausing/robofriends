@@ -84,6 +84,7 @@ export default {
       activeUsers: [],
       currentToolbarPosition: 0,
       currentSelectedEditorIndex: 0,
+      currentSelectedObjectId: "",
       hasApprovedProposal: true,
       yDoc: new Y.Doc({ autoLoad: true }),
       hasLoadedFromIndexDB: false,
@@ -110,45 +111,46 @@ export default {
       this.teamCodeUnique,
       this.yDoc
     );
+
     persistence.once("synced", () => {
       new WebrtcProvider(this.teamCodeUnique, this.yDoc);
-      console.log("initial content loaded");
       const folder = this.yDoc.getArray("subdocuments");
-      // console.log({ folder: folder.length });
-      // console.log({ value: folder.length });
-      // folder.forEach((value) => {
-      //   const persistence = new IndexeddbPersistence(value.id, new Y.Doc());
-      //   persistence.destroy();
-      // });
-      // folder.delete(0, folder.length);
-      // this.yDoc.subdocs.forEach((value) => {
-      //   console.log({ subDocsValue: value });
-      // });
+
       folder.forEach((value) => {
         value.ydoc = new Y.Doc();
         value.persistence = new IndexeddbPersistence(value.id, value.ydoc);
         this.editors.push(value);
       });
+
       if (!this.editors.length) {
         this.addEditor({
           currentSelectedEditorIndex: this.currentSelectedEditorIndex,
         });
       }
 
+      //TODO: if unused, remove this property
       this.hasLoadedFromIndexDB = true;
+
       this.yDoc.on("update", (update, origin) => {
-        console.log({ origin });
-        // if (origin == this.teamCodeUnique) {
-        //   return;
-        // }
         Y.applyUpdate(this.yDoc, update);
+
         const folder = this.yDoc.getArray("subdocuments");
         this.editors = [];
-        folder.forEach((value) => {
+        let objectIndex = 0;
+
+        folder.forEach((value, index) => {
+          if (value.id == this.currentSelectedObjectId) {
+            objectIndex = index;
+          }
+          // * init ydoc and indexdb
           value.ydoc = new Y.Doc();
           value.persistence = new IndexeddbPersistence(value.id, value.ydoc);
           this.editors.push(value);
         });
+        // * update toolbar for changes from other peers
+        if (origin != this.teamCodeUnique && this.editors.length > 0) {
+          this.selectBlock(this.editors[objectIndex]);
+        }
       });
     });
   },
@@ -175,6 +177,7 @@ export default {
     selectBlock(object) {
       const index = this.editors.map((editor) => editor.id).indexOf(object.id);
       this.moveToolbar(object.id, index);
+      this.currentSelectedObjectId = object.id;
       this.currentSelectedEditorIndex = index;
     },
     moveToolbar(id, index) {
@@ -198,6 +201,8 @@ export default {
       if (index === -1) return;
 
       let content = ``;
+
+      // TODO: put this on a constant file
       if (blockType === "table")
         content = `
         <h2> </h2>
@@ -221,42 +226,35 @@ export default {
           </tbody>
         </table>`;
 
+      let objToAdd = {
+        id: new Date().getTime() + blockType + this.teamCodeUnique,
+        content: content,
+        blockType,
+        users: [],
+        column: "default",
+      };
+
       if (blockType === "heading") {
-        const objToAdd = {
-          id: new Date().getTime() + blockType + this.teamCodeUnique,
-          content: ``,
-          blockType,
-          users: [],
-          children: [],
-          column: "default",
-        };
-        this.editors.splice(index + 1, 0, objToAdd);
-        this.yDoc.transact(() => {
-          const folder = this.yDoc.getArray("subdocuments");
-          folder.push([objToAdd]);
-        }, this.teamCodeUnique);
-        // this.yDoc.subdocs.add(objToAdd);
-      } else {
-        const objToAdd = {
-          id: new Date().getTime() + blockType + this.teamCodeUnique,
-          content: content,
-          blockType,
-          users: [],
-          column: "default",
-        };
-        this.editors.splice(index + 1, 0, objToAdd);
-        this.yDoc.transact(() => {
-          const folder = this.yDoc.getArray("subdocuments");
-          folder.push([objToAdd]);
-        }, this.teamCodeUnique);
+        //*add children
+        objToAdd = { ...objToAdd, children: [] };
       }
+
+      this.yDoc.transact(() => {
+        const insertAt = this.editors.length > 0 ? index + 1 : 0;
+        const folder = this.yDoc.getArray("subdocuments");
+        folder.insert(insertAt, [objToAdd]);
+      }, this.teamCodeUnique);
     },
     removeEditor({ currentSelectedEditorIndex: index = -1 }) {
-      // this.editors.splice(index, 1);
-      this.yDoc.transact(() => {
-        const folder = this.yDoc.getArray("subdocuments");
-        folder.delete(index, 1);
-      }, this.teamCodeUnique);
+      if (this.editors.length > 0) {
+        this.selectBlock(this.editors[index - 1]);
+      }
+      if (this.editors.length > 0) {
+        this.yDoc.transact(() => {
+          const folder = this.yDoc.getArray("subdocuments");
+          folder.delete(index, 1);
+        }, this.teamCodeUnique);
+      }
     },
     getRandomColor() {
       let letters = "0123456789ABCDEF";
