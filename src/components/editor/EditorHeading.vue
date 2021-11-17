@@ -57,6 +57,7 @@ export default {
       editor: null,
       content: "",
       dbPersistence: null,
+      provider: null,
     };
   },
 
@@ -75,14 +76,12 @@ export default {
   mounted() {
     const ydoc = this.editorData.ydoc;
     const documentId = this.editorData.id;
-
-    const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
-    let content = this.editorData.content;
-    console.log({ content: content });
     this.dbPersistence = this.editorData.persistence;
+    let content = this.editorData.content;
+    const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
+
     this.dbPersistence.once("synced", () => {
-      console.log({ documentId });
-      const provider = new WebrtcProvider(documentId, ydoc);
+      this.provider = new WebrtcProvider(documentId, ydoc);
       this.editor = new Editor({
         extensions: [
           CustomDocument,
@@ -107,11 +106,12 @@ export default {
             document: ydoc,
           }),
           CollaborationCursor.configure({
-            provider: provider,
+            provider: this.provider,
             user: {
               name,
               color: this.userColor,
             },
+            onUpdate: null,
           }),
         ],
         content: content,
@@ -129,17 +129,16 @@ export default {
   },
 
   beforeDestroy() {
-    this.dbPersistence.clearData();
-    console.log({ DB: this.dbPersistence });
+    this.editor.destroy();
+    this.provider.destroy();
+    // TODO: add a better handling for this
+    // ?commenting this as it causes the content to be erased on hot reload
+    // this.dbPersistence.clearData();
+    this.editorData.ydoc.destroy();
   },
 
   methods: {
     //
-  },
-
-  beforeUnmount() {
-    this.editor.destroy();
-    this.provider.destroy();
   },
 };
 </script>
