@@ -58,6 +58,12 @@ const studentRoutes = [
           import("@/modules/student/views/ApprovedResearchVersionHistory.vue"),
       },
       {
+        path: "research-editor-version-history",
+        name: "Research Paper Version History",
+        component: () =>
+          import("@/modules/student/views/ResearchEditorVersionHistory.vue"),
+      },
+      {
         path: "archive",
         name: "Student Archive",
         component: () => import("@/modules/student/views/Archive.vue"),
