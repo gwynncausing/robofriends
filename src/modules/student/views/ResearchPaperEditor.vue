@@ -114,7 +114,9 @@ export default {
     );
 
     persistence.once("synced", () => {
-      new WebrtcProvider(this.teamCodeUnique, this.yDoc);
+      new WebrtcProvider(this.teamCodeUnique, this.yDoc, {
+        signaling: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
+      });
       const folder = this.yDoc.getArray("subdocuments");
 
       folder.forEach((value) => {

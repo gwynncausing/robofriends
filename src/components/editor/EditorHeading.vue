@@ -81,7 +81,9 @@ export default {
     const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
 
     this.dbPersistence.once("synced", () => {
-      this.provider = new WebrtcProvider(documentId, ydoc);
+      this.provider = new WebrtcProvider(documentId, ydoc, {
+        signaling: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
+      });
       this.editor = new Editor({
         extensions: [
           CustomDocument,
