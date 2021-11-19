@@ -89,6 +89,7 @@ export default {
       hasApprovedProposal: true,
       yDoc: new Y.Doc({ autoLoad: true }),
       teamCodeUnique: "MyT3@mN@m3Unique09876543",
+      provider: null,
     };
   },
 
@@ -112,7 +113,7 @@ export default {
       this.yDoc
     );
     persistence.once("synced", () => {
-      new WebrtcProvider(this.teamCodeUnique, this.yDoc, {
+      this.provider = new WebrtcProvider(this.teamCodeUnique, this.yDoc, {
         signaling: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
       });
       const folder = this.yDoc.getArray("subdocuments");
@@ -152,6 +153,11 @@ export default {
         }
       });
     });
+  },
+
+  beforeDestroy() {
+    this.yDoc.destroy();
+    this.provider.destroy();
   },
 
   methods: {
