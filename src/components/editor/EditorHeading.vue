@@ -18,9 +18,6 @@ import Placeholder from "@tiptap/extension-placeholder";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
-// import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
-// import { IndexeddbPersistence } from "y-indexeddb";
 
 import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
 
@@ -56,8 +53,6 @@ export default {
     return {
       editor: null,
       content: "",
-      dbPersistence: null,
-      provider: null,
     };
   },
 
@@ -74,69 +69,56 @@ export default {
   },
 
   mounted() {
-    const ydoc = this.editorData.ydoc;
-    const documentId = this.editorData.id;
-    this.dbPersistence = this.editorData.persistence;
     let content = this.editorData.content;
     const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
 
-    this.dbPersistence.once("synced", () => {
-      this.provider = new WebrtcProvider(documentId, ydoc, {
-        signaling: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
-      });
-      this.editor = new Editor({
-        extensions: [
-          CustomDocument,
-          Text,
-          Paragraph,
-          Heading.configure({
-            levels: [1, 2, 3, 4],
-            HTMLAttributes: {
-              class: "editor-heading-block-title",
-            },
-          }),
-          Placeholder.configure({
-            placeholder: ({ node }) => {
-              if (node.type.name === "heading") {
-                return "What’s the title?";
-              }
+    this.editor = new Editor({
+      extensions: [
+        CustomDocument,
+        Text,
+        Paragraph,
+        Heading.configure({
+          levels: [1, 2, 3, 4],
+          HTMLAttributes: {
+            class: "editor-heading-block-title",
+          },
+        }),
+        Placeholder.configure({
+          placeholder: ({ node }) => {
+            if (node.type.name === "heading") {
+              return "What’s the title?";
+            }
 
-              return "Text in this line will be neglected from exporting. Add an image instead";
-            },
-          }),
-          Collaboration.configure({
-            document: ydoc,
-          }),
-          CollaborationCursor.configure({
-            provider: this.provider,
-            user: {
-              name,
-              color: this.userColor,
-            },
-            onUpdate: null,
-          }),
-        ],
-        content: content,
-        onUpdate: () => {
-          this.$emit("input", this.editor.getJSON());
-        },
-        onFocus: () => {
-          this.$emit("selectBlock", {
+            return "Text in this line will be neglected from exporting. Add an image instead";
+          },
+        }),
+        Collaboration.configure({
+          document: this.editorData.ydoc,
+          field: this.editorData.id,
+        }),
+        CollaborationCursor.configure({
+          provider: this.editorData.provider,
+          user: {
             name,
-            id: this.editorData.id,
-          });
-        },
-      });
+            color: this.userColor,
+          },
+        }),
+      ],
+      content: content,
+      onUpdate: () => {
+        this.$emit("input", this.editor.getJSON());
+      },
+      onFocus: () => {
+        this.$emit("selectBlock", {
+          name,
+          id: this.editorData.id,
+        });
+      },
     });
   },
 
   beforeDestroy() {
     this.editor.destroy();
-    this.provider.destroy();
-    // TODO: add a better handling for this
-    // ?commenting this as it causes the content to be erased on hot reload
-    // this.dbPersistence.clearData();
-    this.editorData.ydoc.destroy();
   },
 
   methods: {

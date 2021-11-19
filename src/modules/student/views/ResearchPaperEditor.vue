@@ -87,9 +87,9 @@ export default {
       currentSelectedEditorIndex: 0,
       currentSelectedObjectId: "",
       hasApprovedProposal: true,
-      yDoc: new Y.Doc({ autoLoad: true }),
+      yDoc: new Y.Doc(),
       hasLoadedFromIndexDB: false,
-      teamCodeUnique: "MyT3@mN@m3Unique123123124",
+      teamCodeUnique: "MyT3@mN@m3Unique0987654321",
     };
   },
 
@@ -114,15 +114,15 @@ export default {
     );
 
     persistence.once("synced", () => {
-      new WebrtcProvider(this.teamCodeUnique, this.yDoc, {
-        signaling: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
+      const provider = new WebrtcProvider(this.teamCodeUnique, this.yDoc, {
+        signaling: ["wss://y-webrtc-signaling-eu.herokuapp.com/"],
       });
       const folder = this.yDoc.getArray("subdocuments");
-
-      folder.forEach((value) => {
-        value.ydoc = new Y.Doc();
-        value.persistence = new IndexeddbPersistence(value.id, value.ydoc);
-        this.editors.push(value);
+      // folder.delete(0, folder.length);
+      folder.forEach((block) => {
+        block.ydoc = this.yDoc;
+        block.provider = provider;
+        this.editors.push(block);
       });
 
       if (!this.editors.length) {
@@ -141,14 +141,14 @@ export default {
         this.editors = [];
         let objectIndex = 0;
 
-        folder.forEach((value, index) => {
-          if (value.id == this.currentSelectedObjectId) {
+        folder.forEach((block, index) => {
+          if (block.id == this.currentSelectedObjectId) {
             objectIndex = index;
           }
-          // * init ydoc and indexdb
-          value.ydoc = new Y.Doc();
-          value.persistence = new IndexeddbPersistence(value.id, value.ydoc);
-          this.editors.push(value);
+          // * init block ydoc
+          block.ydoc = this.yDoc;
+          block.provider = provider;
+          this.editors.push(block);
         });
         // * update toolbar for changes from other peers
         if (origin != this.teamCodeUnique && this.editors.length > 0) {
