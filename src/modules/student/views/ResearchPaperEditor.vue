@@ -87,9 +87,8 @@ export default {
       currentSelectedEditorIndex: 0,
       currentSelectedObjectId: "",
       hasApprovedProposal: true,
-      yDoc: new Y.Doc(),
-      hasLoadedFromIndexDB: false,
-      teamCodeUnique: "MyT3@mN@m3Unique0987654321",
+      yDoc: new Y.Doc({ autoLoad: true }),
+      teamCodeUnique: "MyT3@mN@m3Unique09876543",
     };
   },
 
@@ -112,29 +111,26 @@ export default {
       this.teamCodeUnique,
       this.yDoc
     );
-
     persistence.once("synced", () => {
-      const provider = new WebrtcProvider(this.teamCodeUnique, this.yDoc, {
-        signaling: ["wss://y-webrtc-signaling-eu.herokuapp.com/"],
+      new WebrtcProvider(this.teamCodeUnique, this.yDoc, {
+        signaling: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
       });
       const folder = this.yDoc.getArray("subdocuments");
       // folder.delete(0, folder.length);
       folder.forEach((block) => {
         block.ydoc = this.yDoc;
-        block.provider = provider;
+        // block.provider = provider;
         this.editors.push(block);
       });
 
-      if (!this.editors.length) {
-        this.addEditor({
-          currentSelectedEditorIndex: this.currentSelectedEditorIndex,
-        });
-      }
-
-      //TODO: if unused, remove this property
-      this.hasLoadedFromIndexDB = true;
+      // if (!this.editors.length) {
+      //   this.addEditor({
+      //     currentSelectedEditorIndex: this.currentSelectedEditorIndex,
+      //   });
+      // }
 
       this.yDoc.on("update", (update, origin) => {
+        console.log({ origin });
         Y.applyUpdate(this.yDoc, update);
 
         const folder = this.yDoc.getArray("subdocuments");
@@ -147,7 +143,7 @@ export default {
           }
           // * init block ydoc
           block.ydoc = this.yDoc;
-          block.provider = provider;
+          // block.provider = provider;
           this.editors.push(block);
         });
         // * update toolbar for changes from other peers

@@ -17,7 +17,7 @@ import Paragraph from "@tiptap/extension-paragraph";
 import Placeholder from "@tiptap/extension-placeholder";
 
 import Collaboration from "@tiptap/extension-collaboration";
-import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
+// import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 
 import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
 
@@ -96,13 +96,13 @@ export default {
           document: this.editorData.ydoc,
           field: this.editorData.id,
         }),
-        CollaborationCursor.configure({
-          provider: this.editorData.provider,
-          user: {
-            name,
-            color: this.userColor,
-          },
-        }),
+        // CollaborationCursor.configure({
+        //   provider: this.editorData.provider,
+        //   user: {
+        //     name,
+        //     color: this.userColor,
+        //   },
+        // }),
       ],
       content: content,
       onUpdate: () => {
