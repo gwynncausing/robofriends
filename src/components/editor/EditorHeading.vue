@@ -69,7 +69,7 @@ export default {
   },
 
   mounted() {
-    let content = this.editorData.content;
+    // let content = this.editorData.content;
     const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
 
     this.editor = new Editor({
@@ -103,8 +103,9 @@ export default {
         //     color: this.userColor,
         //   },
         // }),
+        // this.editorData.cursorExtension,
       ],
-      content: content,
+      // content: content,
       onUpdate: () => {
         this.$emit("input", this.editor.getJSON());
       },
