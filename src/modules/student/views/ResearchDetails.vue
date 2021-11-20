@@ -12,7 +12,22 @@
         <EmptyDataProposals v-else />
       </template>
       <template v-slot:body-approved-research>
-        <ApprovedResearch :approved-research="approvedResearchTab.research" />
+        <ApprovedResearch
+          :approved-research="approvedResearchTab.research"
+          :is-editable="approvedResearchTab.isEditable"
+          @saveProposal="updateApprovedProposal"
+          @setEditableClick="approvedResearchTab.isEditable = true"
+        />
+        <Snackbar
+          content-class="neutral-800--text"
+          :timeout="4000"
+          :is-snackbar-shown="approvedResearchTab.isSnackbarShown"
+          @closeSnackbar="approvedResearchTab.isSnackbarShown = false"
+        >
+          <template v-slot:content>
+            {{ approvedResearchTab.snackbarMessage }}
+          </template>
+        </Snackbar>
       </template>
       <template v-slot:body-create-new>
         <CreateNew :proposal="createNewTab.proposal" @submit="submitProposal" />
@@ -27,6 +42,7 @@ import Proposals from "@/components/student/research-details/Proposals";
 import ApprovedResearch from "@/components/student/research-details/ApprovedResearch";
 import CreateNew from "@/components/student/research-details/CreateNew";
 import EmptyDataProposals from "@/components/student/EmptyDataProposals";
+import Snackbar from "@/components/Snackbar";
 
 import { mapActions, mapGetters } from "vuex";
 import {
@@ -44,6 +60,7 @@ export default {
     ApprovedResearch,
     CreateNew,
     EmptyDataProposals,
+    Snackbar,
   },
   data() {
     return {
@@ -57,6 +74,9 @@ export default {
       },
       approvedResearchTab: {
         research: {},
+        isSnackbarShown: false,
+        snackbarMessage: "",
+        isEditable: false,
       },
       items: [
         {
@@ -172,6 +192,27 @@ export default {
       // * temporary solution to show content in the editor
       window.location.href =
         "/student/research-details?tab=create-new&action=revision";
+    },
+
+    async updateApprovedProposal({ title, content }) {
+      try {
+        const payload = {
+          id: this.getApprovedProposal.id,
+          proposal: {
+            title: title,
+            content: content,
+            teamId: this.getSelectedTeamDetails.id,
+          },
+        };
+        await this.onUpdateApprovedProposal(payload);
+        this.approvedResearchTab.isEditable = false;
+        this.approvedResearchTab.isSnackbarShown = true;
+        this.approvedResearchTab.snackbarMessage =
+          "Changes saved successfully!";
+      } catch (error) {
+        // TODO: Improve Api Error Handling
+        console.log(error);
+      }
     },
 
     async submitProposal(proposal) {
