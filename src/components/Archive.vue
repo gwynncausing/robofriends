@@ -1,5 +1,6 @@
 <template>
   <!-- // TODO: Filter Categories not yet implemented -->
+  <!-- // ***** Filter Categories commented out for now -->
   <div id="archive" class="container">
     <header>
       <div class="archive-header-wrapper">
@@ -22,9 +23,21 @@
             Filter
           </template>
           <template v-slot:content>
-            <ArchiveCategories
+            <!-- <ArchiveCategories
               :categories="categories"
               @getSelectedCategory="selectedCategory = $event"
+            /> -->
+            <ArchiveDate
+              label="Start Date"
+              :date="startDate"
+              :allowed-dates="allowedStartDate"
+              @update-date="startDate = $event"
+            />
+            <ArchiveDate
+              label="End Date"
+              :date="endDate"
+              :allowed-dates="allowedEndDate"
+              @update-date="endDate = $event"
             />
           </template>
           <template v-slot:footer> footer </template>
@@ -35,10 +48,10 @@
       <aside class="d-none d-sm-block">
         <v-icon class="mr-2">mdi-filter</v-icon>
         Filter
-        <ArchiveCategories
+        <!-- <ArchiveCategories
           :categories="categories"
           @getSelectedCategory="selectedCategory = $event"
-        />
+        /> -->
         <ArchiveDate
           label="Start Date"
           :date="startDate"
@@ -66,7 +79,7 @@ import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
 import Modal from "@/components/Modal.vue";
-import ArchiveCategories from "@/components/archive/ArchiveCategories.vue";
+// import ArchiveCategories from "@/components/archive/ArchiveCategories.vue";
 import ArchiveDate from "@/components/archive/ArchiveDate.vue";
 import ArchiveCard from "@/components/archive/ArchiveCard.vue";
 
@@ -80,7 +93,7 @@ export default {
     TextField,
     Button,
     Modal,
-    ArchiveCategories,
+    // ArchiveCategories,
     ArchiveDate,
     ArchiveCard,
   },
