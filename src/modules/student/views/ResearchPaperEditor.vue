@@ -88,7 +88,7 @@ export default {
       currentSelectedObjectId: "",
       hasApprovedProposal: true,
       yDoc: new Y.Doc(),
-      teamCodeUnique: "MyT3@mN@m3Unique6",
+      teamCodeUnique: "MyT3@mN@m3Unique666111",
       provider: null,
     };
   },
@@ -108,6 +108,7 @@ export default {
   },
 
   mounted() {
+    console.log({ ydocid: this.yDoc.guid });
     const persistence = new IndexeddbPersistence(
       this.teamCodeUnique,
       this.yDoc
@@ -120,12 +121,12 @@ export default {
         peerOpts: {
           config: {
             iceServers: [
-              { urls: "stun:stun.l.google.com:19302" },
-              { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
+              // { urls: "stun:stun.l.google.com:19302" },
+              // { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
               {
                 urls: "turn:bud-api.southeastasia.cloudapp.azure.com:3478",
-                credential: "bud",
-                username: "budresearchbuddy!",
+                credential: "budresearchbuddy!",
+                username: "bud",
               },
             ],
           },
