@@ -117,6 +117,19 @@ export default {
       this.provider = new WebrtcProvider(this.teamCodeUnique, this.yDoc, {
         signaling: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
         maxConns: 200,
+        peerOpts: {
+          config: {
+            iceServers: [
+              { urls: "stun:stun.l.google.com:19302" },
+              { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
+              {
+                urls: "turn:bud-api.southeastasia.cloudapp.azure.com:3478",
+                credential: "bud",
+                username: "budresearchbuddy!",
+              },
+            ],
+          },
+        },
       });
       const folder = this.yDoc.getArray("subdocuments");
       // folder.delete(0, folder.length);
