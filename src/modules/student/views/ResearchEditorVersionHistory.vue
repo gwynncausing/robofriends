@@ -1,5 +1,5 @@
 <template>
-  <div id="approved-research-version-history">
+  <div id="research-editor-version-history">
     <div class="editor-wrapper">
       <div class="editor-heading">
         <Button text class="back-button">
@@ -12,14 +12,6 @@
         </Button>
       </div>
       <div class="editor">
-        <!-- <EditorTextWithTitleReadonly
-          v-model="editor.content"
-          :editor-data="editor"
-        /> -->
-        <!-- <EditorHeadingReadonly v-model="editor.content" :editor-data="editor" /> -->
-        <!-- <EditorTextReadonly v-model="editor.content" :editor-data="editor" /> -->
-        <!-- <EditorImageReadonly v-model="editor.content" :editor-data="editor" /> -->
-        <!-- <EditorTableReadonly v-model="editor.content" :editor-data="editor" /> -->
         <EditorNestedReadonly :list="activeVersion.editors" />
       </div>
     </div>
@@ -89,7 +81,7 @@ export default {
                   content: [
                     {
                       type: "text",
-                      text: "Bud: Gamified Research Management System with Real Time Collaboration and AutoFormatting",
+                      text: "title",
                     },
                   ],
                 },
@@ -105,7 +97,7 @@ export default {
                   content: [
                     {
                       type: "text",
-                      text: "Bud is a web application that offers a modern solution where research can be fun, hassle-free, and paperless; helping students and teachers with writing research from start to finish. Inside the app, users will have access to a dashboard for monitoring their progress, can use real time collaboration features to work on their research, can utilize an easy-to-use research editor with auto-formatting to standard research formats (e.g. ACM) and can store completed research papers in the research archive. With Bud, research collaboration, tracking and writing will be made easier and enjoyable without using different applications and creating multiple files.",
+                      text: "paragraph",
                     },
                   ],
                 },
@@ -140,7 +132,7 @@ export default {
                       content: [
                         {
                           type: "text",
-                          text: "Bunker sludge degrading microorganisms were isolated using enrichment culture technique from the polluted waters of Manila Bay. Water samples were inoculated using liquid mineral media (LAM). Isolates were tentatively identified as Xanthomonas sp.,Alcaligenes sp, Enterobacter sp. and Flavobacterium sp. Two parameters were tested evaluating the biodegradative abilities of individual isolates to degrade bunker sludge and the effect of chicken manure as added source of nitrates and phosphates. Results revealed no significant difference between pure and mixed cultures in ability to degrade",
+                          text: "paragraph",
                         },
                       ],
                     },
@@ -153,7 +145,7 @@ export default {
                   content: [
                     {
                       type: "text",
-                      text: "Isolation and Determination of the Bioremediation Potential of Bunker Sludge Degrading Bacteria from Manila Bay",
+                      text: "title",
                     },
                   ],
                 },
@@ -291,7 +283,7 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-#approved-research-version-history {
+#research-editor-version-history {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -323,9 +315,6 @@ export default {
     .editor {
       display: flex;
       width: 80%;
-      // border: 1px solid $neutral-400;
-      // border-radius: 4px;
-      // padding: 0.8rem;
       margin: 0 auto;
     }
   }

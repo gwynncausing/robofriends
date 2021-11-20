@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="editor-nested">
     <div
       v-for="editor in list"
       :id="'editor-' + editor.id"
@@ -94,25 +94,20 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.draggable-container {
+.editor-nested {
   width: 100%;
-  background-color: $neutral-50;
 }
 .editor-panels-wrapper {
   background-color: white;
 }
 .parent-wrapper {
+  width: 100%;
+
   .parent {
     display: flex;
     align-items: top;
     background-color: white;
     padding-bottom: 24px;
-    .handle {
-      cursor: grab;
-      width: 24px;
-      margin-bottom: auto;
-      margin-top: 8px;
-    }
     .toggle {
       &:hover {
         background-color: $neutral-50;
@@ -143,12 +138,5 @@ export default {
   -moz-transform: rotate(90deg);
   -webkit-transform: rotate(90deg);
   transform: rotate(90deg);
-}
-.chosen,
-.drag {
-  background-color: white;
-}
-.ghost {
-  opacity: 50%;
 }
 </style>
