@@ -48,4 +48,14 @@ export default {
   [STUDENT_GETTERS.GET_REVISED_PROPOSAL]({ revisedProposal }) {
     return revisedProposal;
   },
+
+  [STUDENT_GETTERS.GET_APPROVED_PROPOSAL_HISTORY]({ approvedProposalHistory }) {
+    return approvedProposalHistory;
+  },
+
+  [STUDENT_GETTERS.GET_APPROVED_PROPOSAL_HISTORY_SELECTED_DETAILS]({
+    approvedProposalHistorySelectedDetails,
+  }) {
+    return approvedProposalHistorySelectedDetails;
+  },
 };
