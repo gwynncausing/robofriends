@@ -88,7 +88,7 @@ export default {
       currentSelectedObjectId: "",
       hasApprovedProposal: true,
       yDoc: new Y.Doc(),
-      teamCodeUnique: "MyT3@mN@m3Unique111222111222",
+      teamCodeUnique: "MyT3@mN@m3Unique6",
       provider: null,
     };
   },
@@ -112,10 +112,11 @@ export default {
       this.teamCodeUnique,
       this.yDoc
     );
+    localStorage.log = "y-webrtc";
     persistence.once("synced", () => {
       this.provider = new WebrtcProvider(this.teamCodeUnique, this.yDoc, {
         signaling: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
-        maxConns: 100,
+        maxConns: 200,
       });
       const folder = this.yDoc.getArray("subdocuments");
       // folder.delete(0, folder.length);
