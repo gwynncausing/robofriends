@@ -1,22 +1,43 @@
 <template>
   <div class="editor-toolbar" :style="{ top: currentToolbarPosition + 'px' }">
-    <Button icon @click="addEditor(currentSelectedEditorIndex)">
+    <Button
+      icon
+      title="Add Text Block"
+      @click="addEditor(currentSelectedEditorIndex)"
+    >
       <v-icon class="editor-control-icon">mdi-plus-circle-outline</v-icon>
     </Button>
 
-    <Button icon @click="addEditor(currentSelectedEditorIndex, 'image')">
+    <Button
+      icon
+      title="Add Image Block"
+      @click="addEditor(currentSelectedEditorIndex, 'image')"
+    >
       <v-icon class="editor-control-icon">mdi-image-outline</v-icon>
     </Button>
 
-    <Button icon @click="addEditor(currentSelectedEditorIndex, 'heading')">
+    <Button
+      icon
+      title="Add Heading Block"
+      @click="addEditor(currentSelectedEditorIndex, 'heading')"
+    >
       <v-icon class="editor-control-icon">mdi-application-outline</v-icon>
     </Button>
 
-    <Button icon @click="addEditor(currentSelectedEditorIndex, 'table')">
+    <Button
+      icon
+      title="Add Table Block"
+      @click="addEditor(currentSelectedEditorIndex, 'table')"
+    >
       <v-icon class="editor-control-icon">mdi-table</v-icon>
     </Button>
 
-    <Button icon :disabled="editorLength === 0" @click="testMethod">
+    <Button
+      icon
+      title="Comments"
+      :disabled="editorLength === 0"
+      @click="testMethod"
+    >
       <v-icon
         class="editor-control-icon"
         :class="{ 'disabled-button': editorLength === 0 }"
@@ -26,6 +47,7 @@
 
     <Button
       icon
+      title="Remove Block"
       :disabled="editorLength === 0"
       @click="removeEditor(currentSelectedEditorIndex)"
     >
