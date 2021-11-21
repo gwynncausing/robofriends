@@ -302,10 +302,10 @@ export default {
         await this.onGetUserInfo({ id: this.getUser.id });
         switch (this.getUserType) {
           case USER.TYPES.STUDENT:
-            this.$router.replace({ name: "Student Dashboard" });
+            this.$router.replace({ name: "Create Team" });
             break;
           case USER.TYPES.TEACHER:
-            this.$router.replace({ name: "Adviser Dashboard" });
+            this.$router.replace({ name: "Manage Teams" });
             break;
           default:
             console.log("Default");

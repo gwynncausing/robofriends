@@ -41,10 +41,10 @@ export default {
           "https://pbs.twimg.com/profile_images/516676441291759617/aLOOeXSl_400x400.jpeg",
       },
       routes: [
-        {
-          name: "Home",
-          path: { name: "Adviser Dashboard" },
-        },
+        // {
+        //   name: "Home",
+        //   path: { name: "Adviser Dashboard" },
+        // },
         {
           name: "Manage Teams",
           path: { name: "Manage Teams" },

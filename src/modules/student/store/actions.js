@@ -138,4 +138,51 @@ export default {
       selectedProposal: proposal,
     });
   },
+
+  async [STUDENT_ACTIONS.UPDATE_PROPOSAL]({ commit }, { id }) {
+    const response = await ProposalRepository.getProposal(id);
+    const proposal = response.data;
+    commit(STUDENT_MUTATIONS.SET_SELECTED_PROPOSAL, {
+      selectedProposal: proposal,
+    });
+  },
+
+  async [STUDENT_ACTIONS.SET_PROPOSAL_TO_REVISED]({ commit }, { proposal }) {
+    commit(STUDENT_MUTATIONS.SET_REVISED_PROPOSAL, {
+      revisedProposal: proposal,
+    });
+  },
+
+  async [STUDENT_ACTIONS.UPDATE_PROPOSAL](
+    context,
+    payload = STUDENT_ACTIONS.UPDATE_PROPOSAL
+  ) {
+    const { id, proposal } = payload;
+    await ProposalRepository.updateContent(proposal, id);
+  },
+
+  async [STUDENT_ACTIONS.FETCH_APPROVED_PROPOSAL_HISTORY](
+    { commit },
+    { teamId }
+  ) {
+    const response = await ProposalRepository.getProposalsByStatus(
+      PROPOSAL.STATUS.APPROVED,
+      teamId
+    );
+    const approvedProposalHistory = response.data;
+    commit(STUDENT_MUTATIONS.SET_APPROVED_PROPOSAL_HISTORY, {
+      approvedProposalHistory,
+    });
+  },
+
+  async [STUDENT_ACTIONS.FETCH_APPROVED_PROPOSAL_HISTORY_SELECTED_DETAILS](
+    { commit },
+    { proposalId }
+  ) {
+    const response = await ProposalRepository.getProposal(proposalId);
+    const approvedProposalHistorySelectedDetails = response.data;
+    commit(STUDENT_MUTATIONS.SET_APPROVED_PROPOSAL_HISTORY_SELECTED_DETAILS, {
+      approvedProposalHistorySelectedDetails,
+    });
+  },
 };
