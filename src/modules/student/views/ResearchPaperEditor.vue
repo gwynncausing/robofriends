@@ -196,24 +196,33 @@ export default {
       this.activeUsers = users;
     },
     selectBlock(object) {
-      const index = this.editors.map((editor) => editor.id).indexOf(object.id);
-      this.moveToolbar(object.id, index);
-      this.currentSelectedObjectId = object.id;
-      this.currentSelectedEditorIndex = index;
+      try {
+        const index = this.editors
+          .map((editor) => editor.id)
+          .indexOf(object.id);
+        this.moveToolbar(object.id, index);
+        this.currentSelectedObjectId = object.id;
+        this.currentSelectedEditorIndex = index;
+      } catch (error) {
+        console.log(error);
+      }
     },
     moveToolbar(id, index) {
-      const editorID = "editor-" + id;
-      let position = 0;
+      try {
+        const editorID = "editor-" + id;
+        let position = 0;
 
-      for (let i = 0; i < this.editors.length; i++) {
-        let editorID = "editor-" + this.editors[i].id;
-        position += document.getElementById(editorID).clientHeight;
-        if (i === index) break;
-        // position += 24;
+        for (let i = 0; i < this.editors.length; i++) {
+          let editorID = "editor-" + this.editors[i].id;
+          position += document.getElementById(editorID).clientHeight;
+          if (i === index) break;
+        }
+
+        const blockHeight = document.getElementById(editorID).clientHeight;
+        this.currentToolbarPosition = position - blockHeight;
+      } catch (error) {
+        console.log(error);
       }
-
-      const blockHeight = document.getElementById(editorID).clientHeight;
-      this.currentToolbarPosition = position - blockHeight;
     },
     getContent({ content, index }) {
       this.editors[index].content = content.content;

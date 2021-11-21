@@ -112,7 +112,7 @@
         <v-icon>mdi-format-align-justify</v-icon>
       </button>
 
-      <span class="formatter-section-end"></span>
+      <!-- <span class="formatter-section-end"></span>
 
       <button
         title="Add Table"
@@ -132,7 +132,7 @@
         @click="editor.chain().focus().deleteTable().run()"
       >
         <v-icon>mdi-table-remove</v-icon>
-      </button>
+      </button> -->
 
       <span class="formatter-section-end"></span>
 

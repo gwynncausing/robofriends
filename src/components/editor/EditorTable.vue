@@ -49,7 +49,7 @@ import { ROOT_GETTERS } from "@/store/types";
 // new WebrtcProvider("bud-test-1", ydoc);
 
 const CustomDocument = Document.extend({
-  content: "heading tableCell",
+  content: "heading table",
 });
 
 const CustomTableCell = TableCell.extend({
