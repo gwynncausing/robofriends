@@ -25,17 +25,22 @@
           >
             <v-icon> mdi-chevron-right </v-icon>
           </v-btn>
-          <div v-if="editor.blockType === 'text'" class="editor-content-text">
+          <div
+            v-if="editor.blockType === 'text'"
+            :ref="'block-' + editor.id"
+            class="editor-content-text"
+          >
             <EditorText
               :editor-data="editor"
               :user-color="userColor"
               @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
-              @selectBlock="$emit('selectBlock', $event)"
+              @selectBlock="selectBlock"
             />
           </div>
           <div
             v-else-if="editor.blockType === 'image'"
+            :ref="'block-' + editor.id"
             class="editor-content-image"
           >
             <EditorImage
@@ -50,12 +55,13 @@
               "
               @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
-              @selectBlock="$emit('selectBlock', $event)"
+              @selectBlock="selectBlock"
             />
           </div>
 
           <div
             v-else-if="editor.blockType === 'heading'"
+            :ref="'block-' + editor.id"
             class="editor-content-heading"
           >
             <EditorHeading
@@ -63,13 +69,14 @@
               :user-color="userColor"
               @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
-              @selectBlock="$emit('selectBlock', $event)"
+              @selectBlock="selectBlock"
             />
           </div>
           <!-- @input="$emit('getContent', $event, index)" -->
 
           <div
             v-else-if="editor.blockType === 'table'"
+            :ref="'block-' + editor.id"
             class="editor-content-table"
           >
             <EditorTable
@@ -84,7 +91,7 @@
               "
               @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
-              @selectBlock="$emit('selectBlock', $event)"
+              @selectBlock="selectBlock"
             />
           </div>
         </div>
@@ -137,15 +144,33 @@ export default {
         dragClass: "drag",
         emptyInsertThreshold: 5,
       },
-      id: 123,
+      selectedBlockId: "",
     };
   },
   watch: {
     list: function () {
       console.log(this.list);
     },
+    selectedBlockId(newValue, oldValue) {
+      console.log("newValue: ", newValue, "oldValue: ", oldValue);
+      let newBlockRef = "block-" + newValue;
+      let oldBlockRef = "block-" + oldValue;
+      // console.log("ref: ", this.$refs);
+      // console.log("newBlockRef: ", this.$refs[newBlockRef]);
+      // console.log("oldBlockRef: ", this.$refs[oldBlockRef]);
+      this.$refs[oldBlockRef][0].classList.remove("focused");
+      this.$refs[newBlockRef][0].classList.add("focused");
+    },
   },
   methods: {
+    selectBlock(event) {
+      this.$emit("selectBlock", event);
+      try {
+        this.selectedBlockId = event.id;
+      } catch (e) {
+        console.log(e);
+      }
+    },
     onEnd(event) {
       console.log(event.oldIndex);
       this.$emit("dragElement");
@@ -223,5 +248,8 @@ export default {
 }
 .ghost {
   opacity: 50%;
+}
+.focused {
+  outline: 2px solid $secondary;
 }
 </style>
