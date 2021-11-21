@@ -14,6 +14,7 @@
       :id="'editor-' + editor.id"
       :key="editor.id"
     >
+      {{ editor.content }}
       <v-expansion-panel-header :hide-actions="editor.blockType !== 'heading'">
         <v-icon class="handle">mdi-drag-vertical</v-icon>
         <template v-slot:actions>
@@ -22,7 +23,6 @@
           </v-btn>
         </template>
         <div class="header">
-          {{ editor }}
           <div v-if="editor.blockType === 'text'" class="editor-content-text">
             <EditorText
               :editor-data="editor"
