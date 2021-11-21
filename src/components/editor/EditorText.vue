@@ -146,10 +146,6 @@ export default {
         content: content,
         onUpdate: () => {
           this.$emit("input", this.editor.getJSON());
-          // console.log(
-          //   "editor.storage.collaborationCursor.users: ",
-          //   this.editor.storage.collaborationCursor.users
-          // );
         },
         onFocus: () => {
           this.$emit("selectBlock", {

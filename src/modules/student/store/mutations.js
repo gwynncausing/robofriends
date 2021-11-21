@@ -4,14 +4,12 @@ export default {
   [STUDENT_MUTATIONS.SET_CURRENT_CREATED_TEAM](state, { team }) {
     state.currentCreatedTeam = team;
   },
-
   [STUDENT_MUTATIONS.SET_SENT_MEMBERS_INVITATIONS](
     state,
     { sentMembersInvitations }
   ) {
     state.sentMembersInvitations = sentMembersInvitations;
   },
-
   [STUDENT_MUTATIONS.SET_SENT_TEACHERS_INVITATIONS](
     state,
     { sentTeachersInvitations }
@@ -68,6 +66,25 @@ export default {
     { approvedProposalDetails }
   ) {
     state.approvedProposalDetails = approvedProposalDetails;
+  },
+
+  [STUDENT_MUTATIONS.SET_REVISED_PROPOSAL](state, { revisedProposal }) {
+    state.revisedProposal = revisedProposal;
+  },
+
+  [STUDENT_MUTATIONS.SET_APPROVED_PROPOSAL_HISTORY](
+    state,
+    { approvedProposalHistory }
+  ) {
+    state.approvedProposalHistory = approvedProposalHistory;
+  },
+
+  [STUDENT_MUTATIONS.SET_APPROVED_PROPOSAL_HISTORY_SELECTED_DETAILS](
+    state,
+    { approvedProposalHistorySelectedDetails }
+  ) {
+    state.approvedProposalHistorySelectedDetails =
+      approvedProposalHistorySelectedDetails;
   },
 
   [STUDENT_MUTATIONS.SET_RESET_STUDENT_STATE](state) {

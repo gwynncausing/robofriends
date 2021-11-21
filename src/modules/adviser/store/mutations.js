@@ -27,8 +27,10 @@ export default {
     state.teams[index] = team;
   },
   [ADVISER_MUTATIONS.ADD_PENDING_PROPOSAL](state, { proposals, id }) {
-    let index = state.teams.findIndex((_team) => _team.id === id);
-    state.teams[index].proposals = { pending: proposals };
+    let teamIndex = state.teams.findIndex((_team) => _team.id === id);
+    if (!state.teams[teamIndex].proposals)
+      state.teams[teamIndex].proposals = {};
+    state.teams[teamIndex].proposals.pending = proposals;
   },
   [ADVISER_MUTATIONS.UPDATE_ONE_PENDING_PROPOSAL](
     state,
@@ -39,5 +41,21 @@ export default {
       (_proposal) => _proposal.id === proposalId
     );
     state.teams[teamIndex].proposals.pending[proposalIndex] = proposal;
+  },
+  [ADVISER_MUTATIONS.UPDATE_ONE_APPROVED_PROPOSAL](
+    state,
+    { proposal, proposalId, teamId }
+  ) {
+    let teamIndex = state.teams.findIndex((_team) => _team.id === teamId);
+    let proposalIndex = state.teams[teamIndex].proposals.approved.findIndex(
+      (_proposal) => _proposal.id === proposalId
+    );
+    state.teams[teamIndex].proposals.approved[proposalIndex] = proposal;
+  },
+  [ADVISER_MUTATIONS.ADD_APPROVED_PROPOSAL](state, { teamId, proposals }) {
+    let teamIndex = state.teams.findIndex((_team) => _team.id === teamId);
+    if (!state.teams[teamIndex].proposals)
+      state.teams[teamIndex].proposals = {};
+    state.teams[teamIndex].proposals.approved = proposals;
   },
 };

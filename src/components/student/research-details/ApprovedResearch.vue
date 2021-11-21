@@ -2,11 +2,17 @@
   <div>
     <div v-if="hasApprovedResearch" class="approved-research">
       <div class="editor-heading">
-        <Button text class="neutral-800--text"> Version History </Button>
+        <Button
+          text
+          class="neutral-800--text"
+          :to="{ name: 'Approved Research Version History' }"
+        >
+          Version History
+        </Button>
         <div class="buttons-users-wrapper">
           <Button v-show="!isEditable" @click="setEditable"> Edit </Button>
           <ActiveUsersList v-show="isEditable" :users="activeUsers" />
-          <Button v-show="isEditable"> Save </Button>
+          <Button v-show="isEditable" @click="saveProposal"> Save </Button>
         </div>
       </div>
       <div class="editor-wrapper">
@@ -45,6 +51,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    isEditable: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -82,7 +92,6 @@ export default {
         users: [],
       },
       activeUsers: [],
-      isEditable: false,
     };
   },
   computed: {
@@ -105,8 +114,12 @@ export default {
   //   this.editor.content = this.approvedResearch.content;
   // },
   methods: {
+    getTitle() {
+      return this.editor.content?.content?.[0]?.content?.[0]?.text;
+    },
     setEditable() {
-      this.isEditable = true;
+      this.$emit("setEditableClick");
+      // this.isEditable = true;
     },
     updateUsers(users) {
       this.activeUsers = users;
@@ -123,6 +136,13 @@ export default {
         color += letters[Math.floor(Math.random() * 16)];
       }
       return color;
+    },
+    saveProposal() {
+      const proposalContent = this.editor.content;
+      this.$emit("saveProposal", {
+        title: this.getTitle(),
+        content: proposalContent,
+      });
     },
   },
 };

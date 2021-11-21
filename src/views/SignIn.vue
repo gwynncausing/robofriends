@@ -52,9 +52,14 @@
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import {
+  STUDENT_GETTERS,
+  STUDENT_ACTIONS,
+} from "@/modules/student/store/types";
 import { ROOT_GETTERS, ROOT_ACTIONS } from "@/store/types";
-import { USER, STATUS_CODES } from "@/utils/constants";
+import { MODULES, USER, STATUS_CODES } from "@/utils/constants";
+import { isObjectEmpty } from "@/utils/helpers";
 
 export default {
   name: "Signin",
@@ -75,17 +80,29 @@ export default {
     ...mapGetters({
       getUser: ROOT_GETTERS.GET_USER,
       getUserType: ROOT_GETTERS.GET_USER_TYPE,
+      hasMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
+      getMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_MEMBERSHIPS}`,
+      getSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM_DETAILS}`,
+      getSubmittedProposals: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SUBMITTED_PROPOSALS}`,
+      getApprovedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_APPROVED_PROPOSAL}`,
     }),
   },
   methods: {
     ...mapActions({
       onLogin: ROOT_ACTIONS.LOGIN_USER,
+      onFetchMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_MEMBERSHIPS}`,
+      onFetchSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
+      onFetchSubmittedProposals: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SUBMITTED_PROPOSALS}`,
+      onFetchApprovedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_APPROVED_PROPOSAL}`,
+      onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
+
     verifyEmailPassword() {
       return !/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
         this.user.email
       );
     },
+
     handleErrors(status) {
       switch (status) {
         case STATUS_CODES.ERRORS.UNAUTHORIZED:
@@ -98,6 +115,7 @@ export default {
           break;
       }
     },
+
     async signin() {
       let isEmailOk = this.verifyEmailPassword();
       if (isEmailOk || !this.user.password) {
@@ -107,14 +125,45 @@ export default {
       this.error = "";
       this.isSubmit = true;
       try {
+        let location;
         await this.onLogin(this.user);
         if (this.getUser.deletedAt === null) {
           switch (this.getUserType) {
             case USER.TYPES.STUDENT:
-              this.$router.replace({ name: "Student Dashboard" });
+              await this.onFetchMemberships();
+              if (this.hasMemberships) {
+                await this.onFetchSelectedTeamDetails({
+                  id: this.getMemberships[0].team.id,
+                });
+                await this.onFetchApprovedProposal({
+                  id: this.getSelectedTeamDetails.id,
+                });
+                if (!isObjectEmpty(this.getApprovedProposal)) {
+                  location = {
+                    name: "Research Details",
+                    query: { tab: "approved-research" },
+                  };
+                } else {
+                  await this.onFetchSubmittedProposals({
+                    id: this.getSelectedTeamDetails.id,
+                  });
+                  if (this.getSubmittedProposals.length === 0) {
+                    location = {
+                      name: "Research Details",
+                      query: { tab: "create-new" },
+                    };
+                  } else {
+                    location = {
+                      name: "Research Details",
+                      query: { tab: "proposals" },
+                    };
+                  }
+                }
+              } else location = { name: "Create Team" };
+              this.$router.replace(location);
               break;
             case USER.TYPES.TEACHER:
-              this.$router.replace({ name: "Adviser Dashboard" });
+              this.$router.replace({ name: "Manage Teams" });
               break;
             default:
               this.$router.replace({ name: "Onboarding" });
@@ -124,6 +173,7 @@ export default {
         } else this.handleErrors(STATUS_CODES.ERRORS.UNAUTHORIZED);
       } catch (error) {
         this.handleErrors(error?.response?.status);
+        console.log(error);
       } finally {
         this.isSubmit = false;
       }

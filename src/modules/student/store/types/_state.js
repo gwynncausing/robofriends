@@ -10,4 +10,7 @@ export let studentInitialState = () => ({
   selectedProposal: {},
   approvedProposal: {},
   approvedProposalDetails: {},
+  revisedProposal: {},
+  approvedProposalHistory: {},
+  approvedProposalHistorySelectedDetails: {},
 });

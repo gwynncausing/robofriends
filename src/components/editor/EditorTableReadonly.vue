@@ -1,11 +1,5 @@
 <template>
   <div class="editor-table">
-    <EditorTextFormatterButtons
-      :editor="editor"
-      :block-type="editorData.blockType"
-      :column="editorData.column"
-      @setColumn="$emit('setColumn', $event)"
-    />
     <editor-content :editor="editor" class="editor-content" />
   </div>
 </template>
@@ -14,8 +8,6 @@
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
-import Heading from "@tiptap/extension-heading";
-import Placeholder from "@tiptap/extension-placeholder";
 import Text from "@tiptap/extension-text";
 import Bold from "@tiptap/extension-bold";
 import Italic from "@tiptap/extension-italic";
@@ -32,27 +24,6 @@ import TableRow from "@tiptap/extension-table-row";
 import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import TextAlign from "@tiptap/extension-text-align";
-import Image from "@tiptap/extension-image";
-import Dropcursor from "@tiptap/extension-dropcursor";
-
-import Collaboration from "@tiptap/extension-collaboration";
-import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
-import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
-
-import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
-
-import { mapGetters } from "vuex";
-import { ROOT_GETTERS } from "@/store/types";
-
-// A new Y document
-// const ydoc = new Y.Doc();
-// Registered with a WebRTC provider
-// new WebrtcProvider("bud-test-1", ydoc);
-
-const CustomDocument = Document.extend({
-  content: "heading table",
-});
 
 const CustomTableCell = TableCell.extend({
   addAttributes() {
@@ -76,8 +47,8 @@ const CustomTableCell = TableCell.extend({
 });
 
 export default {
+  name: "EditorTableReadonly",
   components: {
-    EditorTextFormatterButtons,
     EditorContent,
   },
 
@@ -85,10 +56,6 @@ export default {
     editorData: {
       type: Object,
       default: () => ({}),
-    },
-    userColor: {
-      type: String,
-      default: "#FFF",
     },
   },
 
@@ -99,32 +66,13 @@ export default {
     };
   },
 
-  computed: {
-    ...mapGetters({
-      getUser: `${ROOT_GETTERS.GET_USER}`,
-    }),
-  },
-
-  watch: {
-    "editor.storage.collaborationCursor.users": function (newValue) {
-      this.$emit("updateUsers", newValue);
-    },
-  },
-
   mounted() {
-    const ydoc = new Y.Doc();
-
-    const documentId = this.editorData.id;
-
-    const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
     let content = this.editorData.content;
-
-    const provider = new WebrtcProvider(documentId + "", ydoc);
 
     try {
       this.editor = new Editor({
         extensions: [
-          CustomDocument,
+          Document,
           Paragraph,
           Text,
           Bold,
@@ -138,19 +86,6 @@ export default {
           Superscript,
           Subscript,
           Image,
-          Dropcursor,
-          Heading.configure({
-            levels: [2],
-          }),
-          Placeholder.configure({
-            placeholder: ({ node }) => {
-              if (node.type.name === "heading") {
-                return "What’s the label?";
-              }
-
-              return "Text in this line will be neglected from exporting. Add a table instead";
-            },
-          }),
           TextAlign.configure({
             types: ["paragraph"],
           }),
@@ -160,36 +95,19 @@ export default {
           TableRow,
           TableHeader,
           CustomTableCell,
-          Collaboration.configure({
-            document: ydoc,
-          }),
-          CollaborationCursor.configure({
-            provider: provider,
-            user: {
-              name,
-              color: this.userColor,
-            },
-          }),
         ],
-        content: content,
-        onUpdate: () => {
-          this.$emit("input", this.editor.getJSON());
-        },
-        onFocus: () => {
-          this.$emit("selectBlock", {
-            name,
-            id: this.editorData.id,
-          });
-        },
+        editable: false,
       });
     } catch (e) {
       console.log(e);
     }
+    this.editor.commands.forEach(content, (item, { commands }) => {
+      return commands.insertContent(item);
+    });
   },
 
   beforeUnmount() {
     this.editor.destroy();
-    this.provider.destroy();
   },
 };
 </script>

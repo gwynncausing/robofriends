@@ -35,7 +35,7 @@ import { mapGetters, mapActions } from "vuex";
 import { STUDENT_GETTERS, STUDENT_ACTIONS } from "./store/types";
 import { ROOT_GETTERS, ROOT_ACTIONS } from "@/store/types";
 import { MODULES } from "@/utils/constants";
-import { capitalizeFirstLetter } from "@/utils/helpers";
+import { capitalizeFirstLetter, isObjectEmpty } from "@/utils/helpers";
 
 export default {
   name: "Student",
@@ -52,10 +52,10 @@ export default {
       },
       teams: [],
       routes: [
-        {
-          name: "Home",
-          path: { name: "Student Dashboard" },
-        },
+        // {
+        //   name: "Home",
+        //   path: { name: "Student Dashboard" },
+        // },
         {
           name: "Archive",
           path: { name: "Student Archive" },
@@ -96,7 +96,8 @@ export default {
     },
     updatedRoutes() {
       if (this.hasMemberships)
-        return [this.routes[0], ...this.teamRoutes, this.routes[1]];
+        // return [this.routes[0], ...this.teamRoutes, this.routes[1]];
+        return [...this.teamRoutes, this.routes[0]];
       else return this.routes;
     },
   },
@@ -104,7 +105,7 @@ export default {
     try {
       await this.onFetchMemberships();
       this.setTeams();
-      if (Object.keys(this.getSelectedTeamDetails).length === 0)
+      if (!isObjectEmpty(this.getSelectedTeamDetails))
         await this.setSelectedTeamDetails(this.teams[0] || {});
       this.selectedTeamDetails = this.getSelectedTeamDetails;
     } catch (error) {

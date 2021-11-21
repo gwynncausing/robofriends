@@ -15,14 +15,19 @@
         <Chip dark :color="statusColors[selectedProposal.status]">
           {{ selectedProposal.status }}
         </Chip>
-        <router-link
+        <!-- <router-link
           v-show="showButton(selectedProposal)"
           v-slot="{ href, navigate }"
-          to="/student/research-details?tab=create-new"
+          :to="`/student/research-details?tab=create-new&action=revise&proposal=${selectedProposal.id}`"
           custom
         >
           <Button :href="href" @click="navigate">Revise</Button>
-        </router-link>
+        </router-link> -->
+        <Button
+          v-show="showButton(selectedProposal)"
+          @click="revise(selectedProposal)"
+          >Revise</Button
+        >
       </div>
       <div class="editor">
         <EditorTextWithTitleReadonly
@@ -182,6 +187,12 @@ export default {
     },
     showButton: function (proposal) {
       return proposal.status === "Needs Revision" ? true : false;
+    },
+    revise(proposal) {
+      this.$emit("reviseProposal", proposal);
+      // console.log("revise");
+      // window.location.href =
+      //   "/student/research-details?tab=create-new&action=revise";
     },
   },
 };

@@ -13,11 +13,12 @@ import { Editor, EditorContent } from "@tiptap/vue-2";
 import Document from "@tiptap/extension-document";
 import Text from "@tiptap/extension-text";
 import Heading from "@tiptap/extension-heading";
-import Paragraph from "@tiptap/extension-paragraph";
 import Placeholder from "@tiptap/extension-placeholder";
 
 import Collaboration from "@tiptap/extension-collaboration";
-// import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
+import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
+import * as Y from "yjs";
+import { WebrtcProvider } from "y-webrtc";
 
 import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
 
@@ -62,25 +63,24 @@ export default {
     }),
   },
 
-  watch: {
-    "editor.storage.collaborationCursor.users": function (newValue) {
-      this.$emit("updateUsers", newValue);
-    },
-  },
-
   mounted() {
-    // let content = this.editorData.content;
+    const ydoc = new Y.Doc();
+
+    const documentId = this.editorData.id;
+
     const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
+    let content = this.editorData.content;
+
+    const provider = new WebrtcProvider(documentId + "", ydoc);
 
     this.editor = new Editor({
       extensions: [
         CustomDocument,
         Text,
-        Paragraph,
         Heading.configure({
-          levels: [1, 2, 3, 4],
+          levels: [4],
           HTMLAttributes: {
-            class: "editor-heading-block-title",
+            class: "editor-section-block-title",
           },
         }),
         Placeholder.configure({
@@ -93,19 +93,20 @@ export default {
           },
         }),
         Collaboration.configure({
-          document: this.editorData.ydoc,
-          field: this.editorData.id,
+          document: ydoc,
         }),
-        // CollaborationCursor.configure({
-        //   provider: this.editorData.provider,
-        //   user: {
-        //     name,
-        //     color: this.userColor,
-        //   },
-        // }),
-        // this.editorData.cursorExtension,
+        CollaborationCursor.configure({
+          provider: provider,
+          user: {
+            name,
+            color: this.userColor,
+          },
+          onUpdate: (users) => {
+            this.$emit("updateUsers", users);
+          },
+        }),
       ],
-      // content: content,
+      content: content,
       onUpdate: () => {
         this.$emit("input", this.editor.getJSON());
       },
@@ -118,12 +119,12 @@ export default {
     });
   },
 
-  beforeDestroy() {
-    this.editor.destroy();
-  },
-
   methods: {
     //
+  },
+
+  beforeUnmount() {
+    this.editor.destroy();
   },
 };
 </script>

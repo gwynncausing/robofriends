@@ -1,44 +1,29 @@
 <template>
-  <!-- <draggable
-    v-bind="dragOptions"
-    class="item-container"
-    :list="list"
-    :empty-insert-threshhold="500"
-    tag="v-expansion-panels"
-    :component-data="componentData"
-    handle=".handle"
-  >
-    <v-expansion-panel v-for="el in list" :key="el.parent" class="item-group">
-      <v-expansion-panel-header class="item">
-        <v-icon class="handle">mdi-drag-vertical</v-icon>
-
-        <template v-slot:actions>
-          <v-icon class="icon">$expand</v-icon>
-        </template>
-        <span class="header"> {{ el.parent }} </span>
-      </v-expansion-panel-header>
-      <v-expansion-panel-content>
-        <NestedExpandableDraggable :list="el.children" class="item-sub" />
-      </v-expansion-panel-content>
-    </v-expansion-panel>
-  </draggable> -->
   <draggable
     v-bind="dragOptions"
     class="block-list-wrapper"
     :list="list"
-    :empty-insert-threshhold="10"
+    :empty-insert-threshhold="500"
     tag="div"
     handle=".handle"
   >
-    <details v-for="el in list" :key="el.parent" class="parent-wrapper">
-      <summary class="parent">
-        <v-icon class="handle">mdi-drag-vertical</v-icon>
-        <span class="parent"> {{ el.parent }} </span>
-      </summary>
-      <div class="child-wrapper">
-        <NestedExpandableDraggable :list="el.children" class="child" />
+    <div v-for="el in list" :key="el.parent" class="parent-wrapper">
+      <div class="parent">
+        <v-icon class="handle"> mdi-drag-vertical </v-icon>
+        <v-btn
+          :id="'toggle-' + el.id"
+          icon
+          class="toggle"
+          @click="toggleChildren(el.id)"
+        >
+          <v-icon> mdi-chevron-right </v-icon>
+        </v-btn>
+        <span> {{ el.parent }} </span>
       </div>
-    </details>
+      <div :id="'children-' + el.id" class="children-wrapper">
+        <NestedExpandableDraggable :list="el.children" />
+      </div>
+    </div>
   </draggable>
 </template>
 <script>
@@ -78,44 +63,60 @@ export default {
       };
     },
   },
-  methods: {},
+  methods: {
+    toggleChildren(id) {
+      let children = document.getElementById("children-" + id);
+      let toggle = document.getElementById("toggle-" + id);
+      if (children.style.display === "block") {
+        children.style.display = "none";
+        toggle.classList.remove("down");
+      } else {
+        children.style.display = "block";
+        toggle.classList.add("down");
+      }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
 .block-list-wrapper {
   margin: 0;
+  background-color: $neutral-50;
 }
 .parent-wrapper {
   padding: 1rem;
   background-color: white;
-  .handle {
-    float: left;
-    cursor: grab;
-  }
   .parent {
-    cursor: default;
+    display: flex;
+    align-items: center;
+    .handle {
+      float: left;
+      cursor: grab;
+    }
   }
 }
-
-// summary {
-//   font-weight: bold;
-//   list-style-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/right-arrow.svg);
-// }
-// summary::-webkit-details-marker {
-//   background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/right-arrow.svg);
-//   color: transparent;
-// }
-
 .child-wrapper {
-  height: 100px;
+  min-height: 100px;
+  height: fit-content;
   margin-left: 20px;
+  display: none;
+}
+.toggle {
+  border-radius: 50%;
+  &:hover {
+    background-color: $neutral-50;
+  }
+}
+.down {
+  -moz-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 .chosen,
 .drag {
   background-color: white;
 }
-
 .ghost {
-  background-color: $neutral-50;
+  opacity: 0;
 }
 </style>

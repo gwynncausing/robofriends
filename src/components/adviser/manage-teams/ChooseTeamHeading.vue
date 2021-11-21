@@ -26,7 +26,6 @@
 <script>
 import TextField from "@/components/global/TextField";
 import Button from "@/components/global/Button";
-// import { isObjectEmpty } from "@/utils/helpers";
 
 export default {
   name: "ChooseTeamHeading",

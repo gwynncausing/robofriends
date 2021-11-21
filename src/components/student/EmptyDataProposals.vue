@@ -1,7 +1,7 @@
 <template>
   <EmptyData>
     <template v-slot:title
-      >Your team doesn't have any submitted proposals yet.</template
+      >Your team haven't submitted a proposal yet.</template
     >
     <template v-slot:content
       >To create a proposal, go to Create New tab.</template

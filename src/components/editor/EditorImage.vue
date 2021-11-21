@@ -95,12 +95,12 @@ export default {
           Image,
           Dropcursor,
           Heading.configure({
-            levels: [4],
+            levels: [2],
           }),
           Placeholder.configure({
             placeholder: ({ node }) => {
               if (node.type.name === "heading") {
-                return "What’s the title?";
+                return "What’s the label?";
               }
 
               return "Text in this line will be neglected from exporting. Add an image instead";

@@ -1,181 +1,51 @@
 <template>
-  <!-- <div id="editor">
-    <div class="editor-heading">
-      <Button text class="neutral-800--text mr-auto">Version History</Button>
-      <ActiveUsersList :users="activeUsers" class="mr-4" />
-      <v-menu offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <Button outlined v-bind="attrs" v-on="on">
-            Export
-            <v-icon>mdi-chevron-down</v-icon>
-          </Button>
-        </template>
-        <v-list>
-          <v-list-item v-for="(item, index) in exportItems" :key="index" link>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </div>
-    <div class="editor-list-wrapper">
-      <div class="editor-list">
-        <div
-          v-for="(editor, index) in editors"
-          :id="'editor-' + editor.id"
-          :key="editor.id"
-          class="editor-row"
-        >
-          <div v-if="editor.blockType === 'text'" class="editor-content-text">
-            <EditorText
-              :editor-data="editor"
-              :user-color="userColor"
-              @input="getContent($event, index)"
-              @updateUsers="updateUsers($event)"
-              @selectBlock="selectBlock($event)"
-            />
-          </div>
-          <div
-            v-else-if="editor.blockType === 'image'"
-            class="editor-content-image"
-          >
-            <EditorImage
-              :editor-data="editor"
-              :user-color="userColor"
-              @input="getContent($event, index)"
-              @updateUsers="updateUsers($event)"
-              @selectBlock="selectBlock($event)"
-              @setColumnNumber="setColumnNumber($event, editor)"
-            />
-          </div>
-          <div
-            v-else-if="editor.blockType === 'heading'"
-            class="editor-content-heading"
-          >
-            <EditorHeading
-              :editor-data="editor"
-              :user-color="userColor"
-              @input="getContent($event, index)"
-              @updateUsers="updateUsers($event)"
-              @selectBlock="selectBlock($event)"
-            />
-          </div>
-          <div
-            v-else-if="editor.blockType === 'table'"
-            class="editor-content-table"
-          >
-            <EditorTable
-              :editor-data="editor"
-              :user-color="userColor"
-              @input="getContent($event, index)"
-              @updateUsers="updateUsers($event)"
-              @selectBlock="selectBlock($event)"
-              @setColumnNumber="setColumnNumber($event, editor)"
-            />
-          </div>
-        </div>
-      </div>
-      <EditorToolbar
-        :current-toolbar-position="currentToolbarPosition"
-        :current-selected-editor-index="currentSelectedEditorIndex"
-        @addEditor="addEditor($event)"
-        @removeEditor="removeEditor($event)"
-      />
-    </div>
-  </div> -->
   <div id="editor">
-    <div class="editor-heading">
-      <Button text class="neutral-800--text mr-auto">Version History</Button>
-      <ActiveUsersList :users="activeUsers" class="mr-4" />
-      <v-menu offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <Button outlined v-bind="attrs" v-on="on">
-            Export
-            <v-icon>mdi-chevron-down</v-icon>
-          </Button>
-        </template>
-        <v-list>
-          <v-list-item v-for="(item, index) in exportItems" :key="index" link>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </div>
     <!-- // * make this hasApprovedProposal to true to check/see the editor -->
-    <div v-if="hasApprovedProposal">
+    <div v-if="!hasApprovedProposal">
       <EmptyDataResearchPaperEditor />
     </div>
-    <div class="editor-list-wrapper">
-      <div class="editor-list">
-        <div class="editor-row">
-          <EditorDraggable
-            :list="editors"
-            :user-color="userColor"
-            @setColumn="setColumn($event)"
-            @dragElement="testMethod"
-            @getContent="getContent($event)"
-            @updateUsers="updateUsers($event)"
-            @selectBlock="selectBlock($event)"
+    <div v-else class="editor-wrapper">
+      <div class="editor-heading">
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <Button outlined v-bind="attrs" class="mr-4" v-on="on">
+              Export
+              <v-icon>mdi-chevron-down</v-icon>
+            </Button>
+          </template>
+          <v-list>
+            <v-list-item v-for="(item, index) in exportItems" :key="index" link>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <Button text class="neutral-800--text mr-auto">Version History</Button>
+        <ActiveUsersList :users="activeUsers" class="mr-4" />
+        <Button>Save</Button>
+      </div>
+      <div class="editor-list-wrapper">
+        <div class="editor-list">
+          <div class="editor-row">
+            <EditorDraggable
+              :list="editors"
+              :user-color="userColor"
+              @setColumn="setColumn($event)"
+              @dragElement="testMethod"
+              @getContent="getContent($event)"
+              @updateUsers="updateUsers($event)"
+              @selectBlock="selectBlock($event)"
+            />
+          </div>
+
+          <EditorToolbar
+            :current-toolbar-position="currentToolbarPosition"
+            :current-selected-editor-index="currentSelectedEditorIndex"
+            :editor-length="editors.length"
+            @addEditor="addEditor($event)"
+            @removeEditor="removeEditor($event)"
           />
         </div>
-
-        <EditorToolbar
-          :current-toolbar-position="currentToolbarPosition"
-          :current-selected-editor-index="currentSelectedEditorIndex"
-          @addEditor="addEditor($event)"
-          @removeEditor="removeEditor($event)"
-        />
       </div>
-
-      <!-- <div class="editor-list-wrapper">
-        <div class="editor-list">
-          <div
-            v-for="(editor, index) in editors"
-            :id="'editor-' + editor.id"
-            :key="editor.id"
-            class="editor-row"
-          >
-            <div v-if="editor.blockType === 'text'" class="editor-content-text">
-              <EditorText
-                :editor-data="editor"
-                :user-color="userColor"
-                @input="getContent($event, index)"
-                @updateUsers="updateUsers($event)"
-                @selectBlock="selectBlock($event)"
-              />
-            </div>
-            <div
-              v-else-if="editor.blockType === 'image'"
-              class="editor-content-image"
-            >
-              <EditorImage
-                :editor-data="editor"
-                :user-color="userColor"
-                @input="getContent($event, index)"
-                @updateUsers="updateUsers($event)"
-                @selectBlock="selectBlock($event)"
-              />
-            </div>
-            <div
-              v-else-if="editor.blockType === 'section'"
-              class="editor-content-section"
-            >
-              <EditorSection
-                :editor-data="editor"
-                :user-color="userColor"
-                @input="getContent($event, index)"
-                @updateUsers="updateUsers($event)"
-                @selectBlock="selectBlock($event)"
-              />
-            </div>
-          </div>
-        </div>
-        <EditorToolbar
-          :current-toolbar-position="currentToolbarPosition"
-          :current-selected-editor-index="currentSelectedEditorIndex"
-          @addEditor="addEditor($event)"
-          @removeEditor="removeEditor($event)"
-        />
-      </div> -->
     </div>
   </div>
 </template>
@@ -183,9 +53,6 @@
 <script>
 import EditorDraggable from "@/components/editor/EditorDraggable.vue";
 import Button from "@/components/global/Button.vue";
-// import EditorText from "@/components/editor/EditorText.vue";
-// import EditorImage from "@/components/editor/EditorImage.vue";
-// import EditorSection from "@/components/editor/EditorSection.vue";
 import EditorToolbar from "@/components/editor/EditorToolbar.vue";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 import EmptyDataResearchPaperEditor from "@/components/student/EmptyDataResearchPaperEditor";
@@ -197,15 +64,15 @@ import {
 } from "@/modules/student/store/types";
 import { isObjectEmpty } from "@/utils/helpers";
 import { MODULES } from "@/utils/constants";
+import { IndexeddbPersistence } from "y-indexeddb";
+import * as Y from "yjs";
+import { WebrtcProvider } from "y-webrtc";
 
 export default {
   name: "ResearchPaperEditor",
   components: {
     EditorDraggable,
     Button,
-    // EditorText,
-    // EditorImage,
-    // EditorSection,
     EditorToolbar,
     ActiveUsersList,
     EmptyDataResearchPaperEditor,
@@ -218,7 +85,11 @@ export default {
       activeUsers: [],
       currentToolbarPosition: 0,
       currentSelectedEditorIndex: 0,
-      hasApprovedProposal: false,
+      currentSelectedObjectId: "",
+      hasApprovedProposal: true,
+      yDoc: new Y.Doc(),
+      teamCodeUnique: "MyT3@mN@m3Unique666111",
+      provider: null,
     };
   },
 
@@ -237,11 +108,72 @@ export default {
   },
 
   mounted() {
-    if (!this.editors.length) {
-      this.addEditor({
-        currentSelectedEditorIndex: this.currentSelectedEditorIndex,
+    console.log({ ydocid: this.yDoc.guid });
+    const persistence = new IndexeddbPersistence(
+      this.teamCodeUnique,
+      this.yDoc
+    );
+    localStorage.log = "y-webrtc";
+    persistence.once("synced", () => {
+      this.provider = new WebrtcProvider(this.teamCodeUnique, this.yDoc, {
+        signaling: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
+        maxConns: 200,
+        peerOpts: {
+          config: {
+            iceServers: [
+              // { urls: "stun:stun.l.google.com:19302" },
+              // { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
+              {
+                urls: "turn:bud-api.southeastasia.cloudapp.azure.com:3478",
+                credential: "budresearchbuddy!",
+                username: "bud",
+              },
+            ],
+          },
+        },
       });
-    }
+      const folder = this.yDoc.getArray("subdocuments");
+      // folder.delete(0, folder.length);
+      folder.forEach((block) => {
+        block.ydoc = this.yDoc;
+        // block.provider = provider;
+        this.editors.push(block);
+      });
+
+      // if (!this.editors.length) {
+      //   this.addEditor({
+      //     currentSelectedEditorIndex: this.currentSelectedEditorIndex,
+      //   });
+      // }
+
+      this.yDoc.on("update", (update, origin) => {
+        console.log({ origin });
+        Y.applyUpdate(this.yDoc, update);
+
+        const folder = this.yDoc.getArray("subdocuments");
+        this.editors = [];
+        let objectIndex = 0;
+
+        folder.forEach((block, index) => {
+          if (block.id == this.currentSelectedObjectId) {
+            objectIndex = index;
+          }
+          // * init block ydoc
+          block.ydoc = this.yDoc;
+          // block.provider = provider;
+          this.editors.push(block);
+        });
+        // * update toolbar for changes from other peers
+        if (origin != this.teamCodeUnique && this.editors.length > 0) {
+          this.selectBlock(this.editors[objectIndex]);
+        }
+      });
+    });
+  },
+
+  beforeDestroy() {
+    this.yDoc.destroy();
+    this.provider.destroy();
   },
 
   methods: {
@@ -264,23 +196,33 @@ export default {
       this.activeUsers = users;
     },
     selectBlock(object) {
-      const index = this.editors.map((editor) => editor.id).indexOf(object.id);
-      this.moveToolbar(object.id, index);
-      this.currentSelectedEditorIndex = index;
+      try {
+        const index = this.editors
+          .map((editor) => editor.id)
+          .indexOf(object.id);
+        this.moveToolbar(object.id, index);
+        this.currentSelectedObjectId = object.id;
+        this.currentSelectedEditorIndex = index;
+      } catch (error) {
+        console.log(error);
+      }
     },
     moveToolbar(id, index) {
-      const editorID = "editor-" + id;
-      let position = 0;
+      try {
+        const editorID = "editor-" + id;
+        let position = 0;
 
-      for (let i = 0; i < this.editors.length; i++) {
-        let editorID = "editor-" + this.editors[i].id;
-        position += document.getElementById(editorID).clientHeight;
-        if (i === index) break;
-        // position += 24;
+        for (let i = 0; i < this.editors.length; i++) {
+          let editorID = "editor-" + this.editors[i].id;
+          position += document.getElementById(editorID).clientHeight;
+          if (i === index) break;
+        }
+
+        const blockHeight = document.getElementById(editorID).clientHeight;
+        this.currentToolbarPosition = position - blockHeight;
+      } catch (error) {
+        console.log(error);
       }
-
-      const blockHeight = document.getElementById(editorID).clientHeight;
-      this.currentToolbarPosition = position - blockHeight;
     },
     getContent({ content, index }) {
       this.editors[index].content = content.content;
@@ -288,8 +230,12 @@ export default {
     addEditor({ currentSelectedEditorIndex: index, blockType = "heading" }) {
       if (index === -1) return;
       let content = ``;
+
+      // TODO: put this on a constant file
       if (blockType === "table")
-        content = `<table>
+        content = `
+        <h2> </h2>
+        <table>
           <tbody>
             <tr>
               <td></td>
@@ -309,27 +255,35 @@ export default {
           </tbody>
         </table>`;
 
+      let objToAdd = {
+        id: new Date().getTime() + blockType + this.teamCodeUnique,
+        content: content,
+        blockType,
+        users: [],
+        column: "default",
+      };
+
       if (blockType === "heading") {
-        this.editors.splice(index + 1, 0, {
-          id: this.id++,
-          content: content,
-          blockType,
-          users: [],
-          children: [],
-          column: "default",
-        });
-      } else {
-        this.editors.splice(index + 1, 0, {
-          id: this.id++,
-          content: content,
-          blockType,
-          users: [],
-          column: "default",
-        });
+        //*add children
+        objToAdd = { ...objToAdd, children: [] };
       }
+
+      this.yDoc.transact(() => {
+        const insertAt = this.editors.length > 0 ? index + 1 : 0;
+        const folder = this.yDoc.getArray("subdocuments");
+        folder.insert(insertAt, [objToAdd]);
+      }, this.teamCodeUnique);
     },
     removeEditor({ currentSelectedEditorIndex: index = -1 }) {
-      this.editors.splice(index, 1);
+      if (this.editors.length > 0) {
+        this.selectBlock(this.editors[index - 1]);
+      }
+      if (this.editors.length > 0) {
+        this.yDoc.transact(() => {
+          const folder = this.yDoc.getArray("subdocuments");
+          folder.delete(index, 1);
+        }, this.teamCodeUnique);
+      }
     },
     getRandomColor() {
       let letters = "0123456789ABCDEF";
@@ -351,13 +305,13 @@ export default {
 
 <style lang="scss" scoped>
 #editor {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
+  .editor-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
   .editor-heading {
     display: flex;
-    // justify-content: space-between;
   }
 
   .editor-list-wrapper {
@@ -374,24 +328,6 @@ export default {
       gap: 16px;
       margin-right: 76px;
     }
-
-    //   div[class^="editor-content-"] {
-    //     width: 100%;
-    //     border: 1px solid $neutral-400;
-    //     border-radius: 4px;
-    //     padding: 0.8rem;
-    //     margin-right: 76px;
-    //   }
-    //   .editor-content-section {
-    //     height: 42px;
-    //     padding: 4px;
-    //   }
-
-    //   .editor-content-text,
-    //   .editor-content-image {
-    //     min-height: 18rem; // 304px
-    //   }
-    // }
   }
 }
 </style>

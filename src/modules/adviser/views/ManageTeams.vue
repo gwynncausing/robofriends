@@ -18,15 +18,20 @@
       <Tabs active="pending-proposals" :items="items" class="tabs">
         <template v-slot:body-pending-proposals>
           <span v-if="pendingProposalsLoading">Loading...</span>
-          <PendingProposals v-else :pending-proposals="pendingProposals" />
-          <!-- :pending-proposals="teams[activeEl].pendingProposals" -->
+          <PendingProposals
+            v-else
+            :pending-proposals="pendingProposals"
+            :has-approved-proposal="hasApprovedProposal"
+            @updateProposal="updateProposals($event)"
+          />
         </template>
         <template v-slot:body-approved-research>
-          <ApprovedResearch />
-          <!-- :approved-research="teams[activeEl].approvedResearch" -->
+          <span v-if="approvedProposalsLoading">Loading...</span>
+          <ApprovedResearch v-else :approved-research="approvedProposals[0]" />
         </template>
         <template v-slot:body-research-paper>
-          <ResearchPaper />
+          <span v-if="!hasApprovedProposal">No Approved Proposal yet</span>
+          <ResearchPaper v-else />
         </template>
       </Tabs>
     </div>
@@ -45,7 +50,8 @@ import ResearchPaper from "@/components/adviser/manage-teams/ResearchPaper";
 import { mapActions, mapGetters } from "vuex";
 import { ADVISER_ACTIONS, ADVISER_GETTERS } from "../store/types";
 import { MODULES } from "@/utils/constants";
-// TEAM, STATUS_CODES
+import { PROPOSAL } from "@/utils/constants";
+
 export default {
   name: "ManageTeams",
   components: {
@@ -78,6 +84,9 @@ export default {
       memberships: [],
       pendingProposals: [],
       pendingProposalsLoading: false,
+      approvedProposals: [],
+      approvedProposalsLoading: false,
+      hasApprovedProposal: false,
     };
   },
 
@@ -107,7 +116,10 @@ export default {
       onFetchMembership: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_MEMBERSHIPS}`,
       onFetchTeam: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_TEAM}`,
       onFetchPendingProposals: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_PENDING_PROPOSALS}`,
+      onFetchApprovedProposal: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_APPROVED_PROPOSAL}`,
       onFetchOnePendingProposal: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_ONE_PENDING_PROPOSAL}`,
+      onFetchOneApprovedProposal: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_ONE_APPROVED_PROPOSAL}`,
+      onUpdateProposal: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.UPDATE_PROPOSAL}`,
     }),
     fetchMembership() {
       return this.onFetchMembership();
@@ -118,24 +130,62 @@ export default {
     fetchPendingProposals(id) {
       return this.onFetchPendingProposals(id);
     },
-    fetchOnePendingProposal(id) {
-      return this.onFetchOnePendingProposal(id);
+    fetchApprovedProposal(id) {
+      return this.onFetchApprovedProposal(id);
+    },
+    fetchOnePendingProposal(payload) {
+      return this.onFetchOnePendingProposal(payload);
+    },
+    fetchOneApprovedProposal(payload) {
+      return this.onFetchOneApprovedProposal(payload);
+    },
+    updateProposal(id, status, feedback) {
+      return this.onUpdateProposal({
+        id,
+        status,
+        feedback,
+        teamId: this.currentSelectedTeam,
+      });
     },
     selectTeam(index, team_id) {
       this.activeEl = index;
       this.currentSelectedTeam = team_id;
 
-      this.updatePendingProposals(index, team_id);
+      this.fetchAndUpdateProposals(this.activeEl, this.currentSelectedTeam);
+    },
+    async updateProposals({ id, status, feedback }) {
+      await this.updateProposal(id, status, feedback);
+      if (status === PROPOSAL.STATUS.APPROVED) {
+        const status = PROPOSAL.STATUS.REJECTED;
+        const feedback = {
+          content: "",
+        };
+        for (let proposal of this.pendingProposals) {
+          if (proposal.id !== id) {
+            await this.updateProposal(proposal.id, status, feedback);
+          }
+        }
+      }
+      this.fetchAndUpdateProposals(this.activeEl, this.currentSelectedTeam);
+      this.$router.replace({
+        query: { ...this.$route.query, tab: "approved-research" },
+      });
     },
 
-    async updatePendingProposals(index, team_id) {
+    async fetchAndUpdateProposals(index, team_id) {
       this.pendingProposalsLoading = true;
+      this.approvedProposalsLoading = true;
 
       const payload = { id: team_id };
+
       await this.fetchPendingProposals(payload);
+      this.updatePendingProposals(index, team_id);
 
+      await this.fetchApprovedProposal(payload);
+      this.updateApprovedProposals(index, team_id);
+    },
+    async updatePendingProposals(index, team_id) {
       this.pendingProposals = this.teams[index]?.proposals?.pending;
-
       if (this.pendingProposals) {
         for (let proposal of this.pendingProposals) {
           const payload = { proposalId: proposal.id, teamId: team_id };
@@ -143,7 +193,21 @@ export default {
           await this.fetchOnePendingProposal(payload);
         }
       }
+
       this.pendingProposalsLoading = false;
+    },
+    async updateApprovedProposals(index, team_id) {
+      this.approvedProposals = this.teams[index]?.proposals?.approved;
+      if (this.approvedProposals) {
+        for (let proposal of this.approvedProposals) {
+          const payload = { proposalId: proposal.id, teamId: team_id };
+          await this.fetchOneApprovedProposal(payload);
+        }
+      }
+      this.approvedProposalsLoading = false;
+      if (this.approvedProposals.length > 0) {
+        this.hasApprovedProposal = true;
+      }
     },
   },
 };

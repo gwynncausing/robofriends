@@ -55,6 +55,22 @@ export default {
     });
   },
 
+  async [ADVISER_ACTIONS.FETCH_APPROVED_PROPOSAL](
+    { commit },
+    payload = ADVISER_PAYLOADS.FETCH_APPROVED_PROPOSAL
+  ) {
+    const { id } = payload;
+    const response = await ProposalRepository.getProposalsByStatus(
+      PROPOSAL.STATUS.APPROVED,
+      id
+    );
+    const proposals = response.data;
+    commit(ADVISER_MUTATIONS.ADD_APPROVED_PROPOSAL, {
+      proposals: proposals,
+      teamId: id,
+    });
+  },
+
   async [ADVISER_ACTIONS.FETCH_ONE_PENDING_PROPOSAL](
     { commit },
     payload = ADVISER_PAYLOADS.FETCH_ONE_PENDING_PROPOSAL
@@ -65,6 +81,37 @@ export default {
     commit(ADVISER_MUTATIONS.UPDATE_ONE_PENDING_PROPOSAL, {
       proposal: proposal,
       proposalId: proposalId,
+      teamId: teamId,
+    });
+  },
+
+  async [ADVISER_ACTIONS.FETCH_ONE_APPROVED_PROPOSAL](
+    { commit },
+    payload = ADVISER_PAYLOADS.FETCH_ONE_APPROVED_PROPOSAL
+  ) {
+    const { proposalId, teamId } = payload;
+    const response = await ProposalRepository.getProposal(proposalId);
+    const proposal = response.data;
+    commit(ADVISER_MUTATIONS.UPDATE_ONE_APPROVED_PROPOSAL, {
+      proposal: proposal,
+      proposalId: proposalId,
+      teamId: teamId,
+    });
+  },
+
+  async [ADVISER_ACTIONS.UPDATE_PROPOSAL](
+    { commit },
+    payload = ADVISER_PAYLOADS.UPDATE_PROPOSAL
+  ) {
+    const { id, status, feedback, teamId } = payload;
+    const _payload = {
+      status: status,
+      feedback: feedback,
+    };
+    const response = await ProposalRepository.update(_payload, id);
+    const proposals = response.data;
+    commit(ADVISER_MUTATIONS.ADD_APPROVED_PROPOSAL, {
+      proposals: proposals,
       teamId: teamId,
     });
   },

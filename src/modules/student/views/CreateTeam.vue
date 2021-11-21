@@ -115,16 +115,15 @@
           A plant is required
         </span>
       </div> -->
-    </v-form>
-
-    <div
-      :class="{ active: addMemberActive || addTeacherActive }"
-      class="submit-wrapper"
-    >
-      <Button class="ml-auto" :loading="isSubmit" @click="submit"
-        >Submit</Button
+      <div
+        :class="{ active: addMemberActive || addTeacherActive }"
+        class="submit-wrapper"
       >
-    </div>
+        <Button class="ml-auto" :loading="isSubmit" @click="submit"
+          >Submit</Button
+        >
+      </div>
+    </v-form>
     <ModalCreateYourTeam
       :user="getUser"
       :dialog-props="createYourTeamModal"
@@ -286,8 +285,7 @@ export default {
           await this.onSelectedTeamDetails({
             id: this.getCurrentCreatedTeam.id,
           });
-          await this.$router.go();
-          await this.$router.push({ name: "Student Dashboard" });
+          window.location.href = "/student/research-details?tab=create-new";
         } catch (error) {
           console.log(error);
         } finally {

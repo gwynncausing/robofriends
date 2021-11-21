@@ -1,20 +1,7 @@
 <template>
   <div v-if="editor" class="formatter-wrapper">
-    <span v-if="blockType === 'image'">
-      <input
-        ref="fileInput"
-        type="file"
-        accept="image/png, image/gif, image/jpeg"
-        hidden
-        @change="selectFiles"
-      />
-      <button title="Add Image" @click="addImage">
-        <v-icon>mdi-image-plus</v-icon>
-      </button>
-    </span>
-
     <span
-      v-else-if="
+      v-if="
         blockType === 'text' ||
         blockType === 'table' ||
         blockType === 'text-with-title'
@@ -79,7 +66,23 @@
       >
         <v-icon>mdi-format-list-numbered</v-icon>
       </button>
+
+      <span class="formatter-section-end"></span>
     </span>
+
+    <span v-if="blockType === 'image' || blockType === 'table'">
+      <input
+        ref="fileInput"
+        type="file"
+        accept="image/png, image/gif, image/jpeg"
+        hidden
+        @change="selectFiles"
+      />
+      <button title="Add Image" @click="addImage">
+        <v-icon>mdi-image-plus</v-icon>
+      </button>
+    </span>
+
     <span v-if="blockType === 'table'">
       <span class="formatter-section-end"></span>
 
@@ -111,6 +114,28 @@
       >
         <v-icon>mdi-format-align-justify</v-icon>
       </button>
+
+      <!-- <span class="formatter-section-end"></span>
+
+      <button
+        title="Add Table"
+        @click="
+          editor
+            .chain()
+            .focus()
+            .insertTable({ rows: 3, cols: 3, withHeaderRow: false })
+            .run()
+        "
+      >
+        <v-icon>mdi-table-plus</v-icon>
+      </button>
+
+      <button
+        title="Remove Table"
+        @click="editor.chain().focus().deleteTable().run()"
+      >
+        <v-icon>mdi-table-remove</v-icon>
+      </button> -->
 
       <span class="formatter-section-end"></span>
 
