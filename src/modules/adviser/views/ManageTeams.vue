@@ -6,14 +6,29 @@
     />
     <div class="flex-wrapper">
       <div v-show="$vuetify.breakpoint.lgAndUp" id="team-list-wrapper">
-        <CardTeam
-          v-for="(team, index) in teams"
-          :key="team.id"
-          :team="team"
-          :index="index"
-          :class="{ active: activeEl == index }"
-          @select="selectTeam(index, team.id)"
-        />
+        <div class="teams-list-filter">
+          <Chip
+            v-for="chip in statusChips"
+            :key="chip.title"
+            small
+            dark
+            :color="chip.color"
+            :outlined="!chip.isActive"
+            @click="selectChip(chip)"
+          >
+            {{ chip.title }}
+          </Chip>
+        </div>
+        <div>
+          <CardTeam
+            v-for="(team, index) in teams"
+            :key="team.id"
+            :team="team"
+            :index="index"
+            :class="{ active: activeEl == index }"
+            @select="selectTeam(index, team.id)"
+          />
+        </div>
       </div>
       <Tabs active="pending-proposals" :items="items" class="tabs">
         <template v-slot:body-pending-proposals>
@@ -39,6 +54,7 @@
 </template>
 
 <script>
+import Chip from "@/components/global/Chip";
 import ChooseTeamHeading from "@/components/adviser/manage-teams/ChooseTeamHeading";
 import CardTeam from "@/components/adviser/manage-teams/CardTeam";
 import Tabs from "@/components/Tabs";
@@ -55,6 +71,7 @@ import { PROPOSAL } from "@/utils/constants";
 export default {
   name: "ManageTeams",
   components: {
+    Chip,
     ChooseTeamHeading,
     CardTeam,
     Tabs,
@@ -78,6 +95,23 @@ export default {
         {
           title: "Research Paper",
           value: "research-paper",
+        },
+      ],
+      statusChips: [
+        {
+          title: "Ongoing",
+          color: "yellow",
+          isActive: true,
+        },
+        {
+          title: "Completed",
+          color: "primary",
+          isActive: false,
+        },
+        {
+          title: "Published",
+          color: "secondary",
+          isActive: false,
         },
       ],
       teams: [],
@@ -153,6 +187,9 @@ export default {
 
       this.fetchAndUpdateProposals(this.activeEl, this.currentSelectedTeam);
     },
+    selectChip(chip) {
+      chip.isActive = !chip.isActive;
+    },
     async updateProposals({ id, status, feedback }) {
       await this.updateProposal(id, status, feedback);
       if (status === PROPOSAL.STATUS.APPROVED) {
@@ -222,7 +259,6 @@ export default {
     column-gap: 16px;
 
     #team-list-wrapper {
-      flex: 1;
       display: flex;
       flex-direction: column;
       row-gap: 24px;
@@ -230,8 +266,15 @@ export default {
       padding: 0px 4px 4px 4px;
       overflow-y: auto;
       height: 75vh;
+      width: 300px;
       .active {
         background: $neutral-50;
+      }
+      .teams-list-filter {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        column-gap: 8px;
       }
     }
     .tabs {
