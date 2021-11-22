@@ -37,18 +37,11 @@ import Dropcursor from "@tiptap/extension-dropcursor";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
-import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
 
 import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
 
 import { mapGetters } from "vuex";
 import { ROOT_GETTERS } from "@/store/types";
-
-// A new Y document
-// const ydoc = new Y.Doc();
-// Registered with a WebRTC provider
-// new WebrtcProvider("bud-test-1", ydoc);
 
 const CustomDocument = Document.extend({
   content: "heading table",
@@ -90,6 +83,11 @@ export default {
       type: String,
       default: "#FFF",
     },
+    provider: {
+      required: true,
+      type: Object,
+      default: null,
+    },
   },
 
   data() {
@@ -112,15 +110,7 @@ export default {
   },
 
   mounted() {
-    const ydoc = new Y.Doc();
-
-    const documentId = this.editorData.id;
-
     const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
-    let content = this.editorData.content;
-
-    const provider = new WebrtcProvider(documentId + "", ydoc);
-
     try {
       this.editor = new Editor({
         extensions: [
@@ -161,17 +151,17 @@ export default {
           TableHeader,
           CustomTableCell,
           Collaboration.configure({
-            document: ydoc,
+            document: this.editorData.ydoc,
+            field: this.editorData.id,
           }),
           CollaborationCursor.configure({
-            provider: provider,
+            provider: this.provider,
             user: {
               name,
               color: this.userColor,
             },
           }),
         ],
-        content: content,
         onUpdate: () => {
           this.$emit("input", this.editor.getJSON());
         },

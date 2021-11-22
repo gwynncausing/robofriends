@@ -28,8 +28,6 @@ import Placeholder from "@tiptap/extension-placeholder";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
-import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
 
 import EditorTextFormatterButtons from "@/components/editor/EditorTextFormatterButtons";
 
@@ -59,6 +57,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    provider: {
+      required: true,
+      type: Object,
+      default: null,
+    },
   },
   data() {
     return {
@@ -83,15 +86,7 @@ export default {
   },
 
   mounted() {
-    const ydoc = new Y.Doc();
-
-    const documentId = this.editorData.id;
-
     const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
-    let content = this.editorData.content;
-
-    const provider = new WebrtcProvider(documentId, ydoc);
-
     try {
       this.editor = new Editor({
         extensions: [
@@ -129,17 +124,17 @@ export default {
             },
           }),
           Collaboration.configure({
-            document: ydoc,
+            document: this.editorData.ydoc,
+            field: this.editorData.id,
           }),
           CollaborationCursor.configure({
-            provider: provider,
+            provider: this.provider,
             user: {
               name,
               color: this.userColor,
             },
           }),
         ],
-        content: content,
         autofocus: true,
         editable: this.isEditable,
         onUpdate: () => {

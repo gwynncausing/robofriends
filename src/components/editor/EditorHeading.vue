@@ -17,7 +17,7 @@ import Paragraph from "@tiptap/extension-paragraph";
 import Placeholder from "@tiptap/extension-placeholder";
 
 import Collaboration from "@tiptap/extension-collaboration";
-// import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
+import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 
 import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
 
@@ -47,6 +47,11 @@ export default {
       type: String,
       default: "#FFF",
     },
+    provider: {
+      required: true,
+      type: Object,
+      default: null,
+    },
   },
 
   data() {
@@ -69,7 +74,6 @@ export default {
   },
 
   mounted() {
-    // let content = this.editorData.content;
     const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
 
     this.editor = new Editor({
@@ -96,16 +100,14 @@ export default {
           document: this.editorData.ydoc,
           field: this.editorData.id,
         }),
-        // CollaborationCursor.configure({
-        //   provider: this.editorData.provider,
-        //   user: {
-        //     name,
-        //     color: this.userColor,
-        //   },
-        // }),
-        // this.editorData.cursorExtension,
+        CollaborationCursor.configure({
+          provider: this.provider,
+          user: {
+            name,
+            color: this.userColor,
+          },
+        }),
       ],
-      // content: content,
       onUpdate: () => {
         this.$emit("input", this.editor.getJSON());
       },

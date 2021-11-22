@@ -27,6 +27,7 @@
             <EditorText
               :editor-data="editor"
               :user-color="userColor"
+              :provider="provider"
               @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
               @selectBlock="$emit('selectBlock', $event)"
@@ -40,6 +41,7 @@
               :editor-data="editor"
               :user-color="userColor"
               :column="editor.column"
+              :provider="provider"
               @setColumn="
                 $emit('setColumn', {
                   column: $event,
@@ -59,6 +61,7 @@
             <EditorHeading
               :editor-data="editor"
               :user-color="userColor"
+              :provider="provider"
               @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
               @selectBlock="$emit('selectBlock', $event)"
@@ -74,6 +77,7 @@
               :editor-data="editor"
               :user-color="userColor"
               :column="editor.column"
+              :provider="provider"
               @setColumn="
                 $emit('setColumn', {
                   column: $event,
@@ -118,9 +122,12 @@ export default {
       type: Array,
     },
     userColor: {
-      required: false,
       type: String,
       default: null,
+    },
+    provider: {
+      type: Object,
+      default: () => {},
     },
   },
   data() {
@@ -150,6 +157,16 @@ export default {
   watch: {
     list: function () {
       console.log(this.list);
+    },
+    selectedBlockId(newValue, oldValue) {
+      console.log("newValue: ", newValue, "oldValue: ", oldValue);
+      let newBlockRef = "block-" + newValue;
+      let oldBlockRef = "block-" + oldValue;
+      // console.log("ref: ", this.$refs);
+      // console.log("newBlockRef: ", this.$refs[newBlockRef]);
+      // console.log("oldBlockRef: ", this.$refs[oldBlockRef]);
+      this.$refs?.[oldBlockRef]?.[0]?.classList.remove("focused");
+      this.$refs?.[newBlockRef]?.[0]?.classList.add("focused");
     },
   },
   methods: {
