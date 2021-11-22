@@ -34,6 +34,7 @@
               :editor-data="editor"
               :user-color="userColor"
               :provider="provider"
+              :y-doc="yDoc"
               @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
               @selectBlock="selectBlock"
@@ -49,6 +50,7 @@
               :user-color="userColor"
               :column="editor.column"
               :provider="provider"
+              :y-doc="yDoc"
               @setColumn="
                 $emit('setColumn', {
                   column: $event,
@@ -70,6 +72,7 @@
               :editor-data="editor"
               :user-color="userColor"
               :provider="provider"
+              :y-doc="yDoc"
               @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
               @selectBlock="selectBlock"
@@ -87,6 +90,7 @@
               :user-color="userColor"
               :column="editor.column"
               :provider="provider"
+              :y-doc="yDoc"
               @setColumn="
                 $emit('setColumn', {
                   column: $event,
@@ -101,13 +105,13 @@
         </div>
       </div>
 
-      <div
-        v-show="editor.blockType === 'heading'"
+      <!-- <div
+        v-show="!!editor.children && editor.children.length > 0"
         :id="'children-' + editor.id"
         class="children"
       >
         <EditorDraggable :list="editor.children" />
-      </div>
+      </div> -->
     </div>
   </draggable>
 </template>
@@ -140,6 +144,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    yDoc: {
+      type: Object,
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -155,9 +163,9 @@ export default {
     };
   },
   watch: {
-    list: function () {
-      console.log(this.list);
-    },
+    // list: function () {
+    //   console.log(this.list);
+    // },
     selectedBlockId(newValue, oldValue) {
       console.log("newValue: ", newValue, "oldValue: ", oldValue);
       let newBlockRef = "block-" + newValue;
@@ -179,8 +187,7 @@ export default {
       }
     },
     onEnd(event) {
-      console.log(event.oldIndex);
-      this.$emit("dragElement");
+      this.$emit("dragElement", event.newIndex, event.oldIndex);
     },
     input(event, index) {
       this.$emit("getContent", { content: event, index: index });

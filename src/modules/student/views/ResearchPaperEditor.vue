@@ -30,8 +30,9 @@
               :list="editors"
               :user-color="userColor"
               :provider="provider"
+              :y-doc="yDoc"
               @setColumn="setColumn($event)"
-              @dragElement="testMethod"
+              @dragElement="afterDrag"
               @getContent="getContent($event)"
               @updateUsers="updateUsers($event)"
               @selectBlock="selectBlock($event)"
@@ -149,7 +150,7 @@ export default {
       //* initialize editors
       folder.forEach((block) => {
         // *pass reference to parent ydoc
-        block.ydoc = this.yDoc;
+        // block.ydoc = this.yDoc;
         this.editors.push(block);
       });
 
@@ -173,7 +174,7 @@ export default {
             objectIndex = index;
           }
           // *pass reference to parent ydoc
-          block.ydoc = this.yDoc;
+          // block.ydoc = this.yDoc;
           this.editors.push(block);
         });
         // * update toolbar pos based on changes
@@ -310,8 +311,25 @@ export default {
     setColumn({ column, editor }) {
       editor.column = column;
     },
-    testMethod() {
-      console.log("testMethod called");
+    afterDrag(newIndex, oldIndex) {
+      const length = this.editors.length;
+      let insertAt = newIndex;
+      let deleteAt = oldIndex;
+      if (newIndex === oldIndex) {
+        return;
+      } else if (oldIndex === length - 1) {
+        deleteAt = length;
+      } else if (oldIndex > newIndex) {
+        deleteAt++;
+      } else {
+        insertAt++;
+      }
+      this.yDoc.transact(() => {
+        const folder = this.yDoc.getArray("subdocuments");
+        const objToRepos = folder.get(oldIndex);
+        folder.insert(insertAt, [objToRepos]);
+        folder.delete(deleteAt, 1);
+      }, this.teamCodeUnique);
     },
   },
 };
