@@ -74,7 +74,6 @@ export const generateDocument = async (rules, content) => {
         processHeadingBlock(rules, item, numberList, section);
         break;
       case "text":
-        console.log("text");
         processTextBlock(item, section);
         break;
       case "image":
@@ -84,7 +83,6 @@ export const generateDocument = async (rules, content) => {
         section = await processTableBlock(rules, item, properties, section);
         break;
       case "reference":
-        console.log("reference");
         section = processReferenceBlock(item, section);
         break;
     }

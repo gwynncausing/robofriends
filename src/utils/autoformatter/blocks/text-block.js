@@ -1,4 +1,5 @@
 import { Paragraph, TextRun } from "docx";
+import { MARK_TYPE } from "../constants";
 
 //TODO: add string to constants instead
 //* OK
@@ -7,14 +8,13 @@ const hasMark = (item, markType) =>
 
 //* OK
 export const createTextRun = (item) => {
-  const hasBold = hasMark(item, "bold");
-  const hasItalic = hasMark(item, "italic");
-  const hasUnderline = hasMark(item, "underline");
-  const hasSubScript = hasMark(item, "subscript");
-  const hasSuperScript = hasMark(item, "superscript");
-  const hasStrike = hasMark(item, "strike");
-  const hasUri = hasMark(item, "link");
-  console.log({ hasUri });
+  const hasBold = hasMark(item, MARK_TYPE.bold);
+  const hasItalic = hasMark(item, MARK_TYPE.italic);
+  const hasUnderline = hasMark(item, MARK_TYPE.underline);
+  const hasSubScript = hasMark(item, MARK_TYPE.subscript);
+  const hasSuperScript = hasMark(item, MARK_TYPE.superscript);
+  const hasStrike = hasMark(item, MARK_TYPE.strike);
+  const hasUri = hasMark(item, MARK_TYPE.link);
 
   return new TextRun({
     text: item.text || "",
