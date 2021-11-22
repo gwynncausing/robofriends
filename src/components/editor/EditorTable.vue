@@ -34,6 +34,7 @@ import TableHeader from "@tiptap/extension-table-header";
 import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
 import Dropcursor from "@tiptap/extension-dropcursor";
+import Link from "@tiptap/extension-link";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
@@ -133,6 +134,9 @@ export default {
           Subscript,
           Image,
           Dropcursor,
+          Link.configure({
+            openOnClick: true,
+          }),
           Heading.configure({
             levels: [2],
           }),

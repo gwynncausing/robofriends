@@ -7,6 +7,7 @@ import { processTextBlock } from "./blocks/text-block";
 import { processHeadingBlock } from "./blocks/heading-block";
 import { processImageBlock } from "./blocks/image-block";
 import { processTableBlock } from "./blocks/table-block";
+import { processReferenceBlock } from "./blocks/reference-block";
 import { createACMCopyrightSpace } from "./special-elements";
 
 //*OK
@@ -43,7 +44,11 @@ export const createDocumentProperties = (rules) => {
       paragraphStyles: rules.styles.paragraphs,
     },
     numbering: {
-      config: [rules.styles.list.ordered, rules.styles.list.unordered],
+      config: [
+        rules.styles.list.ordered,
+        rules.styles.list.unordered,
+        rules.styles.list.reference,
+      ],
     },
     sections: [],
   };
@@ -69,6 +74,7 @@ export const generateDocument = async (rules, content) => {
         processHeadingBlock(rules, item, numberList, section);
         break;
       case "text":
+        console.log("text");
         processTextBlock(item, section);
         break;
       case "image":
@@ -76,6 +82,10 @@ export const generateDocument = async (rules, content) => {
         break;
       case "table":
         section = await processTableBlock(rules, item, properties, section);
+        break;
+      case "reference":
+        console.log("reference");
+        section = processReferenceBlock(item, section);
         break;
     }
   }

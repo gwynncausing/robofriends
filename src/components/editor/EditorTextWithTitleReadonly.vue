@@ -18,6 +18,7 @@ import Subscript from "@tiptap/extension-subscript";
 import Heading from "@tiptap/extension-heading";
 import BulletList from "@tiptap/extension-bullet-list";
 import ListItem from "@tiptap/extension-list-item";
+import Link from "@tiptap/extension-link";
 
 const CustomDocument = Document.extend({
   content: "heading block*",
@@ -71,6 +72,9 @@ export default {
           Underline,
           Superscript,
           Subscript,
+          Link.configure({
+            openOnClick: true,
+          }),
           Heading.configure({
             levels: [2],
             HTMLAttributes: {

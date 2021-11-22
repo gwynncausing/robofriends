@@ -13,6 +13,8 @@ export const createTextRun = (item) => {
   const hasSubScript = hasMark(item, "subscript");
   const hasSuperScript = hasMark(item, "superscript");
   const hasStrike = hasMark(item, "strike");
+  const hasUri = hasMark(item, "link");
+  console.log({ hasUri });
 
   return new TextRun({
     text: item.text || "",
@@ -22,10 +24,11 @@ export const createTextRun = (item) => {
     subScript: hasSubScript,
     superScript: hasSuperScript,
     strike: hasStrike,
+    color: hasUri ? "#0000ff" : "#000000",
   });
 };
 
-const createParagraphChilren = (content) => {
+export const createParagraphChilren = (content) => {
   let textRuns = [];
 
   content?.forEach((child) => {
@@ -80,7 +83,6 @@ export const processTextBlock = (item, section) => {
       childContent.type === "orderedList" ||
       childContent.type === "bulletList"
     ) {
-      console.log("childContent.content: ", childContent.content);
       const results = createList(childContent.content, childContent.type);
       results.forEach((result) => section.children.push(result));
       section.children.push(

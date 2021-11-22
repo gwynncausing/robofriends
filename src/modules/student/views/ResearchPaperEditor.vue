@@ -90,7 +90,7 @@ export default {
       currentSelectedObjectId: "",
       hasApprovedProposal: true,
       yDoc: new Y.Doc(),
-      teamCodeUnique: "MyT3@mN@m3Unique666111",
+      teamCodeUnique: "MyT3@mN@m3Unique6661111",
       provider: {},
       signalingServers: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
       webrtcPeerOpts: {

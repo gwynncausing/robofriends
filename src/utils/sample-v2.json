@@ -7,6 +7,6 @@
       "content": [{ "type": "text", "text": "INTRODUCTION" }]
     }
   ],
-  "blockType": "section",
+  "blockType": "heading",
   "users": []
 }

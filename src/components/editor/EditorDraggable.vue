@@ -11,8 +11,11 @@
       v-for="(editor, index) in list"
       :id="'editor-' + editor.id"
       :key="editor.id"
+      style="display: block"
       class="editor-panels-wrapper"
     >
+      <!-- temporary to get content -->
+      <!-- {{ cloneList[index] }} -->
       <div class="parent">
         <v-icon class="handle"> mdi-drag-vertical </v-icon>
         <v-btn
@@ -165,7 +168,8 @@ export default {
         dragClass: "drag",
         emptyInsertThreshold: 5,
       },
-      id: 123,
+      cloneList: [],
+      selectedBlockId: "",
     };
   },
 
@@ -183,6 +187,13 @@ export default {
     },
     input(event, index) {
       this.$emit("getContent", { content: event, index: index });
+      this.cloneList.length = 0;
+      this.list.forEach((item) => {
+        /* eslint-disable-next-line*/
+        const { ydoc, ...newObject } = item;
+        this.cloneList.push(newObject);
+      });
+      console.log("this.cloneList", this.cloneList);
     },
     toggleChildren(id) {
       let children = document.getElementById("children-" + id);
