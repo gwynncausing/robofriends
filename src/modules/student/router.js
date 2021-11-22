@@ -15,11 +15,11 @@ const studentRoutes = [
     // beforeEnter: studentGuard,
     component: () => import("@/modules/student/Module.vue"),
     children: [
-      {
-        path: "",
-        name: "Student Dashboard",
-        component: () => import("@/modules/student/views/Dashboard.vue"),
-      },
+      // {
+      //   path: "",
+      //   name: "Student Dashboard",
+      //   component: () => import("@/modules/student/views/Dashboard.vue"),
+      // },
       {
         path: "settings",
         name: "Student Account Settings",

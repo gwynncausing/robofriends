@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import EmptyData from "@/components/student/EmptyData";
+import EmptyData from "./EmptyData";
 
 export default {
   name: "EmptyDataProposals",

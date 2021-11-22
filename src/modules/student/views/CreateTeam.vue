@@ -137,7 +137,7 @@
 import Combobox from "@/components/global/Combobox.vue";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
-import ModalCreateYourTeam from "@/components/student/ModalCreateYourTeam.vue";
+import ModalCreateYourTeam from "@/components/modals/ModalCreateYourTeam.vue";
 
 import { mapActions, mapGetters } from "vuex";
 import { ROOT_GETTERS } from "@/store/types";
@@ -210,21 +210,27 @@ export default {
       onSendTeachersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_TEACHERS_INVITATIONS}`,
       onSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
     }),
+
     showCreateYourTeamModal() {
       this.createYourTeamModal = true;
     },
+
     createYourTeam() {
       this.createYourTeamModal = false;
     },
+
     removeItem(item = 0, user = []) {
       user.splice(item, 1);
     },
+
     importAllImages(directory) {
       return directory.keys().map(directory);
     },
+
     capitalize(item) {
       return item.charAt(0).toUpperCase() + item.slice(1);
     },
+
     addItem(user = [], userActive) {
       user.push("");
       if (userActive === "addMemberActive") {
@@ -239,6 +245,7 @@ export default {
         this.addTeacherActive = !this.addTeacherActive;
       }, 1000);
     },
+
     selectTree(treeTitle) {
       if (this.team.tree !== treeTitle) {
         this.team.tree = treeTitle;
@@ -247,9 +254,11 @@ export default {
       }
       this.team.tree = "";
     },
+
     cleanEmailsArray(emailsArray) {
       return emailsArray.filter((email) => email !== "");
     },
+
     async submit() {
       // if (!this.team.tree) this.isTreeError = true;
       if (this.$refs.form.validate() && !this.isTreeError) {

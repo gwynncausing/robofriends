@@ -1,11 +1,31 @@
 <template>
   <div id="manage-teams">
     <ChooseTeamHeading
-      v-show="$vuetify.breakpoint.mdAndDown"
+      v-show="$vuetify.breakpoint.smAndDown"
       :team="teams[activeEl]"
+      @showDialog="teamsDialog = true"
     />
-    <div class="flex-wrapper">
-      <div v-show="$vuetify.breakpoint.lgAndUp" id="team-list-wrapper">
+    <Modal
+      :dialog="teamsDialog"
+      class="black--text d-sm-none"
+      @closed="teamsDialog = false"
+    >
+      <template v-slot:title>
+        <div class="teams-list-filter">
+          <Chip
+            v-for="chip in statusChips"
+            :key="chip.title"
+            medium
+            dark
+            :color="chip.color"
+            :outlined="!chip.isActive"
+            @click="selectChip(chip)"
+          >
+            {{ chip.title }}
+          </Chip>
+        </div>
+      </template>
+      <template v-slot:content>
         <CardTeam
           v-for="(team, index) in teams"
           :key="team.id"
@@ -14,24 +34,76 @@
           :class="{ active: activeEl == index }"
           @select="selectTeam(index, team.id)"
         />
+      </template>
+    </Modal>
+    <div class="flex-wrapper">
+      <div v-show="$vuetify.breakpoint.lgAndUp" id="team-list">
+        <div class="teams-list-filter">
+          <Chip
+            v-for="chip in statusChips"
+            :key="chip.title"
+            small
+            dark
+            :color="chip.color"
+            :outlined="!chip.isActive"
+            @click="selectChip(chip)"
+          >
+            {{ chip.title }}
+          </Chip>
+        </div>
+        <div id="team-list-wrapper">
+          <CardTeam
+            v-for="(team, index) in teams"
+            :key="team.id"
+            :team="team"
+            :index="index"
+            :class="{ active: activeEl == index }"
+            @select="selectTeam(index, team.id)"
+          />
+        </div>
       </div>
       <Tabs active="pending-proposals" :items="items" class="tabs">
         <template v-slot:body-pending-proposals>
           <span v-if="pendingProposalsLoading">Loading...</span>
-          <PendingProposals
-            v-else
-            :pending-proposals="pendingProposals"
-            :has-approved-proposal="hasApprovedProposal"
-            @updateProposal="updateProposals($event)"
-          />
+          <div v-else>
+            <PendingProposals
+              v-if="pendingProposals.length !== 0"
+              :pending-proposals="pendingProposals"
+              :has-approved-proposal="hasApprovedProposal"
+              @updateProposal="updateProposals($event)"
+            />
+            <EmptyDataTeamProposals
+              v-else-if="
+                pendingProposals.length === 0 && approvedProposals.length > 0
+              "
+              content="One of the proposals of this team is already approved. Please check on the approved research tab."
+            />
+            <EmptyDataTeamProposals
+              v-else
+              content="This team have not yet submitted any proposals."
+            />
+          </div>
         </template>
         <template v-slot:body-approved-research>
           <span v-if="approvedProposalsLoading">Loading...</span>
-          <ApprovedResearch v-else :approved-research="approvedProposals[0]" />
+          <div v-else>
+            <ApprovedResearch
+              v-if="approvedProposals.length > 0"
+              :approved-research="approvedProposals[0]"
+            />
+            <EmptyDataTeamApprovedResearch v-else />
+          </div>
         </template>
         <template v-slot:body-research-paper>
-          <span v-if="!hasApprovedProposal">No Approved Proposal yet</span>
-          <ResearchPaper v-else />
+          <div v-if="approvedProposals.length === 0">
+            <EmptyDataTeamResearchPaper />
+          </div>
+          <div v-else>
+            <ResearchPaper
+              v-if="approvedProposals.length > 0"
+              :blocks="researchPaper"
+            />
+          </div>
         </template>
       </Tabs>
     </div>
@@ -39,6 +111,8 @@
 </template>
 
 <script>
+import Chip from "@/components/global/Chip";
+import Modal from "@/components/modals/Modal";
 import ChooseTeamHeading from "@/components/adviser/manage-teams/ChooseTeamHeading";
 import CardTeam from "@/components/adviser/manage-teams/CardTeam";
 import Tabs from "@/components/Tabs";
@@ -46,6 +120,9 @@ import Tabs from "@/components/Tabs";
 import PendingProposals from "@/components/adviser/manage-teams/PendingProposals";
 import ApprovedResearch from "@/components/adviser/manage-teams/ApprovedResearch";
 import ResearchPaper from "@/components/adviser/manage-teams/ResearchPaper";
+import EmptyDataTeamProposals from "@/components/messages/EmptyDataTeamProposals";
+import EmptyDataTeamApprovedResearch from "@/components/messages/EmptyDataTeamApprovedResearch";
+import EmptyDataTeamResearchPaper from "@/components/messages/EmptyDataTeamResearchPaper";
 
 import { mapActions, mapGetters } from "vuex";
 import { ADVISER_ACTIONS, ADVISER_GETTERS } from "../store/types";
@@ -55,12 +132,17 @@ import { PROPOSAL } from "@/utils/constants";
 export default {
   name: "ManageTeams",
   components: {
+    Chip,
+    Modal,
     ChooseTeamHeading,
     CardTeam,
     Tabs,
     PendingProposals,
     ApprovedResearch,
     ResearchPaper,
+    EmptyDataTeamProposals,
+    EmptyDataTeamApprovedResearch,
+    EmptyDataTeamResearchPaper,
   },
   data() {
     return {
@@ -80,6 +162,24 @@ export default {
           value: "research-paper",
         },
       ],
+      teamsDialog: false,
+      statusChips: [
+        {
+          title: "Ongoing",
+          color: "yellow",
+          isActive: true,
+        },
+        {
+          title: "Completed",
+          color: "primary",
+          isActive: false,
+        },
+        {
+          title: "Published",
+          color: "secondary",
+          isActive: false,
+        },
+      ],
       teams: [],
       memberships: [],
       pendingProposals: [],
@@ -87,6 +187,146 @@ export default {
       approvedProposals: [],
       approvedProposalsLoading: false,
       hasApprovedProposal: false,
+      researchPaper: [
+        {
+          id: "125",
+          blockType: "heading",
+          column: "default",
+          children: [
+            {
+              id: "126",
+              blockType: "text",
+              column: "default",
+              content: [
+                {
+                  type: "paragraph",
+                  content: [
+                    {
+                      type: "text",
+                      text: "paragraph",
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          content: [
+            {
+              type: "heading",
+              content: [
+                {
+                  type: "text",
+                  text: "title",
+                },
+              ],
+            },
+          ],
+        },
+
+        {
+          id: "127",
+          blockType: "image",
+          column: "default",
+          content: [
+            {
+              type: "heading",
+              attrs: {
+                level: 1,
+              },
+              content: [
+                {
+                  type: "text",
+                  text: "sample image title",
+                },
+              ],
+            },
+            {
+              type: "image",
+              attrs: {
+                src: "https://source.unsplash.com/8xznAGy4HcY/800x400",
+              },
+            },
+          ],
+        },
+        {
+          id: "128",
+          blockType: "table",
+          column: "default",
+          content: [
+            {
+              type: "table",
+              content: [
+                {
+                  type: "tableRow",
+                  content: [
+                    {
+                      type: "tableCell",
+                      content: [
+                        {
+                          type: "paragraph",
+                          content: [
+                            {
+                              type: "text",
+                              text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      type: "tableCell",
+                      content: [
+                        {
+                          type: "paragraph",
+                          content: [
+                            {
+                              type: "text",
+                              text: "Donec venenatis turpis vitae orci pulvinar sollicitudin.",
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: "tableRow",
+                  content: [
+                    {
+                      type: "tableCell",
+                      content: [
+                        {
+                          type: "paragraph",
+                          content: [
+                            {
+                              type: "text",
+                              text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      type: "tableCell",
+                      content: [
+                        {
+                          type: "paragraph",
+                          content: [
+                            {
+                              type: "text",
+                              text: "Donec venenatis turpis vitae orci pulvinar sollicitudin.",
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
     };
   },
 
@@ -97,18 +337,8 @@ export default {
     }),
   },
 
-  async created() {
-    await this.fetchMembership();
-
-    this.memberships = await this.getMemberships;
-    this.teams = await this.getTeam;
-
-    for (let membership of this.memberships) {
-      const payload = { id: membership.team.id };
-      await this.fetchTeam(payload);
-    }
-
-    this.selectTeam(0, this.teams[0].id);
+  created() {
+    this.initialize();
   },
 
   methods: {
@@ -121,24 +351,45 @@ export default {
       onFetchOneApprovedProposal: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_ONE_APPROVED_PROPOSAL}`,
       onUpdateProposal: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.UPDATE_PROPOSAL}`,
     }),
+
+    async initialize() {
+      await this.fetchMembership();
+
+      this.memberships = await this.getMemberships;
+      this.teams = await this.getTeam;
+
+      for (let membership of this.memberships) {
+        const payload = { id: membership.team.id };
+        await this.fetchTeam(payload);
+      }
+
+      this.selectTeam(0, this.teams[0].id);
+    },
+
     fetchMembership() {
       return this.onFetchMembership();
     },
+
     fetchTeam(id) {
       return this.onFetchTeam(id);
     },
+
     fetchPendingProposals(id) {
       return this.onFetchPendingProposals(id);
     },
+
     fetchApprovedProposal(id) {
       return this.onFetchApprovedProposal(id);
     },
+
     fetchOnePendingProposal(payload) {
       return this.onFetchOnePendingProposal(payload);
     },
+
     fetchOneApprovedProposal(payload) {
       return this.onFetchOneApprovedProposal(payload);
     },
+
     updateProposal(id, status, feedback) {
       return this.onUpdateProposal({
         id,
@@ -147,12 +398,18 @@ export default {
         teamId: this.currentSelectedTeam,
       });
     },
+
     selectTeam(index, team_id) {
       this.activeEl = index;
       this.currentSelectedTeam = team_id;
 
       this.fetchAndUpdateProposals(this.activeEl, this.currentSelectedTeam);
     },
+
+    selectChip(chip) {
+      chip.isActive = !chip.isActive;
+    },
+
     async updateProposals({ id, status, feedback }) {
       await this.updateProposal(id, status, feedback);
       if (status === PROPOSAL.STATUS.APPROVED) {
@@ -184,6 +441,7 @@ export default {
       await this.fetchApprovedProposal(payload);
       this.updateApprovedProposals(index, team_id);
     },
+
     async updatePendingProposals(index, team_id) {
       this.pendingProposals = this.teams[index]?.proposals?.pending;
       if (this.pendingProposals) {
@@ -196,6 +454,7 @@ export default {
 
       this.pendingProposalsLoading = false;
     },
+
     async updateApprovedProposals(index, team_id) {
       this.approvedProposals = this.teams[index]?.proposals?.approved;
       if (this.approvedProposals) {
@@ -214,6 +473,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.teams-list-filter {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  column-gap: 8px;
+}
 #manage-teams {
   padding: 24px clamp(20px, 5.5vw, 80px);
   .flex-wrapper {
@@ -221,19 +486,24 @@ export default {
     flex-direction: row;
     column-gap: 16px;
 
+    #team-list {
+      margin-top: 72px;
+    }
+
     #team-list-wrapper {
-      flex: 1;
       display: flex;
       flex-direction: column;
       row-gap: 24px;
-      margin-top: 72px;
+      margin-top: 32px;
       padding: 0px 4px 4px 4px;
       overflow-y: auto;
       height: 75vh;
+      width: 300px;
       .active {
         background: $neutral-50;
       }
     }
+
     .tabs {
       flex: 3;
     }

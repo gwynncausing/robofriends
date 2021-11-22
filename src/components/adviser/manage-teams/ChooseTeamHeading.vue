@@ -19,7 +19,9 @@
         </v-avatar>
       </div>
     </div>
-    <Button outlined class="choose-team-btn"> Choose Team</Button>
+    <Button outlined class="choose-team-btn" @click="$emit('showDialog', true)">
+      Choose Team
+    </Button>
   </div>
 </template>
 

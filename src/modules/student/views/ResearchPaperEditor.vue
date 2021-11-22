@@ -57,7 +57,7 @@ import EditorDraggable from "@/components/editor/EditorDraggable.vue";
 import Button from "@/components/global/Button.vue";
 import EditorToolbar from "@/components/editor/EditorToolbar.vue";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
-import EmptyDataResearchPaperEditor from "@/components/student/EmptyDataResearchPaperEditor";
+import EmptyDataResearchPaperEditor from "@/components/messages/EmptyDataResearchPaperEditor";
 
 import { mapActions, mapGetters } from "vuex";
 import {

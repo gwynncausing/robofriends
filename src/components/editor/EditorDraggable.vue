@@ -1,108 +1,109 @@
 <template>
   <draggable
     v-bind="dragOptions"
-    class="item-container"
+    class="draggable-container"
     :list="list"
-    :empty-insert-threshhold="500"
-    tag="v-expansion-panels"
-    :component-data="componentData"
+    tag="div"
     handle=".handle"
     @end="onEnd($event)"
   >
-    <v-expansion-panel
+    <div
       v-for="(editor, index) in list"
       :id="'editor-' + editor.id"
       :key="editor.id"
+      class="editor-panels-wrapper"
     >
-      <!-- {{ editor.content }} -->
-      <v-expansion-panel-header :hide-actions="editor.blockType !== 'heading'">
-        <v-icon class="handle">mdi-drag-vertical</v-icon>
-        <template v-slot:actions>
-          <v-btn icon>
-            <v-icon class="toggleButton">$expand</v-icon>
-          </v-btn>
-        </template>
-        <div class="header">
-          <div v-if="editor.blockType === 'text'" class="editor-content-text">
-            <EditorText
-              :editor-data="editor"
-              :user-color="userColor"
-              :provider="provider"
-              :y-doc="yDoc"
-              @input="input($event, index)"
-              @updateUsers="$emit('updateUsers', $event)"
-              @selectBlock="$emit('selectBlock', $event)"
-            />
-          </div>
-          <div
-            v-else-if="editor.blockType === 'image'"
-            class="editor-content-image"
-          >
-            <EditorImage
-              :editor-data="editor"
-              :user-color="userColor"
-              :column="editor.column"
-              :provider="provider"
-              :y-doc="yDoc"
-              @setColumn="
-                $emit('setColumn', {
-                  column: $event,
-                  editor: editor,
-                })
-              "
-              @input="input($event, index)"
-              @updateUsers="$emit('updateUsers', $event)"
-              @selectBlock="$emit('selectBlock', $event)"
-            />
-          </div>
-
-          <div
-            v-else-if="editor.blockType === 'heading'"
-            class="editor-content-heading"
-          >
-            <EditorHeading
-              :editor-data="editor"
-              :user-color="userColor"
-              :provider="provider"
-              :y-doc="yDoc"
-              @input="input($event, index)"
-              @updateUsers="$emit('updateUsers', $event)"
-              @selectBlock="$emit('selectBlock', $event)"
-            />
-          </div>
-          <!-- @input="$emit('getContent', $event, index)" -->
-
-          <div
-            v-else-if="editor.blockType === 'table'"
-            class="editor-content-table"
-          >
-            <EditorTable
-              :editor-data="editor"
-              :user-color="userColor"
-              :column="editor.column"
-              :provider="provider"
-              :y-doc="yDoc"
-              @setColumn="
-                $emit('setColumn', {
-                  column: $event,
-                  editor: editor,
-                })
-              "
-              @input="input($event, index)"
-              @updateUsers="$emit('updateUsers', $event)"
-              @selectBlock="$emit('selectBlock', $event)"
-            />
-          </div>
+      <div class="parent">
+        <v-icon class="handle"> mdi-drag-vertical </v-icon>
+        <v-btn
+          v-if="editor.blockType === 'heading'"
+          :id="'toggle-' + editor.id"
+          icon
+          class="toggle"
+          @click="toggleChildren(editor.id)"
+        >
+          <v-icon> mdi-chevron-right </v-icon>
+        </v-btn>
+        <div v-if="editor.blockType === 'text'" class="editor-content-text">
+          <EditorText
+            :editor-data="editor"
+            :user-color="userColor"
+            :provider="provider"
+            :y-doc="yDoc"
+            @input="input($event, index)"
+            @updateUsers="$emit('updateUsers', $event)"
+            @selectBlock="$emit('selectBlock', $event)"
+          />
         </div>
-      </v-expansion-panel-header>
+        <div
+          v-else-if="editor.blockType === 'image'"
+          class="editor-content-image"
+        >
+          <EditorImage
+            :editor-data="editor"
+            :user-color="userColor"
+            :column="editor.column"
+            :provider="provider"
+            :y-doc="yDoc"
+            @setColumn="
+              $emit('setColumn', {
+                column: $event,
+                editor: editor,
+              })
+            "
+            @input="input($event, index)"
+            @updateUsers="$emit('updateUsers', $event)"
+            @selectBlock="$emit('selectBlock', $event)"
+          />
+        </div>
 
-      <v-expansion-panel-content
-        v-if="editor.blockType === 'heading'"
-        :class="collapsed"
-      >
-        <EditorDraggable :list="editor.children" class="item-sub" />
-      </v-expansion-panel-content>
-    </v-expansion-panel>
+        <div
+          v-else-if="editor.blockType === 'heading'"
+          class="editor-content-heading"
+        >
+          <EditorHeading
+            :editor-data="editor"
+            :user-color="userColor"
+            :provider="provider"
+            :y-doc="yDoc"
+            @input="input($event, index)"
+            @updateUsers="$emit('updateUsers', $event)"
+            @selectBlock="$emit('selectBlock', $event)"
+          />
+        </div>
+        <div
+          v-else-if="editor.blockType === 'table'"
+          class="editor-content-table"
+        >
+          <EditorTable
+            :editor-data="editor"
+            :user-color="userColor"
+            :column="editor.column"
+            :provider="provider"
+            :y-doc="yDoc"
+            @setColumn="
+              $emit('setColumn', {
+                column: $event,
+                editor: editor,
+              })
+            "
+            @input="input($event, index)"
+            @updateUsers="$emit('updateUsers', $event)"
+            @selectBlock="$emit('selectBlock', $event)"
+          />
+        </div>
+      </div>
+
+      <div :id="'children-wrapper' + editor.id" class="children-wrapper">
+        <div
+          v-show="editor.blockType === 'heading'"
+          :id="'children-' + editor.id"
+          class="children"
+        >
+          <EditorDraggable :list="editor.children" />
+        </div>
+      </div>
+    </div>
   </draggable>
 </template>
 <script>
@@ -122,8 +123,8 @@ export default {
   },
   props: {
     list: {
-      required: true,
       type: Array,
+      default: () => [],
     },
     userColor: {
       type: String,
@@ -140,39 +141,22 @@ export default {
   },
   data() {
     return {
-      componentData: {
-        attrs: {
-          accordion: true,
-          flat: true,
-          tile: true,
-        },
+      dragOptions: {
+        animation: 200,
+        group: "editors",
+        ghostClass: "ghost",
+        chosenClass: "chosen",
+        dragClass: "drag",
+        emptyInsertThreshold: 5,
       },
       id: 123,
     };
   },
-  computed: {
-    dragOptions() {
-      return {
-        animation: 0,
-        group: "description",
-        disabled: false,
-        ghostClass: "ghost", // Class name for the drop placeholder
-        chosenClass: "chosen", // Class name for the chosen item
-        dragClass: "drag", // Class name for the dragging item
-      };
-    },
-  },
+
   watch: {
-    // list: function () {
-    //   console.log(this.list);
-    // },
     selectedBlockId(newValue, oldValue) {
-      console.log("newValue: ", newValue, "oldValue: ", oldValue);
       let newBlockRef = "block-" + newValue;
       let oldBlockRef = "block-" + oldValue;
-      // console.log("ref: ", this.$refs);
-      // console.log("newBlockRef: ", this.$refs[newBlockRef]);
-      // console.log("oldBlockRef: ", this.$refs[oldBlockRef]);
       this.$refs?.[oldBlockRef]?.[0]?.classList.remove("focused");
       this.$refs?.[newBlockRef]?.[0]?.classList.add("focused");
     },
@@ -184,62 +168,78 @@ export default {
     input(event, index) {
       this.$emit("getContent", { content: event, index: index });
     },
+    toggleChildren(id) {
+      let children = document.getElementById("children-" + id);
+      let toggle = document.getElementById("toggle-" + id);
+      if (children.style.display === "block") {
+        children.style.display = "none";
+        toggle.classList.remove("down");
+      } else {
+        children.style.display = "block";
+        toggle.classList.add("down");
+      }
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
-.v-expansion-panels {
+.draggable-container {
   width: 100%;
   background-color: $neutral-50;
 }
-
-.v-expansion-panel {
-  padding-bottom: 24px;
+.editor-panels-wrapper {
+  background-color: white;
 }
-
-.v-expansion-panel-header {
-  padding: 0;
+.parent {
+  display: flex;
+  align-items: top;
+  padding-bottom: 12px;
   .handle {
     cursor: grab;
     width: 24px;
+    margin-bottom: auto;
+    margin-top: 8px;
   }
-  .icon {
-    order: 0;
-  }
-  .header {
-    order: 1;
-    width: 100%;
+  .toggle {
+    &:hover {
+      background-color: $neutral-50;
+    }
   }
   div[class^="editor-content-"] {
     border: 1px solid $neutral-400;
     border-radius: 4px;
     padding: 0.8rem;
-  }
-  .editor-content-heading,
-  .editor-content-text,
-  .editor-content-image,
-  .editor-content-table {
     cursor: text;
+    width: 100%;
   }
+  .editor-content-table,
   .editor-content-text,
-  .editor-content-image,
-  .editor-content-table {
+  .editor-content-image {
     margin-left: 36px;
   }
-
-  .editor-content-heading {
-    height: 98px;
-    padding: 4px;
+}
+.children-wrapper {
+  margin-left: 60px;
+  padding-bottom: 12px;
+  .children {
+    min-height: 200px;
+    height: fit-content;
+    display: none;
+    border: 1px dashed $neutral-400;
+    border-radius: 4px;
+    padding: 0.8rem;
   }
 }
-.v-expansion-panel-content {
-  min-height: 24px;
+.down {
+  -moz-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 .chosen,
 .drag {
   background-color: white;
 }
 .ghost {
-  opacity: 0;
+  opacity: 50%;
 }
 </style>

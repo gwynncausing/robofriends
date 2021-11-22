@@ -137,8 +137,8 @@
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 import Select from "@/components/global/Select.vue";
-import ModalDeleteAccount from "@/components/ModalDeleteAccount.vue";
-import ModalChangePassword from "@/components/ModalChangePassword.vue";
+import ModalDeleteAccount from "@/components/modals/ModalDeleteAccount.vue";
+import ModalChangePassword from "@/components/modals/ModalChangePassword.vue";
 import LoaderCircular from "@/components/LoaderCircular";
 
 import { mapActions, mapGetters } from "vuex";
@@ -224,9 +224,11 @@ export default {
       onDeleteUser: ROOT_ACTIONS.DELETE_USER,
       onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
+
     fetchSchools() {
       return this.onFetchSchools();
     },
+
     initializeUserInformation() {
       this.user.firstName = this.getUser.firstName;
       this.user.lastName = this.getUser.lastName;
@@ -236,11 +238,13 @@ export default {
       this.user.college = this.getUser.college;
       this.user.program = this.getUser?.program;
     },
+
     closeChangePasswordModal(status) {
       this.changePasswordModal = status;
       this.changePasswordErrors = [];
       this.changePasswordSuccessMessage = "";
     },
+
     async saveChanges() {
       if (!this.$refs["settings-form"].validate()) return;
       try {
@@ -262,6 +266,7 @@ export default {
         this.isSavingChanges = false;
       }
     },
+
     async changePassword(passwords) {
       try {
         this.changePasswordErrors = [];
@@ -291,6 +296,7 @@ export default {
         this.isChangingPassword = false;
       }
     },
+
     async deleteAccount() {
       try {
         this.deleteAccountModal = false;

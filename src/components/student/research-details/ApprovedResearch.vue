@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="hasApprovedResearch" class="approved-research">
+    <div class="approved-research">
       <div class="editor-heading">
         <Button
           text
@@ -25,9 +25,6 @@
         />
       </div>
     </div>
-    <div v-else>
-      <EmptyDataApprovedResearch />
-    </div>
   </div>
 </template>
 
@@ -35,8 +32,6 @@
 import EditorTextWithTitle from "@/components/editor/EditorTextWithTitle";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 import Button from "@/components/global/Button.vue";
-import EmptyDataApprovedResearch from "@/components/student/EmptyDataApprovedResearch";
-import { isObjectEmpty } from "@/utils/helpers";
 
 export default {
   name: "ApprovedResearch",
@@ -44,7 +39,6 @@ export default {
     Button,
     EditorTextWithTitle,
     ActiveUsersList,
-    EmptyDataApprovedResearch,
   },
   props: {
     approvedResearch: {
@@ -97,9 +91,6 @@ export default {
   computed: {
     userColor() {
       return this.getRandomColor();
-    },
-    hasApprovedResearch() {
-      return !isObjectEmpty(this.approvedResearch);
     },
   },
   watch: {
