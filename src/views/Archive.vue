@@ -78,7 +78,7 @@ import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
 import AppBar from "@/components/AppBar.vue";
-import Modal from "@/components/Modal.vue";
+import Modal from "@/components/modals/Modal.vue";
 import ArchiveCategories from "@/components/archive/ArchiveCategories.vue";
 import ArchiveDate from "@/components/archive/ArchiveDate.vue";
 import ArchiveCard from "@/components/archive/ArchiveCard.vue";

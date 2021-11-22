@@ -30,7 +30,7 @@
         </router-link>
       </p>
     </div>
-    <JoinTeamModal
+    <ModalJoinTeam
       :dialog-props="joinTeamModal"
       :is-loading="isSubmitTeamCode"
       @dialogClose="joinTeamModal = $event"
@@ -79,7 +79,7 @@
 <script>
 import InvitationMessage from "@/components/InvitationMessage.vue";
 import InvitationRow from "@/components/InvitationRow.vue";
-import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
+import ModalJoinTeam from "@/components/modals/ModalJoinTeam.vue";
 
 import { mapGetters, mapActions } from "vuex";
 import { ADVISER_ACTIONS, ADVISER_GETTERS } from "../store/types";
@@ -90,7 +90,7 @@ export default {
   components: {
     InvitationMessage,
     InvitationRow,
-    JoinTeamModal,
+    ModalJoinTeam,
   },
   data: function () {
     return {

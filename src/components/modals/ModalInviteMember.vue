@@ -3,10 +3,10 @@
     <Modal small :dialog="dialog" @closed="closeModal()">
       <template v-slot:title>
         <div class="d-block">
-          <h4>Invite an adviser</h4>
-          <div class="subheading1 neutral-500--text">
+          <h4>Invite a member</h4>
+          <span class="subheading1 neutral-500--text">
             Enter the email address
-          </div>
+          </span>
         </div>
       </template>
       <template v-slot:content>
@@ -21,21 +21,19 @@
       <template v-slot:footer>
         <v-spacer></v-spacer>
         <Button text @click="closeModal()">Cancel</Button>
-        <Button class="px-6" :loading="isLoading" @click="inviteAdviser"
-          >Invite</Button
-        >
+        <Button :loading="isLoading" @click="inviteMember">Invite</Button>
       </template>
     </Modal>
   </v-form>
 </template>
 
 <script>
-import Modal from "@/components/Modal.vue";
+import Modal from "./Modal.vue";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
 export default {
-  name: "ModalInviteAdviser",
+  name: "ModalInviteMember",
   components: {
     Modal,
     TextField,
@@ -75,13 +73,13 @@ export default {
   },
   methods: {
     closeModal() {
-      this.resetForm();
       this.dialog = false;
+      this.resetForm();
     },
-    inviteAdviser() {
+    inviteMember() {
       // this.dialog = false;
       if (this.$refs.form.validate())
-        this.$emit("dialogInviteAdviser", { email: this.email });
+        this.$emit("dialogInviteMmember", { email: this.email });
     },
     resetForm() {
       this.$refs.form.reset();

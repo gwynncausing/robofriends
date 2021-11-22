@@ -1,40 +1,35 @@
 <template>
   <Modal small :dialog="dialog" @closed="closeModal()">
     <template v-slot:title>
-      <h4>Remove Adviser</h4>
+      <h4>Join a team</h4>
+      <span class="subheading1 neutral-500--text">
+        Enter the team code given by your friend
+      </span>
     </template>
     <template v-slot:content>
-      <div class="pt-3">
-        <span class="subheading1 neutral-500--text">
-          Are you sure that you want remove {{ fullName }} as your adviser?
-        </span>
-      </div>
+      <TextField v-model="teamCode" placeholder="Team code" name="team-code" />
     </template>
     <template v-slot:footer>
       <v-spacer></v-spacer>
-      <Button text class="error--text" @click="closeModal()">Cancel</Button>
-      <Button class="error" :loading="isLoading" @click="removeAdviser"
-        >Remove</Button
-      >
+      <Button text @click="closeModal()">Cancel</Button>
+      <Button :loading="isLoading" @click="joinTeam(teamCode)">Submit</Button>
     </template>
   </Modal>
 </template>
 
 <script>
-import Modal from "@/components/Modal.vue";
+import Modal from "./Modal.vue";
+import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
 export default {
-  name: "ModalRemoveAdviser",
+  name: "JoinTeamModal",
   components: {
     Modal,
+    TextField,
     Button,
   },
   props: {
-    adviser: {
-      type: Object,
-      default: () => {},
-    },
     dialogProps: {
       type: Boolean,
       default: false,
@@ -46,13 +41,9 @@ export default {
   },
   data() {
     return {
+      teamCode: "",
       dialog: false,
     };
-  },
-  computed: {
-    fullName() {
-      return `${this.adviser.firstName} ${this.adviser.lastName}`;
-    },
   },
   watch: {
     dialogProps(newVal) {
@@ -66,9 +57,9 @@ export default {
     closeModal() {
       this.dialog = false;
     },
-    removeAdviser() {
+    joinTeam(code) {
       // this.dialog = false;
-      this.$emit("dialogRemoveAdviser");
+      this.$emit("dialogJoinTeam", code);
     },
   },
 };

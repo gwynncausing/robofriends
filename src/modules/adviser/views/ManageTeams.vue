@@ -108,7 +108,7 @@
 
 <script>
 import Chip from "@/components/global/Chip";
-import Modal from "@/components/Modal";
+import Modal from "@/components/modals/Modal";
 import ChooseTeamHeading from "@/components/adviser/manage-teams/ChooseTeamHeading";
 import CardTeam from "@/components/adviser/manage-teams/CardTeam";
 import Tabs from "@/components/Tabs";

@@ -151,10 +151,10 @@
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 import Select from "@/components/global/Select.vue";
-import ModalLeaveTeam from "@/components/ModalLeaveTeam.vue";
-import ModalRemoveAdviser from "@/components/ModalRemoveAdviser.vue";
-import ModalInviteAdviser from "@/components/ModalInviteAdviser.vue";
-import ModalInviteMember from "@/components/ModalInviteMember.vue";
+import ModalLeaveTeam from "@/components/modals/ModalLeaveTeam.vue";
+import ModalRemoveAdviser from "@/components/modals/ModalRemoveAdviser.vue";
+import ModalInviteAdviser from "@/components/modals/ModalInviteAdviser.vue";
+import ModalInviteMember from "@/components/modals/ModalInviteMember.vue";
 import Snackbar from "@/components/Snackbar";
 
 import { mapActions, mapGetters, mapMutations } from "vuex";
