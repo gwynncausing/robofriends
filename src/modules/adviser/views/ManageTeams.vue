@@ -120,9 +120,9 @@ import Tabs from "@/components/Tabs";
 import PendingProposals from "@/components/adviser/manage-teams/PendingProposals";
 import ApprovedResearch from "@/components/adviser/manage-teams/ApprovedResearch";
 import ResearchPaper from "@/components/adviser/manage-teams/ResearchPaper";
-import EmptyDataTeamProposals from "@/components/adviser/EmptyDataTeamProposals";
-import EmptyDataTeamApprovedResearch from "@/components/adviser/EmptyDataTeamApprovedResearch";
-import EmptyDataTeamResearchPaper from "@/components/adviser/EmptyDataTeamResearchPaper";
+import EmptyDataTeamProposals from "@/components/messages/EmptyDataTeamProposals";
+import EmptyDataTeamApprovedResearch from "@/components/messages/EmptyDataTeamApprovedResearch";
+import EmptyDataTeamResearchPaper from "@/components/messages/EmptyDataTeamResearchPaper";
 
 import { mapActions, mapGetters } from "vuex";
 import { ADVISER_ACTIONS, ADVISER_GETTERS } from "../store/types";

@@ -1,18 +1,18 @@
 <template>
   <EmptyData>
-    <template v-slot:title>No Approved Research</template>
+    <template v-slot:title>Research Paper Editor is not Available</template>
     <template v-slot:content
-      >You have not approved any of the proposals submitted by this
-      team.</template
+      >You can access this tab when you approve of one of the submitted
+      proposals of the team.</template
     >
   </EmptyData>
 </template>
 
 <script>
-import EmptyData from "@/components/student/EmptyData";
+import EmptyData from "./EmptyData";
 
 export default {
-  name: "EmptyDataTeamApprovedResearch",
+  name: "EmptyDataTeamResearchPaper",
   components: {
     EmptyData,
   },
