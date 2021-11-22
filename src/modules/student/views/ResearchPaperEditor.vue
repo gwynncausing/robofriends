@@ -29,6 +29,7 @@
             <EditorDraggable
               :list="editors"
               :user-color="userColor"
+              :provider="provider"
               @setColumn="setColumn($event)"
               @dragElement="testMethod"
               @getContent="getContent($event)"
@@ -89,7 +90,7 @@ export default {
       hasApprovedProposal: true,
       yDoc: new Y.Doc(),
       teamCodeUnique: "MyT3@mN@m3Unique666111",
-      provider: null,
+      provider: {},
     };
   },
 
@@ -107,40 +108,42 @@ export default {
     this.setHasApprovedProposal();
   },
 
+  beforeMount() {
+    this.provider = new WebrtcProvider(this.teamCodeUnique, this.yDoc, {
+      signaling: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
+      maxConns: 200,
+      peerOpts: {
+        config: {
+          iceServers: [
+            // { urls: "stun:stun.l.google.com:19302" },
+            // { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
+            {
+              urls: "turn:bud-api.southeastasia.cloudapp.azure.com:3478",
+              credential: "budresearchbuddy!",
+              username: "bud",
+            },
+          ],
+        },
+      },
+    });
+  },
+
   mounted() {
-    console.log({ ydocid: this.yDoc.guid });
+    console.log({ providerIsEmpty: !!this.provider });
     const persistence = new IndexeddbPersistence(
       this.teamCodeUnique,
       this.yDoc
     );
-    localStorage.log = "y-webrtc";
+    localStorage.log = "false";
     persistence.once("synced", () => {
-      this.provider = new WebrtcProvider(this.teamCodeUnique, this.yDoc, {
-        signaling: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
-        maxConns: 200,
-        peerOpts: {
-          config: {
-            iceServers: [
-              // { urls: "stun:stun.l.google.com:19302" },
-              // { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
-              {
-                urls: "turn:bud-api.southeastasia.cloudapp.azure.com:3478",
-                credential: "budresearchbuddy!",
-                username: "bud",
-              },
-            ],
-          },
-        },
-      });
       const folder = this.yDoc.getArray("subdocuments");
       // folder.delete(0, folder.length);
       folder.forEach((block) => {
         block.ydoc = this.yDoc;
-        // block.provider = provider;
         this.editors.push(block);
       });
 
-      // if (!this.editors.length) {
+      // if (this.editors.length === 0) {
       //   this.addEditor({
       //     currentSelectedEditorIndex: this.currentSelectedEditorIndex,
       //   });
@@ -160,7 +163,6 @@ export default {
           }
           // * init block ydoc
           block.ydoc = this.yDoc;
-          // block.provider = provider;
           this.editors.push(block);
         });
         // * update toolbar for changes from other peers
