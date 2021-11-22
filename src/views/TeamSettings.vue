@@ -182,7 +182,12 @@ export default {
       snackbarMessage: "",
       leaveTeamModal: false,
       isleavingTeamModal: false,
-      selectedAdviser: {},
+      selectedAdviser: {
+        user: {
+          firstName: "",
+          lastName: "",
+        },
+      },
       removeAdviserModal: false,
       isRemovingAdviserModal: false,
       inviteAdviserModal: false,
@@ -193,40 +198,40 @@ export default {
       baseRoles: ["member", "leader"],
       teamName: "",
       team: {
-        name: "Cary and Co.",
-        members: [
-          {
-            id: 1,
-            email: "member1.member1@cit.edu",
-            baseRole: "leader",
-          },
-          {
-            id: 2,
-            email: "member2.member2@cit.edu",
-            baseRole: "leader",
-          },
-          {
-            id: 3,
-            email: "member3.member3@cit.edu",
-            baseRole: "leader",
-          },
-        ],
-        advisers: [
-          {
-            id: 1,
-            email: "adviser1.adviser1@cit.edu",
-            baseRole: "teacher",
-            firstName: "Cheryl",
-            lastName: "Pantaleon",
-          },
-          {
-            id: 2,
-            email: "adviser2.adviser2@cit.edu",
-            baseRole: "teacher",
-            firstName: "Leah",
-            lastName: "Barbaso",
-          },
-        ],
+        // name: "Cary and Co.",
+        // members: [
+        //   {
+        //     id: 1,
+        //     email: "member1.member1@cit.edu",
+        //     baseRole: "leader",
+        //   },
+        //   {
+        //     id: 2,
+        //     email: "member2.member2@cit.edu",
+        //     baseRole: "leader",
+        //   },
+        //   {
+        //     id: 3,
+        //     email: "member3.member3@cit.edu",
+        //     baseRole: "leader",
+        //   },
+        // ],
+        // advisers: [
+        //   {
+        //     id: 1,
+        //     email: "adviser1.adviser1@cit.edu",
+        //     baseRole: "teacher",
+        //     firstName: "Cheryl",
+        //     lastName: "Pantaleon",
+        //   },
+        //   {
+        //     id: 2,
+        //     email: "adviser2.adviser2@cit.edu",
+        //     baseRole: "teacher",
+        //     firstName: "Leah",
+        //     lastName: "Barbaso",
+        //   },
+        // ],
       },
     };
   },
@@ -236,31 +241,37 @@ export default {
       getSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM_DETAILS}`,
     }),
     currentUserAsMemberDetails() {
-      return this.team.members.find(
-        (member) => member.user.id === this.getUser.id
+      return (
+        this.team?.members?.find(
+          (member) => member.user.id === this.getUser.id
+        ) || {}
       );
     },
     teamNameComputed: {
       get() {
-        return this.team.name;
+        return this.team?.name;
       },
       set(value) {
         this.teamName = value;
       },
     },
     teamCode() {
-      return this.team.code;
+      return this.team?.code;
     },
     members() {
-      return this.team.members.filter(
-        (member) => member.baseRole !== TEAM.ROLES.ADVISER
+      return (
+        this.team?.members?.filter(
+          (member) => member.baseRole !== TEAM.ROLES.ADVISER
+        ) || []
       );
     },
     advisers() {
-      return this.team.members.filter(
-        (member) =>
-          member.baseRole === TEAM.ROLES.ADVISER &&
-          member.status !== TEAM.MEMBERSHIP_STATUS.TERMINATED
+      return (
+        this.team?.members?.filter(
+          (member) =>
+            member.baseRole === TEAM.ROLES.ADVISER &&
+            member.status !== TEAM.MEMBERSHIP_STATUS.TERMINATED
+        ) || []
       );
     },
   },

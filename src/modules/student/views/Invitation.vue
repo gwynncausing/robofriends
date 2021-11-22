@@ -127,13 +127,8 @@ export default {
       this.setInvitations();
     },
   },
-  async created() {
-    try {
-      await this.fetchInvitations();
-      this.setInvitations();
-    } catch (error) {
-      console.log(error);
-    }
+  created() {
+    this.initialize();
   },
   methods: {
     ...mapActions({
@@ -142,12 +137,24 @@ export default {
       onJoinCodeTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.JOIN_CODE_TEAM}`,
       onSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
     }),
+
+    async initialize() {
+      try {
+        await this.fetchInvitations();
+        this.setInvitations();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     fetchInvitations() {
       return this.onFetchInvitations();
     },
+
     setInvitations() {
       this.invitations = this.getInvitations;
     },
+
     async updateInvitation({ invitation, status }) {
       const payload = {
         id: invitation.id,
@@ -159,7 +166,10 @@ export default {
         await this.onUpdateInvitation(payload);
         await this.setSelectTeam(invitation.team);
         if (status === TEAM.INVITATION_STATUS.ACCEPTED) {
-          await this.$router.push({ name: "Student Dashboard" });
+          await this.$router.push({
+            name: "Research Details",
+            query: { tab: "proposals" },
+          });
           await this.$router.go();
         } else {
           this.isSnackbarShown = true;
@@ -169,13 +179,17 @@ export default {
         console.log(error);
       }
     },
+
     async joinTeam(code) {
       try {
         this.isSubmitTeamCode = true;
         this.error = "";
         const payload = { code: code };
         await this.onJoinCodeTeam(payload);
-        await this.$router.push({ name: "Student Dashboard" });
+        await this.$router.push({
+          name: "Research Details",
+          query: { tab: "proposals" },
+        });
         await this.$router.go();
       } catch (error) {
         switch (error?.response?.statusCode) {
@@ -191,6 +205,7 @@ export default {
         this.joinTeamModal = false;
       }
     },
+
     setSelectTeam(team) {
       return this.onSelectedTeamDetails({ id: team.id });
     },

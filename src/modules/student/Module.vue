@@ -101,16 +101,8 @@ export default {
       else return this.routes;
     },
   },
-  async created() {
-    try {
-      await this.onFetchMemberships();
-      this.setTeams();
-      if (!isObjectEmpty(this.getSelectedTeamDetails))
-        await this.setSelectedTeamDetails(this.teams[0] || {});
-      this.selectedTeamDetails = this.getSelectedTeamDetails;
-    } catch (error) {
-      console.log(error);
-    }
+  created() {
+    this.initialize();
   },
   methods: {
     ...mapActions({
@@ -118,6 +110,18 @@ export default {
       onFetchSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
       onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
+
+    async initialize() {
+      try {
+        await this.onFetchMemberships();
+        this.setTeams();
+        if (isObjectEmpty(this.getSelectedTeamDetails))
+          await this.setSelectedTeamDetails(this.teams[0] || {});
+        this.selectedTeamDetails = this.getSelectedTeamDetails;
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
     setIsAccountMenuDropdownCloseOnClick() {
       this.isAccountMenuDropdownCloseOnClick = true;
@@ -140,20 +144,22 @@ export default {
         this.setIsAccountMenuDropdownCloseOnClick();
         await this.setSelectedTeamDetails(team);
         this.selectedTeamDetails = this.getSelectedTeamDetails;
-        this.$router.push({ name: "Student Dashboard" });
-        this.$router.go();
+        window.location.href = "/student/research-details?tab=proposals";
       } catch (error) {
         console.log(error);
       }
     },
+
     goToAccountSettings() {
       this.setIsAccountMenuDropdownCloseOnClick();
       this.$router.push({ name: "Student Account Settings" });
     },
+
     goToCreateTeam() {
       this.setIsAccountMenuDropdownCloseOnClick();
       this.$router.push({ name: "Create Team" });
     },
+
     async logout() {
       try {
         await this.onLogoutUser();
