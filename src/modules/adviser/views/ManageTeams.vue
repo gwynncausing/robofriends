@@ -1,11 +1,43 @@
 <template>
   <div id="manage-teams">
     <ChooseTeamHeading
-      v-show="$vuetify.breakpoint.mdAndDown"
+      v-show="$vuetify.breakpoint.smAndDown"
       :team="teams[activeEl]"
+      @showDialog="teamsDialog = true"
     />
+    <Modal
+      :dialog="teamsDialog"
+      class="black--text d-sm-none"
+      @closed="teamsDialog = false"
+    >
+      <template v-slot:title>
+        <div class="teams-list-filter">
+          <Chip
+            v-for="chip in statusChips"
+            :key="chip.title"
+            medium
+            dark
+            :color="chip.color"
+            :outlined="!chip.isActive"
+            @click="selectChip(chip)"
+          >
+            {{ chip.title }}
+          </Chip>
+        </div>
+      </template>
+      <template v-slot:content>
+        <CardTeam
+          v-for="(team, index) in teams"
+          :key="team.id"
+          :team="team"
+          :index="index"
+          :class="{ active: activeEl == index }"
+          @select="selectTeam(index, team.id)"
+        />
+      </template>
+    </Modal>
     <div class="flex-wrapper">
-      <div v-show="$vuetify.breakpoint.lgAndUp" id="team-list-wrapper">
+      <div v-show="$vuetify.breakpoint.mdAndUp" id="team-list-wrapper">
         <div class="teams-list-filter">
           <Chip
             v-for="chip in statusChips"
@@ -55,6 +87,7 @@
 
 <script>
 import Chip from "@/components/global/Chip";
+import Modal from "@/components/Modal";
 import ChooseTeamHeading from "@/components/adviser/manage-teams/ChooseTeamHeading";
 import CardTeam from "@/components/adviser/manage-teams/CardTeam";
 import Tabs from "@/components/Tabs";
@@ -72,6 +105,7 @@ export default {
   name: "ManageTeams",
   components: {
     Chip,
+    Modal,
     ChooseTeamHeading,
     CardTeam,
     Tabs,
@@ -97,6 +131,7 @@ export default {
           value: "research-paper",
         },
       ],
+      teamsDialog: false,
       statusChips: [
         {
           title: "Ongoing",
@@ -129,6 +164,14 @@ export default {
       getMemberships: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_GETTERS.GET_MEMBERSHIPS}`,
       getTeam: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_GETTERS.GET_TEAM}`,
     }),
+  },
+
+  watch: {
+    "$vuetify.breakpoint.name": function (newVal) {
+      if (newVal !== "xs") {
+        this.teamsDialog = false;
+      }
+    },
   },
 
   async created() {
@@ -251,6 +294,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.teams-list-filter {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  column-gap: 8px;
+}
 #manage-teams {
   padding: 24px clamp(20px, 5.5vw, 80px);
   .flex-wrapper {
@@ -270,13 +319,8 @@ export default {
       .active {
         background: $neutral-50;
       }
-      .teams-list-filter {
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        column-gap: 8px;
-      }
     }
+
     .tabs {
       flex: 3;
     }
