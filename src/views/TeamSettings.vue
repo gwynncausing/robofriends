@@ -32,7 +32,7 @@
             >
           </div>
           <v-row
-            v-for="(member, index) in members"
+            v-for="(member, index) in membersRolesInformation"
             :key="index"
             class="mt-7 mt-md-3"
           >
@@ -48,6 +48,8 @@
                 v-model="member.baseRole"
                 label="Role"
                 :items="baseRoles"
+                :disabled="!isCurrentUserLeader"
+                @change="changeMemberBaseRole(member)"
               />
             </v-col>
           </v-row>
@@ -93,7 +95,7 @@
         </div>
         <div cols="12" class="d-flex mt-15">
           <Button
-            v-if="currentUserAsMemberDetails.baseRole !== 'leader'"
+            v-if="!isCurrentUserLeader"
             text
             class="error--text"
             @click="leaveTeamModal = true"
@@ -197,6 +199,8 @@ export default {
       isSavingChanges: false,
       baseRoles: ["member", "leader"],
       teamName: "",
+      membersRolesInformation: [],
+      selectedTeamLeader: {},
       team: {
         // name: "Cary and Co.",
         // members: [
@@ -240,6 +244,7 @@ export default {
       getUser: ROOT_GETTERS.GET_USER,
       getSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM_DETAILS}`,
     }),
+
     currentUserAsMemberDetails() {
       return (
         this.team?.members?.find(
@@ -247,6 +252,19 @@ export default {
         ) || {}
       );
     },
+
+    isCurrentUserLeader() {
+      return this.currentUserAsMemberDetails.baseRole === TEAM.ROLES.LEADER;
+    },
+
+    teamLeader() {
+      return (
+        this.team?.members?.find(
+          (member) => member.baseRole === TEAM.ROLES.LEADER
+        ) || {}
+      );
+    },
+
     teamNameComputed: {
       get() {
         return this.team?.name;
@@ -255,9 +273,11 @@ export default {
         this.teamName = value;
       },
     },
+
     teamCode() {
       return this.team?.code;
     },
+
     members() {
       return (
         this.team?.members?.filter(
@@ -265,6 +285,7 @@ export default {
         ) || []
       );
     },
+
     advisers() {
       return (
         this.team?.members?.filter(
@@ -297,6 +318,17 @@ export default {
         id: this.getSelectedTeamDetails.id,
       });
       this.team = this.getSelectedTeamDetails;
+      // * members information is deep copied so that it will not affect to other components who are dependent on member roles
+      // * through this, the user can freely change the member roles
+      this.selectedTeamLeader = this.teamLeader;
+      this.membersRolesInformation =
+        JSON.parse(
+          JSON.stringify(
+            this.team?.members?.filter(
+              (member) => member.baseRole !== TEAM.ROLES.ADVISER
+            )
+          )
+        ) || [];
     },
 
     showRemoveAdviserModal(adviser) {
@@ -322,6 +354,20 @@ export default {
         this.isSnackbarShown = true;
         this.isRemovingAdviserModal = false;
         this.removeAdviserModal = false;
+      }
+    },
+
+    changeMemberBaseRole(currentMember) {
+      if (currentMember.baseRole === TEAM.ROLES.LEADER) {
+        this.selectedTeamLeader = currentMember;
+        this.membersRolesInformation.map((member) => {
+          if (
+            member.id !== currentMember.id &&
+            member.baseRole !== TEAM.ROLES.ADVISER
+          ) {
+            member.baseRole = TEAM.ROLES.MEMBER;
+          }
+        });
       }
     },
 
@@ -404,19 +450,46 @@ export default {
       }
     },
 
+    isTeamHasLeaderSelected() {
+      let isTeamLeaderSelected = false;
+      for (let i = 0; i < this.membersRolesInformation.length; i++) {
+        if (this.membersRolesInformation[i].baseRole === TEAM.ROLES.LEADER) {
+          isTeamLeaderSelected = true;
+          break;
+        }
+      }
+      return isTeamLeaderSelected;
+    },
+
     async saveChanges() {
       try {
-        this.isSavingChanges = true;
-        const payload = {
-          id: this.getSelectedTeamDetails.id,
-          team: {
-            name: this.teamName,
-          },
-        };
-        await this.onUpdateSelectedTeamDetails(payload);
+        if (!this.isTeamHasLeaderSelected()) {
+          this.snackbarMessage =
+            "A leader cannot demote self to member, pass the leadership to others instead.";
+        } else {
+          this.isSavingChanges = true;
+          const teamDetailsPayload = {
+            id: this.getSelectedTeamDetails.id,
+            team: {
+              name: this.teamName,
+            },
+          };
+          await this.onUpdateSelectedTeamDetails(teamDetailsPayload);
+          const membershipsPayload = {
+            id: this.selectedTeamLeader.id,
+            membership: {
+              baseRole: this.selectedTeamLeader.baseRole,
+            },
+          };
+          await this.onUpdateMemberships(membershipsPayload);
+          this.initialize();
+          this.snackbarMessage = "Changes saved successfully.";
+        }
       } catch (error) {
+        // TODO: Improve Api Error Handling
         console.log(error);
       } finally {
+        this.isSnackbarShown = true;
         this.isSavingChanges = false;
       }
     },
