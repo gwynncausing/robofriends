@@ -77,8 +77,9 @@
           <ApprovedResearch v-else :approved-research="approvedProposals[0]" />
         </template>
         <template v-slot:body-research-paper>
-          <span v-if="!hasApprovedProposal">No Approved Proposal yet</span>
-          <ResearchPaper v-else />
+          <!-- //* !hasApprovedProposal *//-->
+          <span v-if="hasApprovedProposal">No Approved Proposal yet</span>
+          <ResearchPaper v-else :blocks="researchPaper" />
         </template>
       </Tabs>
     </div>
@@ -156,6 +157,146 @@ export default {
       approvedProposals: [],
       approvedProposalsLoading: false,
       hasApprovedProposal: false,
+      researchPaper: [
+        {
+          id: "125",
+          blockType: "heading",
+          column: "default",
+          children: [
+            {
+              id: "126",
+              blockType: "text",
+              column: "default",
+              content: [
+                {
+                  type: "paragraph",
+                  content: [
+                    {
+                      type: "text",
+                      text: "paragraph",
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          content: [
+            {
+              type: "heading",
+              content: [
+                {
+                  type: "text",
+                  text: "title",
+                },
+              ],
+            },
+          ],
+        },
+
+        {
+          id: "127",
+          blockType: "image",
+          column: "default",
+          content: [
+            {
+              type: "heading",
+              attrs: {
+                level: 1,
+              },
+              content: [
+                {
+                  type: "text",
+                  text: "sample image title",
+                },
+              ],
+            },
+            {
+              type: "image",
+              attrs: {
+                src: "https://source.unsplash.com/8xznAGy4HcY/800x400",
+              },
+            },
+          ],
+        },
+        {
+          id: "128",
+          blockType: "table",
+          column: "default",
+          content: [
+            {
+              type: "table",
+              content: [
+                {
+                  type: "tableRow",
+                  content: [
+                    {
+                      type: "tableCell",
+                      content: [
+                        {
+                          type: "paragraph",
+                          content: [
+                            {
+                              type: "text",
+                              text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      type: "tableCell",
+                      content: [
+                        {
+                          type: "paragraph",
+                          content: [
+                            {
+                              type: "text",
+                              text: "Donec venenatis turpis vitae orci pulvinar sollicitudin.",
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: "tableRow",
+                  content: [
+                    {
+                      type: "tableCell",
+                      content: [
+                        {
+                          type: "paragraph",
+                          content: [
+                            {
+                              type: "text",
+                              text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      type: "tableCell",
+                      content: [
+                        {
+                          type: "paragraph",
+                          content: [
+                            {
+                              type: "text",
+                              text: "Donec venenatis turpis vitae orci pulvinar sollicitudin.",
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
     };
   },
 
