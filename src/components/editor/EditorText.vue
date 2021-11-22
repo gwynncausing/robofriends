@@ -111,6 +111,7 @@ export default {
           Strike,
           Code,
           BulletList,
+          OrderedList,
           ListItem,
           OrderedList,
           Underline,

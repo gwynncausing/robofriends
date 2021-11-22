@@ -146,14 +146,17 @@ export default {
         console.log(error);
       }
     },
+
     goToAccountSettings() {
       this.setIsAccountMenuDropdownCloseOnClick();
       this.$router.push({ name: "Student Account Settings" });
     },
+
     goToCreateTeam() {
       this.setIsAccountMenuDropdownCloseOnClick();
       this.$router.push({ name: "Create Team" });
     },
+
     async logout() {
       try {
         await this.onLogoutUser();

@@ -21,6 +21,26 @@ const routes = [
     component: () => import("@/views/CreateAccount.vue"),
   },
   {
+    path: "/docx",
+    name: "Docx",
+    component: () => import("@/views/DocxJSTest.vue"),
+  },
+  {
+    path: "/docx2",
+    name: "Docx2",
+    component: () => import("@/views/DocxJSTest2.vue"),
+  },
+  {
+    path: "/docx3",
+    name: "Docx3",
+    component: () => import("@/views/DocxJSTest3.vue"),
+  },
+  {
+    path: "/docx4",
+    name: "Docx4",
+    component: () => import("@/views/DocxJSTest4.vue"),
+  },
+  {
     path: "/verify",
     name: "Email Verification",
     component: () => import("@/views/security/EmailVerification.vue"),
@@ -50,11 +70,6 @@ const routes = [
     path: "/onboarding",
     name: "Onboarding",
     component: () => import("@/views/Onboarding.vue"),
-  },
-  {
-    path: "/archive",
-    name: "Archive",
-    component: () => import("@/views/Archive.vue"),
   },
   {
     path: "*",
