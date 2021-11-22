@@ -20,6 +20,7 @@
           <div v-if="editor.blockType === 'text'" class="editor-content-text">
             <EditorTextReadonly :editor-data="editor" />
           </div>
+
           <div
             v-else-if="editor.blockType === 'image'"
             class="editor-content-image"
