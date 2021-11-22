@@ -187,6 +187,20 @@ export const ACM_FORMAT = {
           })
         ),
       },
+      reference: {
+        reference: "reference",
+        levels: [0, 1, 2].map((val) =>
+          createListLevelOptions({
+            level: val,
+            format: LevelFormat.DECIMAL,
+            text: "[%1]",
+            baseIndentOptions: {
+              left: 1.27,
+              hanging: 0.45,
+            },
+          })
+        ),
+      },
       unordered: {
         reference: "bullet",
         levels: [0, 1, 2, 3, 4, 5].map((val) =>
