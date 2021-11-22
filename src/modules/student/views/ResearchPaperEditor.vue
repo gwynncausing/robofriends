@@ -164,7 +164,7 @@ export default {
       //* on receiving updates from other peers
       this.yDoc.on("update", (update, origin) => {
         Y.applyUpdate(this.yDoc, update);
-
+        console.log("receiving updates!");
         const folder = this.yDoc.getArray("subdocuments");
         this.editors = [];
         let objectIndex = 0;
@@ -287,6 +287,17 @@ export default {
       editor.column = column;
     },
     afterDrag(newIndex, oldIndex, childrenCount) {
+      //TODO: when receiving update, show error and do not update, instead reset the editor back like this:
+      //TODO: show error also and reposition toolbar
+      // if (newIndex >= 0) {
+      //   const folder = this.yDoc.getArray("subdocuments");
+      //   this.editors = [];
+      //   folder.forEach((block) => {
+      //     this.editors.push(block);
+      //   });
+      //   return;
+      // }
+
       const length = this.editors.length;
       let insertAt = newIndex;
       let deleteAt = oldIndex;
