@@ -31,6 +31,13 @@
     >
       <v-icon class="editor-control-icon">mdi-table</v-icon>
     </Button>
+    <Button
+      icon
+      title="Add Reference Block"
+      @click="addEditor(currentSelectedEditorIndex, 'reference')"
+    >
+      <v-icon class="editor-control-icon">mdi-book</v-icon>
+    </Button>
 
     <Button
       icon

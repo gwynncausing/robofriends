@@ -92,6 +92,20 @@
             @selectBlock="$emit('selectBlock', $event)"
           />
         </div>
+        <div
+          v-else-if="editor.blockType === 'reference'"
+          class="editor-content-reference"
+        >
+          <EditorReference
+            :editor-data="editor"
+            :user-color="userColor"
+            :provider="provider"
+            :y-doc="yDoc"
+            @input="input($event, index)"
+            @updateUsers="$emit('updateUsers', $event)"
+            @selectBlock="$emit('selectBlock', $event)"
+          />
+        </div>
       </div>
 
       <div :id="'children-wrapper' + editor.id" class="children-wrapper">
@@ -111,6 +125,7 @@ import EditorText from "@/components/editor/EditorText.vue";
 import EditorImage from "@/components/editor/EditorImage.vue";
 import EditorHeading from "@/components/editor/EditorHeading.vue";
 import EditorTable from "@/components/editor/EditorTable.vue";
+import EditorReference from "@/components/editor/EditorReference.vue";
 import draggable from "vuedraggable";
 export default {
   name: "EditorDraggable",
@@ -120,6 +135,7 @@ export default {
     EditorImage,
     EditorHeading,
     EditorTable,
+    EditorReference,
   },
   props: {
     list: {
@@ -214,7 +230,8 @@ export default {
   }
   .editor-content-table,
   .editor-content-text,
-  .editor-content-image {
+  .editor-content-image,
+  .editor-content-reference {
     margin-left: 36px;
   }
 }

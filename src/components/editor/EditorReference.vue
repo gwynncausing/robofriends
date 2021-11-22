@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-text">
+  <div class="editor-reference">
     <EditorTextFormatterButtons
       :editor="editor"
       :block-type="editorData.blockType"
@@ -32,7 +32,12 @@ import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
 import { mapGetters } from "vuex";
 import { ROOT_GETTERS } from "@/store/types";
 
+const CustomDocument = Document.extend({
+  content: "orderedList",
+});
+
 export default {
+  name: "EditorReference",
   components: {
     EditorTextFormatterButtons,
     EditorContent,
@@ -82,7 +87,7 @@ export default {
     try {
       this.editor = new Editor({
         extensions: [
-          Document,
+          CustomDocument,
           Paragraph,
           Text,
           Bold,
@@ -129,7 +134,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.editor-text {
+.editor-reference {
   height: 93%;
   .editor-content {
     height: inherit;

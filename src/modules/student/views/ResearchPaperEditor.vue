@@ -245,30 +245,6 @@ export default {
       if (index === -1) return;
       let content = ``;
 
-      // TODO: put this on a constant file
-      if (blockType === "table")
-        content = `
-        <h2> </h2>
-        <table>
-          <tbody>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>`;
-
       let objToAdd = {
         id: new Date().getTime() + blockType + this.teamCodeUnique,
         content: content,
