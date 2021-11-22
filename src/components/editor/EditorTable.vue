@@ -181,16 +181,6 @@ export default {
     }
   },
 
-  updated() {
-    if (!this.editorData.content) {
-      this.editor
-        .chain()
-        .focus()
-        .insertTable({ rows: 3, cols: 3, withHeaderRow: false })
-        .run();
-    }
-  },
-
   beforeUnmount() {
     this.editor.destroy();
     this.provider.destroy();
