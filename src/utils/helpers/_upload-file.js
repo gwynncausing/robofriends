@@ -18,7 +18,7 @@ export const uploadFile = async (files) => {
 
       filesUrl.push(blockBlobClient.url);
     }
-
+    console.log(filesUrl);
     return filesUrl;
   } catch (err) {
     console.log(err);
