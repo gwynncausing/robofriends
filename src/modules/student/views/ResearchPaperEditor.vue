@@ -286,25 +286,56 @@ export default {
     setColumn({ column, editor }) {
       editor.column = column;
     },
-    afterDrag(newIndex, oldIndex) {
+    afterDrag(newIndex, oldIndex, childrenCount) {
       const length = this.editors.length;
       let insertAt = newIndex;
       let deleteAt = oldIndex;
-      if (newIndex === oldIndex) {
-        return;
-      } else if (oldIndex === length - 1) {
+      const selectedBlock = this.editors[newIndex];
+      if (oldIndex === length - 1) {
         deleteAt = length;
       } else if (oldIndex > newIndex) {
-        deleteAt++;
-      } else {
+        oldIndex++;
+        deleteAt = oldIndex + childrenCount;
+      } else if (oldIndex < newIndex) {
         insertAt++;
       }
-      this.yDoc.transact(() => {
-        const folder = this.yDoc.getArray("subdocuments");
-        const objToRepos = folder.get(oldIndex);
-        folder.insert(insertAt, [objToRepos]);
-        folder.delete(deleteAt, 1);
-      }, this.teamCodeUnique);
+
+      if (newIndex !== oldIndex) {
+        const objectsToInsert =
+          childrenCount > 0
+            ? [
+                this.editors[newIndex],
+                ...this.editors.slice(oldIndex, oldIndex + childrenCount),
+              ]
+            : [this.editors[newIndex]];
+        this.yDoc.transact(() => {
+          const folder = this.yDoc.getArray("subdocuments");
+          folder.insert(insertAt, objectsToInsert);
+          document;
+          folder.delete(deleteAt, childrenCount + 1);
+        }, this.teamCodeUnique);
+      }
+
+      const parentIndex = this.editors.findIndex(
+        (block) => block.id === selectedBlock.id
+      );
+      if (parentIndex !== length - 1 && selectedBlock.blockType === "heading") {
+        document
+          .getElementById("toggle-" + selectedBlock.id)
+          .classList.add("down");
+        for (let i = parentIndex + 1; i < this.editors.length; i++) {
+          const block = this.editors[i];
+          if (
+            block.blockType === "heading" &&
+            selectedBlock.content[0].attrs.level >= block.content[0].attrs.level
+          ) {
+            break;
+          } else {
+            const element = document.getElementById("editor-" + block.id);
+            element.style.display = "block";
+          }
+        }
+      }
     },
   },
 };
