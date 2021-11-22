@@ -26,18 +26,31 @@
         </div>
       </template>
       <template v-slot:content>
-        <CardTeam
-          v-for="(team, index) in teams"
-          :key="team.id"
-          :team="team"
-          :index="index"
-          :class="{ active: activeEl == index }"
-          @select="selectTeam(index, team.id)"
-        />
+        <div v-if="hasTeams">
+          <CardTeam
+            v-for="(team, index) in teams"
+            :key="team.id"
+            :team="team"
+            :index="index"
+            :class="{ active: activeEl == index }"
+            @select="selectTeam(index, team.id)"
+          />
+        </div>
+        <div v-else class="text-center mt-7">
+          <p>You don't have any teams yet.</p>
+          <p>
+            Please check your
+            <router-link :to="{ name: 'Adviser Invitation' }">
+              <span class="secondary--text pointer font-bold">
+                invitations.
+              </span></router-link
+            >
+          </p>
+        </div>
       </template>
     </Modal>
     <div class="flex-wrapper">
-      <div v-show="$vuetify.breakpoint.lgAndUp" id="team-list">
+      <div v-if="hasTeams" v-show="$vuetify.breakpoint.lgAndUp" id="team-list">
         <div class="teams-list-filter">
           <Chip
             v-for="chip in statusChips"
@@ -60,6 +73,19 @@
             :class="{ active: activeEl == index }"
             @select="selectTeam(index, team.id)"
           />
+        </div>
+      </div>
+      <div v-else v-show="$vuetify.breakpoint.lgAndUp" id="empty-team-list">
+        <div class="text-center">
+          <p>You don't have any teams yet.</p>
+          <p>
+            Please check your
+            <router-link :to="{ name: 'Adviser Invitation' }">
+              <span class="secondary--text pointer font-bold">
+                invitations.
+              </span></router-link
+            >
+          </p>
         </div>
       </div>
       <Tabs active="pending-proposals" :items="items" class="tabs">
@@ -330,6 +356,10 @@ export default {
       getTeam: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_GETTERS.GET_TEAM}`,
     }),
 
+    hasTeams() {
+      return this.teams.length > 0;
+    },
+
     hasTeamApprovedProposals() {
       return this.approvedProposals.length > 0;
     },
@@ -487,6 +517,14 @@ export default {
     display: flex;
     flex-direction: row;
     column-gap: 16px;
+
+    #empty-team-list {
+      display: flex;
+      height: 75vh;
+      width: 300px;
+      justify-content: center;
+      align-items: center;
+    }
 
     #team-list {
       margin-top: 72px;
