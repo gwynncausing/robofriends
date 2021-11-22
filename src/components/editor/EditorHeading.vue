@@ -103,7 +103,6 @@ export default {
         //     color: this.userColor,
         //   },
         // }),
-        // this.editorData.cursorExtension,
       ],
       // content: content,
       onUpdate: () => {

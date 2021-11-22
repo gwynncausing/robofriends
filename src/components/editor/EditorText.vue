@@ -104,7 +104,6 @@ export default {
 
     const documentId = this.editorData.id;
     const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
-    let content = this.editorData.content;
 
     const provider = new WebrtcProvider(documentId + "", ydoc);
 
@@ -142,7 +141,6 @@ export default {
             },
           }),
         ],
-        content: content,
         onUpdate: () => {
           this.$emit("input", this.editor.getJSON());
         },
