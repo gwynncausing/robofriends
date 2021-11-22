@@ -5,6 +5,18 @@
       <EmptyDataResearchPaperEditor />
     </div>
     <div v-else class="editor-wrapper">
+      <Snackbar
+        :is-snackbar-shown="cannotUpdate"
+        @closeSnackbar="cannotUpdate = false"
+      >
+        <template v-slot:content>
+          <div>
+            <p class="black--text ma-auto">
+              Someone is still typing. Wait for a while.
+            </p>
+          </div>
+        </template>
+      </Snackbar>
       <div class="editor-heading">
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
@@ -58,6 +70,7 @@ import Button from "@/components/global/Button.vue";
 import EditorToolbar from "@/components/editor/EditorToolbar.vue";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 import EmptyDataResearchPaperEditor from "@/components/messages/EmptyDataResearchPaperEditor";
+import Snackbar from "@/components/Snackbar";
 
 import { mapActions, mapGetters } from "vuex";
 import {
@@ -78,6 +91,7 @@ export default {
     EditorToolbar,
     ActiveUsersList,
     EmptyDataResearchPaperEditor,
+    Snackbar,
   },
   data() {
     return {
@@ -106,6 +120,8 @@ export default {
           ],
         },
       },
+      isReceivingUpdates: false,
+      cannotUpdate: false,
     };
   },
 
@@ -164,7 +180,8 @@ export default {
       //* on receiving updates from other peers
       this.yDoc.on("update", (update, origin) => {
         Y.applyUpdate(this.yDoc, update);
-        console.log("receiving updates!");
+        this.isReceivingUpdates = true;
+
         const folder = this.yDoc.getArray("subdocuments");
         this.editors = [];
         let objectIndex = 0;
@@ -181,6 +198,10 @@ export default {
         if (origin != this.teamCodeUnique && this.editors.length > 0) {
           this.selectBlock(this.editors[objectIndex]);
         }
+
+        setTimeout(() => {
+          this.isReceivingUpdates = false;
+        }, 3000);
       });
     });
   },
@@ -289,14 +310,15 @@ export default {
     afterDrag(newIndex, oldIndex, childrenCount) {
       //TODO: when receiving update, show error and do not update, instead reset the editor back like this:
       //TODO: show error also and reposition toolbar
-      // if (newIndex >= 0) {
-      //   const folder = this.yDoc.getArray("subdocuments");
-      //   this.editors = [];
-      //   folder.forEach((block) => {
-      //     this.editors.push(block);
-      //   });
-      //   return;
-      // }
+      if (this.isReceivingUpdates) {
+        const folder = this.yDoc.getArray("subdocuments");
+        this.editors = [];
+        folder.forEach((block) => {
+          this.editors.push(block);
+        });
+        this.cannotUpdate = true;
+        return;
+      }
 
       const length = this.editors.length;
       let insertAt = newIndex;
