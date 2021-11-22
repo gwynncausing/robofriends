@@ -1,10 +1,6 @@
 /* eslint-disable */
 
-import {
-  Document,
-  Packer,
-  SectionType,
-} from "docx";
+import { Document, Packer, SectionType } from "docx";
 
 import { saveAs } from "file-saver";
 import { processTextBlock } from "./blocks/text-block";
@@ -69,7 +65,6 @@ export const generateDocument = async (rules, content) => {
   //* Process each item
   for (const item of content) {
     switch (item.blockType) {
-      case "section":
       case "heading":
         processHeadingBlock(rules, item, numberList, section);
         break;
@@ -80,7 +75,7 @@ export const generateDocument = async (rules, content) => {
         section = await processImageBlock(rules, item, properties, section);
         break;
       case "table":
-        section = processTableBlock(rules, item, properties, section);
+        section = await processTableBlock(rules, item, properties, section);
         break;
     }
   }

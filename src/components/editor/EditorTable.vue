@@ -44,7 +44,7 @@ import { mapGetters } from "vuex";
 import { ROOT_GETTERS } from "@/store/types";
 
 const CustomDocument = Document.extend({
-  content: "heading table",
+  content: "heading table*",
 });
 
 const CustomTableCell = TableCell.extend({
@@ -174,6 +174,16 @@ export default {
       });
     } catch (e) {
       console.log(e);
+    }
+  },
+
+  updated() {
+    if (!this.editorData.content) {
+      this.editor
+        .chain()
+        .focus()
+        .insertTable({ rows: 3, cols: 3, withHeaderRow: false })
+        .run();
     }
   },
 

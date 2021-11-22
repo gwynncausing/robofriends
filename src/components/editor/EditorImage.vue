@@ -132,9 +132,6 @@ export default {
       }
       return color;
     },
-    testMethod() {
-      console.log("test");
-    },
   },
 
   beforeUnmount() {

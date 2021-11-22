@@ -1,8 +1,10 @@
+/* eslint-disable */
 import { Table, TableCell, TableRow, WidthType } from "docx";
 import { createParagraph, createList } from "./text-block";
+import { createImage } from "./image-block";
 import { createSection } from "../autoformat";
 
-const createTableCellsChildren = (content) => {
+const createTableCellsChildren = async (content) => {
   let children = [];
   for (const childContent of content) {
     if (childContent.type === "paragraph") {
@@ -13,14 +15,17 @@ const createTableCellsChildren = (content) => {
     ) {
       const results = createList(childContent.content, childContent.type);
       results.forEach((result) => children.push(result));
+    } else if (childContent.type === "image") {
+      const result = await createImage(childContent.attrs.src);
+      children.push(result);
     }
   }
   return children;
 };
 
-const createTableCells = (content) => {
+const createTableCells = async (content) => {
   const tableCell = new TableCell({
-    children: createTableCellsChildren(content.content),
+    children: await createTableCellsChildren(content.content),
     rowSpan: content.attrs.rowspan,
     columnSpan: content.attrs.colspan,
   });
@@ -28,13 +33,13 @@ const createTableCells = (content) => {
 };
 
 // TODO: add bold on tableHeader
-const createTableRows = (content) => {
+const createTableRows = async (content) => {
   let tableCells = [];
   for (let childContent of content) {
     if (childContent.type === "tableHeader")
-      tableCells.push(createTableCells(childContent));
+      tableCells.push(await createTableCells(childContent));
     if (childContent.type === "tableCell")
-      tableCells.push(createTableCells(childContent));
+      tableCells.push(await createTableCells(childContent));
   }
 
   const tableRow = new TableRow({
@@ -42,11 +47,12 @@ const createTableRows = (content) => {
   });
   return tableRow;
 };
-export const createTable = (content) => {
+
+export const createTable = async (content) => {
   let tableRows = [];
   for (let row of content) {
     if (row.type !== "tableRow") break;
-    tableRows.push(createTableRows(row.content));
+    tableRows.push(await createTableRows(row.content));
   }
   const table = new Table({
     rows: tableRows,
@@ -60,15 +66,22 @@ export const createTable = (content) => {
   return table;
 };
 
-const processTableBlockChildren = (item, section) => {
+const processTableBlockChildren = async (item, section) => {
   for (const childContent of item.content) {
-    if (childContent.type !== "table") break;
-    let table = createTable(childContent.content);
-    section.children.push(table);
+    if (childContent.type === "heading") {
+    } else if (childContent.type === "table") {
+      let table = await createTable(childContent.content);
+      section.children.push(table);
+    }
   }
 };
 
-export const processTableBlock = (rules, item, documentProperty, section) => {
+export const processTableBlock = async (
+  rules,
+  item,
+  documentProperty,
+  section
+) => {
   if (!!item.column && item.column != "default") {
     // TODO: add try catch and fall back when current rules do not have such special rule
     const specialDocumentOptions = rules.special[item.column].document;
@@ -77,8 +90,7 @@ export const processTableBlock = (rules, item, documentProperty, section) => {
     section = createSection({
       documentOptions: specialDocumentOptions,
     });
-
-    processTableBlockChildren(item, section);
+    await processTableBlockChildren(item, section);
 
     documentProperty.sections.push(section);
     section = createSection({
@@ -86,7 +98,7 @@ export const processTableBlock = (rules, item, documentProperty, section) => {
       children: [],
     });
   } else {
-    processTableBlockChildren(item, section);
+    await processTableBlockChildren(item, section);
   }
   return section;
 };
