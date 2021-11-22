@@ -136,26 +136,32 @@ export default {
       this.setInvitations();
     },
   },
-  async created() {
-    try {
-      await this.fetchInvitations();
-      this.setInvitations();
-    } catch (error) {
-      console.log(error);
-    }
+  created() {
+    this.initialize();
   },
   methods: {
     ...mapActions({
       onFetchInvitations: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_INVITATIONS}`,
       onUpdateInvitation: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.UPDATE_INVITATION}`,
-      onJoinCodeTeam: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.JOIN_CODE_TEAM}`,
     }),
+
+    async initialize() {
+      try {
+        await this.fetchInvitations();
+        this.setInvitations();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     fetchInvitations() {
       return this.onFetchInvitations();
     },
+
     setInvitations() {
       this.invitations = this.getInvitations;
     },
+
     async updateInvitation({ invitation, status }) {
       const payload = {
         id: invitation.id,
@@ -175,9 +181,11 @@ export default {
         console.log(error);
       }
     },
+
     createUpdateInvitationPromise(payload) {
       return this.onUpdateInvitation(payload);
     },
+
     async joinAllTeams() {
       try {
         const pendingInvitations = this.invitations.filter(
