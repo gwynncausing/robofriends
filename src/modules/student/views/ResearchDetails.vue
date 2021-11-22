@@ -13,11 +13,13 @@
       </template>
       <template v-slot:body-approved-research>
         <ApprovedResearch
+          v-if="hasApprovedResearch"
           :approved-research="approvedResearchTab.research"
           :is-editable="approvedResearchTab.isEditable"
           @saveProposal="updateApprovedProposal"
           @setEditableClick="approvedResearchTab.isEditable = true"
         />
+        <EmptyDataApprovedResearch v-else />
         <Snackbar
           content-class="neutral-800--text"
           :timeout="4000"
@@ -41,7 +43,8 @@ import Tabs from "@/components/Tabs";
 import Proposals from "@/components/student/research-details/Proposals";
 import ApprovedResearch from "@/components/student/research-details/ApprovedResearch";
 import CreateNew from "@/components/student/research-details/CreateNew";
-import EmptyDataProposals from "@/components/student/EmptyDataProposals";
+import EmptyDataProposals from "@/components/messages/EmptyDataProposals";
+import EmptyDataApprovedResearch from "@/components/messages/EmptyDataApprovedResearch";
 import Snackbar from "@/components/Snackbar";
 
 import { mapActions, mapGetters } from "vuex";
@@ -60,6 +63,7 @@ export default {
     ApprovedResearch,
     CreateNew,
     EmptyDataProposals,
+    EmptyDataApprovedResearch,
     Snackbar,
   },
   data() {
@@ -105,6 +109,9 @@ export default {
     }),
     hasProposals() {
       return this.proposalsTab.proposals.length > 0 ? true : false;
+    },
+    hasApprovedResearch() {
+      return !isObjectEmpty(this.approvedResearchTab.research);
     },
   },
   created() {

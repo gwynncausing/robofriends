@@ -1,36 +1,42 @@
 <template>
   <Modal small :dialog="dialog" @closed="closeModal()">
     <template v-slot:title>
-      <h4>Delete account</h4>
+      <h4>Leave Team</h4>
     </template>
     <template v-slot:content>
       <div class="pt-3">
-        <span class="subheading-1 neutral-500--text">
-          Are you sure that you want to delete your account?
+        <span class="subheading1 neutral-500--text">
+          Are you sure that you want to leave team<span class="font-bold">
+            {{ team.name }}?
+          </span>
         </span>
       </div>
     </template>
     <template v-slot:footer>
       <v-spacer></v-spacer>
-      <Button text class="error--text" @click="deleteAccount"
-        >Delete Account</Button
+      <Button text class="error--text" @click="leaveTeam">Leave</Button>
+      <Button :loading="isLoading" @click="closeModal()"
+        >Stay in this team</Button
       >
-      <Button :loading="isLoading" @click="closeModal()">Keep Account</Button>
     </template>
   </Modal>
 </template>
 
 <script>
-import Modal from "@/components/Modal.vue";
+import Modal from "./Modal.vue";
 import Button from "@/components/global/Button.vue";
 
 export default {
-  name: "ModalDeleteAccount",
+  name: "ModalLeaveTeam",
   components: {
     Modal,
     Button,
   },
   props: {
+    team: {
+      type: Object,
+      default: () => {},
+    },
     dialogProps: {
       type: Boolean,
       default: false,
@@ -42,7 +48,6 @@ export default {
   },
   data() {
     return {
-      teamCode: "",
       dialog: false,
     };
   },
@@ -58,9 +63,9 @@ export default {
     closeModal() {
       this.dialog = false;
     },
-    deleteAccount() {
+    leaveTeam() {
       // this.dialog = false;
-      this.$emit("dialogDeleteAccount");
+      this.$emit("dialogLeaveTeam");
     },
   },
 };

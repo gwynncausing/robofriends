@@ -30,8 +30,9 @@
               :list="editors"
               :user-color="userColor"
               :provider="provider"
+              :y-doc="yDoc"
               @setColumn="setColumn($event)"
-              @dragElement="testMethod"
+              @dragElement="afterDrag"
               @getContent="getContent($event)"
               @updateUsers="updateUsers($event)"
               @selectBlock="selectBlock($event)"
@@ -56,7 +57,7 @@ import EditorDraggable from "@/components/editor/EditorDraggable.vue";
 import Button from "@/components/global/Button.vue";
 import EditorToolbar from "@/components/editor/EditorToolbar.vue";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
-import EmptyDataResearchPaperEditor from "@/components/student/EmptyDataResearchPaperEditor";
+import EmptyDataResearchPaperEditor from "@/components/messages/EmptyDataResearchPaperEditor";
 
 import { mapActions, mapGetters } from "vuex";
 import {
@@ -91,6 +92,20 @@ export default {
       yDoc: new Y.Doc(),
       teamCodeUnique: "MyT3@mN@m3Unique666111",
       provider: {},
+      signalingServers: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
+      webrtcPeerOpts: {
+        config: {
+          iceServers: [
+            // { urls: "stun:stun.l.google.com:19302" },
+            // { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
+            {
+              urls: "turn:bud-api.southeastasia.cloudapp.azure.com:3478",
+              credential: "budresearchbuddy!",
+              username: "bud",
+            },
+          ],
+        },
+      },
     };
   },
 
@@ -109,48 +124,45 @@ export default {
   },
 
   beforeMount() {
+    // TODO: if ydoc is empty, it should check firebase server for existing content when other peers are offline
     this.provider = new WebrtcProvider(this.teamCodeUnique, this.yDoc, {
-      signaling: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
+      signaling: this.signalingServer,
       maxConns: 200,
-      peerOpts: {
-        config: {
-          iceServers: [
-            // { urls: "stun:stun.l.google.com:19302" },
-            // { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
-            {
-              urls: "turn:bud-api.southeastasia.cloudapp.azure.com:3478",
-              credential: "budresearchbuddy!",
-              username: "bud",
-            },
-          ],
-        },
-      },
+      peerOpts: this.webrtcPeerOpts,
     });
   },
 
   mounted() {
-    console.log({ providerIsEmpty: !!this.provider });
     const persistence = new IndexeddbPersistence(
       this.teamCodeUnique,
       this.yDoc
     );
+
+    //*set to y-webrtc to see logs of webrtc connection for yjs
     localStorage.log = "false";
+
     persistence.once("synced", () => {
       const folder = this.yDoc.getArray("subdocuments");
+
+      //* force delete all contents
       // folder.delete(0, folder.length);
+
+      //* initialize editors
       folder.forEach((block) => {
-        block.ydoc = this.yDoc;
+        // *pass reference to parent ydoc
+        // block.ydoc = this.yDoc;
         this.editors.push(block);
       });
 
+      //* turned off for now
       // if (this.editors.length === 0) {
       //   this.addEditor({
       //     currentSelectedEditorIndex: this.currentSelectedEditorIndex,
       //   });
       // }
 
+      //* on receiving updates from other peers
       this.yDoc.on("update", (update, origin) => {
-        console.log({ origin });
         Y.applyUpdate(this.yDoc, update);
 
         const folder = this.yDoc.getArray("subdocuments");
@@ -161,11 +173,11 @@ export default {
           if (block.id == this.currentSelectedObjectId) {
             objectIndex = index;
           }
-          // * init block ydoc
-          block.ydoc = this.yDoc;
+          // *pass reference to parent ydoc
+          // block.ydoc = this.yDoc;
           this.editors.push(block);
         });
-        // * update toolbar for changes from other peers
+        // * update toolbar pos based on changes
         if (origin != this.teamCodeUnique && this.editors.length > 0) {
           this.selectBlock(this.editors[objectIndex]);
         }
@@ -233,30 +245,6 @@ export default {
       if (index === -1) return;
       let content = ``;
 
-      // TODO: put this on a constant file
-      if (blockType === "table")
-        content = `
-        <h2> </h2>
-        <table>
-          <tbody>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>`;
-
       let objToAdd = {
         id: new Date().getTime() + blockType + this.teamCodeUnique,
         content: content,
@@ -298,8 +286,25 @@ export default {
     setColumn({ column, editor }) {
       editor.column = column;
     },
-    testMethod() {
-      console.log("testMethod called");
+    afterDrag(newIndex, oldIndex) {
+      const length = this.editors.length;
+      let insertAt = newIndex;
+      let deleteAt = oldIndex;
+      if (newIndex === oldIndex) {
+        return;
+      } else if (oldIndex === length - 1) {
+        deleteAt = length;
+      } else if (oldIndex > newIndex) {
+        deleteAt++;
+      } else {
+        insertAt++;
+      }
+      this.yDoc.transact(() => {
+        const folder = this.yDoc.getArray("subdocuments");
+        const objToRepos = folder.get(oldIndex);
+        folder.insert(insertAt, [objToRepos]);
+        folder.delete(deleteAt, 1);
+      }, this.teamCodeUnique);
     },
   },
 };

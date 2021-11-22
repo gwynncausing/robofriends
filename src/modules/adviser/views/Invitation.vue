@@ -30,7 +30,7 @@
         </router-link>
       </p>
     </div>
-    <JoinTeamModal
+    <ModalJoinTeam
       :dialog-props="joinTeamModal"
       :is-loading="isSubmitTeamCode"
       @dialogClose="joinTeamModal = $event"
@@ -79,7 +79,7 @@
 <script>
 import InvitationMessage from "@/components/InvitationMessage.vue";
 import InvitationRow from "@/components/InvitationRow.vue";
-import JoinTeamModal from "@/components/student/JoinTeamModal.vue";
+import ModalJoinTeam from "@/components/modals/ModalJoinTeam.vue";
 
 import { mapGetters, mapActions } from "vuex";
 import { ADVISER_ACTIONS, ADVISER_GETTERS } from "../store/types";
@@ -90,7 +90,7 @@ export default {
   components: {
     InvitationMessage,
     InvitationRow,
-    JoinTeamModal,
+    ModalJoinTeam,
   },
   data: function () {
     return {
@@ -136,26 +136,32 @@ export default {
       this.setInvitations();
     },
   },
-  async created() {
-    try {
-      await this.fetchInvitations();
-      this.setInvitations();
-    } catch (error) {
-      console.log(error);
-    }
+  created() {
+    this.initialize();
   },
   methods: {
     ...mapActions({
       onFetchInvitations: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.FETCH_INVITATIONS}`,
       onUpdateInvitation: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.UPDATE_INVITATION}`,
-      onJoinCodeTeam: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_ACTIONS.JOIN_CODE_TEAM}`,
     }),
+
+    async initialize() {
+      try {
+        await this.fetchInvitations();
+        this.setInvitations();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     fetchInvitations() {
       return this.onFetchInvitations();
     },
+
     setInvitations() {
       this.invitations = this.getInvitations;
     },
+
     async updateInvitation({ invitation, status }) {
       const payload = {
         id: invitation.id,
@@ -175,9 +181,11 @@ export default {
         console.log(error);
       }
     },
+
     createUpdateInvitationPromise(payload) {
       return this.onUpdateInvitation(payload);
     },
+
     async joinAllTeams() {
       try {
         const pendingInvitations = this.invitations.filter(

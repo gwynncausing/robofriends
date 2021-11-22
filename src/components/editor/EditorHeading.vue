@@ -52,6 +52,10 @@ export default {
       type: Object,
       default: null,
     },
+    yDoc: {
+      type: Object,
+      default: () => {},
+    },
   },
 
   data() {
@@ -97,7 +101,7 @@ export default {
           },
         }),
         Collaboration.configure({
-          document: this.editorData.ydoc,
+          document: this.yDoc,
           field: this.editorData.id,
         }),
         CollaborationCursor.configure({

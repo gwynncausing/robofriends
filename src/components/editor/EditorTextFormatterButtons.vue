@@ -3,6 +3,7 @@
     <span
       v-if="
         blockType === 'text' ||
+        blockType === 'reference' ||
         blockType === 'table' ||
         blockType === 'text-with-title'
       "
@@ -53,6 +54,7 @@
       <span class="formatter-section-end"></span>
 
       <button
+        v-if="blockType !== 'reference'"
         title="Bullet List"
         :class="{ 'is-active': editor.isActive('bulletList') }"
         @click="editor.chain().focus().toggleBulletList().run()"
@@ -66,9 +68,9 @@
       >
         <v-icon>mdi-format-list-numbered</v-icon>
       </button>
-
-      <span class="formatter-section-end"></span>
     </span>
+
+    <span v-if="blockType === 'table'" class="formatter-section-end"></span>
 
     <span v-if="blockType === 'image' || blockType === 'table'">
       <input
@@ -253,14 +255,7 @@
       </button>
     </span>
 
-    <span
-      v-if="
-        blockType === 'text' ||
-        blockType === 'table' ||
-        blockType === 'heading' ||
-        blockType === 'text-with-title'
-      "
-    >
+    <span>
       <span class="formatter-section-end"></span>
 
       <button title="Redo" @click="editor.chain().focus().redo().run()">

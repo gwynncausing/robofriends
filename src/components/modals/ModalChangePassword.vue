@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import Modal from "@/components/Modal.vue";
+import Modal from "./Modal.vue";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 

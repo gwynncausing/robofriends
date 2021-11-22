@@ -1,10 +1,8 @@
 <template>
-  <div class="editor-image">
+  <div class="editor-reference">
     <EditorTextFormatterButtons
       :editor="editor"
       :block-type="editorData.blockType"
-      :column="editorData.column"
-      @setColumn="$emit('setColumn', $event)"
     />
     <editor-content :editor="editor" class="editor-content" />
   </div>
@@ -13,12 +11,18 @@
 <script>
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import Document from "@tiptap/extension-document";
-import Text from "@tiptap/extension-text";
 import Paragraph from "@tiptap/extension-paragraph";
-import Heading from "@tiptap/extension-heading";
-import Placeholder from "@tiptap/extension-placeholder";
-import Image from "@tiptap/extension-image";
-import Dropcursor from "@tiptap/extension-dropcursor";
+import Text from "@tiptap/extension-text";
+import Bold from "@tiptap/extension-bold";
+import Italic from "@tiptap/extension-italic";
+import Strike from "@tiptap/extension-strike";
+import Code from "@tiptap/extension-code";
+import Underline from "@tiptap/extension-underline";
+import Superscript from "@tiptap/extension-superscript";
+import Subscript from "@tiptap/extension-subscript";
+import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
+import ListItem from "@tiptap/extension-list-item";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
@@ -29,11 +33,11 @@ import { mapGetters } from "vuex";
 import { ROOT_GETTERS } from "@/store/types";
 
 const CustomDocument = Document.extend({
-  content: "heading image",
+  content: "orderedList",
 });
 
 export default {
-  name: "EditorImage",
+  name: "EditorReference",
   components: {
     EditorTextFormatterButtons,
     EditorContent,
@@ -84,22 +88,18 @@ export default {
       this.editor = new Editor({
         extensions: [
           CustomDocument,
-          Text,
           Paragraph,
-          Image,
-          Dropcursor,
-          Heading.configure({
-            levels: [2],
-          }),
-          Placeholder.configure({
-            placeholder: ({ node }) => {
-              if (node.type.name === "heading") {
-                return "What’s the label?";
-              }
-
-              return "Text in this line will be neglected from exporting. Add an image instead";
-            },
-          }),
+          Text,
+          Bold,
+          Italic,
+          Strike,
+          Code,
+          BulletList,
+          OrderedList,
+          ListItem,
+          Underline,
+          Superscript,
+          Subscript,
           Collaboration.configure({
             document: this.yDoc,
             field: this.editorData.id,
@@ -127,26 +127,14 @@ export default {
     }
   },
 
-  methods: {
-    getRandomColor() {
-      let letters = "0123456789ABCDEF";
-      let color = "#";
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    },
-  },
-
   beforeUnmount() {
     this.editor.destroy();
-    this.provider.destroy();
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.editor-image {
+.editor-reference {
   height: 93%;
   .editor-content {
     height: inherit;
