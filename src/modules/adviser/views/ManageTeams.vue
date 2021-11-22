@@ -51,7 +51,7 @@
             {{ chip.title }}
           </Chip>
         </div>
-        <div id="team-list-wrapper">
+        <div class="team-list-wrapper">
           <CardTeam
             v-for="(team, index) in teams"
             :key="team.id"
@@ -67,15 +67,13 @@
           <span v-if="pendingProposalsLoading">Loading...</span>
           <div v-else>
             <PendingProposals
-              v-if="pendingProposals.length !== 0"
+              v-if="hasTeamPendingProposals"
               :pending-proposals="pendingProposals"
-              :has-approved-proposal="hasApprovedProposal"
+              :has-approved-proposal="hasTeamApprovedProposals"
               @updateProposal="updateProposals($event)"
             />
             <EmptyDataTeamProposals
-              v-else-if="
-                pendingProposals.length === 0 && approvedProposals.length > 0
-              "
+              v-else-if="!hasTeamPendingProposals && hasTeamApprovedProposals"
               content="One of the proposals of this team is already approved. Please check on the approved research tab."
             />
             <EmptyDataTeamProposals
@@ -88,22 +86,18 @@
           <span v-if="approvedProposalsLoading">Loading...</span>
           <div v-else>
             <ApprovedResearch
-              v-if="approvedProposals.length > 0"
+              v-if="hasTeamApprovedProposals"
               :approved-research="approvedProposals[0]"
             />
             <EmptyDataTeamApprovedResearch v-else />
           </div>
         </template>
         <template v-slot:body-research-paper>
-          <div v-if="approvedProposals.length === 0">
-            <EmptyDataTeamResearchPaper />
-          </div>
-          <div v-else>
-            <ResearchPaper
-              v-if="approvedProposals.length > 0"
-              :blocks="researchPaper"
-            />
-          </div>
+          <ResearchPaper
+            v-if="hasTeamApprovedProposals"
+            :blocks="researchPaper"
+          />
+          <EmptyDataTeamResearchPaper v-else />
         </template>
       </Tabs>
     </div>
@@ -335,6 +329,14 @@ export default {
       getMemberships: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_GETTERS.GET_MEMBERSHIPS}`,
       getTeam: `${MODULES.ADVISER_MODULE_PATH}${ADVISER_GETTERS.GET_TEAM}`,
     }),
+
+    hasTeamApprovedProposals() {
+      return this.approvedProposals.length > 0;
+    },
+
+    hasTeamPendingProposals() {
+      return this.pendingProposals.length > 0;
+    },
   },
 
   created() {
@@ -490,7 +492,7 @@ export default {
       margin-top: 72px;
     }
 
-    #team-list-wrapper {
+    .team-list-wrapper {
       display: flex;
       flex-direction: column;
       row-gap: 24px;
