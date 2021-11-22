@@ -33,6 +33,7 @@
             <EditorText
               :editor-data="editor"
               :user-color="userColor"
+              :provider="provider"
               @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
               @selectBlock="selectBlock"
@@ -47,6 +48,7 @@
               :editor-data="editor"
               :user-color="userColor"
               :column="editor.column"
+              :provider="provider"
               @setColumn="
                 $emit('setColumn', {
                   column: $event,
@@ -67,6 +69,7 @@
             <EditorHeading
               :editor-data="editor"
               :user-color="userColor"
+              :provider="provider"
               @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
               @selectBlock="selectBlock"
@@ -83,6 +86,7 @@
               :editor-data="editor"
               :user-color="userColor"
               :column="editor.column"
+              :provider="provider"
               @setColumn="
                 $emit('setColumn', {
                   column: $event,
@@ -129,9 +133,12 @@ export default {
       default: () => [],
     },
     userColor: {
-      required: false,
       type: String,
       default: null,
+    },
+    provider: {
+      type: Object,
+      default: () => {},
     },
   },
   data() {
@@ -158,8 +165,8 @@ export default {
       // console.log("ref: ", this.$refs);
       // console.log("newBlockRef: ", this.$refs[newBlockRef]);
       // console.log("oldBlockRef: ", this.$refs[oldBlockRef]);
-      this.$refs[oldBlockRef][0].classList.remove("focused");
-      this.$refs[newBlockRef][0].classList.add("focused");
+      this.$refs?.[oldBlockRef]?.[0]?.classList.remove("focused");
+      this.$refs?.[newBlockRef]?.[0]?.classList.add("focused");
     },
   },
   methods: {
