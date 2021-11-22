@@ -243,7 +243,6 @@ export default {
     },
     addEditor({ currentSelectedEditorIndex: index, blockType = "heading" }) {
       if (index === -1) return;
-
       let content = ``;
 
       // TODO: put this on a constant file

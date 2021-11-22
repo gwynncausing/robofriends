@@ -1,35 +1,29 @@
 <template>
   <draggable
     v-bind="dragOptions"
-    class="draggable-container"
+    class="item-container"
     :list="list"
-    tag="div"
+    :empty-insert-threshhold="500"
+    tag="v-expansion-panels"
+    :component-data="componentData"
     handle=".handle"
     @end="onEnd($event)"
   >
-    <div
+    <v-expansion-panel
       v-for="(editor, index) in list"
       :id="'editor-' + editor.id"
       :key="editor.id"
-      class="editor-panels-wrapper"
     >
-      <div class="parent-wrapper">
-        <div class="parent">
-          <v-icon class="handle"> mdi-drag-vertical </v-icon>
-          <v-btn
-            v-if="editor.blockType === 'heading'"
-            :id="'toggle-' + editor.id"
-            icon
-            class="toggle"
-            @click="toggleChildren(editor.id)"
-          >
-            <v-icon> mdi-chevron-right </v-icon>
+      <!-- {{ editor.content }} -->
+      <v-expansion-panel-header :hide-actions="editor.blockType !== 'heading'">
+        <v-icon class="handle">mdi-drag-vertical</v-icon>
+        <template v-slot:actions>
+          <v-btn icon>
+            <v-icon class="toggleButton">$expand</v-icon>
           </v-btn>
-          <div
-            v-if="editor.blockType === 'text'"
-            :ref="'block-' + editor.id"
-            class="editor-content-text"
-          >
+        </template>
+        <div class="header">
+          <div v-if="editor.blockType === 'text'" class="editor-content-text">
             <EditorText
               :editor-data="editor"
               :user-color="userColor"
@@ -37,12 +31,11 @@
               :y-doc="yDoc"
               @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
-              @selectBlock="selectBlock"
+              @selectBlock="$emit('selectBlock', $event)"
             />
           </div>
           <div
             v-else-if="editor.blockType === 'image'"
-            :ref="'block-' + editor.id"
             class="editor-content-image"
           >
             <EditorImage
@@ -59,13 +52,12 @@
               "
               @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
-              @selectBlock="selectBlock"
+              @selectBlock="$emit('selectBlock', $event)"
             />
           </div>
 
           <div
             v-else-if="editor.blockType === 'heading'"
-            :ref="'block-' + editor.id"
             class="editor-content-heading"
           >
             <EditorHeading
@@ -75,14 +67,13 @@
               :y-doc="yDoc"
               @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
-              @selectBlock="selectBlock"
+              @selectBlock="$emit('selectBlock', $event)"
             />
           </div>
           <!-- @input="$emit('getContent', $event, index)" -->
 
           <div
             v-else-if="editor.blockType === 'table'"
-            :ref="'block-' + editor.id"
             class="editor-content-table"
           >
             <EditorTable
@@ -99,20 +90,19 @@
               "
               @input="input($event, index)"
               @updateUsers="$emit('updateUsers', $event)"
-              @selectBlock="selectBlock"
+              @selectBlock="$emit('selectBlock', $event)"
             />
           </div>
         </div>
-      </div>
+      </v-expansion-panel-header>
 
-      <!-- <div
-        v-show="!!editor.children && editor.children.length > 0"
-        :id="'children-' + editor.id"
-        class="children"
+      <v-expansion-panel-content
+        v-if="editor.blockType === 'heading'"
+        :class="collapsed"
       >
-        <EditorDraggable :list="editor.children" />
-      </div> -->
-    </div>
+        <EditorDraggable :list="editor.children" class="item-sub" />
+      </v-expansion-panel-content>
+    </v-expansion-panel>
   </draggable>
 </template>
 <script>
@@ -134,7 +124,6 @@ export default {
     list: {
       required: true,
       type: Array,
-      default: () => [],
     },
     userColor: {
       type: String,
@@ -151,16 +140,27 @@ export default {
   },
   data() {
     return {
-      dragOptions: {
-        animation: 200,
-        group: "editors",
-        ghostClass: "ghost",
-        chosenClass: "chosen",
-        dragClass: "drag",
-        emptyInsertThreshold: 5,
+      componentData: {
+        attrs: {
+          accordion: true,
+          flat: true,
+          tile: true,
+        },
       },
-      selectedBlockId: "",
+      id: 123,
     };
+  },
+  computed: {
+    dragOptions() {
+      return {
+        animation: 0,
+        group: "description",
+        disabled: false,
+        ghostClass: "ghost", // Class name for the drop placeholder
+        chosenClass: "chosen", // Class name for the chosen item
+        dragClass: "drag", // Class name for the dragging item
+      };
+    },
   },
   watch: {
     // list: function () {
@@ -178,92 +178,68 @@ export default {
     },
   },
   methods: {
-    selectBlock(event) {
-      this.$emit("selectBlock", event);
-      try {
-        this.selectedBlockId = event.id;
-      } catch (e) {
-        console.log(e);
-      }
-    },
     onEnd(event) {
       this.$emit("dragElement", event.newIndex, event.oldIndex);
     },
     input(event, index) {
       this.$emit("getContent", { content: event, index: index });
     },
-    toggleChildren(id) {
-      let children = document.getElementById("children-" + id);
-      let toggle = document.getElementById("toggle-" + id);
-      if (children.style.display === "block") {
-        children.style.display = "none";
-        toggle.classList.remove("down");
-      } else {
-        children.style.display = "block";
-        toggle.classList.add("down");
-      }
-    },
   },
 };
 </script>
 <style lang="scss" scoped>
-.draggable-container {
+.v-expansion-panels {
   width: 100%;
   background-color: $neutral-50;
 }
-.editor-panels-wrapper {
-  background-color: white;
-}
-.parent-wrapper {
-  .parent {
-    display: flex;
-    align-items: top;
-    background-color: white;
-    padding-bottom: 24px;
-    .handle {
-      cursor: grab;
-      width: 24px;
-      margin-bottom: auto;
-      margin-top: 8px;
-    }
-    .toggle {
-      &:hover {
-        background-color: $neutral-50;
-      }
-    }
-    div[class^="editor-content-"] {
-      border: 1px solid $neutral-400;
-      border-radius: 4px;
-      padding: 0.8rem;
-      width: 100%;
-    }
 
-    .editor-content-table,
-    .editor-content-text,
-    .editor-content-image {
-      margin-left: 36px;
-    }
+.v-expansion-panel {
+  padding-bottom: 24px;
+}
+
+.v-expansion-panel-header {
+  padding: 0;
+  .handle {
+    cursor: grab;
+    width: 24px;
+  }
+  .icon {
+    order: 0;
+  }
+  .header {
+    order: 1;
+    width: 100%;
+  }
+  div[class^="editor-content-"] {
+    border: 1px solid $neutral-400;
+    border-radius: 4px;
+    padding: 0.8rem;
+  }
+  .editor-content-heading,
+  .editor-content-text,
+  .editor-content-image,
+  .editor-content-table {
+    cursor: text;
+  }
+  .editor-content-text,
+  .editor-content-image,
+  .editor-content-table {
+    margin-left: 36px;
+  }
+
+  .editor-content-heading {
+    height: 98px;
+    padding: 4px;
   }
 }
-.children {
-  min-height: 200px;
-  height: fit-content;
-  margin-left: 50px;
-  display: none;
-}
-.down {
-  -moz-transform: rotate(90deg);
-  -webkit-transform: rotate(90deg);
-  transform: rotate(90deg);
+.v-expansion-panel-content {
+  min-height: 24px;
 }
 .chosen,
 .drag {
   background-color: white;
 }
 .ghost {
-  opacity: 50%;
-}
-.focused {
-  outline: 2px solid $secondary;
+  opacity: 0;
 }
 </style>

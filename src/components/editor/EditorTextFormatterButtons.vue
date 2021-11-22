@@ -115,7 +115,7 @@
         <v-icon>mdi-format-align-justify</v-icon>
       </button>
 
-      <!-- <span class="formatter-section-end"></span>
+      <span class="formatter-section-end"></span>
 
       <button
         title="Add Table"
@@ -135,7 +135,7 @@
         @click="editor.chain().focus().deleteTable().run()"
       >
         <v-icon>mdi-table-remove</v-icon>
-      </button> -->
+      </button>
 
       <span class="formatter-section-end"></span>
 
@@ -163,6 +163,10 @@
       >
         <v-icon>mdi-table-row-plus-before</v-icon>
       </button>
+    </span>
+    <span v-if="blockType === 'table'">
+      <span class="formatter-section-end"></span>
+
       <button
         title="Add Row After"
         :disabled="!editor.can().addRowAfter()"
