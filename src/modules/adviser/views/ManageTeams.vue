@@ -5,11 +5,7 @@
       :team="teams[activeEl]"
       @showDialog="teamsDialog = true"
     />
-    <Modal
-      :dialog="teamsDialog"
-      class="black--text d-sm-none"
-      @closed="teamsDialog = false"
-    >
+    <Modal :dialog="teamsDialog" @closed="teamsDialog = false">
       <template v-slot:title>
         <div class="teams-list-filter">
           <Chip
@@ -122,17 +118,31 @@
           <ResearchPaper
             v-if="hasTeamApprovedProposals"
             :blocks="researchPaper"
+            :is-marked-as-complete="isMarkedAsComplete"
+            :is-published="isPublished"
+            @showMarkAsCompleteDialog="markAsCompleteDialog = true"
+            @showPublishDialog="publishDialog = true"
           />
           <EmptyDataTeamResearchPaper v-else />
         </template>
       </Tabs>
     </div>
+    <ModalMarkAsComplete
+      :dialog-props="markAsCompleteDialog"
+      @dialogClose="markAsCompleteDialog = $event"
+    />
+    <ModalPublish
+      :dialog-props="publishDialog"
+      @dialogClose="publishDialog = $event"
+    />
   </div>
 </template>
 
 <script>
 import Chip from "@/components/global/Chip";
 import Modal from "@/components/modals/Modal";
+import ModalMarkAsComplete from "@/components/modals/ModalMarkAsComplete";
+import ModalPublish from "@/components/modals/ModalPublish";
 import ChooseTeamHeading from "@/components/adviser/manage-teams/ChooseTeamHeading";
 import CardTeam from "@/components/adviser/manage-teams/CardTeam";
 import Tabs from "@/components/Tabs";
@@ -154,6 +164,8 @@ export default {
   components: {
     Chip,
     Modal,
+    ModalMarkAsComplete,
+    ModalPublish,
     ChooseTeamHeading,
     CardTeam,
     Tabs,
@@ -183,6 +195,8 @@ export default {
         },
       ],
       teamsDialog: false,
+      markAsCompleteDialog: false,
+      publishDialog: false,
       statusChips: [
         {
           title: "Ongoing",
@@ -207,6 +221,8 @@ export default {
       approvedProposals: [],
       approvedProposalsLoading: false,
       hasApprovedProposal: false,
+      isMarkedAsComplete: false,
+      isPublished: false,
       researchPaper: [
         {
           id: "125",
