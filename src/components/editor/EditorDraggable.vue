@@ -6,6 +6,7 @@
     tag="div"
     handle=".handle"
     @end="onEnd($event)"
+    @start="onStart($event)"
   >
     <div
       v-for="(editor, index) in list"
@@ -22,7 +23,7 @@
           v-if="editor.blockType === 'heading'"
           :id="'toggle-' + editor.id"
           icon
-          class="toggle"
+          class="toggle down"
           @click="toggleChildren(editor.id)"
         >
           <v-icon> mdi-chevron-right </v-icon>
@@ -110,16 +111,6 @@
           />
         </div>
       </div>
-
-      <div :id="'children-wrapper' + editor.id" class="children-wrapper">
-        <div
-          v-show="editor.blockType === 'heading'"
-          :id="'children-' + editor.id"
-          class="children"
-        >
-          <EditorDraggable :list="editor.children" />
-        </div>
-      </div>
     </div>
   </draggable>
 </template>
@@ -167,6 +158,7 @@ export default {
         chosenClass: "chosen",
         dragClass: "drag",
         emptyInsertThreshold: 5,
+        childrenCount: 0,
       },
       cloneList: [],
       selectedBlockId: "",
@@ -182,8 +174,39 @@ export default {
     },
   },
   methods: {
+    onStart(event) {
+      this.childrenCount = 0;
+      const parentIndex = event.oldIndex;
+      const parentBlock = this.list[parentIndex];
+      if (
+        parentIndex !== this.list.length - 1 &&
+        parentBlock.blockType === "heading"
+      ) {
+        document
+          .getElementById("toggle-" + parentBlock.id)
+          .classList.remove("down");
+        for (let i = parentIndex + 1; i < this.list.length; i++) {
+          const block = this.list[i];
+          if (
+            block.blockType === "heading" &&
+            parentBlock.content[0].attrs.level >= block.content[0].attrs.level
+          ) {
+            break;
+          } else {
+            const element = document.getElementById("editor-" + block.id);
+            element.style.display = "none";
+            this.childrenCount++;
+          }
+        }
+      }
+    },
     onEnd(event) {
-      this.$emit("dragElement", event.newIndex, event.oldIndex);
+      this.$emit(
+        "dragElement",
+        event.newIndex,
+        event.oldIndex,
+        this.childrenCount
+      );
     },
     input(event, index) {
       this.$emit("getContent", { content: event, index: index });
@@ -196,14 +219,26 @@ export default {
       console.log("this.cloneList", this.cloneList);
     },
     toggleChildren(id) {
-      let children = document.getElementById("children-" + id);
-      let toggle = document.getElementById("toggle-" + id);
-      if (children.style.display === "block") {
-        children.style.display = "none";
-        toggle.classList.remove("down");
-      } else {
-        children.style.display = "block";
-        toggle.classList.add("down");
+      const parentIndex = this.list.findIndex((block) => block.id === id);
+      const toggleElement = document.getElementById("toggle-" + id);
+      toggleElement.classList.toggle("down");
+      const parentBlock = this.list[parentIndex];
+      if (parentIndex === this.list.length - 1) return;
+      for (let i = parentIndex + 1; i < this.list.length; i++) {
+        const block = this.list[i];
+        if (
+          block.blockType === "heading" &&
+          parentBlock.content[0].attrs.level >= block.content[0].attrs.level
+        ) {
+          break;
+        } else {
+          const element = document.getElementById("editor-" + block.id);
+          if (!toggleElement.classList.contains("down")) {
+            element.style.display = "none";
+          } else {
+            element.style.display = "block";
+          }
+        }
       }
     },
   },

@@ -5,6 +5,18 @@
       <EmptyDataResearchPaperEditor />
     </div>
     <div v-else class="editor-wrapper">
+      <Snackbar
+        :is-snackbar-shown="cannotUpdate"
+        @closeSnackbar="cannotUpdate = false"
+      >
+        <template v-slot:content>
+          <div>
+            <p class="black--text ma-auto">
+              Please wait for your team to finish typing.
+            </p>
+          </div>
+        </template>
+      </Snackbar>
       <div class="editor-heading">
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
@@ -58,6 +70,7 @@ import Button from "@/components/global/Button.vue";
 import EditorToolbar from "@/components/editor/EditorToolbar.vue";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 import EmptyDataResearchPaperEditor from "@/components/messages/EmptyDataResearchPaperEditor";
+import Snackbar from "@/components/Snackbar";
 
 import { mapActions, mapGetters } from "vuex";
 import {
@@ -69,6 +82,7 @@ import { MODULES } from "@/utils/constants";
 import { IndexeddbPersistence } from "y-indexeddb";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
+// import { fromUint8Array, toUint8Array } from "js-base64";
 
 export default {
   name: "ResearchPaperEditor",
@@ -78,6 +92,7 @@ export default {
     EditorToolbar,
     ActiveUsersList,
     EmptyDataResearchPaperEditor,
+    Snackbar,
   },
   data() {
     return {
@@ -106,6 +121,9 @@ export default {
           ],
         },
       },
+      isReceivingUpdates: false,
+      cannotUpdate: false,
+      lastReceivedUpdate: +new Date(),
     };
   },
 
@@ -133,6 +151,15 @@ export default {
   },
 
   mounted() {
+    // TODO: should replace localStorage call with fetch data from rtdb
+    //! NOTE: the encoded base64 string can be very long and may be takeup significant space when saving large research paper content
+    // Y.applyUpdate(this.yDoc, toUint8Array(localStorage.lastYDocState));
+
+    // console.log({
+    //   strLength: new Blob([fromUint8Array(Y.encodeStateAsUpdate(this.yDoc))])
+    //     .size,
+    // });
+
     const persistence = new IndexeddbPersistence(
       this.teamCodeUnique,
       this.yDoc
@@ -163,6 +190,7 @@ export default {
 
       //* on receiving updates from other peers
       this.yDoc.on("update", (update, origin) => {
+        this.isReceivingUpdates = true;
         Y.applyUpdate(this.yDoc, update);
 
         const folder = this.yDoc.getArray("subdocuments");
@@ -181,11 +209,17 @@ export default {
         if (origin != this.teamCodeUnique && this.editors.length > 0) {
           this.selectBlock(this.editors[objectIndex]);
         }
+        this.isReceivingUpdates = false;
+        this.lastReceivedUpdate = +new Date();
       });
     });
   },
 
   beforeDestroy() {
+    // TODO: replace localStorage with save to rtdb
+    // localStorage.lastYDocState = fromUint8Array(
+    //   Y.encodeStateAsUpdate(this.yDoc)
+    // );
     this.yDoc.destroy();
     this.provider.destroy();
   },
@@ -286,25 +320,69 @@ export default {
     setColumn({ column, editor }) {
       editor.column = column;
     },
-    afterDrag(newIndex, oldIndex) {
+    afterDrag(newIndex, oldIndex, childrenCount) {
+      //TODO: when receiving update, show error and do not update, instead reset the editor back like this:
+      //TODO: show error also and reposition toolbar
+      console.log(+new Date() - this.lastReceivedUpdate);
+      if (+new Date() - this.lastReceivedUpdate < 1000) {
+        const folder = this.yDoc.getArray("subdocuments");
+        this.editors = [];
+        folder.forEach((block) => {
+          this.editors.push(block);
+        });
+        this.cannotUpdate = true;
+        return;
+      }
+
       const length = this.editors.length;
       let insertAt = newIndex;
       let deleteAt = oldIndex;
-      if (newIndex === oldIndex) {
-        return;
-      } else if (oldIndex === length - 1) {
+      const selectedBlock = this.editors[newIndex];
+      if (oldIndex === length - 1) {
         deleteAt = length;
       } else if (oldIndex > newIndex) {
-        deleteAt++;
-      } else {
+        oldIndex++;
+        deleteAt = oldIndex + childrenCount;
+      } else if (oldIndex < newIndex) {
         insertAt++;
       }
-      this.yDoc.transact(() => {
-        const folder = this.yDoc.getArray("subdocuments");
-        const objToRepos = folder.get(oldIndex);
-        folder.insert(insertAt, [objToRepos]);
-        folder.delete(deleteAt, 1);
-      }, this.teamCodeUnique);
+
+      if (newIndex !== oldIndex) {
+        const objectsToInsert =
+          childrenCount > 0
+            ? [
+                this.editors[newIndex],
+                ...this.editors.slice(oldIndex, oldIndex + childrenCount),
+              ]
+            : [this.editors[newIndex]];
+        this.yDoc.transact(() => {
+          const folder = this.yDoc.getArray("subdocuments");
+          folder.insert(insertAt, objectsToInsert);
+          document;
+          folder.delete(deleteAt, childrenCount + 1);
+        }, this.teamCodeUnique);
+      }
+
+      const parentIndex = this.editors.findIndex(
+        (block) => block.id === selectedBlock.id
+      );
+      if (parentIndex !== length - 1 && selectedBlock.blockType === "heading") {
+        document
+          .getElementById("toggle-" + selectedBlock.id)
+          .classList.add("down");
+        for (let i = parentIndex + 1; i < this.editors.length; i++) {
+          const block = this.editors[i];
+          if (
+            block.blockType === "heading" &&
+            selectedBlock.content[0].attrs.level >= block.content[0].attrs.level
+          ) {
+            break;
+          } else {
+            const element = document.getElementById("editor-" + block.id);
+            element.style.display = "block";
+          }
+        }
+      }
     },
   },
 };
