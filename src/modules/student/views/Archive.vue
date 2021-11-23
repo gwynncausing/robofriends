@@ -1,16 +1,14 @@
 <template>
   <div id="archive">
-    <Archive />
+    <transition name="fade" mode="out-in">
+      <router-view />
+    </transition>
   </div>
 </template>
 
 <script>
-import Archive from "@/components/Archive";
 export default {
   name: "StudentArchive",
-  components: {
-    Archive,
-  },
 };
 </script>
 

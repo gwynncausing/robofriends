@@ -1,0 +1,50 @@
+import { mapGetters, mapActions } from "vuex";
+import {
+  STUDENT_GETTERS,
+  STUDENT_ACTIONS,
+} from "@/modules/student/store/types";
+import { MODULES } from "@/utils/constants";
+
+export const studentVuexMixin = {
+  computed: {
+    ...mapGetters({
+      studentx_getCurrentCreatedTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_CURRENT_CREATED_TEAM}`,
+      studentx_getSentMembersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SENT_MEMBERS_INVITATIONS}`,
+      studentx_getSentTeachersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SENT_TEACHERS_INVITATIONS}`,
+      studentx_getInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_INVITATIONS}`,
+      studentx_getMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_MEMBERSHIPS}`,
+      studentx_getHasMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
+      studentx_getSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM_DETAILS}`,
+      studentx_getSubmittedProposals: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SUBMITTED_PROPOSALS}`,
+      studentx_getSelectedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_PROPOSAL}`,
+      studentx_getApprovedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_APPROVED_PROPOSAL}`,
+      studentx_getApprovedProposalDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_APPROVED_PROPOSAL_DETAILS}`,
+      studentx_getRevisedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_REVISED_PROPOSAL}`,
+      studentx_getApprovedProposalHistory: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_APPROVED_PROPOSAL_HISTORY}`,
+      studentx_getApprovedProposalHistorySelectedDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_APPROVED_PROPOSAL_HISTORY_SELECTED_DETAILS}`,
+    }),
+  },
+  methods: {
+    ...mapActions({
+      studentx_onCreateTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.CREATE_TEAM}`,
+      studentx_onSendMembersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_MEMBERS_INVITATIONS}`,
+      studentx_onSendTeachersInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SEND_TEACHERS_INVITATIONS}`,
+      studentx_onUpdateInvitation: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_INVITATION}`,
+      studentx_onFetchInvitations: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_INVITATIONS}`,
+      studentx_onFetchMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_MEMBERSHIPS}`,
+      studentx_onFetchSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
+      studentx_onJoinCodeTeam: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.JOIN_CODE_TEAM}`,
+      studentx_onUpdateMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_MEMBERSHIPS}`,
+      studentx_onUpdateSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_SELECTED_TEAM_DETAILS}`,
+      studentx_onCreateProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.CREATE_PROPOSAL}`,
+      studentx_onFetchSubmittedProposals: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SUBMITTED_PROPOSALS}`,
+      studentx_onFetchSelectedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_PROPOSAL}`,
+      studentx_onFetchApprovedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_APPROVED_PROPOSAL}`,
+      studentx_onFetchApprovedProposalDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_APPROVED_PROPOSAL_DETAILS}`,
+      studentx_onSetProposalToRevised: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.SET_PROPOSAL_TO_REVISED}`,
+      studentx_onUpdateProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.UPDATE_PROPOSAL}`,
+      studentx_onFetchApprovedProposalHistory: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_APPROVED_PROPOSAL_HISTORY}`,
+      studentx_onFetchApprovedProposalHistorySelectedDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_APPROVED_PROPOSAL_HISTORY_SELECTED_DETAILS}`,
+    }),
+  },
+};

@@ -56,6 +56,11 @@ export default {
       type: Object,
       default: () => {},
     },
+    isEditable: {
+      required: true,
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
@@ -112,6 +117,7 @@ export default {
           },
         }),
       ],
+      editable: this.isEditable,
       onUpdate: () => {
         this.$emit("input", this.editor.getJSON());
       },
@@ -126,10 +132,6 @@ export default {
 
   beforeDestroy() {
     this.editor.destroy();
-  },
-
-  methods: {
-    //
   },
 };
 </script>

@@ -57,6 +57,11 @@ export default {
       type: Object,
       default: () => {},
     },
+    isEditable: {
+      required: true,
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {

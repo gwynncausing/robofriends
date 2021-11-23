@@ -16,6 +16,7 @@
           v-if="hasApprovedResearch"
           :approved-research="approvedResearchTab.research"
           :is-editable="approvedResearchTab.isEditable"
+          :is-completed="isCompleted"
           @saveProposal="updateApprovedProposal"
           @setEditableClick="approvedResearchTab.isEditable = true"
         />
@@ -32,7 +33,11 @@
         </Snackbar>
       </template>
       <template v-slot:body-create-new>
-        <CreateNew :proposal="createNewTab.proposal" @submit="submitProposal" />
+        <CreateNew
+          :proposal="createNewTab.proposal"
+          :is-completed="isCompleted"
+          @submit="submitProposal"
+        />
       </template>
     </Tabs>
   </div>
@@ -96,6 +101,7 @@ export default {
           value: "create-new",
         },
       ],
+      isCompleted: false,
     };
   },
   computed: {

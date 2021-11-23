@@ -7,7 +7,7 @@
           v-for="(member, memberIndex) in members"
           :key="memberIndex"
           color="primary"
-          size="24"
+          size="28"
         >
           <span class="avatar-content caption">
             {{ member.user.firstName[0] }}

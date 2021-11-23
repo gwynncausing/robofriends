@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="approved-research">
-      <div class="editor-heading">
+      <div v-if="isCompleted" class="editor-heading-completed">
+        <Chip>Completed</Chip>
+      </div>
+      <div v-else class="editor-heading">
         <Button
           text
           class="neutral-800--text"
@@ -32,10 +35,12 @@
 import EditorTextWithTitle from "@/components/editor/EditorTextWithTitle";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 import Button from "@/components/global/Button.vue";
+import Chip from "@/components/global/Chip.vue";
 
 export default {
   name: "ApprovedResearch",
   components: {
+    Chip,
     Button,
     EditorTextWithTitle,
     ActiveUsersList,
@@ -46,6 +51,10 @@ export default {
       default: () => {},
     },
     isEditable: {
+      type: Boolean,
+      default: false,
+    },
+    isCompleted: {
       type: Boolean,
       default: false,
     },
@@ -150,6 +159,11 @@ export default {
       display: flex;
       column-gap: 32px;
     }
+  }
+  .editor-heading-completed {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 8px;
   }
   .editor-wrapper {
     width: 100%;

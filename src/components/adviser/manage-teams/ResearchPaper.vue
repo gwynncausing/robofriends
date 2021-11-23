@@ -1,5 +1,5 @@
 <template>
-  <div class="research-paper">
+  <div id="research-paper">
     <EditorNestedReadonly :list="blocks" />
   </div>
 </template>
@@ -8,18 +8,31 @@
 import EditorNestedReadonly from "@/components/editor/EditorNestedReadonly";
 export default {
   name: "ResearchPaper",
-  components: { EditorNestedReadonly },
+  components: {
+    EditorNestedReadonly,
+  },
   props: {
     blocks: {
+      required: true,
       type: Array,
       default: () => [],
+    },
+    isMarkedAsComplete: {
+      required: true,
+      type: Boolean,
+      default: false,
+    },
+    isPublished: {
+      required: true,
+      type: Boolean,
+      default: false,
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.research-paper {
+#research-paper {
   padding-top: 24px;
 }
 </style>

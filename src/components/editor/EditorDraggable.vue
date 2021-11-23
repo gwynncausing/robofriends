@@ -18,7 +18,7 @@
       <!-- temporary to get content -->
       <!-- {{ cloneList[index] }} -->
       <div class="parent">
-        <v-icon class="handle"> mdi-drag-vertical </v-icon>
+        <v-icon v-if="isEditable" class="handle"> mdi-drag-vertical </v-icon>
         <v-btn
           v-if="editor.blockType === 'heading'"
           :id="'toggle-' + editor.id"
@@ -34,6 +34,7 @@
             :user-color="userColor"
             :provider="provider"
             :y-doc="yDoc"
+            :is-editable="isEditable"
             @input="input($event, index)"
             @updateUsers="$emit('updateUsers', $event)"
             @selectBlock="$emit('selectBlock', $event)"
@@ -46,6 +47,7 @@
           <EditorImage
             :editor-data="editor"
             :user-color="userColor"
+            :is-editable="isEditable"
             :column="editor.column"
             :provider="provider"
             :y-doc="yDoc"
@@ -70,6 +72,7 @@
             :user-color="userColor"
             :provider="provider"
             :y-doc="yDoc"
+            :is-editable="isEditable"
             @input="input($event, index)"
             @updateUsers="$emit('updateUsers', $event)"
             @selectBlock="$emit('selectBlock', $event)"
@@ -82,6 +85,7 @@
           <EditorTable
             :editor-data="editor"
             :user-color="userColor"
+            :is-editable="isEditable"
             :column="editor.column"
             :provider="provider"
             :y-doc="yDoc"
@@ -147,6 +151,11 @@ export default {
     yDoc: {
       type: Object,
       default: () => {},
+    },
+    isEditable: {
+      required: true,
+      type: Boolean,
+      default: false,
     },
   },
   data() {

@@ -6,13 +6,16 @@
       @submit.prevent="finishOnboarding()"
     >
       <div id="account-settings-wrapper" class="mt-6">
-        <header>
+        <div class="header">
           <h5 class="tertiary--text">{{ teamNameComputed }} Settings</h5>
-        </header>
-        <div id="members" class="mt-md-8 mt-12">
+          <Chip v-if="isCompleted">Completed</Chip>
+        </div>
+        <span class="neutral-600--text">{{ teamCode }}</span>
+
+        <!-- <div id="members" class="mt-md-8 mt-12">
           <div class="d-flex mb-8">
             <v-spacer></v-spacer>
-            <span class="neutral-600--text">{{ teamCode }}</span>
+            
           </div>
           <div class="d-flex mb-8">
             <h6>Team Name</h6>
@@ -22,14 +25,14 @@
               <TextField v-model="teamNameComputed" placeholder="Team Name" />
             </v-col>
           </v-row>
-        </div>
+        </div> -->
         <div id="members" class="mt-md-8 mt-12">
           <div class="d-flex mb-8">
             <h6>Members</h6>
             <v-spacer></v-spacer>
-            <Button text @click="inviteMemberModal = true"
-              >Invite Member</Button
-            >
+            <Button v-if="!isCompleted" text @click="inviteMemberModal = true">
+              Invite Member
+            </Button>
           </div>
           <v-row
             v-for="(member, index) in membersRolesInformation"
@@ -48,7 +51,7 @@
                 v-model="member.baseRole"
                 label="Role"
                 :items="baseRoles"
-                :disabled="!isCurrentUserLeader"
+                :disabled="!isCurrentUserLeader && isCompleted"
                 @change="changeMemberBaseRole(member)"
               />
             </v-col>
@@ -58,9 +61,9 @@
           <div class="d-flex mb-8">
             <h6>Adviser</h6>
             <v-spacer></v-spacer>
-            <Button text @click="inviteAdviserModal = true"
-              >Invite Adviser</Button
-            >
+            <Button v-if="!isCompleted" text @click="inviteAdviserModal = true">
+              Invite Adviser
+            </Button>
           </div>
           <v-row v-for="(adviser, index) in advisers" :key="index">
             <v-col cols="10" md="8" class="row-details">
@@ -72,6 +75,7 @@
             </v-col>
             <v-col cols="2" md="4" class="row-details">
               <Button
+                v-if="!isCompleted"
                 text
                 class="error--text d-none d-md-flex"
                 @click="showRemoveAdviserModal(adviser)"
@@ -95,16 +99,21 @@
         </div>
         <div cols="12" class="d-flex mt-15">
           <Button
-            v-if="!isCurrentUserLeader"
+            v-if="!isCurrentUserLeader && !isCompleted"
             text
             class="error--text"
             @click="leaveTeamModal = true"
-            >Leave Team</Button
           >
+            Leave Team
+          </Button>
           <v-spacer></v-spacer>
-          <Button :loading="isSavingChanges" @click="saveChanges"
-            >Save Changes</Button
+          <Button
+            v-if="!isCompleted"
+            :loading="isSavingChanges"
+            @click="saveChanges"
           >
+            Save Changes
+          </Button>
         </div>
       </div>
     </v-form>
@@ -148,6 +157,7 @@
 </template>
 
 <script>
+import Chip from "@/components/global/Chip.vue";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 import Select from "@/components/global/Select.vue";
@@ -169,6 +179,7 @@ import { MODULES, TEAM, STATUS_CODES } from "@/utils/constants";
 export default {
   name: "TeamSettings",
   components: {
+    Chip,
     TextField,
     Button,
     Select,
@@ -197,6 +208,7 @@ export default {
       inviteMemberModal: false,
       isInvitingMemberModal: false,
       isSavingChanges: false,
+      isCompleted: false,
       baseRoles: ["member", "leader"],
       teamName: "",
       membersRolesInformation: [],
@@ -503,6 +515,12 @@ export default {
   .row-details {
     margin: 0 !important;
     padding: 0 0 0 12px !important;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
   }
 }
 </style>

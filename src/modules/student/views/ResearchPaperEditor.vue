@@ -31,9 +31,16 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <Button text class="neutral-800--text mr-auto">Version History</Button>
-        <ActiveUsersList :users="activeUsers" class="mr-4" />
-        <Button>Save</Button>
+        <Button v-if="!isCompleted" text class="neutral-800--text mr-auto">
+          Version History
+        </Button>
+        <ActiveUsersList
+          v-if="!isCompleted"
+          :users="activeUsers"
+          class="mr-4"
+        />
+        <Button v-if="!isCompleted">Save</Button>
+        <Chip v-if="isCompleted" class="ml-auto">Completed</Chip>
       </div>
       <div class="editor-list-wrapper">
         <div class="editor-list">
@@ -43,6 +50,7 @@
               :user-color="userColor"
               :provider="provider"
               :y-doc="yDoc"
+              :is-editable="!isCompleted"
               @setColumn="setColumn($event)"
               @dragElement="afterDrag"
               @getContent="getContent($event)"
@@ -52,6 +60,7 @@
           </div>
 
           <EditorToolbar
+            v-if="!isCompleted"
             :current-toolbar-position="currentToolbarPosition"
             :current-selected-editor-index="currentSelectedEditorIndex"
             :editor-length="editors.length"
@@ -71,6 +80,7 @@ import EditorToolbar from "@/components/editor/EditorToolbar.vue";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 import EmptyDataResearchPaperEditor from "@/components/messages/EmptyDataResearchPaperEditor";
 import Snackbar from "@/components/Snackbar";
+import Chip from "@/components/global/Chip.vue";
 
 import { mapActions, mapGetters } from "vuex";
 import {
@@ -93,6 +103,7 @@ export default {
     ActiveUsersList,
     EmptyDataResearchPaperEditor,
     Snackbar,
+    Chip,
   },
   data() {
     return {
@@ -103,7 +114,6 @@ export default {
       currentToolbarPosition: 0,
       currentSelectedEditorIndex: 0,
       currentSelectedObjectId: "",
-      hasApprovedProposal: true,
       yDoc: new Y.Doc(),
       teamCodeUnique: "MyT3@mN@m3Unique6661111",
       provider: {},
@@ -124,6 +134,8 @@ export default {
       isReceivingUpdates: false,
       cannotUpdate: false,
       lastReceivedUpdate: +new Date(),
+      hasApprovedProposal: false,
+      isCompleted: false,
     };
   },
 
@@ -405,6 +417,7 @@ export default {
   }
   .editor-heading {
     display: flex;
+    align-items: center;
   }
 
   .editor-list-wrapper {
