@@ -123,6 +123,7 @@ export default {
       },
       isReceivingUpdates: false,
       cannotUpdate: false,
+      lastReceivedUpdate: +new Date(),
     };
   },
 
@@ -188,53 +189,28 @@ export default {
       // }
 
       //* on receiving updates from other peers
-      this.yDoc.on("update", (update, origin, doc, tr) => {
-        //* reject update if pos mismatch
-        let isTheSame = true;
-        const typeOfChange = tr.changed.keys().next().value.constructor.name;
+      this.yDoc.on("update", (update, origin) => {
+        this.isReceivingUpdates = true;
+        Y.applyUpdate(this.yDoc, update);
 
-        if (typeOfChange !== "YArray") {
-          const tempArray = doc.getArray("subdocuments").toArray();
-          console.log({
-            temp: doc.getArray("subdocuments").length,
-            sameid: doc.guid == this.yDoc.guid,
-            editors: this.yDoc.getArray("subdocuments").length,
-          });
-          if (tempArray.length === this.editors.length) {
-            for (let index = 0; index < tempArray.length; index++) {
-              if (this.editors[index]?.id !== tempArray[index]?.id) {
-                console.log("not the same!");
-                isTheSame = false;
-                break;
-              }
-            }
+        const folder = this.yDoc.getArray("subdocuments");
+        this.editors = [];
+        let objectIndex = 0;
+
+        folder.forEach((block, index) => {
+          if (block.id == this.currentSelectedObjectId) {
+            objectIndex = index;
           }
+          // *pass reference to parent ydoc
+          // block.ydoc = this.yDoc;
+          this.editors.push(block);
+        });
+        // * update toolbar pos based on changes
+        if (origin != this.teamCodeUnique && this.editors.length > 0) {
+          this.selectBlock(this.editors[objectIndex]);
         }
-
-        if (isTheSame) {
-          console.log("the same!");
-
-          this.isReceivingUpdates = true;
-          Y.applyUpdate(this.yDoc, update);
-
-          const folder = this.yDoc.getArray("subdocuments");
-          this.editors = [];
-          let objectIndex = 0;
-
-          folder.forEach((block, index) => {
-            if (block.id == this.currentSelectedObjectId) {
-              objectIndex = index;
-            }
-            // *pass reference to parent ydoc
-            // block.ydoc = this.yDoc;
-            this.editors.push(block);
-          });
-          // * update toolbar pos based on changes
-          if (origin != this.teamCodeUnique && this.editors.length > 0) {
-            this.selectBlock(this.editors[objectIndex]);
-          }
-          this.isReceivingUpdates = false;
-        }
+        this.isReceivingUpdates = false;
+        this.lastReceivedUpdate = +new Date();
       });
     });
   },
@@ -347,7 +323,8 @@ export default {
     afterDrag(newIndex, oldIndex, childrenCount) {
       //TODO: when receiving update, show error and do not update, instead reset the editor back like this:
       //TODO: show error also and reposition toolbar
-      if (this.isReceivingUpdates) {
+      console.log(+new Date() - this.lastReceivedUpdate);
+      if (+new Date() - this.lastReceivedUpdate < 1000) {
         const folder = this.yDoc.getArray("subdocuments");
         this.editors = [];
         folder.forEach((block) => {
