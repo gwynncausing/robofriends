@@ -12,7 +12,7 @@
         <template v-slot:content>
           <div>
             <p class="black--text ma-auto">
-              Someone is still typing. Wait for a while.
+              Please wait for your team to finish typing.
             </p>
           </div>
         </template>
@@ -82,6 +82,7 @@ import { MODULES } from "@/utils/constants";
 import { IndexeddbPersistence } from "y-indexeddb";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
+// import { fromUint8Array, toUint8Array } from "js-base64";
 
 export default {
   name: "ResearchPaperEditor",
@@ -149,6 +150,15 @@ export default {
   },
 
   mounted() {
+    // TODO: should replace localStorage call with fetch data from rtdb
+    //! NOTE: the encoded base64 string can be very long and may be takeup significant space when saving large research paper content
+    // Y.applyUpdate(this.yDoc, toUint8Array(localStorage.lastYDocState));
+
+    // console.log({
+    //   strLength: new Blob([fromUint8Array(Y.encodeStateAsUpdate(this.yDoc))])
+    //     .size,
+    // });
+
     const persistence = new IndexeddbPersistence(
       this.teamCodeUnique,
       this.yDoc
@@ -198,15 +208,16 @@ export default {
         if (origin != this.teamCodeUnique && this.editors.length > 0) {
           this.selectBlock(this.editors[objectIndex]);
         }
-
-        setTimeout(() => {
-          this.isReceivingUpdates = false;
-        }, 3000);
+        this.isReceivingUpdates = false;
       });
     });
   },
 
   beforeDestroy() {
+    // TODO: replace localStorage with save to rtdb
+    // localStorage.lastYDocState = fromUint8Array(
+    //   Y.encodeStateAsUpdate(this.yDoc)
+    // );
     this.yDoc.destroy();
     this.provider.destroy();
   },
