@@ -115,7 +115,7 @@
           </div>
         </template>
         <template v-slot:body-research-paper>
-          <div class="buttons-wrapper" v-if="hasTeamApprovedProposals">
+          <div v-if="hasTeamApprovedProposals" class="buttons-wrapper">
             <Button
               v-show="!isMarkedAsComplete"
               @click="markAsCompleteDialog = true"
