@@ -38,8 +38,19 @@ const adviserRoutes = [
       },
       {
         path: "archive",
-        name: "Adviser Archive",
         component: () => import("@/modules/adviser/views/Archive.vue"),
+        children: [
+          {
+            path: "",
+            component: () => import("@/views/Archive.vue"),
+            name: "Adviser Archive",
+          },
+          {
+            path: "research-paper/:id",
+            component: () => import("@/views/ResearchPaper.vue"),
+            name: "Adviser Research Paper",
+          },
+        ],
       },
     ],
   },

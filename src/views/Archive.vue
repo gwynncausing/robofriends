@@ -1,74 +1,75 @@
 <template>
-  <div>
-    <!-- // TODO: Filter Categories not yet implemented -->
-    <AppBar
-      :routes="appBar.routes"
-      :notification="appBar.notification"
-      :user="userInformation"
-      @logout="logout"
-    />
-    <div id="archive" class="container">
-      <header>
-        <div class="archive-header-wrapper">
-          <div class="space d-none d-sm-block"></div>
-          <TextField
-            v-model="searchContent"
-            placeholder="Seach research paper here"
-            append-icon="mdi-magnify"
-          />
-          <Button
-            text
-            class="black--text d-sm-none"
-            @click="filterDialog = true"
-          >
-            <v-icon>mdi-filter</v-icon>
-          </Button>
-          <Modal
-            :dialog="filterDialog"
-            class="black--text d-sm-none"
-            @closed="filterDialog = false"
-          >
-            <template v-slot:title>
-              <v-icon class="mr-2">mdi-filter</v-icon>
-              Filter
-            </template>
-            <template v-slot:content>
-              <ArchiveCategories
-                :categories="categories"
-                @getSelectedCategory="selectedCategory = $event"
-              />
-            </template>
-            <template v-slot:footer> footer </template>
-          </Modal>
-        </div>
-      </header>
-      <div class="archive-wrapper">
-        <aside class="d-none d-sm-block">
-          <v-icon class="mr-2">mdi-filter</v-icon>
-          Filter
-          <ArchiveCategories
-            :categories="categories"
-            @getSelectedCategory="selectedCategory = $event"
-          />
-          <ArchiveDate
-            label="Start Date"
-            :date="startDate"
-            :allowed-dates="allowedStartDate"
-            @update-date="startDate = $event"
-          />
-          <ArchiveDate
-            label="End Date"
-            :date="endDate"
-            :allowed-dates="allowedEndDate"
-            @update-date="endDate = $event"
-          />
-        </aside>
-        <section class="research-archive-wrapper">
-          <div v-for="(archive, index) in filteredArchives" :key="index">
-            <ArchiveCard :data="archive" />
-          </div>
-        </section>
+  <!-- // TODO: Filter Categories not yet implemented -->
+  <!-- // ***** Filter Categories commented out for now -->
+  <div id="archive" class="container">
+    <header>
+      <div class="archive-header-wrapper">
+        <div class="space d-none d-sm-block"></div>
+        <TextField
+          v-model="searchContent"
+          placeholder="Seach research paper here"
+          append-icon="mdi-magnify"
+        />
+        <Button text class="black--text d-sm-none" @click="filterDialog = true">
+          <v-icon>mdi-filter</v-icon>
+        </Button>
+        <Modal
+          :dialog="filterDialog"
+          class="black--text d-sm-none"
+          @closed="filterDialog = false"
+        >
+          <template v-slot:title>
+            <v-icon class="mr-2">mdi-filter</v-icon>
+            Filter
+          </template>
+          <template v-slot:content>
+            <!-- <ArchiveCategories
+              :categories="categories"
+              @getSelectedCategory="selectedCategory = $event"
+            /> -->
+            <ArchiveDate
+              label="Start Date"
+              :date="startDate"
+              :allowed-dates="allowedStartDate"
+              @update-date="startDate = $event"
+            />
+            <ArchiveDate
+              label="End Date"
+              :date="endDate"
+              :allowed-dates="allowedEndDate"
+              @update-date="endDate = $event"
+            />
+          </template>
+          <template v-slot:footer> footer </template>
+        </Modal>
       </div>
+    </header>
+    <div class="archive-wrapper">
+      <aside class="d-none d-sm-block">
+        <v-icon class="mr-2">mdi-filter</v-icon>
+        Filter
+        <!-- <ArchiveCategories
+          :categories="categories"
+          @getSelectedCategory="selectedCategory = $event"
+        /> -->
+        <ArchiveDate
+          label="Start Date"
+          :date="startDate"
+          :allowed-dates="allowedStartDate"
+          @update-date="startDate = $event"
+        />
+        <ArchiveDate
+          label="End Date"
+          :date="endDate"
+          :allowed-dates="allowedEndDate"
+          @update-date="endDate = $event"
+        />
+      </aside>
+      <section class="research-archive-wrapper">
+        <div v-for="(archive, index) in filteredArchives" :key="index">
+          <ArchiveCard :data="archive" @click="goToResearchPaper(index)" />
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -77,14 +78,14 @@
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
-import AppBar from "@/components/AppBar.vue";
 import Modal from "@/components/modals/Modal.vue";
-import ArchiveCategories from "@/components/archive/ArchiveCategories.vue";
+// import ArchiveCategories from "@/components/archive/ArchiveCategories.vue";
 import ArchiveDate from "@/components/archive/ArchiveDate.vue";
 import ArchiveCard from "@/components/archive/ArchiveCard.vue";
 
-import { mapActions, mapGetters } from "vuex";
-import { ROOT_ACTIONS, ROOT_GETTERS } from "@/store/types";
+import { mapGetters } from "vuex";
+import { ROOT_GETTERS } from "@/store/types";
+import { USER } from "@/utils/constants";
 import { capitalizeFirstLetter } from "@/utils/helpers";
 
 export default {
@@ -92,9 +93,8 @@ export default {
   components: {
     TextField,
     Button,
-    AppBar,
     Modal,
-    ArchiveCategories,
+    // ArchiveCategories,
     ArchiveDate,
     ArchiveCard,
   },
@@ -130,8 +130,9 @@ export default {
       archives: [
         {
           title: "Capstone Management System with Prescriptive Analytics",
-          imgSrc:
-            "https://th.bing.com/th/id/OIP.RDBwKq9LkMgzZJ3NKwglSgHaFL?pid=ImgDet&rs=1",
+          // imgSrc:
+          //   "https://th.bing.com/th/id/OIP.RDBwKq9LkMgzZJ3NKwglSgHaFL?pid=ImgDet&rs=1",
+          imgSrc: "",
           members: [
             {
               firstName: "Juan",
@@ -150,7 +151,8 @@ export default {
         },
         {
           title: "Random Ramdom",
-          imgSrc: "https://en.freejpg.com.ar/asset/900/f5/f5c2/F100011137.jpg",
+          // imgSrc: "https://en.freejpg.com.ar/asset/900/f5/f5c2/F100011137.jpg",
+          imgSrc: "",
           members: [
             {
               firstName: "Hey",
@@ -169,7 +171,8 @@ export default {
         },
         {
           title: "Mondar Mondar Mondar Mondar",
-          imgSrc: "https://en.freejpg.com.ar/asset/900/f5/f5c2/F100011137.jpg",
+          // imgSrc: "https://en.freejpg.com.ar/asset/900/f5/f5c2/F100011137.jpg",
+          imgSrc: "",
           members: [
             {
               firstName: "Hey",
@@ -193,8 +196,6 @@ export default {
 
   computed: {
     ...mapGetters({
-      getSchools: ROOT_GETTERS.GET_SCHOOLS,
-      getUser: ROOT_GETTERS.GET_USER,
       getUserType: ROOT_GETTERS.GET_USER_TYPE,
     }),
     userInformation() {
@@ -240,12 +241,33 @@ export default {
   },
 
   methods: {
+    goToResearchPaper(id) {
+      switch (this.getUserType) {
+        case USER.TYPES.STUDENT:
+          this.$router.push({
+            name: "Student Research Paper",
+            params: { id: id },
+          });
+          break;
+        case USER.TYPES.TEACHER:
+          this.$router.push({
+            name: "Adviser Research Paper",
+            params: { id: id },
+          });
+          break;
+        default:
+          break;
+      }
+    },
+
     allowedStartDate(val) {
       return Date.parse(val) < new Date(this.endDate);
     },
+
     allowedEndDate(val) {
       return Date.parse(val) >= new Date(this.startDate);
     },
+
     setDefaultStartDate() {
       const yearToDeduct = 3;
       this.startDate = new Date(
@@ -253,17 +275,6 @@ export default {
       )
         .toISOString()
         .substr(0, 7);
-    },
-    ...mapActions({
-      onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
-    }),
-    async logout() {
-      try {
-        await this.onLogoutUser();
-        this.$router.replace({ name: "SignIn" });
-      } catch (error) {
-        console.log(error);
-      }
     },
   },
 };
