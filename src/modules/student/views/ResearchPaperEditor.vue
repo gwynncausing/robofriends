@@ -12,7 +12,7 @@
         <template v-slot:content>
           <div>
             <p class="black--text ma-auto">
-              Please wait for your team to finish typing.
+              Still syncing, wait for a second to avoid data loss.
             </p>
           </div>
         </template>
@@ -323,46 +323,54 @@ export default {
     afterDrag(newIndex, oldIndex, childrenCount) {
       //TODO: when receiving update, show error and do not update, instead reset the editor back like this:
       //TODO: show error also and reposition toolbar
-      console.log(+new Date() - this.lastReceivedUpdate);
-      if (+new Date() - this.lastReceivedUpdate < 1000) {
+
+      //* check if there are recent updates to prevent duplicate blocks
+      let canUpdate = true;
+      if (+new Date() - this.lastReceivedUpdate < 2000) {
         const folder = this.yDoc.getArray("subdocuments");
         this.editors = [];
         folder.forEach((block) => {
           this.editors.push(block);
         });
         this.cannotUpdate = true;
-        return;
+        canUpdate = false;
       }
 
       const length = this.editors.length;
       let insertAt = newIndex;
       let deleteAt = oldIndex;
       const selectedBlock = this.editors[newIndex];
-      if (oldIndex === length - 1) {
-        deleteAt = length;
-      } else if (oldIndex > newIndex) {
-        oldIndex++;
-        deleteAt = oldIndex + childrenCount;
-      } else if (oldIndex < newIndex) {
-        insertAt++;
+
+      //* process and broadcast positional change
+      if (canUpdate) {
+        if (oldIndex === length - 1) {
+          deleteAt = length;
+        } else if (oldIndex > newIndex) {
+          oldIndex++;
+          deleteAt = oldIndex + childrenCount;
+        } else if (oldIndex < newIndex) {
+          insertAt++;
+        }
+
+        if (newIndex !== oldIndex) {
+          const objectsToInsert =
+            childrenCount > 0
+              ? [
+                  this.editors[newIndex],
+                  ...this.editors.slice(oldIndex, oldIndex + childrenCount),
+                ]
+              : [this.editors[newIndex]];
+          this.yDoc.transact(() => {
+            const folder = this.yDoc.getArray("subdocuments");
+            folder.insert(insertAt, objectsToInsert);
+            document;
+            folder.delete(deleteAt, childrenCount + 1);
+          }, this.teamCodeUnique);
+        }
       }
 
-      if (newIndex !== oldIndex) {
-        const objectsToInsert =
-          childrenCount > 0
-            ? [
-                this.editors[newIndex],
-                ...this.editors.slice(oldIndex, oldIndex + childrenCount),
-              ]
-            : [this.editors[newIndex]];
-        this.yDoc.transact(() => {
-          const folder = this.yDoc.getArray("subdocuments");
-          folder.insert(insertAt, objectsToInsert);
-          document;
-          folder.delete(deleteAt, childrenCount + 1);
-        }, this.teamCodeUnique);
-      }
-
+      //* uncollapse after dropping
+      //! still has some bug where it wont uncollapse
       const parentIndex = this.editors.findIndex(
         (block) => block.id === selectedBlock.id
       );
