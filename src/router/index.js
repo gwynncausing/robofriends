@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import { loggedInGuard } from "../utils/guards";
 // import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
@@ -13,6 +14,7 @@ const routes = [
   {
     path: "/",
     name: "SignIn",
+    beforeEnter: loggedInGuard,
     component: () => import("@/views/SignIn.vue"),
   },
   {
@@ -49,12 +51,13 @@ const routes = [
   {
     path: "/onboarding",
     name: "Onboarding",
+    beforeEnter: loggedInGuard,
     component: () => import("@/views/Onboarding.vue"),
   },
   {
     path: "*",
     name: "PageNotFound",
-    component: () => import("@/views/PageNotFound.vue"),
+    component: () => import("@/views/errors/PageNotFound.vue"),
   },
 ];
 
