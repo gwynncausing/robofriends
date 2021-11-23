@@ -188,23 +188,27 @@ export default {
       // }
 
       //* on receiving updates from other peers
-      this.yDoc.on("update", (update, origin) => {
+      this.yDoc.on("update", (update, origin, doc, tr) => {
         //* reject update if pos mismatch
         let isTheSame = true;
+        const typeOfChange = tr.changed.keys().next().value.constructor.name;
 
-        if (origin !== this.teamCodeUnique) {
-          const tempYdoc = new Y.Doc();
-          Y.applyUpdate(tempYdoc, update);
-          const tempArray = this.yDoc.getArray("subdocuments").toArray();
-
-          for (let index = 0; index < tempArray.length; index++) {
-            if (this.editors[index].id !== tempArray[index].id) {
-              console.log("not the same!");
-              isTheSame = false;
-              break;
+        if (typeOfChange !== "YArray") {
+          const tempArray = doc.getArray("subdocuments").toArray();
+          console.log({
+            temp: doc.getArray("subdocuments").length,
+            sameid: doc.guid == this.yDoc.guid,
+            editors: this.yDoc.getArray("subdocuments").length,
+          });
+          if (tempArray.length === this.editors.length) {
+            for (let index = 0; index < tempArray.length; index++) {
+              if (this.editors[index]?.id !== tempArray[index]?.id) {
+                console.log("not the same!");
+                isTheSame = false;
+                break;
+              }
             }
           }
-          tempYdoc.destroy();
         }
 
         if (isTheSame) {
