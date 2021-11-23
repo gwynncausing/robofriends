@@ -208,7 +208,7 @@ export default {
         if (origin != this.teamCodeUnique && this.editors.length > 0) {
           this.selectBlock(this.editors[objectIndex]);
         }
-        this.isReceivingUpdates = false;
+        setTimeout(() => (this.isReceivingUpdates = false), 1500);
       });
     });
   },
