@@ -193,15 +193,24 @@ export default {
         const tempYdoc = new Y.Doc();
         Y.applyUpdate(tempYdoc, update);
         const tempArray = this.yDoc.getArray("subdocuments").toArray();
-        for (let index = 0; index < tempArray.length; index++) {
-          if (this.editors[index].id !== tempArray[index].id) {
-            console.log("not the same!");
-            tempYdoc.destroy();
-            return;
+        let isTheSame = true;
+
+        if (origin !== this.teamCodeUnique) {
+          for (let index = 0; index < tempArray.length; index++) {
+            if (this.editors[index].id !== tempArray[index].id) {
+              console.log("not the same!");
+              isTheSame = false;
+              break;
+            }
           }
         }
-        console.log("the same!");
+
         tempYdoc.destroy();
+        if (!isTheSame) {
+          return;
+        }
+
+        console.log("the same!");
 
         this.isReceivingUpdates = true;
         Y.applyUpdate(this.yDoc, update);
@@ -222,7 +231,6 @@ export default {
         if (origin != this.teamCodeUnique && this.editors.length > 0) {
           this.selectBlock(this.editors[objectIndex]);
         }
-        // setTimeout(() => (this.isReceivingUpdates = false), 1500);
         this.isReceivingUpdates = false;
       });
     });
