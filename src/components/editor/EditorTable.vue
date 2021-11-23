@@ -82,6 +82,11 @@ export default {
       type: String,
       default: "#FFF",
     },
+    isEditable: {
+      required: true,
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
@@ -151,6 +156,8 @@ export default {
           }),
         ],
         content: content,
+        editable: this.isEditable,
+
         onUpdate: () => {
           this.$emit("input", this.editor.getJSON());
         },
