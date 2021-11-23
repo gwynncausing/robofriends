@@ -1,34 +1,45 @@
 <template>
   <div class="create-new">
-    <div class="editor-heading">
-      <ActiveUsersList :users="activeUsers" />
-      <Button :loading="isSubmittingProposal" @click="submitProposal">
-        Submit
-      </Button>
+    <Yaaaay v-if="isCompleted" @showDialog="joinTeamModal = true" />
+    <div v-else class="create-new-editor">
+      <div class="editor-heading">
+        <ActiveUsersList :users="activeUsers" />
+        <Button :loading="isSubmittingProposal" @click="submitProposal">
+          Submit
+        </Button>
+      </div>
+      <div class="editor-wrapper">
+        <EditorTextWithTitle
+          :editor-data="editor"
+          :user-color="userColor"
+          is-editable
+          @input="getContent($event)"
+          @updateUsers="updateUsers($event)"
+        />
+      </div>
+      <Snackbar
+        content-class="neutral-800--text text-center"
+        :timeout="4000"
+        :is-snackbar-shown="isSnackbarShown"
+        @closeSnackbar="isSnackbarShown = false"
+      >
+        <template v-slot:content>
+          {{ snackbarMessage }}
+        </template>
+      </Snackbar>
     </div>
-    <div class="editor-wrapper">
-      <EditorTextWithTitle
-        :editor-data="editor"
-        :user-color="userColor"
-        is-editable
-        @input="getContent($event)"
-        @updateUsers="updateUsers($event)"
-      />
-    </div>
-    <Snackbar
-      content-class="neutral-800--text text-center"
-      :timeout="4000"
-      :is-snackbar-shown="isSnackbarShown"
-      @closeSnackbar="isSnackbarShown = false"
-    >
-      <template v-slot:content>
-        {{ snackbarMessage }}
-      </template>
-    </Snackbar>
+    <ModalJoinTeam
+      :dialog-props="joinTeamModal"
+      :is-loading="isSubmitTeamCode"
+      @dialogClose="joinTeamModal = $event"
+      @dialogJoinTeam="joinTeam($event)"
+    />
   </div>
 </template>
 
 <script>
+import ModalJoinTeam from "@/components/modals/ModalJoinTeam.vue";
+import Yaaaay from "@/components/messages/Yaaaay.vue";
 import Button from "@/components/global/Button.vue";
 import EditorTextWithTitle from "@/components/editor/EditorTextWithTitle";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
@@ -39,6 +50,8 @@ import { isEmptyOrWhiteSpaces } from "@/utils/helpers";
 export default {
   name: "CreateNew",
   components: {
+    Yaaaay,
+    ModalJoinTeam,
     Button,
     EditorTextWithTitle,
     ActiveUsersList,
@@ -48,6 +61,10 @@ export default {
     proposal: {
       type: Object,
       default: () => ({}),
+    },
+    isCompleted: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -61,6 +78,8 @@ export default {
       isSubmittingProposal: false,
       isSnackbarShown: false,
       snackbarMessage: "",
+      joinTeamModal: false,
+      isSubmitTeamCode: false,
     };
   },
   computed: {
@@ -116,7 +135,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.create-new {
+.create-new-editor {
   padding-top: 24px;
   display: flex;
   flex-direction: column;
