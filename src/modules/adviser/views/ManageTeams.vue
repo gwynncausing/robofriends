@@ -115,13 +115,31 @@
           </div>
         </template>
         <template v-slot:body-research-paper>
+          <div class="buttons-wrapper" v-if="hasTeamApprovedProposals">
+            <Button
+              v-show="!isMarkedAsComplete"
+              @click="markAsCompleteDialog = true"
+            >
+              Mark as Complete
+            </Button>
+            <Button v-show="isMarkedAsComplete" outlined>
+              Mark as Incomplete
+            </Button>
+            <Button
+              v-show="isMarkedAsComplete && !isPublished"
+              @click="publishDialog = true"
+            >
+              Publish to Research Archive
+            </Button>
+            <Button v-show="isMarkedAsComplete && isPublished" outlined>
+              Unpublish
+            </Button>
+          </div>
           <ResearchPaper
             v-if="hasTeamApprovedProposals"
             :blocks="researchPaper"
             :is-marked-as-complete="isMarkedAsComplete"
             :is-published="isPublished"
-            @showMarkAsCompleteDialog="markAsCompleteDialog = true"
-            @showPublishDialog="publishDialog = true"
           />
           <EmptyDataTeamResearchPaper v-else />
         </template>
@@ -139,6 +157,7 @@
 </template>
 
 <script>
+import Button from "@/components/global/Button";
 import Chip from "@/components/global/Chip";
 import Modal from "@/components/modals/Modal";
 import ModalMarkAsComplete from "@/components/modals/ModalMarkAsComplete";
@@ -162,6 +181,7 @@ import { PROPOSAL } from "@/utils/constants";
 export default {
   name: "ManageTeams",
   components: {
+    Button,
     Chip,
     Modal,
     ModalMarkAsComplete,
@@ -562,6 +582,13 @@ export default {
 
     .tabs {
       flex: 3;
+    }
+
+    .buttons-wrapper {
+      display: flex;
+      column-gap: 8px;
+      justify-content: flex-end;
+      padding-top: 24px;
     }
   }
 }
