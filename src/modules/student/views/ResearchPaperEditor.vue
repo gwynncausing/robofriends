@@ -189,8 +189,8 @@ export default {
 
       //* on receiving updates from other peers
       this.yDoc.on("update", (update, origin) => {
-        Y.applyUpdate(this.yDoc, update);
         this.isReceivingUpdates = true;
+        Y.applyUpdate(this.yDoc, update);
 
         const folder = this.yDoc.getArray("subdocuments");
         this.editors = [];
