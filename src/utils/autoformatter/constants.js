@@ -21,3 +21,13 @@ export const PAGE_ORIENTATION = {
   portrait: PageOrientation.PORTRAIT,
   landscape: PageOrientation.LANDSCAPE,
 };
+
+export const MARK_TYPE = {
+  bold: "bold",
+  italic: "italic",
+  underline: "underline",
+  subscript: "subscript",
+  superscript: "superscript",
+  strike: "strike",
+  link: "link",
+};

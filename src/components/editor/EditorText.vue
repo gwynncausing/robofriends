@@ -23,6 +23,7 @@ import Subscript from "@tiptap/extension-subscript";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import ListItem from "@tiptap/extension-list-item";
+import Link from "@tiptap/extension-link";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
@@ -95,6 +96,9 @@ export default {
           Underline,
           Superscript,
           Subscript,
+          Link.configure({
+            openOnClick: true,
+          }),
           Collaboration.configure({
             document: this.yDoc,
             field: this.editorData.id,

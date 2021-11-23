@@ -51,16 +51,21 @@ export const createParagraphStyle = ({
 export const createListLevelOptions = ({
   level = 0,
   format = LevelFormat.DECIMAL,
+  text = `%${level + 1}.`,
   alignment = AlignmentType.START,
   baseIndentOptions = {
     left: 1.27,
     hanging: 0.45,
   },
+  spacing = {
+    before: 0,
+    after: 0,
+  },
 }) => {
   return {
     level: level,
     format: format,
-    text: format == LevelFormat.BULLET ? "\u25CF" : `%${level + 1}.`,
+    text: text,
     alignment: alignment,
     style: {
       paragraph: {
@@ -69,8 +74,8 @@ export const createListLevelOptions = ({
           hanging: `${baseIndentOptions.hanging}cm`,
         },
         spacing: {
-          before: "0pt",
-          after: "0pt",
+          before: `${spacing.before}pt`,
+          after: `${spacing.after}pt`,
         },
       },
     },
@@ -180,9 +185,28 @@ export const ACM_FORMAT = {
         levels: [0, 1, 2, 3, 4, 5].map((val) =>
           createListLevelOptions({
             level: val,
+            text: `%${val + 1}`,
             baseIndentOptions: {
               left: 1.27,
               hanging: 0.45,
+            },
+          })
+        ),
+      },
+      reference: {
+        reference: "reference",
+        levels: [0, 1, 2, 3, 4, 5].map((val) =>
+          createListLevelOptions({
+            level: val,
+            format: LevelFormat.DECIMAL,
+            text: `[%${val + 1}]`,
+            baseIndentOptions: {
+              left: 1.27,
+              hanging: 0.63,
+            },
+            spacing: {
+              before: 0,
+              after: 4,
             },
           })
         ),
@@ -193,6 +217,7 @@ export const ACM_FORMAT = {
           createListLevelOptions({
             level: val,
             format: LevelFormat.BULLET,
+            text: "\u25CF",
             baseIndentOptions: {
               left: 1.27,
               hanging: 0.45,

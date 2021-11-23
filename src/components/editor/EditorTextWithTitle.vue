@@ -25,6 +25,7 @@ import Heading from "@tiptap/extension-heading";
 import BulletList from "@tiptap/extension-bullet-list";
 import ListItem from "@tiptap/extension-list-item";
 import Placeholder from "@tiptap/extension-placeholder";
+import Link from "@tiptap/extension-link";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
@@ -111,6 +112,9 @@ export default {
           Underline,
           Superscript,
           Subscript,
+          Link.configure({
+            openOnClick: true,
+          }),
           Placeholder.configure({
             placeholder: ({ node }) => {
               if (node.type.name === "heading") {

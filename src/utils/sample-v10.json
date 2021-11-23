@@ -1,0 +1,87 @@
+{
+  "id": "1637579366554referenceMyT3@mN@m3Unique6661111",
+  "content": [
+    {
+      "type": "orderedList",
+      "attrs": { "start": 1 },
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Bowman, M., Debray, S. K., and Peterson, L. L. 1993. Reasoning about naming systems. "
+                },
+                {
+                  "type": "text",
+                  "marks": [{ "type": "italic" }],
+                  "text": "ACM Trans. Program. Lang. Syst."
+                },
+                {
+                  "type": "text",
+                  "text": " 15, 5 (Nov. 1993), 795-825. DOI= "
+                },
+                {
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "http://doi.acm.org/10.1145/161468.16147",
+                        "target": "_blank"
+                      }
+                    }
+                  ],
+                  "text": "http://doi.acm.org/10.1145/161468.16147"
+                },
+                { "type": "text", "text": "." }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Ding, W. and Marchionini, G. 1997. "
+                },
+                {
+                  "type": "text",
+                  "marks": [{ "type": "italic" }],
+                  "text": "A Study on Video Browsing Strategies"
+                },
+                {
+                  "type": "text",
+                  "text": ". Technical Report. University of Maryland at College Park."
+                },
+                {
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "http://bud.com/student/editor",
+                        "target": "_blank"
+                      }
+                    }
+                  ],
+                  "text": "http://bud.com/student/editor"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "blockType": "reference",
+  "users": [],
+  "column": "default"
+}
