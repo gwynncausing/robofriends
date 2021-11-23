@@ -239,6 +239,9 @@ export default {
   },
 
   methods: {
+    goToResearchPaper() {
+      console.log("I am here");
+    },
     allowedStartDate(val) {
       return Date.parse(val) < new Date(this.endDate);
     },

@@ -1,5 +1,11 @@
 <template>
-  <v-card class="archive-card" :width="maxWidth + 'px'" height="324px">
+  <v-card
+    class="archive-card"
+    v-bind="$attrs"
+    :width="maxWidth + 'px'"
+    height="324px"
+    v-on="$listeners"
+  >
     <div
       class="image-container"
       :style="{ backgroundImage: `url('${image}')` }"
