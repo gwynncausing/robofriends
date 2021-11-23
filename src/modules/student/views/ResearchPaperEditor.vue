@@ -295,7 +295,6 @@ export default {
         id: new Date().getTime() + blockType + this.teamCodeUnique,
         content: content,
         blockType,
-        users: [],
         column: "default",
       };
 

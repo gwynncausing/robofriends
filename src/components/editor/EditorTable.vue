@@ -120,7 +120,7 @@ export default {
   },
 
   mounted() {
-    const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
+    const name = `${this.getUser.firstName}${this.getUser.lastName}`;
     try {
       this.editor = new Editor({
         extensions: [
@@ -170,7 +170,7 @@ export default {
           CollaborationCursor.configure({
             provider: this.provider,
             user: {
-              name,
+              name: name,
               color: this.userColor,
             },
           }),
