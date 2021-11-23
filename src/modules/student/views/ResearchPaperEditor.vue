@@ -1,7 +1,7 @@
 <template>
   <div id="editor">
     <!-- // * make this hasApprovedProposal to true to check/see the editor -->
-    <div v-if="hasApprovedProposal">
+    <div v-if="!hasApprovedProposal">
       <EmptyDataResearchPaperEditor />
     </div>
     <div v-else class="editor-wrapper">
@@ -19,9 +19,16 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <Button text class="neutral-800--text mr-auto">Version History</Button>
-        <ActiveUsersList :users="activeUsers" class="mr-4" />
-        <Button>Save</Button>
+        <Button v-if="!isCompleted" text class="neutral-800--text mr-auto">
+          Version History
+        </Button>
+        <ActiveUsersList
+          v-if="!isCompleted"
+          :users="activeUsers"
+          class="mr-4"
+        />
+        <Button v-if="!isCompleted">Save</Button>
+        <Chip v-if="isCompleted" class="ml-auto">Completed</Chip>
       </div>
       <div class="editor-list-wrapper">
         <div class="editor-list">
@@ -29,6 +36,7 @@
             <EditorDraggable
               :list="editors"
               :user-color="userColor"
+              :is-editable="!isCompleted"
               @setColumn="setColumn($event)"
               @dragElement="testMethod"
               @getContent="getContent($event)"
@@ -38,6 +46,7 @@
           </div>
 
           <EditorToolbar
+            v-if="!isCompleted"
             :current-toolbar-position="currentToolbarPosition"
             :current-selected-editor-index="currentSelectedEditorIndex"
             @addEditor="addEditor($event)"
@@ -55,6 +64,7 @@ import Button from "@/components/global/Button.vue";
 import EditorToolbar from "@/components/editor/EditorToolbar.vue";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 import EmptyDataResearchPaperEditor from "@/components/messages/EmptyDataResearchPaperEditor";
+import Chip from "@/components/global/Chip.vue";
 
 import { mapActions, mapGetters } from "vuex";
 import {
@@ -72,6 +82,7 @@ export default {
     EditorToolbar,
     ActiveUsersList,
     EmptyDataResearchPaperEditor,
+    Chip,
   },
   data() {
     return {
@@ -82,6 +93,7 @@ export default {
       currentToolbarPosition: 0,
       currentSelectedEditorIndex: 0,
       hasApprovedProposal: false,
+      isCompleted: false,
     };
   },
 
@@ -222,6 +234,7 @@ export default {
   }
   .editor-heading {
     display: flex;
+    align-items: center;
   }
 
   .editor-list-wrapper {
