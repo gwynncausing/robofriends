@@ -130,8 +130,9 @@ export default {
       archives: [
         {
           title: "Capstone Management System with Prescriptive Analytics",
-          imgSrc:
-            "https://th.bing.com/th/id/OIP.RDBwKq9LkMgzZJ3NKwglSgHaFL?pid=ImgDet&rs=1",
+          // imgSrc:
+          //   "https://th.bing.com/th/id/OIP.RDBwKq9LkMgzZJ3NKwglSgHaFL?pid=ImgDet&rs=1",
+          imgSrc: "",
           members: [
             {
               firstName: "Juan",
@@ -150,7 +151,8 @@ export default {
         },
         {
           title: "Random Ramdom",
-          imgSrc: "https://en.freejpg.com.ar/asset/900/f5/f5c2/F100011137.jpg",
+          // imgSrc: "https://en.freejpg.com.ar/asset/900/f5/f5c2/F100011137.jpg",
+          imgSrc: "",
           members: [
             {
               firstName: "Hey",
@@ -169,7 +171,8 @@ export default {
         },
         {
           title: "Mondar Mondar Mondar Mondar",
-          imgSrc: "https://en.freejpg.com.ar/asset/900/f5/f5c2/F100011137.jpg",
+          // imgSrc: "https://en.freejpg.com.ar/asset/900/f5/f5c2/F100011137.jpg",
+          imgSrc: "",
           members: [
             {
               firstName: "Hey",

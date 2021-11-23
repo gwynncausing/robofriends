@@ -7,8 +7,8 @@
     v-on="$listeners"
   >
     <div
-      class="image-container"
-      :style="{ backgroundImage: `url('${image}')` }"
+      :class="image.isDefault ? 'default-container' : 'image-container'"
+      :style="{ backgroundImage: `url('${image.src}')` }"
     ></div>
 
     <header>{{ data.title }}</header>
@@ -51,8 +51,17 @@ export default {
 
   computed: {
     image() {
-      if (this.data?.imgSrc) return this.data.imgSrc;
-      return "https://cdn.vuetifyjs.com/images/cards/cooking.png";
+      let image = {
+        isDefault: false,
+        src: "",
+      };
+      if (this.data?.imgSrc || this.data?.imgSrc !== "")
+        image.src = this.data?.imgSrc;
+      else {
+        image.isDefault = true;
+        image.src = require("@/assets/bud-flower-fade.svg");
+      }
+      return image;
     },
     researchFinishYear() {
       return new Date(this.data?.dateFinished).getFullYear() || "";
@@ -89,6 +98,13 @@ export default {
   .image-container {
     height: 156px;
     background-size: cover;
+  }
+  .default-container {
+    height: 156px;
+    background: var(--v-neutral-300);
+    background-size: 70%;
+    background-repeat: no-repeat;
+    background-position: center;
   }
   header {
     font-size: 1rem;
