@@ -26,7 +26,11 @@
             </Button>
           </template>
           <v-list>
-            <v-list-item v-for="(item, index) in exportItems" :key="index" link>
+            <v-list-item
+              v-for="(item, index) in exportItems"
+              :key="index"
+              @click="exportFile(item.title)"
+            >
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -93,6 +97,9 @@ import { IndexeddbPersistence } from "y-indexeddb";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 // import { fromUint8Array, toUint8Array } from "js-base64";
+
+import { ACM_FORMAT } from "@/utils/autoformatter/format-rules";
+import autoformat from "@/utils/autoformatter/autoformat";
 
 export default {
   name: "ResearchPaperEditor",
@@ -402,6 +409,11 @@ export default {
           }
         }
       }
+    },
+
+    exportFile(title) {
+      if (title === "ACM")
+        autoformat.generateDocument(ACM_FORMAT, this.editors);
     },
   },
 };

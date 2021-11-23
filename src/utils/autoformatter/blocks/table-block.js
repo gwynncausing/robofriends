@@ -69,6 +69,14 @@ export const createTable = async (content) => {
 const processTableBlockChildren = async (item, section) => {
   for (const childContent of item.content) {
     if (childContent.type === "heading") {
+      let tempContentText = [
+        {
+          type: "text",
+          marks: [{ type: "bold" }],
+          text: childContent.content[0].text,
+        },
+      ];
+      section.children.push(createParagraph(tempContentText, "FigureStyle"));
     } else if (childContent.type === "table") {
       let table = await createTable(childContent.content);
       section.children.push(table);
