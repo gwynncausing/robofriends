@@ -190,12 +190,13 @@ export default {
       //* on receiving updates from other peers
       this.yDoc.on("update", (update, origin) => {
         //* reject update if pos mismatch
-        const tempYdoc = new Y.Doc();
-        Y.applyUpdate(tempYdoc, update);
-        const tempArray = this.yDoc.getArray("subdocuments").toArray();
         let isTheSame = true;
 
         if (origin !== this.teamCodeUnique) {
+          const tempYdoc = new Y.Doc();
+          Y.applyUpdate(tempYdoc, update);
+          const tempArray = this.yDoc.getArray("subdocuments").toArray();
+
           for (let index = 0; index < tempArray.length; index++) {
             if (this.editors[index].id !== tempArray[index].id) {
               console.log("not the same!");
@@ -203,35 +204,33 @@ export default {
               break;
             }
           }
+          tempYdoc.destroy();
         }
 
-        tempYdoc.destroy();
-        if (!isTheSame) {
-          return;
-        }
+        if (isTheSame) {
+          console.log("the same!");
 
-        console.log("the same!");
+          this.isReceivingUpdates = true;
+          Y.applyUpdate(this.yDoc, update);
 
-        this.isReceivingUpdates = true;
-        Y.applyUpdate(this.yDoc, update);
+          const folder = this.yDoc.getArray("subdocuments");
+          this.editors = [];
+          let objectIndex = 0;
 
-        const folder = this.yDoc.getArray("subdocuments");
-        this.editors = [];
-        let objectIndex = 0;
-
-        folder.forEach((block, index) => {
-          if (block.id == this.currentSelectedObjectId) {
-            objectIndex = index;
+          folder.forEach((block, index) => {
+            if (block.id == this.currentSelectedObjectId) {
+              objectIndex = index;
+            }
+            // *pass reference to parent ydoc
+            // block.ydoc = this.yDoc;
+            this.editors.push(block);
+          });
+          // * update toolbar pos based on changes
+          if (origin != this.teamCodeUnique && this.editors.length > 0) {
+            this.selectBlock(this.editors[objectIndex]);
           }
-          // *pass reference to parent ydoc
-          // block.ydoc = this.yDoc;
-          this.editors.push(block);
-        });
-        // * update toolbar pos based on changes
-        if (origin != this.teamCodeUnique && this.editors.length > 0) {
-          this.selectBlock(this.editors[objectIndex]);
+          this.isReceivingUpdates = false;
         }
-        this.isReceivingUpdates = false;
       });
     });
   },
