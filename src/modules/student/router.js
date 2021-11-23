@@ -1,18 +1,10 @@
-// import store from "@/store/index";
-
-// const studentGuard = (to, from, next) => {
-//   if (store.getters["user/getAuthStatus"]) {
-//     if (store.getters["user/getUserType"] == "STUDENT") {
-//       next();
-//     } else next("/");
-//   }
-// };
+import { studentGuard } from "@/utils/guards";
 
 const studentRoutes = [
   {
     path: "/student",
     name: "",
-    // beforeEnter: studentGuard,
+    beforeEnter: studentGuard,
     component: () => import("@/modules/student/Module.vue"),
     children: [
       // {
