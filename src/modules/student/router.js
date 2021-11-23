@@ -65,8 +65,19 @@ const studentRoutes = [
       },
       {
         path: "archive",
-        name: "Student Archive",
         component: () => import("@/modules/student/views/Archive.vue"),
+        children: [
+          {
+            path: "",
+            component: () => import("@/views/Archive.vue"),
+            name: "Student Archive",
+          },
+          {
+            path: "research-paper/:id",
+            component: () => import("@/views/ResearchPaper.vue"),
+            name: "Student Research Paper",
+          },
+        ],
       },
     ],
   },

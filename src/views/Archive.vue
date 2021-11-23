@@ -1,74 +1,75 @@
 <template>
-  <div>
-    <!-- // TODO: Filter Categories not yet implemented -->
-    <AppBar
-      :routes="appBar.routes"
-      :notification="appBar.notification"
-      :user="userInformation"
-      @logout="logout"
-    />
-    <div id="archive" class="container">
-      <header>
-        <div class="archive-header-wrapper">
-          <div class="space d-none d-sm-block"></div>
-          <TextField
-            v-model="searchContent"
-            placeholder="Seach research paper here"
-            append-icon="mdi-magnify"
-          />
-          <Button
-            text
-            class="black--text d-sm-none"
-            @click="filterDialog = true"
-          >
-            <v-icon>mdi-filter</v-icon>
-          </Button>
-          <Modal
-            :dialog="filterDialog"
-            class="black--text d-sm-none"
-            @closed="filterDialog = false"
-          >
-            <template v-slot:title>
-              <v-icon class="mr-2">mdi-filter</v-icon>
-              Filter
-            </template>
-            <template v-slot:content>
-              <ArchiveCategories
-                :categories="categories"
-                @getSelectedCategory="selectedCategory = $event"
-              />
-            </template>
-            <template v-slot:footer> footer </template>
-          </Modal>
-        </div>
-      </header>
-      <div class="archive-wrapper">
-        <aside class="d-none d-sm-block">
-          <v-icon class="mr-2">mdi-filter</v-icon>
-          Filter
-          <ArchiveCategories
-            :categories="categories"
-            @getSelectedCategory="selectedCategory = $event"
-          />
-          <ArchiveDate
-            label="Start Date"
-            :date="startDate"
-            :allowed-dates="allowedStartDate"
-            @update-date="startDate = $event"
-          />
-          <ArchiveDate
-            label="End Date"
-            :date="endDate"
-            :allowed-dates="allowedEndDate"
-            @update-date="endDate = $event"
-          />
-        </aside>
-        <section class="research-archive-wrapper">
-          <div v-for="(archive, index) in filteredArchives" :key="index">
-            <ArchiveCard :data="archive" />
-          </div>
-        </section>
+  <!-- // TODO: Filter Categories not yet implemented -->
+  <!-- // ***** Filter Categories commented out for now -->
+  <div id="archive" class="container">
+    <header>
+      <div class="archive-header-wrapper">
+        <div class="space d-none d-sm-block"></div>
+        <TextField
+          v-model="searchContent"
+          placeholder="Seach research paper here"
+          append-icon="mdi-magnify"
+        />
+        <Button text class="black--text d-sm-none" @click="filterDialog = true">
+          <v-icon>mdi-filter</v-icon>
+        </Button>
+        <Modal
+          :dialog="filterDialog"
+          class="black--text d-sm-none"
+          @closed="filterDialog = false"
+        >
+          <template v-slot:title>
+            <v-icon class="mr-2">mdi-filter</v-icon>
+            Filter
+          </template>
+          <template v-slot:content>
+            <!-- <ArchiveCategories
+              :categories="categories"
+              @getSelectedCategory="selectedCategory = $event"
+            /> -->
+            <ArchiveDate
+              label="Start Date"
+              :date="startDate"
+              :allowed-dates="allowedStartDate"
+              @update-date="startDate = $event"
+            />
+            <ArchiveDate
+              label="End Date"
+              :date="endDate"
+              :allowed-dates="allowedEndDate"
+              @update-date="endDate = $event"
+            />
+          </template>
+          <template v-slot:footer> footer </template>
+        </Modal>
       </div>
+    </header>
+    <div class="archive-wrapper">
+      <aside class="d-none d-sm-block">
+        <v-icon class="mr-2">mdi-filter</v-icon>
+        Filter
+        <!-- <ArchiveCategories
+          :categories="categories"
+          @getSelectedCategory="selectedCategory = $event"
+        /> -->
+        <ArchiveDate
+          label="Start Date"
+          :date="startDate"
+          :allowed-dates="allowedStartDate"
+          @update-date="startDate = $event"
+        />
+        <ArchiveDate
+          label="End Date"
+          :date="endDate"
+          :allowed-dates="allowedEndDate"
+          @update-date="endDate = $event"
+        />
+      </aside>
+      <section class="research-archive-wrapper">
+        <div v-for="(archive, index) in filteredArchives" :key="index">
+          <ArchiveCard :data="archive" />
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -77,9 +78,8 @@
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 
-import AppBar from "@/components/AppBar.vue";
 import Modal from "@/components/modals/Modal.vue";
-import ArchiveCategories from "@/components/archive/ArchiveCategories.vue";
+// import ArchiveCategories from "@/components/archive/ArchiveCategories.vue";
 import ArchiveDate from "@/components/archive/ArchiveDate.vue";
 import ArchiveCard from "@/components/archive/ArchiveCard.vue";
 
@@ -92,9 +92,8 @@ export default {
   components: {
     TextField,
     Button,
-    AppBar,
     Modal,
-    ArchiveCategories,
+    // ArchiveCategories,
     ArchiveDate,
     ArchiveCard,
   },

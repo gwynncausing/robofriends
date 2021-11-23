@@ -1,16 +1,12 @@
 <template>
   <div id="archive">
-    <Archive />
+    <router-view />
   </div>
 </template>
 
 <script>
-import Archive from "@/components/Archive";
 export default {
   name: "StudentArchive",
-  components: {
-    Archive,
-  },
 };
 </script>
 

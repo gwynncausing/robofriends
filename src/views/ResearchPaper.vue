@@ -1,12 +1,10 @@
 <template>
-  <div id="archive">
-    <router-view />
-  </div>
+  <div>Research Information</div>
 </template>
 
 <script>
 export default {
-  name: "StudentArchive",
+  name: "ResearchPaper",
 };
 </script>
 
