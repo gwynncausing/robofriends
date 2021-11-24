@@ -29,7 +29,12 @@ export default {
 @import "@/styles/_global-styles.scss";
 @import "@/styles/_transitions.scss";
 @import "@/styles/prosemirror.scss";
+// .container {
+// max-width: 1251px !important;
+// }
 .container {
-  max-width: 1251px !important;
+  margin: 0px !important;
+  padding: 0px !important;
+  max-width: 100% !important;
 }
 </style>
