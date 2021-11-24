@@ -19,4 +19,7 @@ export default {
   [ROOT_GETTERS.GET_SCHOOLS]({ schools }) {
     return schools;
   },
+  [ROOT_GETTERS.GET_CURRENT_SCHOOL]({ currentSchool }) {
+    return currentSchool;
+  },
 };

@@ -178,6 +178,34 @@ export const ACM_FORMAT = {
         alignment: AlignmentType.CENTER,
         spacingOptions: { after: "6pt" },
       }),
+      createParagraphStyle({
+        id: "DocumentTitle",
+        name: "DocumentTitle",
+        runOptions: {
+          font: "Helvetica",
+          size: "18pt",
+        },
+        alignment: AlignmentType.CENTER,
+        spacingOptions: { after: "3pt" },
+      }),
+      createParagraphStyle({
+        id: "AuthorNameOrEmail",
+        name: "Author Name Or Email",
+        runOptions: {
+          font: "Helvetica",
+          size: "12pt",
+        },
+        alignment: AlignmentType.CENTER,
+      }),
+      createParagraphStyle({
+        id: "AuthorOthers",
+        name: "Author other properties",
+        runOptions: {
+          font: "Helvetica",
+          size: "10pt",
+        },
+        alignment: AlignmentType.CENTER,
+      }),
     ],
     list: {
       ordered: {
@@ -246,6 +274,33 @@ export const ACM_FORMAT = {
         },
         column: {
           count: 1,
+        },
+      },
+      width:
+        //page size
+        convertCMtoPixel("21.59cm") -
+        //left margin
+        convertCMtoPixel("1.9cm") -
+        //right margin
+        convertCMtoPixel("1.9cm"),
+    },
+    tripleColumnContent: {
+      document: {
+        page: {
+          size: {
+            orientation: PageOrientation.PORTRAIT,
+            height: "27.94cm",
+            width: "21.59cm",
+          },
+          margin: {
+            top: "1.9cm",
+            right: "1.9cm",
+            bottom: "2.54cm",
+            left: "1.9cm",
+          },
+        },
+        column: {
+          count: 3,
         },
       },
       width:

@@ -41,7 +41,7 @@ export const processHeadingBlock = (rules, item, numberList, section) => {
           numberList,
           level,
           rules.headingOptions.isNestedNumbers
-        )} ${headingText}`;
+        )} ${headingText ?? ""}`;
       }
       section.children.push(createHeading(headingText, level));
     }

@@ -91,6 +91,7 @@ import {
   STUDENT_ACTIONS,
   STUDENT_GETTERS,
 } from "@/modules/student/store/types";
+import { ROOT_ACTIONS, ROOT_GETTERS } from "@/store/types";
 import { isObjectEmpty } from "@/utils/helpers";
 import { MODULES } from "@/utils/constants";
 import { IndexeddbPersistence } from "y-indexeddb";
@@ -151,6 +152,8 @@ export default {
     ...mapGetters({
       getSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_SELECTED_TEAM_DETAILS}`,
       getApprovedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_APPROVED_PROPOSAL}`,
+      getUser: `${ROOT_GETTERS.GET_USER}`,
+      getCurrentSchool: ROOT_GETTERS.GET_CURRENT_SCHOOL,
     }),
     userColor() {
       return this.getRandomColor();
@@ -244,6 +247,7 @@ export default {
   methods: {
     ...mapActions({
       onFetchApprovedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_APPROVED_PROPOSAL}`,
+      onFetchCurrentSchool: ROOT_ACTIONS.FETCH_CURRENT_SCHOOL,
     }),
     async setHasApprovedProposal() {
       try {
@@ -409,9 +413,19 @@ export default {
       }
     },
 
-    exportFile(title) {
+    async exportFile(title) {
+      if (isObjectEmpty(await this.getCurrentSchool))
+        await this.onFetchCurrentSchool({ schoolId: this.getUser.school });
+      const currentSchool = await this.getCurrentSchool;
+      const teamDetails = await this.getSelectedTeamDetails;
+
       if (title === "ACM")
-        autoformat.generateDocument(ACM_FORMAT, this.editors);
+        autoformat.generateDocument(
+          ACM_FORMAT,
+          this.editors,
+          currentSchool,
+          teamDetails
+        );
     },
   },
 };
