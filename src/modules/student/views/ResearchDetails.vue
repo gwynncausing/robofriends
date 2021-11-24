@@ -36,6 +36,7 @@
         <CreateNew
           :proposal="createNewTab.proposal"
           :is-completed="isCompleted"
+          @reset="resetCreateNew"
           @submit="submitProposal"
         />
       </template>
@@ -184,6 +185,11 @@ export default {
         // TODO: Improve Api Error Handling
         console.log(error);
       }
+    },
+
+    async resetCreateNew() {
+      await this.onSetProposalToRevised({ proposal: {} });
+      this.createNewTab.proposal = {};
     },
 
     async fetchSelectedProposal(proposal) {

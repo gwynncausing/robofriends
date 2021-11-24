@@ -52,6 +52,7 @@ import { isEmptyOrWhiteSpaces } from "@/utils/helpers";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { IndexeddbPersistence } from "y-indexeddb";
+import { isObjectEmpty } from "@/utils/helpers";
 
 export default {
   name: "CreateNew",
@@ -112,9 +113,8 @@ export default {
     },
   },
   beforeMount() {
-    console.log("I am here");
     // console.log(this.proposal);
-    this.editor.content = this.proposal;
+    this.editor.toBeRevised = this.proposal;
     // console.log(this.editor.content);
     // console.log(this.proposal.content);
     // this.proposal.content ??= this.editor.content;
@@ -125,7 +125,13 @@ export default {
       maxConns: 50,
       peerOpts: this.webrtcPeerOpts,
     });
-    new IndexeddbPersistence(this.documentCode, this.yDoc);
+    this.editor.db = new IndexeddbPersistence(this.documentCode, this.yDoc);
+    this.editor.db.on("synced", () => {
+      if (!isObjectEmpty(this.proposal)) {
+        this.editor.replaceContent();
+        this.$emit("reset");
+      }
+    });
   },
 
   methods: {
@@ -138,7 +144,7 @@ export default {
     },
     getContent(event) {
       this.editor.content = event;
-      console.log(event);
+      // console.log(event);
     },
     getRandomColor() {
       let letters = "0123456789ABCDEF";

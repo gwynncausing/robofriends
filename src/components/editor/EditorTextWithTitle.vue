@@ -151,12 +151,22 @@ export default {
       });
       this.editorData.clearContent = () =>
         this.editor.commands.clearContent(true);
+
+      this.editorData.replaceContent = () => {
+        if (window.location.href.includes("action=revision")) {
+          this.editor.commands.setContent(
+            this.editorData.toBeRevised.content,
+            true
+          );
+          //TODO: clear editorData.toBeRevised content
+          // e.g. here this.editor.toBeRevised = this.proposal at CreateNew.vue
+        }
+      };
     } catch (e) {
       console.log(e);
     }
   },
   beforeUnmount() {
-    this.editor.commands.clearContent();
     this.editor.destroy();
     this.provider.destroy();
   },
