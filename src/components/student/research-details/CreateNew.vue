@@ -129,6 +129,7 @@ export default {
     this.editor.db.on("synced", () => {
       if (!isObjectEmpty(this.proposal)) {
         this.editor.replaceContent();
+        this.$emit("reset");
       }
     });
   },
