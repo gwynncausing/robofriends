@@ -149,11 +149,14 @@ export default {
           this.$emit("input", this.editor.getJSON());
         },
       });
+      this.editorData.clearContent = () =>
+        this.editor.commands.clearContent(true);
     } catch (e) {
       console.log(e);
     }
   },
   beforeUnmount() {
+    this.editor.commands.clearContent();
     this.editor.destroy();
     this.provider.destroy();
   },

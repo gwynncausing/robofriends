@@ -12,6 +12,8 @@
         <EditorTextWithTitle
           :editor-data="editor"
           :user-color="userColor"
+          :y-doc="yDoc"
+          :provider="provider"
           is-editable
           @input="getContent($event)"
           @updateUsers="updateUsers($event)"
@@ -47,6 +49,10 @@ import Snackbar from "@/components/Snackbar";
 
 import { isEmptyOrWhiteSpaces } from "@/utils/helpers";
 
+import * as Y from "yjs";
+import { WebrtcProvider } from "y-webrtc";
+import { IndexeddbPersistence } from "y-indexeddb";
+
 export default {
   name: "CreateNew",
   components: {
@@ -80,6 +86,24 @@ export default {
       snackbarMessage: "",
       joinTeamModal: false,
       isSubmitTeamCode: false,
+      documentCode: "MyT3@mN@m3Unique6661111" + "-create-proposal",
+      yDoc: new Y.Doc(),
+      provider: {},
+      // TODO: should find a better way to store this like a realtime.config file
+      signalingServers: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
+      webrtcPeerOpts: {
+        config: {
+          iceServers: [
+            // { urls: "stun:stun.l.google.com:19302" },
+            // { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
+            {
+              urls: "turn:bud-api.southeastasia.cloudapp.azure.com:3478",
+              credential: "budresearchbuddy!",
+              username: "bud",
+            },
+          ],
+        },
+      },
     };
   },
   computed: {
@@ -87,7 +111,6 @@ export default {
       return this.getRandomColor();
     },
   },
-
   beforeMount() {
     console.log("I am here");
     // console.log(this.proposal);
@@ -96,6 +119,13 @@ export default {
     // console.log(this.proposal.content);
     // this.proposal.content ??= this.editor.content;
     // console.log(this.proposal.content);
+    // TODO: determine whether this needs an implicit backup wth firestore
+    this.provider = new WebrtcProvider(this.documentCode, this.yDoc, {
+      signaling: this.signalingServer,
+      maxConns: 50,
+      peerOpts: this.webrtcPeerOpts,
+    });
+    new IndexeddbPersistence(this.documentCode, this.yDoc);
   },
 
   methods: {
@@ -125,6 +155,7 @@ export default {
           content: this.editor.content,
         };
         this.$emit("submit", payload);
+        this.editor.clearContent();
       } else {
         this.isSnackbarShown = true;
         this.snackbarMessage = "Your proposal must have a title.";
