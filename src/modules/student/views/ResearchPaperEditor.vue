@@ -122,8 +122,9 @@ export default {
       currentSelectedEditorIndex: 0,
       currentSelectedObjectId: "",
       yDoc: new Y.Doc(),
-      teamCodeUnique: "MyT3@mN@m3Unique6661111",
+      documentCode: "MyT3@mN@m3Unique6661111",
       provider: {},
+      // TODO: should find a better way to store this like a realtime.config file
       signalingServers: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
       webrtcPeerOpts: {
         config: {
@@ -162,9 +163,9 @@ export default {
 
   beforeMount() {
     // TODO: if ydoc is empty, it should check firebase server for existing content when other peers are offline
-    this.provider = new WebrtcProvider(this.teamCodeUnique, this.yDoc, {
+    this.provider = new WebrtcProvider(this.documentCode, this.yDoc, {
       signaling: this.signalingServer,
-      maxConns: 200,
+      maxConns: 50,
       peerOpts: this.webrtcPeerOpts,
     });
   },
@@ -179,10 +180,7 @@ export default {
     //     .size,
     // });
 
-    const persistence = new IndexeddbPersistence(
-      this.teamCodeUnique,
-      this.yDoc
-    );
+    const persistence = new IndexeddbPersistence(this.documentCode, this.yDoc);
 
     //*set to y-webrtc to see logs of webrtc connection for yjs
     localStorage.log = "false";
@@ -225,7 +223,7 @@ export default {
           this.editors.push(block);
         });
         // * update toolbar pos based on changes
-        if (origin != this.teamCodeUnique && this.editors.length > 0) {
+        if (origin != this.documentCode && this.editors.length > 0) {
           this.selectBlock(this.editors[objectIndex]);
         }
         this.isReceivingUpdates = false;
@@ -299,7 +297,7 @@ export default {
       let content = ``;
 
       let objToAdd = {
-        id: new Date().getTime() + blockType + this.teamCodeUnique,
+        id: new Date().getTime() + blockType + this.documentCode,
         content: content,
         blockType,
         column: "default",
@@ -314,7 +312,7 @@ export default {
         const insertAt = this.editors.length > 0 ? index + 1 : 0;
         const folder = this.yDoc.getArray("subdocuments");
         folder.insert(insertAt, [objToAdd]);
-      }, this.teamCodeUnique);
+      }, this.documentCode);
     },
     removeEditor({ currentSelectedEditorIndex: index = -1 }) {
       if (this.editors.length > 0) {
@@ -324,7 +322,7 @@ export default {
         this.yDoc.transact(() => {
           const folder = this.yDoc.getArray("subdocuments");
           folder.delete(index, 1);
-        }, this.teamCodeUnique);
+        }, this.documentCode);
       }
     },
     getRandomColor() {
@@ -383,7 +381,7 @@ export default {
             folder.insert(insertAt, objectsToInsert);
             document;
             folder.delete(deleteAt, childrenCount + 1);
-          }, this.teamCodeUnique);
+          }, this.documentCode);
         }
       }
 
