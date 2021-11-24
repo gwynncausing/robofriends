@@ -158,6 +158,8 @@ export default {
             this.editorData.toBeRevised.content,
             true
           );
+          //TODO: clear editorData.toBeRevised content
+          // e.g. here this.editor.toBeRevised = this.proposal at CreateNew.vue
         }
       };
     } catch (e) {
