@@ -9,7 +9,8 @@ export const expireTokenHandler = (error) => {
   if (
     error.response.status === STATUS_CODES.ERRORS.UNAUTHORIZED &&
     !originalRequest._retry &&
-    originalRequest.url !== "/refresh"
+    originalRequest.url !== "/refresh" &&
+    originalRequest.url !== "/login"
   ) {
     originalRequest._retry = true;
     const payload = {
