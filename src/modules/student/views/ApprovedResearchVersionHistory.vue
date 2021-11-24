@@ -244,16 +244,6 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.container {
-  margin: 0px !important;
-  padding: 0px !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  overflow-y: hidden;
-}
-</style>
-
 <style lang="scss" scoped>
 #approved-research-version-history {
   display: flex;
