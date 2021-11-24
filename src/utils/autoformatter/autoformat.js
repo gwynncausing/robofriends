@@ -57,6 +57,8 @@ export const createDocumentProperties = (rules) => {
 
 export const generateDocument = async (rules, content) => {
   const numberList = [];
+  const imageList = [];
+  const tableList = [];
   const properties = createDocumentProperties(rules);
   let section = createSection({
     documentOptions: rules.document,
@@ -77,10 +79,22 @@ export const generateDocument = async (rules, content) => {
         processTextBlock(item, section);
         break;
       case "image":
-        section = await processImageBlock(rules, item, properties, section);
+        section = await processImageBlock(
+          rules,
+          item,
+          properties,
+          imageList,
+          section
+        );
         break;
       case "table":
-        section = await processTableBlock(rules, item, properties, section);
+        section = await processTableBlock(
+          rules,
+          item,
+          properties,
+          tableList,
+          section
+        );
         break;
       case "reference":
         section = processReferenceBlock(item, section);

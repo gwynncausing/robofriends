@@ -33,6 +33,12 @@ const createImageRun = async (imgUrl, targetWidth) => {
   });
 };
 
+const getFigureNumber = (imageList = []) => {
+  imageList.push("0");
+  let figureText = `Figure ${imageList.length}. `;
+  return figureText;
+};
+
 export const createImage = async (url, targetWidth = 672.37795276) => {
   const imagerun = await createImageRun(url, targetWidth);
   return new Paragraph({
@@ -40,7 +46,12 @@ export const createImage = async (url, targetWidth = 672.37795276) => {
   });
 };
 
-const processImageBlockChildren = async (content, section, imageWidth) => {
+const processImageBlockChildren = async (
+  content,
+  section,
+  imageWidth,
+  imageList
+) => {
   for (const childContent of content) {
     if (childContent.type === "image") {
       const result = await createImage(childContent.attrs.src, imageWidth);
@@ -51,7 +62,7 @@ const processImageBlockChildren = async (content, section, imageWidth) => {
         {
           type: "text",
           marks: [{ type: "bold" }],
-          text: childContent.content[0].text,
+          text: getFigureNumber(imageList) + childContent.content[0].text,
         },
       ];
 
@@ -64,6 +75,7 @@ export const processImageBlock = async (
   rules,
   item,
   documentProperty,
+  imageList,
   section
 ) => {
   // TODO: only do this when rules.figure.label.position == BELOW or something
@@ -82,7 +94,12 @@ export const processImageBlock = async (
       documentOptions: specialDocumentOptions,
     });
 
-    await processImageBlockChildren(tempContent, section, specialWidth);
+    await processImageBlockChildren(
+      tempContent,
+      section,
+      specialWidth,
+      imageList
+    );
 
     documentProperty.sections.push(section);
     section = createSection({
@@ -91,7 +108,12 @@ export const processImageBlock = async (
     });
   } else {
     const defaultWidth = rules.defaultContentWidth;
-    await processImageBlockChildren(tempContent, section, defaultWidth);
+    await processImageBlockChildren(
+      tempContent,
+      section,
+      defaultWidth,
+      imageList
+    );
   }
 
   //* return this as for some reason section is pass by value

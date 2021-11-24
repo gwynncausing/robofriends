@@ -66,6 +66,12 @@ export const createTable = async (content) => {
   return table;
 };
 
+const getTableNumber = (imageList = []) => {
+  imageList.push("0");
+  let figureText = `Table ${imageList.length}. `;
+  return figureText;
+};
+
 const processTableBlockChildren = async (item, section) => {
   for (const childContent of item.content) {
     if (childContent.type === "heading") {
@@ -73,7 +79,7 @@ const processTableBlockChildren = async (item, section) => {
         {
           type: "text",
           marks: [{ type: "bold" }],
-          text: childContent.content[0].text,
+          text: getTableNumber() + childContent.content[0].text,
         },
       ];
       section.children.push(createParagraph(tempContentText, "FigureStyle"));
@@ -88,8 +94,10 @@ export const processTableBlock = async (
   rules,
   item,
   documentProperty,
+  tableList,
   section
 ) => {
+  console.log({ tableList });
   if (!!item.column && item.column != "default") {
     // TODO: add try catch and fall back when current rules do not have such special rule
     const specialDocumentOptions = rules.special[item.column].document;
