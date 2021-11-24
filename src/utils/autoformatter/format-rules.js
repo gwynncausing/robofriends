@@ -178,6 +178,34 @@ export const ACM_FORMAT = {
         alignment: AlignmentType.CENTER,
         spacingOptions: { after: "6pt" },
       }),
+      createParagraphStyle({
+        id: "DocumentTitle",
+        name: "DocumentTitle",
+        runOptions: {
+          font: "Helvetica",
+          size: "18pt",
+        },
+        alignment: AlignmentType.CENTER,
+        spacingOptions: { after: "3pt" },
+      }),
+      createParagraphStyle({
+        id: "AuthorNameOrEmail",
+        name: "Author Name Or Email",
+        runOptions: {
+          font: "Helvetica",
+          size: "12pt",
+        },
+        alignment: AlignmentType.CENTER,
+      }),
+      createParagraphStyle({
+        id: "AuthorOthers",
+        name: "Author other properties",
+        runOptions: {
+          font: "Helvetica",
+          size: "10pt",
+        },
+        alignment: AlignmentType.CENTER,
+      }),
     ],
     list: {
       ordered: {

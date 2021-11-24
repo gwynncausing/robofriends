@@ -55,7 +55,7 @@ export const createDocumentProperties = (rules) => {
   return properties;
 };
 
-export const generateDocument = async (rules, content) => {
+export const generateDocument = async (rules, content, school, team) => {
   const numberList = [];
   const imageList = [];
   const tableList = [];

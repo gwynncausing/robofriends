@@ -123,4 +123,10 @@ export default {
     const { id } = payload;
     await UserRepository.delete(id);
   },
+
+  async [ROOT_ACTIONS.FETCH_CURRENT_SCHOOL]({ commit }, { schoolId }) {
+    const response = await SchoolRepository.getSchool(schoolId);
+    const school = response.data;
+    commit(ROOT_MUTATIONS.SET_CURRENT_SCHOOL, { school: school });
+  },
 };
