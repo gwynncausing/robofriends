@@ -23,7 +23,7 @@ export const getHeadingNumber = (numberList = [], level, isNested = false) => {
   let number = "";
   if (isNested) {
     for (let i = 0; i < level; i++) {
-      number += numberList[i] + ".";
+      number += (numberList[i] ?? "1") + ".";
     }
   } else number = numberList[level - 1];
 

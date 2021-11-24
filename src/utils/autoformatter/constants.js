@@ -31,3 +31,10 @@ export const MARK_TYPE = {
   strike: "strike",
   link: "link",
 };
+export const authorDetails = [
+  "name",
+  "affiliation",
+  "address",
+  "phone",
+  "email",
+];
