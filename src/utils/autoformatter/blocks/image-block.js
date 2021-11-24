@@ -53,7 +53,7 @@ const processImageBlockChildren = async (
   imageList
 ) => {
   for (const childContent of content) {
-    if (childContent.type === "image") {
+    if (childContent.type === "image" && childContent.attrs.src !== null) {
       const result = await createImage(childContent.attrs.src, imageWidth);
       section.children.push(result);
     } else if (childContent.type === "heading") {
@@ -62,7 +62,9 @@ const processImageBlockChildren = async (
         {
           type: "text",
           marks: [{ type: "bold" }],
-          text: getFigureNumber(imageList) + childContent.content[0].text,
+          text:
+            getFigureNumber(imageList) +
+            (childContent.content?.[0]?.text ?? ""),
         },
       ];
 

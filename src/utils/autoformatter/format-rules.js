@@ -284,5 +284,32 @@ export const ACM_FORMAT = {
         //right margin
         convertCMtoPixel("1.9cm"),
     },
+    tripleColumnContent: {
+      document: {
+        page: {
+          size: {
+            orientation: PageOrientation.PORTRAIT,
+            height: "27.94cm",
+            width: "21.59cm",
+          },
+          margin: {
+            top: "1.9cm",
+            right: "1.9cm",
+            bottom: "2.54cm",
+            left: "1.9cm",
+          },
+        },
+        column: {
+          count: 3,
+        },
+      },
+      width:
+        //page size
+        convertCMtoPixel("21.59cm") -
+        //left margin
+        convertCMtoPixel("1.9cm") -
+        //right margin
+        convertCMtoPixel("1.9cm"),
+    },
   },
 };

@@ -66,20 +66,21 @@ export const createTable = async (content) => {
   return table;
 };
 
-const getTableNumber = (imageList = []) => {
-  imageList.push("0");
-  let figureText = `Table ${imageList.length}. `;
+const getTableNumber = (tableList = []) => {
+  tableList.push("0");
+  let figureText = `Table ${tableList.length}. `;
   return figureText;
 };
 
-const processTableBlockChildren = async (item, section) => {
+const processTableBlockChildren = async (item, section, tableList) => {
   for (const childContent of item.content) {
     if (childContent.type === "heading") {
       let tempContentText = [
         {
           type: "text",
           marks: [{ type: "bold" }],
-          text: getTableNumber() + childContent.content[0].text,
+          text:
+            getTableNumber(tableList) + (childContent.content?.[0]?.text ?? ""),
         },
       ];
       section.children.push(createParagraph(tempContentText, "FigureStyle"));
@@ -97,7 +98,6 @@ export const processTableBlock = async (
   tableList,
   section
 ) => {
-  console.log({ tableList });
   if (!!item.column && item.column != "default") {
     // TODO: add try catch and fall back when current rules do not have such special rule
     const specialDocumentOptions = rules.special[item.column].document;
@@ -106,7 +106,7 @@ export const processTableBlock = async (
     section = createSection({
       documentOptions: specialDocumentOptions,
     });
-    await processTableBlockChildren(item, section);
+    await processTableBlockChildren(item, section, tableList);
 
     documentProperty.sections.push(section);
     section = createSection({
@@ -114,7 +114,7 @@ export const processTableBlock = async (
       children: [],
     });
   } else {
-    await processTableBlockChildren(item, section);
+    await processTableBlockChildren(item, section, tableList);
   }
   return section;
 };
