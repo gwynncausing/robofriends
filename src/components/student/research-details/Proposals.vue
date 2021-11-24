@@ -25,6 +25,7 @@
         </router-link> -->
         <Button
           v-show="showButton(selectedProposal)"
+          :disabled="hasApprovedResearch"
           @click="revise(selectedProposal)"
           >Revise</Button
         >
@@ -66,6 +67,10 @@ export default {
     selectedProposal: {
       type: Object,
       default: null,
+    },
+    hasApprovedResearch: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

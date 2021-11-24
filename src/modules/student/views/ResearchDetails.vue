@@ -1,9 +1,10 @@
 <template>
   <div id="research-details">
-    <Tabs active="proposals" :items="items" class="tabs">
+    <Tabs active="proposals" :items="researchDetailsItems" class="tabs">
       <template v-slot:body-proposals>
         <Proposals
           v-if="hasProposals"
+          :has-approved-research="hasApprovedResearch"
           :proposals="proposalsTab.proposals"
           :selected-proposal="proposalsTab.selectedProposal"
           @selectProposal="fetchSelectedProposal"
@@ -91,14 +92,17 @@ export default {
         {
           title: "Proposals",
           value: "proposals",
+          isDisabled: false,
         },
         {
           title: "Approved Research",
           value: "approved-research",
+          isDisabled: false,
         },
         {
           title: "Create New",
           value: "create-new",
+          isDisabled: false,
         },
       ],
       isCompleted: false,
@@ -118,6 +122,14 @@ export default {
     },
     hasApprovedResearch() {
       return !isObjectEmpty(this.approvedResearchTab.research);
+    },
+    researchDetailsItems() {
+      if (this.hasApprovedResearch) {
+        return this.items.map((item) => {
+          if (item.title === "Create New") return { ...item, isDisabled: true };
+          return { ...item };
+        });
+      } else return this.items;
     },
   },
   created() {
