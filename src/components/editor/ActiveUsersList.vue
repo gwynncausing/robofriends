@@ -35,7 +35,7 @@ export default {
   methods: {
     getUserInitials(user) {
       const first = user?.name?.split(" ")[0][0];
-      const second = user?.name?.split(" ")[1][0];
+      const second = user?.name?.split(" ")[1]?.[0] || "";
       return first + second;
     },
   },
