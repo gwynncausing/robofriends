@@ -236,13 +236,11 @@ export default {
   },
 
   beforeDestroy() {
-    // TODO: replace localStorage with save to rtdb
-
     // TODO: get key
     // TODO: data 
 
-    const key = this.documentCode;
-    const content = fromUint8Array(Y.encodeStateAsUpdate(this.yDoc));
+    //const key = this.documentCode;
+    //const content = fromUint8Array(Y.encodeStateAsUpdate(this.yDoc));
 
     // TODO: firebase function
 
