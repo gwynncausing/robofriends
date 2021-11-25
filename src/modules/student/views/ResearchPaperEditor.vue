@@ -103,6 +103,7 @@ import { ACM_FORMAT } from "@/utils/autoformatter/format-rules";
 import autoformat from "@/utils/autoformatter/autoformat";
 
 import { db } from "../../../vuefire-db";
+import { setDoc, doc } from "firebase/firestore";
 
 export default {
   name: "ResearchPaperEditor",
@@ -246,13 +247,13 @@ export default {
 
     const document = {
       key: this.documentCode,
-      content: fromUint8Array(Y.encodeStateAsUpdate(this.yDoc));
+      content: fromUint8Array(Y.encodeStateAsUpdate(this.yDoc)),
     };
 
-    db.collection("backups").doc(`${key}`).set({
-      ...document
+    setDoc(doc(db, "backups", `${document.key}`), {
+      ...document,
     });
-      
+
     this.yDoc.destroy();
     this.provider.destroy();
   },
