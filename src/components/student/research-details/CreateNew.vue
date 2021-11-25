@@ -48,10 +48,6 @@ import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 import Snackbar from "@/components/Snackbar";
 
 import { isEmptyOrWhiteSpaces } from "@/utils/helpers";
-
-import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
-import { IndexeddbPersistence } from "y-indexeddb";
 import { isObjectEmpty } from "@/utils/helpers";
 
 export default {
@@ -73,6 +69,19 @@ export default {
       type: Boolean,
       default: false,
     },
+    provider: {
+      required: true,
+      type: Object,
+      default: null,
+    },
+    yDoc: {
+      type: Object,
+      default: () => {},
+    },
+    db: {
+      type: Object,
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -80,6 +89,7 @@ export default {
         id: "create-new",
         content: ``,
         users: [],
+        isSafeToSetContent: false,
       },
       activeUsers: [],
       isSubmittingProposal: false,
@@ -87,24 +97,6 @@ export default {
       snackbarMessage: "",
       joinTeamModal: false,
       isSubmitTeamCode: false,
-      documentCode: "MyT3@mN@m3Unique6661111" + "-create-proposal",
-      yDoc: new Y.Doc(),
-      provider: {},
-      // TODO: should find a better way to store this like a realtime.config file
-      signalingServers: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
-      webrtcPeerOpts: {
-        config: {
-          iceServers: [
-            // { urls: "stun:stun.l.google.com:19302" },
-            // { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
-            {
-              urls: "turn:bud-api.southeastasia.cloudapp.azure.com:3478",
-              credential: "budresearchbuddy!",
-              username: "bud",
-            },
-          ],
-        },
-      },
     };
   },
   computed: {
@@ -114,20 +106,17 @@ export default {
   },
   beforeMount() {
     // console.log(this.proposal);
-    this.editor.toBeRevised = this.proposal;
+    this.editor.newContent = this.proposal;
     // console.log(this.editor.content);
     // console.log(this.proposal.content);
     // this.proposal.content ??= this.editor.content;
     // console.log(this.proposal.content);
     // TODO: determine whether this needs an implicit backup wth firestore
-    this.provider = new WebrtcProvider(this.documentCode, this.yDoc, {
-      signaling: this.signalingServer,
-      maxConns: 50,
-      peerOpts: this.webrtcPeerOpts,
-    });
-    this.editor.db = new IndexeddbPersistence(this.documentCode, this.yDoc);
-    this.editor.db.on("synced", () => {
-      if (!isObjectEmpty(this.proposal)) {
+    this.db.on("synced", () => {
+      if (
+        !isObjectEmpty(this.proposal) &&
+        window.location.href.includes("action=revision")
+      ) {
         this.editor.replaceContent();
         this.$emit("reset");
       }

@@ -17,6 +17,8 @@
           :approved-research="approvedResearchTab.research"
           :is-editable="approvedResearchTab.isEditable"
           :is-completed="isCompleted"
+          :y-doc="yDoc"
+          :provider="provider"
           @saveProposal="updateApprovedProposal"
           @setEditableClick="approvedResearchTab.isEditable = true"
         />
@@ -36,6 +38,9 @@
         <CreateNew
           :proposal="createNewTab.proposal"
           :is-completed="isCompleted"
+          :y-doc="yDoc"
+          :provider="provider"
+          :db="db"
           @reset="resetCreateNew"
           @submit="submitProposal"
         />
@@ -60,6 +65,10 @@ import {
 } from "@/modules/student/store/types";
 import { capitalizeWords, parseDateTime, isObjectEmpty } from "@/utils/helpers";
 import { MODULES } from "@/utils/constants";
+
+import * as Y from "yjs";
+import { WebrtcProvider } from "y-webrtc";
+import { IndexeddbPersistence } from "y-indexeddb";
 
 export default {
   name: "ResearchDetails",
@@ -103,6 +112,25 @@ export default {
         },
       ],
       isCompleted: false,
+      documentCode: "MyT3@mN@m3Unique6661111" + "-create-proposal",
+      yDoc: new Y.Doc(),
+      db: null,
+      provider: {},
+      // TODO: should find a better way to store this like a realtime.config file
+      signalingServers: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
+      webrtcPeerOpts: {
+        config: {
+          iceServers: [
+            // { urls: "stun:stun.l.google.com:19302" },
+            // { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
+            {
+              urls: "turn:bud-api.southeastasia.cloudapp.azure.com:3478",
+              credential: "budresearchbuddy!",
+              username: "bud",
+            },
+          ],
+        },
+      },
     };
   },
   computed: {
@@ -122,9 +150,18 @@ export default {
     },
   },
   created() {
+    this.provider = new WebrtcProvider(this.documentCode, this.yDoc, {
+      signaling: this.signalingServer,
+      maxConns: 50,
+      peerOpts: this.webrtcPeerOpts,
+    });
+    this.db = new IndexeddbPersistence(this.documentCode, this.yDoc);
     this.initializeCreateNewTab();
     this.initializeProposalsTab();
     this.initializeApprovedProposalTab();
+  },
+  beforeDestroy() {
+    this.provider.destroy();
   },
   methods: {
     ...mapActions({
