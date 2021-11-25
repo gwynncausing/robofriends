@@ -240,16 +240,12 @@ export default {
   },
 
   beforeDestroy() {
-    // TODO: get key
-    // TODO: data
-
-    // TODO: firebase function
-
+    
     const document = {
       key: this.documentCode,
       content: fromUint8Array(Y.encodeStateAsUpdate(this.yDoc)),
+      createdAt: new Date(),
     };
-
     setDoc(doc(db, "backups", `${document.key}`), {
       ...document,
     });
