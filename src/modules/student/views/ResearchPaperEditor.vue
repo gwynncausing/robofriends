@@ -97,13 +97,13 @@ import { MODULES } from "@/utils/constants";
 import { IndexeddbPersistence } from "y-indexeddb";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
-import { fromUint8Array } from "js-base64";
+import { fromUint8Array, toUint8Array } from "js-base64";
 
 import { ACM_FORMAT } from "@/utils/autoformatter/format-rules";
 import autoformat from "@/utils/autoformatter/autoformat";
 
 import { db } from "../../../vuefire-db";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, getDoc } from "firebase/firestore";
 
 export default {
   name: "ResearchPaperEditor",
@@ -180,7 +180,8 @@ export default {
   mounted() {
     // TODO: should replace localStorage call with fetch data from rtdb
     //! NOTE: the encoded base64 string can be very long and may be takeup significant space when saving large research paper content
-    // Y.applyUpdate(this.yDoc, toUint8Array(localStorage.lastYDocState));
+
+    firebaseGetBackup();
 
     // console.log({
     //   strLength: new Blob([fromUint8Array(Y.encodeStateAsUpdate(this.yDoc))])
@@ -240,16 +241,7 @@ export default {
   },
 
   beforeDestroy() {
-    
-    const document = {
-      key: this.documentCode,
-      content: fromUint8Array(Y.encodeStateAsUpdate(this.yDoc)),
-      createdAt: new Date(),
-    };
-    setDoc(doc(db, "backups", `${document.key}`), {
-      ...document,
-    });
-
+    this.firestoreSave();
     this.yDoc.destroy();
     this.provider.destroy();
   },
@@ -259,6 +251,26 @@ export default {
       onFetchApprovedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_APPROVED_PROPOSAL}`,
       onFetchCurrentSchool: ROOT_ACTIONS.FETCH_CURRENT_SCHOOL,
     }),
+    firestoreSave() {
+      const document = {
+        key: this.documentCode,
+        content: fromUint8Array(Y.encodeStateAsUpdate(this.yDoc)),
+        createdAt: new Date(),
+      };
+      setDoc(doc(db, "backups", `${document.key}`), {
+        ...document,
+      });
+    },
+    firestoreGetBackup(){
+      const docRef = doc(db, "backups", `${this.documentCode}`);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        console.log("Backup found!");
+        Y.applyUpdate(this.yDoc, toUint8Array(docSnap.data().content));
+      } else {
+        console.log("No backup found!");
+      }
+    },
     async setHasApprovedProposal() {
       try {
         await this.onFetchApprovedProposal({
