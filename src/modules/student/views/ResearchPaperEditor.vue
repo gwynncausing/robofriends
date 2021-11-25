@@ -181,7 +181,7 @@ export default {
     // TODO: should replace localStorage call with fetch data from rtdb
     //! NOTE: the encoded base64 string can be very long and may be takeup significant space when saving large research paper content
 
-    firebaseGetBackup();
+    this.firestoreGetBackup();
 
     // console.log({
     //   strLength: new Blob([fromUint8Array(Y.encodeStateAsUpdate(this.yDoc))])
@@ -261,7 +261,7 @@ export default {
         ...document,
       });
     },
-    firestoreGetBackup(){
+    async firestoreGetBackup() {
       const docRef = doc(db, "backups", `${this.documentCode}`);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
