@@ -1,6 +1,6 @@
 import { firestorePlugin } from "vuefire";
 import firebase from "firebase/app";
-import { getFirestore } from "firebase/firestore"
+import { getFirestore } from "firebase/firestore";
 
 import Vue from "vue";
 
@@ -21,7 +21,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 export const db = getFirestore();
-
 
 // * For Realtime
 // * Not Necessary
