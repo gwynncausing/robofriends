@@ -1,6 +1,6 @@
 import { firestorePlugin } from "vuefire";
 import firebase from "firebase/app";
-import "firebase/firestore";
+import { getFirestore } from "firebase/firestore"
 
 import Vue from "vue";
 
@@ -18,7 +18,10 @@ const firebaseConfig = {
   measurementId: "G-WYCCTDFFE5",
 };
 
-export const db = firebase.initializeApp(firebaseConfig).firestore();
+firebase.initializeApp(firebaseConfig);
+
+export const db = getFirestore();
+
 
 // * For Realtime
 // * Not Necessary
