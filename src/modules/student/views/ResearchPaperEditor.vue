@@ -142,6 +142,7 @@ export default {
           ],
         },
       },
+      backups: [],
       isReceivingUpdates: false,
       cannotUpdate: false,
       lastReceivedUpdate: +new Date(),
@@ -243,16 +244,15 @@ export default {
 
     // TODO: firebase function
 
-    // const key = this.documentCode;
-    const content = fromUint8Array(Y.encodeStateAsUpdate(this.yDoc));
+    const document = {
+      key: this.documentCode,
+      content: fromUint8Array(Y.encodeStateAsUpdate(this.yDoc));
+    };
 
-    db.collection("backups")
-      .doc(this.documentCode)
-      .update({ content })
-      .then(() => {
-        console.log("backup updated!");
-      });
-
+    db.collection("backups").doc(`${key}`).set({
+      ...document
+    });
+      
     this.yDoc.destroy();
     this.provider.destroy();
   },

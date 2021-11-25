@@ -12,6 +12,10 @@ import designSystemModule from "@/modules/design_system";
 
 import { registerModules } from "./register-modules";
 
+import { firestorePlugin } from "vuefire";
+
+Vue.use(firestorePlugin);
+
 registerModules({
   student: studentModule,
   adviser: adviserModule,
