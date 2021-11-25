@@ -1,7 +1,7 @@
 <template>
   <div id="manage-teams">
     <ChooseTeamHeading
-      v-show="$vuetify.breakpoint.smAndDown"
+      v-show="$vuetify.breakpoint.mdAndDown"
       :team="teams[activeEl]"
       @showDialog="teamsDialog = true"
     />
@@ -84,7 +84,12 @@
           </p>
         </div>
       </div>
-      <Tabs active="pending-proposals" :items="items" class="tabs">
+      <Tabs
+        active="pending-proposals"
+        :items="items"
+        class="tabs"
+        style="position: relative"
+      >
         <template v-slot:body-pending-proposals>
           <span v-if="pendingProposalsLoading">Loading...</span>
           <div v-else>
@@ -492,9 +497,12 @@ export default {
         }
       }
       this.fetchAndUpdateProposals(this.activeEl, this.currentSelectedTeam);
-      this.$router.replace({
-        query: { ...this.$route.query, tab: "approved-research" },
-      });
+      if (status === PROPOSAL.STATUS.APPROVED) {
+        this.$router.replace({
+          ...this.$route.query,
+          tab: "approved-research",
+        });
+      }
     },
 
     async fetchAndUpdateProposals(index, team_id) {
