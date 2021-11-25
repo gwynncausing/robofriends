@@ -15,42 +15,46 @@
         <EditorNestedReadonly :list="activeVersion.editors" />
       </div>
     </div>
-    <div class="version-list-wrapper">
-      <div class="title">Version History</div>
-      <div
-        v-for="(version, index) in versions"
-        :key="version.id"
-        class="version"
-        :class="{ active: activeEl == index }"
-        @click="selectVersion(index)"
-      >
-        <span class="date">{{ version.dateTime }}</span>
-        <span v-show="index === 0" class="current-version-label overline">
-          Current Version
-        </span>
-        <p>
-          <span
-            v-for="(user, userIndex) in version.users"
-            :key="userIndex"
-            class="user caption"
-          >
-            {{ user }},
+    <Sidebar>
+      <template v-slot:title> Version History</template>
+      <template v-slot:content>
+        <div
+          v-for="(version, index) in versions"
+          :key="version.id"
+          class="version"
+          :class="{ active: activeEl == index }"
+          @click="selectVersion(index)"
+        >
+          <span class="date">{{ version.dateTime }}</span>
+          <span v-show="index === 0" class="current-version-label overline">
+            Current Version
           </span>
-        </p>
-      </div>
-    </div>
+          <p>
+            <span
+              v-for="(user, userIndex) in version.users"
+              :key="userIndex"
+              class="user caption"
+            >
+              {{ user }},
+            </span>
+          </p>
+        </div>
+      </template>
+    </Sidebar>
   </div>
 </template>
 
 <script>
 import EditorNestedReadonly from "@/components/editor/EditorNestedReadonly";
 import Button from "@/components/global/Button.vue";
+import Sidebar from "@/components/global/Sidebar.vue";
 
 export default {
   name: "ResearchEditorVersionHistory",
   components: {
     EditorNestedReadonly,
     Button,
+    Sidebar,
   },
   props: {},
   data() {
@@ -272,16 +276,6 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.container {
-  margin: 0px !important;
-  padding: 0px !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  overflow-y: hidden;
-}
-</style>
-
 <style lang="scss" scoped>
 #research-editor-version-history {
   display: flex;
@@ -318,36 +312,27 @@ export default {
       margin: 0 auto;
     }
   }
-  .version-list-wrapper {
-    flex: 1;
-    border-left: 1px solid $neutral-400;
-    overflow-y: auto;
-    height: 100vh;
-    .title {
-      border-bottom: 1px solid $neutral-400;
-      padding: 16px;
+
+  .version {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid $neutral-400;
+    .date {
+      font-weight: $font-weight-bold;
     }
-    .version {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 16px;
-      cursor: pointer;
-      user-select: none;
-      border-bottom: 1px solid $neutral-400;
-      .date {
-        font-weight: $font-weight-bold;
-      }
-      p {
-        margin: 0px;
-      }
-      .current-version-label {
-        color: $primary;
-      }
+    p {
+      margin: 0px;
     }
-    .active {
-      background-color: $neutral-50;
+    .current-version-label {
+      color: $primary;
     }
+  }
+  .active {
+    background-color: $neutral-50;
   }
 }
 </style>

@@ -12,6 +12,7 @@
         v-for="(item, index) in items"
         :key="index"
         :href="`#${item.value}`"
+        :disabled="isDisabledTab(item)"
         class="font-medium"
         >{{ item.title }}</v-tab
       >
@@ -57,6 +58,11 @@ export default {
   watch: {
     active() {
       this.tab = this.active;
+    },
+  },
+  methods: {
+    isDisabledTab(item) {
+      return item?.isDisabled === true ? true : false;
     },
   },
 };

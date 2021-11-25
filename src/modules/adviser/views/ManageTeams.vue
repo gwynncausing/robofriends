@@ -1,10 +1,113 @@
 <template>
   <div id="manage-teams">
-    <ChooseTeamHeading
-      v-show="$vuetify.breakpoint.smAndDown"
-      :team="teams[activeEl]"
-      @showDialog="teamsDialog = true"
-    />
+    <div class="main-content-wrapper">
+      <div v-if="hasTeams" v-show="$vuetify.breakpoint.lgAndUp" id="team-list">
+        <div class="teams-list-filter">
+          <Chip
+            v-for="chip in statusChips"
+            :key="chip.title"
+            small
+            dark
+            :color="chip.color"
+            :outlined="!chip.isActive"
+            @click="selectChip(chip)"
+          >
+            {{ chip.title }}
+          </Chip>
+        </div>
+        <div class="team-list-wrapper">
+          <CardTeam
+            v-for="(team, index) in teams"
+            :key="team.id"
+            :team="team"
+            :index="index"
+            :class="{ active: activeEl == index }"
+            @select="selectTeam(index, team.id)"
+          />
+        </div>
+      </div>
+      <div v-else v-show="$vuetify.breakpoint.lgAndUp" id="empty-team-list">
+        <div class="text-center">
+          <p>You don't have any teams yet.</p>
+          <p>
+            Please check your
+            <router-link :to="{ name: 'Adviser Invitation' }">
+              <span class="secondary--text pointer font-bold">
+                invitations.
+              </span></router-link
+            >
+          </p>
+        </div>
+      </div>
+      <div id="tabs-content">
+        <ChooseTeamHeading
+          v-show="$vuetify.breakpoint.mdAndDown"
+          :team="teams[activeEl]"
+          @showDialog="teamsDialog = true"
+        />
+        <Tabs active="pending-proposals" :items="items" class="tabs">
+          <template v-slot:body-pending-proposals>
+            <span v-if="pendingProposalsLoading">Loading...</span>
+            <div v-else>
+              <PendingProposals
+                v-if="hasTeamPendingProposals"
+                :pending-proposals="pendingProposals"
+                :has-approved-proposal="hasTeamApprovedProposals"
+                @updateProposal="updateProposals($event)"
+              />
+              <EmptyDataTeamProposals
+                v-else-if="!hasTeamPendingProposals && hasTeamApprovedProposals"
+                content="One of the proposals of this team is already approved. Please check on the approved research tab."
+              />
+              <EmptyDataTeamProposals
+                v-else
+                content="This team have not yet submitted any proposals."
+              />
+            </div>
+          </template>
+          <template v-slot:body-approved-research>
+            <span v-if="approvedProposalsLoading">Loading...</span>
+            <div v-else>
+              <ApprovedResearch
+                v-if="hasTeamApprovedProposals"
+                :approved-research="approvedProposals[0]"
+              />
+              <EmptyDataTeamApprovedResearch v-else />
+            </div>
+          </template>
+          <template v-slot:body-research-paper>
+            <div v-if="hasTeamApprovedProposals" class="buttons-wrapper">
+              <Button
+                v-show="!isMarkedAsComplete"
+                @click="markAsCompleteDialog = true"
+              >
+                Mark as Complete
+              </Button>
+              <Button v-show="isMarkedAsComplete" outlined>
+                Mark as Incomplete
+              </Button>
+              <Button
+                v-show="isMarkedAsComplete && !isPublished"
+                @click="publishDialog = true"
+              >
+                Publish to Research Archive
+              </Button>
+              <Button v-show="isMarkedAsComplete && isPublished" outlined>
+                Unpublish
+              </Button>
+            </div>
+            <ResearchPaper
+              v-if="hasTeamApprovedProposals"
+              :blocks="researchPaper"
+              :is-marked-as-complete="isMarkedAsComplete"
+              :is-published="isPublished"
+            />
+            <EmptyDataTeamResearchPaper v-else />
+          </template>
+        </Tabs>
+      </div>
+    </div>
+    <SidebarComments :comments="commentList[0].comments" />
     <Modal :dialog="teamsDialog" @closed="teamsDialog = false">
       <template v-slot:title>
         <div class="teams-list-filter">
@@ -45,106 +148,6 @@
         </div>
       </template>
     </Modal>
-    <div class="flex-wrapper">
-      <div v-if="hasTeams" v-show="$vuetify.breakpoint.lgAndUp" id="team-list">
-        <div class="teams-list-filter">
-          <Chip
-            v-for="chip in statusChips"
-            :key="chip.title"
-            small
-            dark
-            :color="chip.color"
-            :outlined="!chip.isActive"
-            @click="selectChip(chip)"
-          >
-            {{ chip.title }}
-          </Chip>
-        </div>
-        <div class="team-list-wrapper">
-          <CardTeam
-            v-for="(team, index) in teams"
-            :key="team.id"
-            :team="team"
-            :index="index"
-            :class="{ active: activeEl == index }"
-            @select="selectTeam(index, team.id)"
-          />
-        </div>
-      </div>
-      <div v-else v-show="$vuetify.breakpoint.lgAndUp" id="empty-team-list">
-        <div class="text-center">
-          <p>You don't have any teams yet.</p>
-          <p>
-            Please check your
-            <router-link :to="{ name: 'Adviser Invitation' }">
-              <span class="secondary--text pointer font-bold">
-                invitations.
-              </span></router-link
-            >
-          </p>
-        </div>
-      </div>
-      <Tabs active="pending-proposals" :items="items" class="tabs">
-        <template v-slot:body-pending-proposals>
-          <span v-if="pendingProposalsLoading">Loading...</span>
-          <div v-else>
-            <PendingProposals
-              v-if="hasTeamPendingProposals"
-              :pending-proposals="pendingProposals"
-              :has-approved-proposal="hasTeamApprovedProposals"
-              @updateProposal="updateProposals($event)"
-            />
-            <EmptyDataTeamProposals
-              v-else-if="!hasTeamPendingProposals && hasTeamApprovedProposals"
-              content="One of the proposals of this team is already approved. Please check on the approved research tab."
-            />
-            <EmptyDataTeamProposals
-              v-else
-              content="This team have not yet submitted any proposals."
-            />
-          </div>
-        </template>
-        <template v-slot:body-approved-research>
-          <span v-if="approvedProposalsLoading">Loading...</span>
-          <div v-else>
-            <ApprovedResearch
-              v-if="hasTeamApprovedProposals"
-              :approved-research="approvedProposals[0]"
-            />
-            <EmptyDataTeamApprovedResearch v-else />
-          </div>
-        </template>
-        <template v-slot:body-research-paper>
-          <div v-if="hasTeamApprovedProposals" class="buttons-wrapper">
-            <Button
-              v-show="!isMarkedAsComplete"
-              @click="markAsCompleteDialog = true"
-            >
-              Mark as Complete
-            </Button>
-            <Button v-show="isMarkedAsComplete" outlined>
-              Mark as Incomplete
-            </Button>
-            <Button
-              v-show="isMarkedAsComplete && !isPublished"
-              @click="publishDialog = true"
-            >
-              Publish to Research Archive
-            </Button>
-            <Button v-show="isMarkedAsComplete && isPublished" outlined>
-              Unpublish
-            </Button>
-          </div>
-          <ResearchPaper
-            v-if="hasTeamApprovedProposals"
-            :blocks="researchPaper"
-            :is-marked-as-complete="isMarkedAsComplete"
-            :is-published="isPublished"
-          />
-          <EmptyDataTeamResearchPaper v-else />
-        </template>
-      </Tabs>
-    </div>
     <ModalMarkAsComplete
       :dialog-props="markAsCompleteDialog"
       @dialogClose="markAsCompleteDialog = $event"
@@ -157,6 +160,7 @@
 </template>
 
 <script>
+import SidebarComments from "@/components/sidebar/SidebarComments";
 import Button from "@/components/global/Button";
 import Chip from "@/components/global/Chip";
 import Modal from "@/components/modals/Modal";
@@ -181,6 +185,7 @@ import { PROPOSAL } from "@/utils/constants";
 export default {
   name: "ManageTeams",
   components: {
+    SidebarComments,
     Button,
     Chip,
     Modal,
@@ -234,6 +239,7 @@ export default {
           isActive: false,
         },
       ],
+      selectedChips: ["Ongoing"],
       teams: [],
       memberships: [],
       pendingProposals: [],
@@ -383,6 +389,32 @@ export default {
           ],
         },
       ],
+      commentList: [
+        {
+          blockId: 123,
+          comments: [
+            {
+              first_name: "Jessica",
+              last_name: "Reyes",
+              datetime: "November 24, 2021",
+              message: "Justify this text",
+            },
+            {
+              first_name: "Cary",
+              last_name: "Gwapo",
+              datetime: "November 24, 2021",
+              message: "Happy birthday",
+            },
+            {
+              first_name: "Cary",
+              last_name: "Gwapo",
+              datetime: "November 24, 2021",
+              message:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id lorem luctus, placerat orci nec, viverra ante. Donec at odio sed massa finibus interdum sit amet a orci. Vivamus sollicitudin scelerisque interdum.",
+            },
+          ],
+        },
+      ],
     };
   },
 
@@ -402,6 +434,13 @@ export default {
 
     hasTeamPendingProposals() {
       return this.pendingProposals.length > 0;
+    },
+
+    //* for filtering by status
+    filteredTeams() {
+      return this.teams.filter((team) =>
+        this.selectedChips.includes(team.status)
+      );
     },
   },
 
@@ -475,7 +514,12 @@ export default {
     },
 
     selectChip(chip) {
-      chip.isActive = !chip.isActive;
+      if (this.selectedChips.length > 0) {
+        if (chip.isActive)
+          this.selectedChips.splice(this.selectedChips.indexOf(chip.title), 1);
+        else this.selectedChips.push(chip.title);
+        chip.isActive = !chip.isActive;
+      }
     },
 
     async updateProposals({ id, status, feedback }) {
@@ -492,9 +536,12 @@ export default {
         }
       }
       this.fetchAndUpdateProposals(this.activeEl, this.currentSelectedTeam);
-      this.$router.replace({
-        query: { ...this.$route.query, tab: "approved-research" },
-      });
+      if (status === PROPOSAL.STATUS.APPROVED) {
+        this.$router.replace({
+          ...this.$route.query,
+          tab: "approved-research",
+        });
+      }
     },
 
     async fetchAndUpdateProposals(index, team_id) {
@@ -541,55 +588,65 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#manage-teams {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: 100vh;
+}
+
 .teams-list-filter {
   width: 100%;
   display: flex;
   flex-direction: row;
   column-gap: 8px;
 }
-#manage-teams {
+
+// padding: 24px clamp(20px, 5.5vw, 80px);
+.main-content-wrapper {
+  display: flex;
+  flex-direction: row;
+  column-gap: 16px;
+  width: 100%;
   padding: 24px clamp(20px, 5.5vw, 80px);
-  .flex-wrapper {
+
+  #tabs-content {
+    width: 100%;
+  }
+
+  #empty-team-list {
     display: flex;
-    flex-direction: row;
-    column-gap: 16px;
+    height: 75vh;
+    width: 18vw;
+    justify-content: center;
+    align-items: center;
+  }
 
-    #empty-team-list {
-      display: flex;
-      height: 75vh;
-      width: 300px;
-      justify-content: center;
-      align-items: center;
-    }
+  #team-list {
+    margin-top: 72px;
+    width: clamp(260px, 18vw, 274px);
+  }
 
-    #team-list {
-      margin-top: 72px;
-    }
-
-    .team-list-wrapper {
-      display: flex;
-      flex-direction: column;
-      row-gap: 24px;
-      margin-top: 32px;
-      padding: 0px 4px 4px 4px;
-      overflow-y: auto;
-      height: 75vh;
-      width: 300px;
-      .active {
-        background: $neutral-50;
-      }
-    }
-
-    .tabs {
-      flex: 3;
-    }
-
-    .buttons-wrapper {
-      display: flex;
-      column-gap: 8px;
-      justify-content: flex-end;
-      padding-top: 24px;
+  .team-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    row-gap: 24px;
+    margin-top: 32px;
+    padding: 0px 4px 4px 4px;
+    overflow-y: auto;
+    height: 75vh;
+    .active {
+      background: $neutral-50;
     }
   }
+
+  .buttons-wrapper {
+    display: flex;
+    column-gap: 8px;
+    justify-content: flex-end;
+    padding-top: 24px;
+  }
 }
+// }
 </style>
