@@ -97,10 +97,12 @@ import { MODULES } from "@/utils/constants";
 import { IndexeddbPersistence } from "y-indexeddb";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
-// import { fromUint8Array, toUint8Array } from "js-base64";
+import { fromUint8Array } from "js-base64";
 
 import { ACM_FORMAT } from "@/utils/autoformatter/format-rules";
 import autoformat from "@/utils/autoformatter/autoformat";
+
+import { db } from "../../../vuefire-db";
 
 export default {
   name: "ResearchPaperEditor",
@@ -237,19 +239,19 @@ export default {
 
   beforeDestroy() {
     // TODO: get key
-    // TODO: data 
+    // TODO: data
 
     // TODO: firebase function
 
     // const key = this.documentCode;
     const content = fromUint8Array(Y.encodeStateAsUpdate(this.yDoc));
 
-    db.collection('backups')
-    .doc(this.documentCode)
-    .update({ content })
-    .then(() => {
-      console.log('backup updated!')
-    })
+    db.collection("backups")
+      .doc(this.documentCode)
+      .update({ content })
+      .then(() => {
+        console.log("backup updated!");
+      });
 
     this.yDoc.destroy();
     this.provider.destroy();

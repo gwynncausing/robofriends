@@ -1,10 +1,10 @@
-import { firestorePlugin } from 'vuefire'
-import firebase from 'firebase/app'
-import 'firebase/firestore'
+import { firestorePlugin } from "vuefire";
+import firebase from "firebase/app";
+import "firebase/firestore";
 
 import Vue from "vue";
 
-Vue.use(firestorePlugin)
+Vue.use(firestorePlugin);
 
 const firebaseConfig = {
   apiKey: "AIzaSyCfQHu1q5F9hG3GMB3W8hFElJmfpf3qI5s",
@@ -18,15 +18,10 @@ const firebaseConfig = {
   measurementId: "G-WYCCTDFFE5",
 };
 
-
-export const db = firebase
-  .initializeApp(firebaseConfig)
-  .firestore()
-
+export const db = firebase.initializeApp(firebaseConfig).firestore();
 
 // * For Realtime
 // * Not Necessary
 // const { Timestamp, GeoPoint } = firebase.firestore
 // export { Timestamp, GeoPoint }
 // db.settings({ timestampsInSnapshots: true })
-
