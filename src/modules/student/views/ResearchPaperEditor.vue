@@ -239,10 +239,17 @@ export default {
     // TODO: get key
     // TODO: data 
 
-    //const key = this.documentCode;
-    //const content = fromUint8Array(Y.encodeStateAsUpdate(this.yDoc));
-
     // TODO: firebase function
+
+    // const key = this.documentCode;
+    const content = fromUint8Array(Y.encodeStateAsUpdate(this.yDoc));
+
+    db.collection('backups')
+    .doc(this.documentCode)
+    .update({ content })
+    .then(() => {
+      console.log('backup updated!')
+    })
 
     this.yDoc.destroy();
     this.provider.destroy();
