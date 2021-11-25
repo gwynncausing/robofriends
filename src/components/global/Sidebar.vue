@@ -13,10 +13,9 @@ export default {};
 
 <style lang="scss" scoped>
 #sidebar {
-  flex: 1;
   border-left: 1px solid $neutral-400;
   overflow-y: auto;
-  height: 100vh;
+  width: clamp(260px, 20vw, 320px);
   .title {
     border-bottom: 1px solid $neutral-400;
     padding: 16px;
