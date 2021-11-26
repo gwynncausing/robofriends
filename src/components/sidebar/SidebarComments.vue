@@ -1,5 +1,5 @@
 <template>
-  <Sidebar>
+  <Sidebar v-on="$listeners" collapsible>
     <template v-slot:title>Comments</template>
     <template v-slot:content>
       <div class="comment-list-wrapper">

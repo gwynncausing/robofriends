@@ -1,6 +1,10 @@
 <template>
   <div id="research-paper">
-    <EditorNestedReadonly :list="blocks" />
+    <EditorNestedReadonly
+      :list="blocks"
+      :comment-list="commentList"
+      v-on="$listeners"
+    />
   </div>
 </template>
 
@@ -13,6 +17,11 @@ export default {
   },
   props: {
     blocks: {
+      required: true,
+      type: Array,
+      default: () => [],
+    },
+    commentList: {
       required: true,
       type: Array,
       default: () => [],
