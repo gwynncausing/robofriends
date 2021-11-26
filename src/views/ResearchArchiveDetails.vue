@@ -219,6 +219,7 @@ export default {
 <style lang="scss" scoped>
 #research-archive-details-wrapper {
   display: flex;
+  padding: 48px clamp(20px, 8vw, 240px);
   #research-details-info-wrapper {
     max-width: 300px;
     border-right: 1px solid var(--v-neutral-200);
