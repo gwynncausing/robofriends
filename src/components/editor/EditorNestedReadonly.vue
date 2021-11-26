@@ -44,7 +44,12 @@
         >
           <EditorReferenceReadonly :editor-data="editor" />
         </div>
-        <v-btn class="comment" icon @click="selectComment(editor.id)">
+        <v-btn
+          v-if="hasComments"
+          class="comment"
+          icon
+          @click="selectComment(editor.id)"
+        >
           <v-icon> mdi-comment-text </v-icon>
         </v-btn>
       </div>
@@ -73,7 +78,7 @@ export default {
       default: () => [],
     },
     commentList: {
-      required: true,
+      required: false,
       type: Array,
       default: () => [],
     },
@@ -82,6 +87,12 @@ export default {
     return {
       selectedComment: {},
     };
+  },
+
+  computed: {
+    hasComments() {
+      return this.commentList.length > 0 ? true : false;
+    },
   },
 
   methods: {

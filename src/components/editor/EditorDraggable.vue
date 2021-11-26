@@ -35,7 +35,7 @@
             :is-editable="isEditable"
             @input="input($event, index)"
             @updateUsers="$emit('updateUsers', $event)"
-            @selectBlock="$emit('selectBlock', $event)"
+            @selectBlock="$emit('selectBlock', editor)"
           />
         </div>
         <div
@@ -57,7 +57,7 @@
             "
             @input="input($event, index)"
             @updateUsers="$emit('updateUsers', $event)"
-            @selectBlock="$emit('selectBlock', $event)"
+            @selectBlock="$emit('selectBlock', editor)"
           />
         </div>
 
@@ -73,7 +73,7 @@
             :is-editable="isEditable"
             @input="input($event, index)"
             @updateUsers="$emit('updateUsers', $event)"
-            @selectBlock="$emit('selectBlock', $event)"
+            @selectBlock="$emit('selectBlock', editor)"
           />
         </div>
         <div
@@ -95,7 +95,7 @@
             "
             @input="input($event, index)"
             @updateUsers="$emit('updateUsers', $event)"
-            @selectBlock="$emit('selectBlock', $event)"
+            @selectBlock="$emit('selectBlock', editor)"
           />
         </div>
         <div
@@ -109,7 +109,7 @@
             :y-doc="yDoc"
             @input="input($event, index)"
             @updateUsers="$emit('updateUsers', $event)"
-            @selectBlock="$emit('selectBlock', $event)"
+            @selectBlock="$emit('selectBlock', editor)"
           />
         </div>
       </div>

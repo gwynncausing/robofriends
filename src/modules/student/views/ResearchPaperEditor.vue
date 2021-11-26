@@ -201,9 +201,10 @@ export default {
       // folder.delete(0, folder.length);
 
       //* initialize editors
-      folder.forEach((block) => {
+      folder.forEach((block, index) => {
         // *pass reference to parent ydoc
         // block.ydoc = this.yDoc;
+        block.index = index;
         this.editors.push(block);
       });
 
@@ -227,6 +228,7 @@ export default {
           if (block.id == this.currentSelectedObjectId) {
             objectIndex = index;
           }
+          block.index = index;
           // *pass reference to parent ydoc
           // block.ydoc = this.yDoc;
           this.editors.push(block);
@@ -292,31 +294,23 @@ export default {
     updateUsers(users) {
       this.activeUsers = users;
     },
-    selectBlock(object) {
+    selectBlock(block) {
       try {
-        const index = this.editors
-          .map((editor) => editor.id)
-          .indexOf(object.id);
-        this.moveToolbar(object.id, index);
-        this.currentSelectedObjectId = object.id;
-        this.currentSelectedEditorIndex = index;
+        this.currentSelectedObjectId = block.id;
+        this.currentSelectedEditorIndex = block.index;
+        this.moveToolbar(block.id);
       } catch (error) {
         console.log(error);
       }
     },
-    moveToolbar(id, index) {
+    moveToolbar(id) {
       try {
         const editorID = "editor-" + id;
-        let position = 0;
+        const blockElement = document.getElementById(editorID);
+        const rect = blockElement.getBoundingClientRect();
 
-        for (let i = 0; i < this.editors.length; i++) {
-          let editorID = "editor-" + this.editors[i].id;
-          position += document.getElementById(editorID).clientHeight;
-          if (i === index) break;
-        }
-
-        const blockHeight = document.getElementById(editorID).clientHeight;
-        this.currentToolbarPosition = position - blockHeight;
+        //* no idea why 185, maybe from space between first block and header bar?
+        this.currentToolbarPosition = rect.top + window.scrollY - 184;
       } catch (error) {
         console.log(error);
       }
