@@ -159,6 +159,7 @@ export default {
       getApprovedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_APPROVED_PROPOSAL}`,
       getUser: `${ROOT_GETTERS.GET_USER}`,
       getCurrentSchool: ROOT_GETTERS.GET_CURRENT_SCHOOL,
+      getApprovedProposalDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_APPROVED_PROPOSAL_DETAILS}`,
     }),
     userColor() {
       return this.getRandomColor();
@@ -441,13 +442,13 @@ export default {
         await this.onFetchCurrentSchool({ schoolId: this.getUser.school });
       const currentSchool = await this.getCurrentSchool;
       const teamDetails = await this.getSelectedTeamDetails;
-
       if (title === "ACM")
         autoformat.generateDocument(
           ACM_FORMAT,
           this.editors,
           currentSchool,
-          teamDetails
+          teamDetails,
+          this.getApprovedProposalDetails.title
         );
     },
   },
