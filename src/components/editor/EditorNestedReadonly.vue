@@ -4,52 +4,41 @@
       v-for="editor in list"
       :id="'editor-' + editor.id"
       :key="editor.id"
+      style="display: block"
       class="editor-panels-wrapper"
     >
-      <div class="parent-wrapper">
-        <div class="parent">
-          <v-btn
-            v-if="editor.blockType === 'heading'"
-            :id="'toggle-' + editor.id"
-            icon
-            class="toggle"
-            @click="toggleChildren(editor.id)"
-          >
-            <v-icon> mdi-chevron-right </v-icon>
-          </v-btn>
-          <div v-if="editor.blockType === 'text'" class="editor-content-text">
-            <EditorTextReadonly :editor-data="editor" />
-          </div>
-
-          <div
-            v-else-if="editor.blockType === 'image'"
-            class="editor-content-image"
-          >
-            <EditorImageReadonly :editor-data="editor" />
-          </div>
-
-          <div
-            v-else-if="editor.blockType === 'heading'"
-            class="editor-content-heading"
-          >
-            <EditorHeadingReadonly :editor-data="editor" />
-          </div>
-
-          <div
-            v-else-if="editor.blockType === 'table'"
-            class="editor-content-table"
-          >
-            <EditorTableReadonly :editor-data="editor" />
-          </div>
+      <div class="parent">
+        <v-btn
+          v-if="editor.blockType === 'heading'"
+          :id="'toggle-' + editor.id"
+          icon
+          class="toggle down"
+          @click="toggleChildren(editor.id)"
+        >
+          <v-icon> mdi-chevron-right </v-icon>
+        </v-btn>
+        <div v-if="editor.blockType === 'text'" class="editor-content-text">
+          <EditorTextReadonly :editor-data="editor" />
         </div>
-      </div>
+        <div
+          v-else-if="editor.blockType === 'image'"
+          class="editor-content-image"
+        >
+          <EditorImageReadonly :editor-data="editor" />
+        </div>
 
-      <div
-        v-show="editor.blockType === 'heading'"
-        :id="'children-' + editor.id"
-        class="children"
-      >
-        <EditorNestedReadOnly :list="editor.children" />
+        <div
+          v-else-if="editor.blockType === 'heading'"
+          class="editor-content-heading"
+        >
+          <EditorHeadingReadonly :editor-data="editor" />
+        </div>
+        <div
+          v-else-if="editor.blockType === 'table'"
+          class="editor-content-table"
+        >
+          <EditorTableReadonly :editor-data="editor" />
+        </div>
       </div>
     </div>
   </div>
@@ -81,14 +70,26 @@ export default {
   },
   methods: {
     toggleChildren(id) {
-      let children = document.getElementById("children-" + id);
-      let toggle = document.getElementById("toggle-" + id);
-      if (children.style.display === "block") {
-        children.style.display = "none";
-        toggle.classList.remove("down");
-      } else {
-        children.style.display = "block";
-        toggle.classList.add("down");
+      const parentIndex = this.list.findIndex((block) => block.id === id);
+      const toggleElement = document.getElementById("toggle-" + id);
+      toggleElement.classList.toggle("down");
+      const parentBlock = this.list[parentIndex];
+      if (parentIndex === this.list.length - 1) return;
+      for (let i = parentIndex + 1; i < this.list.length; i++) {
+        const block = this.list[i];
+        if (
+          block.blockType === "heading" &&
+          parentBlock.content[0].attrs.level >= block.content[0].attrs.level
+        ) {
+          break;
+        } else {
+          const element = document.getElementById("editor-" + block.id);
+          if (!toggleElement.classList.contains("down")) {
+            element.style.display = "none";
+          } else {
+            element.style.display = "block";
+          }
+        }
       }
     },
   },
@@ -101,40 +102,33 @@ export default {
 .editor-panels-wrapper {
   background-color: white;
 }
-.parent-wrapper {
+
+.parent {
+  display: flex;
+  align-items: top;
+  background-color: white;
+  padding-bottom: 24px;
   width: 100%;
-
-  .parent {
-    display: flex;
-    align-items: top;
-    background-color: white;
-    padding-bottom: 24px;
-    .toggle {
-      &:hover {
-        background-color: $neutral-50;
-      }
-    }
-    div[class^="editor-content-"] {
-      border: 1px solid $neutral-400;
-      border-radius: 4px;
-      padding: 0.8rem;
-      cursor: text;
-      width: 100%;
-    }
-
-    .editor-content-table,
-    .editor-content-text,
-    .editor-content-image {
-      margin-left: 36px;
+  .toggle {
+    &:hover {
+      background-color: $neutral-50;
     }
   }
+  div[class^="editor-content-"] {
+    border: 1px solid $neutral-400;
+    border-radius: 4px;
+    padding: 0.8rem;
+    cursor: text;
+    width: 100%;
+  }
+
+  .editor-content-table,
+  .editor-content-text,
+  .editor-content-image {
+    margin-left: 36px;
+  }
 }
-.children {
-  min-height: 200px;
-  height: fit-content;
-  margin-left: 50px;
-  display: none;
-}
+
 .down {
   -moz-transform: rotate(90deg);
   -webkit-transform: rotate(90deg);
