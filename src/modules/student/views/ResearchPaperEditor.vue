@@ -267,7 +267,8 @@ export default {
       console.log(document.createdAt.toDate());
       if (document == null) return;
 
-      console.log("Backup found!");
+      console.log("Research paper backup found!");
+      console.log(document.createdAt.toDate());
       Y.applyUpdate(this.yDoc, toUint8Array(document.content));
     },
     async setHasApprovedProposal() {

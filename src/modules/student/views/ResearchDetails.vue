@@ -22,6 +22,7 @@
           :provider="provider"
           @saveProposal="updateApprovedProposal"
           @setEditableClick="approvedResearchTab.isEditable = true"
+          @approvedProposalUsers="updateApprovedUsers"
         />
         <EmptyDataApprovedResearch v-else />
         <Snackbar
@@ -44,6 +45,7 @@
           :db="db"
           @reset="resetCreateNew"
           @submit="submitProposal"
+          @createNewProposalUsers="updateCreateNewUsers"
         />
       </template>
     </Tabs>
@@ -71,6 +73,9 @@ import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { IndexeddbPersistence } from "y-indexeddb";
 
+import { fromUint8Array, toUint8Array } from "js-base64";
+import { firestoreSet, firestoreGet } from "@/utils/helpers";
+
 export default {
   name: "ResearchDetails",
   components: {
@@ -87,6 +92,7 @@ export default {
       createNewTab: {
         proposal: {},
         isUpdateProposal: false,
+        activeUsersCount: 0,
       },
       proposalsTab: {
         proposals: [],
@@ -97,6 +103,7 @@ export default {
         isSnackbarShown: false,
         snackbarMessage: "",
         isEditable: false,
+        activeUsersCount: 0,
       },
       items: [
         {
@@ -116,7 +123,7 @@ export default {
         },
       ],
       isCompleted: false,
-      documentCode: "MyT3@mN@m3Unique6661111" + "-create-proposal",
+      documentCode: "MyT3@mN@m3Unique6661111" + "-proposals",
       yDoc: new Y.Doc(),
       db: null,
       provider: {},
@@ -171,8 +178,14 @@ export default {
     this.initializeCreateNewTab();
     this.initializeProposalsTab();
     this.initializeApprovedProposalTab();
+    this.firestoreGetDocument();
   },
   beforeDestroy() {
+    const activeUsersCount =
+      this.approvedResearchTab.activeUsersCount +
+      this.createNewTab.activeUsersCount;
+    if (activeUsersCount <= 2 && activeUsersCount > 0)
+      this.firestoreSaveDocument();
     this.provider.destroy();
   },
   methods: {
@@ -193,6 +206,14 @@ export default {
         this.createNewTab.proposal = this.getRevisedProposal.content;
         this.createNewTab.isUpdateProposal = true;
       }
+    },
+
+    updateApprovedUsers(count) {
+      this.approvedResearchTab.activeUsersCount = count;
+    },
+
+    updateCreateNewUsers(count) {
+      this.createNewTab.activeUsersCount = count;
     },
 
     async initializeProposalsTab() {
@@ -301,6 +322,24 @@ export default {
       } finally {
         this.isSubmittingProposal = false;
       }
+    },
+
+    firestoreSaveDocument() {
+      const document = {
+        key: this.documentCode,
+        content: fromUint8Array(Y.encodeStateAsUpdate(this.yDoc)),
+        createdAt: new Date(),
+      };
+      firestoreSet(this.documentCode, document);
+    },
+
+    async firestoreGetDocument() {
+      const document = await firestoreGet(this.documentCode);
+      if (document == null) return;
+
+      console.log("Proposals backup found!");
+      console.log(document.createdAt.toDate());
+      Y.applyUpdate(this.yDoc, toUint8Array(document.content));
     },
   },
 };

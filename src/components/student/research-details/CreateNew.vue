@@ -129,7 +129,7 @@ export default {
     },
     updateUsers(users) {
       this.activeUsers = users;
-      // console.log(users);
+      this.$emit("createNewProposalUsers", this.activeUsers.length);
     },
     getContent(event) {
       this.editor.content = event;
