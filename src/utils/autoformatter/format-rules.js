@@ -180,7 +180,7 @@ export const ACM_FORMAT = {
       }),
       createParagraphStyle({
         id: "DocumentTitle",
-        name: "DocumentTitle",
+        name: "Document Title",
         runOptions: {
           font: "Helvetica",
           size: "18pt",

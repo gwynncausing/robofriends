@@ -33,6 +33,23 @@ export const createSection = ({
   };
 };
 
+export const processTitle = (rules, documentProperty, section, title) => {
+  const specialDocumentOptions = rules.special.singleColumnContent.document;
+  documentProperty.sections.push(section);
+  section = createSection({
+    documentOptions: specialDocumentOptions,
+  });
+  let tempContentText = [
+    {
+      type: "text",
+      marks: [{ type: "bold" }],
+      text: title ?? "",
+    },
+  ];
+  section.children.push(createParagraph(tempContentText, "DocumentTitle"));
+  return section;
+};
+
 //TODO: polish this, and should accept a content for creator, title, description
 export const createDocumentProperties = (rules) => {
   const properties = {
@@ -56,7 +73,13 @@ export const createDocumentProperties = (rules) => {
   return properties;
 };
 
-export const generateDocument = async (rules, content, school, team) => {
+export const generateDocument = async (
+  rules,
+  content,
+  school,
+  team,
+  researchTitle = ""
+) => {
   const numberList = [];
   const imageList = [];
   const tableList = [];
@@ -65,6 +88,10 @@ export const generateDocument = async (rules, content, school, team) => {
     documentOptions: rules.document,
     children: [],
   });
+  //* Add Title in the paper
+  if (researchTitle)
+    section = processTitle(rules, properties, section, researchTitle);
+  //* Adds authors  in the paper
   section = processAuthors(rules, properties, section, team, school);
   // TODO: add indicator to only add this if the user wants to
   // TODO: add check for format name e.g. if rules.name === ACM
@@ -106,12 +133,12 @@ export const generateDocument = async (rules, content, school, team) => {
   const doc = new Document(properties);
   // TODO: return document object
   // * temporary soluton to save
-  saveDocument(doc);
+  saveDocument(doc, researchTitle);
 };
 
-const saveDocument = (doc) =>
+const saveDocument = (doc, researchTitle) =>
   Packer.toBlob(doc).then((blob) => {
-    saveAs(blob, "test.docx");
+    saveAs(blob, researchTitle + ".docx");
   });
 
 // TODO: once finalized, make this a promise based implementation

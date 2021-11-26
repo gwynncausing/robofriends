@@ -8,7 +8,6 @@ const filterMembers = (team) => {
   for (let index = 0; index < team.members.length; index++) {
     //* uncomment if adviser is not included
     // if (members[index].baseRole !== "adviser")
-    console.log(members[index].user.firstName);
     filteredMembers.push(members[index].user);
   }
   return filteredMembers;
@@ -23,12 +22,9 @@ export const processRowAuthors = (
   totalNumberOfAuthors,
   currentIndexOfAuthors = 0
 ) => {
-  console.log({ currentIndexOfAuthors });
-  console.log({ totalNumberOfAuthors });
   let specialDocumentOptions = "";
 
   const authorsLeft = totalNumberOfAuthors - currentIndexOfAuthors;
-  console.log({ authorsLeft });
   if (authorsLeft === 1) {
     specialDocumentOptions = rules.special.singleColumnContent.document;
   } else if (authorsLeft === 2) {
@@ -47,7 +43,6 @@ export const processRowAuthors = (
     authorIndex < totalNumberOfAuthors && count < 3;
     authorIndex++, count++
   ) {
-    console.log("here");
     for (const detail of authorDetails) {
       let text = null;
       switch (detail) {
@@ -74,7 +69,6 @@ export const processRowAuthors = (
           text: text,
         },
       ];
-      console.log({ text });
       let style = "AuthorOthers";
       if (detail === "name" || detail === "email") style = "AuthorNameOrEmail";
       if (text) section.children.push(createParagraph(tempContentText, style));
