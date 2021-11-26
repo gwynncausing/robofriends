@@ -305,9 +305,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#create-team {
+  padding: 48px clamp(20px, 16vw, 240px);
+}
 #form {
   max-width: 1252px;
-  padding: 40px clamp(20px, 5.5vw, 80px);
+  // padding: 40px clamp(20px, 5.5vw, 80px);
   display: grid;
   grid-template-columns: auto;
   grid-template-rows: repeat(3, auto);

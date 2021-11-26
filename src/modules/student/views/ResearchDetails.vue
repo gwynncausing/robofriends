@@ -308,6 +308,6 @@ export default {
 
 <style lang="scss" scoped>
 #research-details {
-  padding: 24px clamp(20px, 5.5vw, 80px);
+  padding: 36px clamp(20px, 8vw, 240px);
 }
 </style>

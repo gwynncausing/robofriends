@@ -459,6 +459,8 @@ export default {
 
 <style lang="scss" scoped>
 #editor {
+  padding: 48px clamp(20px, 8vw, 240px);
+
   .editor-wrapper {
     display: flex;
     flex-direction: column;

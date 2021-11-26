@@ -646,13 +646,12 @@ export default {
   column-gap: 8px;
 }
 
-// padding: 24px clamp(20px, 5.5vw, 80px);
 .main-content-wrapper {
   display: flex;
   flex-direction: row;
   column-gap: 16px;
   width: 100%;
-  padding: 24px clamp(20px, 5.5vw, 80px);
+  padding: 36px clamp(20px, 8vw, 240px);
 
   #tabs-content {
     width: 100%;

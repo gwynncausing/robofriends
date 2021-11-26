@@ -287,11 +287,10 @@ export default {
     flex: 4;
     display: flex;
     flex-direction: column;
+    padding: 36px clamp(20px, 8vw, 240px);
 
     .editor-heading {
       padding-bottom: 8px;
-      width: 80%;
-      margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       padding-top: 24px;
@@ -305,11 +304,6 @@ export default {
       .restore-button {
         justify-self: end;
       }
-    }
-    .editor {
-      display: flex;
-      width: 80%;
-      margin: 0 auto;
     }
   }
 
