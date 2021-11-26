@@ -2,10 +2,18 @@
   <div class="editor-toolbar" :style="{ top: currentToolbarPosition + 'px' }">
     <Button
       icon
+      title="Add Heading Block"
+      @click="addEditor(currentSelectedEditorIndex, 'heading')"
+    >
+      <v-icon class="editor-control-icon">mdi-application-outline</v-icon>
+    </Button>
+
+    <Button
+      icon
       title="Add Text Block"
       @click="addEditor(currentSelectedEditorIndex)"
     >
-      <v-icon class="editor-control-icon">mdi-plus-circle-outline</v-icon>
+      <v-icon class="editor-control-icon">mdi-format-title</v-icon>
     </Button>
 
     <Button
@@ -14,14 +22,6 @@
       @click="addEditor(currentSelectedEditorIndex, 'image')"
     >
       <v-icon class="editor-control-icon">mdi-image-outline</v-icon>
-    </Button>
-
-    <Button
-      icon
-      title="Add Heading Block"
-      @click="addEditor(currentSelectedEditorIndex, 'heading')"
-    >
-      <v-icon class="editor-control-icon">mdi-application-outline</v-icon>
     </Button>
 
     <Button
@@ -43,7 +43,7 @@
       icon
       title="Comments"
       :disabled="editorLength === 0"
-      @click="testMethod"
+      @click="selectComment(currentSelectedEditorIndex)"
     >
       <v-icon
         class="editor-control-icon"
@@ -98,8 +98,8 @@ export default {
     removeEditor(currentSelectedEditorIndex) {
       this.$emit("removeEditor", { currentSelectedEditorIndex });
     },
-    testMethod() {
-      console.log("testMethod called");
+    selectComment(currentSelectedEditorIndex) {
+      this.$emit("viewComments", { currentSelectedEditorIndex });
     },
   },
 };
@@ -124,6 +124,9 @@ export default {
 
     .editor-control-icon {
       color: $neutral-700;
+      &:hover {
+        color: $primary;
+      }
     }
 
     &:last-child {
