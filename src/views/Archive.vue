@@ -1,7 +1,7 @@
 <template>
   <!-- // TODO: Filter Categories not yet implemented -->
   <!-- // ***** Filter Categories commented out for now -->
-  <div id="archive" class="container">
+  <div id="archive">
     <header>
       <div class="archive-header-wrapper">
         <div class="space d-none d-sm-block"></div>
@@ -281,6 +281,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#archive {
+  padding: 48px clamp(20px, 8vw, 240px);
+}
 .archive-header-wrapper {
   display: flex;
   flex-direction: row;

@@ -5,7 +5,7 @@
       lazy-validation
       @submit.prevent="finishOnboarding()"
     >
-      <v-row id="account-settings-wrapper" class="mt-6">
+      <v-row id="account-settings-wrapper">
         <v-col cols="12">
           <header>
             <h5 class="tertiary--text">Account Settings</h5>
@@ -321,6 +321,7 @@ export default {
 #account-settings {
   #account-settings-wrapper {
     max-width: 960px;
+    padding-top: 48px;
   }
   header {
     margin-bottom: 1rem;

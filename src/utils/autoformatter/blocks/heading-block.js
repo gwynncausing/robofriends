@@ -34,14 +34,25 @@ export const processHeadingBlock = (rules, item, numberList, section) => {
   for (const childContent of item.content) {
     if (childContent.type === "heading") {
       let headingText = childContent.content?.[0].text;
-      const level = childContent.attrs.level;
+      let level = childContent.attrs.level;
       if (rules.headingOptions.isNumbered) {
         // * add numbers to heading
-        headingText = `${getHeadingNumber(
-          numberList,
-          level,
-          rules.headingOptions.isNestedNumbers
-        )} ${headingText ?? ""}`;
+        let headingNumber = "";
+        if (
+          !["abstract", "css concepts", "keywords"].includes(
+            headingText?.toLowerCase()
+          )
+        ) {
+          headingNumber = getHeadingNumber(
+            numberList,
+            level,
+            rules.headingOptions.isNestedNumbers
+          );
+        } else {
+          //* if text includes abstract, css concepts or keywords, it is forced to be level 2
+          level = 2;
+        }
+        headingText = `${headingNumber} ${headingText ?? ""}`;
       }
       section.children.push(createHeading(headingText, level));
     }

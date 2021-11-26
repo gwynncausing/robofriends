@@ -1,7 +1,7 @@
 <template>
   <div id="editor">
     <!-- // * make this hasApprovedProposal to true to check/see the editor -->
-    <div v-if="!hasApprovedProposal">
+    <div v-if="!hasApprovedProposal" class="empty-data">
       <EmptyDataResearchPaperEditor />
     </div>
     <div v-else class="editor-wrapper">
@@ -69,12 +69,16 @@
             :current-toolbar-position="currentToolbarPosition"
             :current-selected-editor-index="currentSelectedEditorIndex"
             :editor-length="editors.length"
+            :comment-list="commentList"
             @addEditor="addEditor($event)"
             @removeEditor="removeEditor($event)"
+            @viewComments="viewComments"
           />
         </div>
       </div>
     </div>
+    <!-- // TODO: add this prop :comments="selectedComment.comments" -->
+    <SidebarComments v-show="commentSidebar" @closed="commentSidebar = false" />
   </div>
 </template>
 
@@ -86,6 +90,7 @@ import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 import EmptyDataResearchPaperEditor from "@/components/messages/EmptyDataResearchPaperEditor";
 import Snackbar from "@/components/Snackbar";
 import Chip from "@/components/global/Chip.vue";
+import SidebarComments from "@/components/sidebar/SidebarComments";
 
 import { mapActions, mapGetters } from "vuex";
 import {
@@ -108,6 +113,7 @@ import { generateBlockId, firestoreSet, firestoreGet } from "@/utils/helpers";
 export default {
   name: "ResearchPaperEditor",
   components: {
+    SidebarComments,
     EditorDraggable,
     Button,
     EditorToolbar,
@@ -150,6 +156,9 @@ export default {
       lastReceivedUpdate: +new Date(),
       hasApprovedProposal: false,
       isCompleted: false,
+      commentList: [],
+      selectedComment: {},
+      commentSidebar: false,
     };
   },
 
@@ -272,6 +281,12 @@ export default {
         // TODO: Improve api error handling
         console.log(error);
       }
+    },
+    viewComments({ currentSelectedEditorIndex: index = -1 }) {
+      if (index === -1) return;
+      else this.selectedComment = this.commentList[index];
+      this.commentSidebar = true;
+      console.log(this.commentSidebar);
     },
     updateUsers(users) {
       this.activeUsers = users;
@@ -444,10 +459,23 @@ export default {
 
 <style lang="scss" scoped>
 #editor {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: 100vh;
+
+  .empty-data {
+    padding: 48px clamp(20px, 8vw, 240px);
+    width: 100%;
+  }
+
   .editor-wrapper {
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    padding: 48px clamp(20px, 8vw, 240px);
+    width: 100%;
   }
   .editor-heading {
     display: flex;

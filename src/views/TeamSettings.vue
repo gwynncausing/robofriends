@@ -5,7 +5,7 @@
       lazy-validation
       @submit.prevent="finishOnboarding()"
     >
-      <div id="account-settings-wrapper" class="mt-6">
+      <div id="account-settings-wrapper">
         <div class="header">
           <h5 class="tertiary--text">{{ teamNameComputed }} Settings</h5>
           <Chip v-if="isCompleted">Completed</Chip>
@@ -512,6 +512,7 @@ export default {
 <style lang="scss" scoped>
 #account-settings {
   margin-bottom: 100px;
+  padding: 48px clamp(20px, 8vw, 240px);
   .row-details {
     margin: 0 !important;
     padding: 0 0 0 12px !important;

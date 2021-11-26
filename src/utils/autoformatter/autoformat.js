@@ -3,12 +3,13 @@
 import { Document, Packer, SectionType } from "docx";
 
 import { saveAs } from "file-saver";
-import { processTextBlock, createParagraph } from "./blocks/text-block";
+import { processTextBlock } from "./blocks/text-block";
 import { processHeadingBlock } from "./blocks/heading-block";
 import { processImageBlock } from "./blocks/image-block";
 import { processTableBlock } from "./blocks/table-block";
 import { processReferenceBlock } from "./blocks/reference-block";
 import { processAuthors } from "./authors-heading";
+import { processTitle } from "./document-title";
 import { createACMCopyrightSpace } from "./special-elements";
 
 //*OK
@@ -31,23 +32,6 @@ export const createSection = ({
     properties: createSectionProperties({ documentOptions, type }),
     children: children,
   };
-};
-
-export const processTitle = (rules, documentProperty, section, title) => {
-  const specialDocumentOptions = rules.special.singleColumnContent.document;
-  documentProperty.sections.push(section);
-  section = createSection({
-    documentOptions: specialDocumentOptions,
-  });
-  let tempContentText = [
-    {
-      type: "text",
-      marks: [{ type: "bold" }],
-      text: title ?? "",
-    },
-  ];
-  section.children.push(createParagraph(tempContentText, "DocumentTitle"));
-  return section;
 };
 
 //TODO: polish this, and should accept a content for creator, title, description

@@ -259,14 +259,12 @@ export default {
     flex: 4;
     display: flex;
     flex-direction: column;
+    padding: 36px clamp(20px, 8vw, 240px);
 
     .editor-heading {
       padding-bottom: 8px;
-      width: 80%;
-      margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      padding-top: 24px;
       .back-button {
         justify-self: start;
       }
@@ -280,11 +278,9 @@ export default {
     }
     .editor {
       display: flex;
-      width: 80%;
       border: 1px solid $neutral-400;
       border-radius: 4px;
       padding: 0.8rem;
-      margin: 0 auto;
     }
   }
 

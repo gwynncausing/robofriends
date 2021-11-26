@@ -20,7 +20,7 @@
           class="teacher-list-wrapper"
         >
           <span class="teacher-list-label">Teacher {{ index + 1 }}</span>
-          <Combobox
+          <TextField
             v-model="team.teacher[index]"
             name="teachers"
             :items="teachersList"
@@ -134,7 +134,6 @@
 </template>
 
 <script>
-import Combobox from "@/components/global/Combobox.vue";
 import TextField from "@/components/global/TextField.vue";
 import Button from "@/components/global/Button.vue";
 import ModalCreateYourTeam from "@/components/modals/ModalCreateYourTeam.vue";
@@ -147,7 +146,6 @@ import { MODULES } from "@/utils/constants";
 export default {
   name: "CreateTeam",
   components: {
-    Combobox,
     TextField,
     Button,
     ModalCreateYourTeam,
@@ -307,9 +305,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#create-team {
+  padding: 48px clamp(20px, 16vw, 240px);
+}
 #form {
   max-width: 1252px;
-  padding: 40px clamp(20px, 5.5vw, 80px);
+  // padding: 40px clamp(20px, 5.5vw, 80px);
   display: grid;
   grid-template-columns: auto;
   grid-template-rows: repeat(3, auto);
