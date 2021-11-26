@@ -96,18 +96,26 @@
                 Unpublish
               </Button>
             </div>
+
             <ResearchPaper
               v-if="hasTeamApprovedProposals"
               :blocks="researchPaper"
               :is-marked-as-complete="isMarkedAsComplete"
               :is-published="isPublished"
+              :comment-list="commentList"
+              @viewComments="viewComments"
             />
+
             <EmptyDataTeamResearchPaper v-else />
           </template>
         </Tabs>
       </div>
     </div>
-    <SidebarComments :comments="commentList[0].comments" />
+    <SidebarComments
+      v-show="commentSidebar"
+      :comments="selectedComment.comments"
+      @closed="commentSidebar = false"
+    />
     <Modal :dialog="teamsDialog" @closed="teamsDialog = false">
       <template v-slot:title>
         <div class="teams-list-filter">
@@ -251,27 +259,9 @@ export default {
       isPublished: false,
       researchPaper: [
         {
-          id: "125",
+          id: "123",
           blockType: "heading",
           column: "default",
-          children: [
-            {
-              id: "126",
-              blockType: "text",
-              column: "default",
-              content: [
-                {
-                  type: "paragraph",
-                  content: [
-                    {
-                      type: "text",
-                      text: "paragraph",
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
           content: [
             {
               type: "heading",
@@ -286,7 +276,7 @@ export default {
         },
 
         {
-          id: "127",
+          id: "124",
           blockType: "image",
           column: "default",
           content: [
@@ -311,7 +301,7 @@ export default {
           ],
         },
         {
-          id: "128",
+          id: "125",
           blockType: "table",
           column: "default",
           content: [
@@ -414,7 +404,57 @@ export default {
             },
           ],
         },
+        {
+          blockId: 124,
+          comments: [
+            {
+              first_name: "Jessica",
+              last_name: "Reyes",
+              datetime: "November 24, 2021",
+              message: "Justify this text 124",
+            },
+            {
+              first_name: "Cary",
+              last_name: "Gwapo",
+              datetime: "November 24, 2021",
+              message: "Happy birthday 124",
+            },
+            {
+              first_name: "Cary",
+              last_name: "Gwapo",
+              datetime: "November 24, 2021",
+              message:
+                "124 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id lorem luctus, placerat orci nec, viverra ante. Donec at odio sed massa finibus interdum sit amet a orci. Vivamus sollicitudin scelerisque interdum.",
+            },
+          ],
+        },
+        {
+          blockId: 125,
+          comments: [
+            {
+              first_name: "Jessica",
+              last_name: "Reyes",
+              datetime: "November 24, 2021",
+              message: "Justify this text 125",
+            },
+            {
+              first_name: "Cary",
+              last_name: "Gwapo",
+              datetime: "November 24, 2021",
+              message: "Happy birthday 125",
+            },
+            {
+              first_name: "Cary",
+              last_name: "Gwapo",
+              datetime: "November 24, 2021",
+              message:
+                "125 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id lorem luctus, placerat orci nec, viverra ante. Donec at odio sed massa finibus interdum sit amet a orci. Vivamus sollicitudin scelerisque interdum.",
+            },
+          ],
+        },
       ],
+      selectedComment: {},
+      commentSidebar: false,
     };
   },
 
@@ -514,12 +554,15 @@ export default {
     },
 
     selectChip(chip) {
-      if (this.selectedChips.length > 0) {
-        if (chip.isActive)
-          this.selectedChips.splice(this.selectedChips.indexOf(chip.title), 1);
-        else this.selectedChips.push(chip.title);
-        chip.isActive = !chip.isActive;
-      }
+      if (chip.isActive)
+        this.selectedChips.splice(this.selectedChips.indexOf(chip.title), 1);
+      else this.selectedChips.push(chip.title);
+      chip.isActive = !chip.isActive;
+    },
+
+    viewComments(comment) {
+      this.selectedComment = comment;
+      this.commentSidebar = true;
     },
 
     async updateProposals({ id, status, feedback }) {
@@ -648,5 +691,4 @@ export default {
     padding-top: 24px;
   }
 }
-// }
 </style>
