@@ -12,7 +12,8 @@
         <template v-slot:content>
           <div>
             <p class="black--text ma-auto">
-              Still syncing, wait for a second to avoid data loss.
+              Someone is updating the document, wait for a second to avoid data
+              loss.
             </p>
           </div>
         </template>
