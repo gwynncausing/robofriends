@@ -106,6 +106,8 @@ import autoformat from "@/utils/autoformatter/autoformat";
 import { db } from "../../../vuefire-db";
 import { setDoc, doc, getDoc } from "firebase/firestore";
 
+import { generateBlockId } from "@/utils/helpers";
+
 export default {
   name: "ResearchPaperEditor",
   components: {
@@ -159,6 +161,7 @@ export default {
       getApprovedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_APPROVED_PROPOSAL}`,
       getUser: `${ROOT_GETTERS.GET_USER}`,
       getCurrentSchool: ROOT_GETTERS.GET_CURRENT_SCHOOL,
+      getApprovedProposalDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_APPROVED_PROPOSAL_DETAILS}`,
     }),
     userColor() {
       return this.getRandomColor();
@@ -324,7 +327,7 @@ export default {
       let content = ``;
 
       let objToAdd = {
-        id: new Date().getTime() + blockType + this.documentCode,
+        id: `${blockType}-${generateBlockId()}`,
         content: content,
         blockType,
         column: "default",
@@ -441,13 +444,13 @@ export default {
         await this.onFetchCurrentSchool({ schoolId: this.getUser.school });
       const currentSchool = await this.getCurrentSchool;
       const teamDetails = await this.getSelectedTeamDetails;
-
       if (title === "ACM")
         autoformat.generateDocument(
           ACM_FORMAT,
           this.editors,
           currentSchool,
-          teamDetails
+          teamDetails,
+          this.getApprovedProposalDetails.title
         );
     },
   },

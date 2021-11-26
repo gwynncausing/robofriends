@@ -180,7 +180,7 @@ export const ACM_FORMAT = {
       }),
       createParagraphStyle({
         id: "DocumentTitle",
-        name: "DocumentTitle",
+        name: "Document Title",
         runOptions: {
           font: "Helvetica",
           size: "18pt",
@@ -274,6 +274,33 @@ export const ACM_FORMAT = {
         },
         column: {
           count: 1,
+        },
+      },
+      width:
+        //page size
+        convertCMtoPixel("21.59cm") -
+        //left margin
+        convertCMtoPixel("1.9cm") -
+        //right margin
+        convertCMtoPixel("1.9cm"),
+    },
+    doubleColumnContent: {
+      document: {
+        page: {
+          size: {
+            orientation: PageOrientation.PORTRAIT,
+            height: "27.94cm",
+            width: "21.59cm",
+          },
+          margin: {
+            top: "1.9cm",
+            right: "1.9cm",
+            bottom: "2.54cm",
+            left: "1.9cm",
+          },
+        },
+        column: {
+          count: 2,
         },
       },
       width:
