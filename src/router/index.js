@@ -20,26 +20,31 @@ const routes = [
   {
     path: "/create-account",
     name: "CreateAccount",
+    beforeEnter: loggedInGuard,
     component: () => import("@/views/CreateAccount.vue"),
   },
   {
     path: "/verify",
     name: "Email Verification",
+    beforeEnter: loggedInGuard,
     component: () => import("@/views/security/EmailVerification.vue"),
   },
   {
     path: "/forgot-password",
     name: "Forgot Password",
+    beforeEnter: loggedInGuard,
     component: () => import("@/views/security/ForgotPassword.vue"),
   },
   {
     path: "/reset-password",
     name: "Reset Password",
+    beforeEnter: loggedInGuard,
     component: () => import("@/views/security/ForgotPasswordResetPassword.vue"),
   },
   {
     path: "/reset-password-success",
     name: "Reset Password Success",
+    beforeEnter: loggedInGuard,
     component: () =>
       import("@/views/security/ForgotPasswordResetPasswordSuccess.vue"),
   },
