@@ -15,19 +15,21 @@
         <div class="buttons-users-wrapper">
           <Button v-show="!isEditable" @click="setEditable"> Edit </Button>
           <ActiveUsersList v-show="isEditable" :users="activeUsers" />
-          <Button v-show="isEditable" @click="saveProposal"> Save </Button>
+          <Button v-show="isEditable" @click="saveProposal"> Submit </Button>
         </div>
       </div>
       <div class="editor-wrapper">
         <EditorTextWithTitle
+          v-if="isEditable"
           :editor-data="editor"
           :user-color="userColor"
-          :is-editable="isEditable"
+          :is-editable="true"
           :y-doc="yDoc"
           :provider="provider"
           @input="getContent($event)"
           @updateUsers="updateUsers($event)"
         />
+        <EditorTextWithTitleReadonly v-else :editor-data="editor" />
       </div>
     </div>
   </div>
@@ -35,6 +37,7 @@
 
 <script>
 import EditorTextWithTitle from "@/components/editor/EditorTextWithTitle";
+import EditorTextWithTitleReadonly from "@/components/editor/EditorTextWithTitleReadonly";
 import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 import Button from "@/components/global/Button.vue";
 import Chip from "@/components/global/Chip.vue";
@@ -45,6 +48,7 @@ export default {
     Chip,
     Button,
     EditorTextWithTitle,
+    EditorTextWithTitleReadonly,
     ActiveUsersList,
   },
   props: {
