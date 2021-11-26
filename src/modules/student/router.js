@@ -66,7 +66,7 @@ const studentRoutes = [
           },
           {
             path: "research-paper/:id",
-            component: () => import("@/views/ResearchPaper.vue"),
+            component: () => import("@/views/ResearchArchiveDetails.vue"),
             name: "Student Research Paper",
           },
         ],
