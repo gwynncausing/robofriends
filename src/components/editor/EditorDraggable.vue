@@ -280,18 +280,6 @@ export default {
     margin-left: 36px;
   }
 }
-.children-wrapper {
-  margin-left: 60px;
-  padding-bottom: 12px;
-  .children {
-    min-height: 200px;
-    height: fit-content;
-    display: none;
-    border: 1px dashed $neutral-400;
-    border-radius: 4px;
-    padding: 0.8rem;
-  }
-}
 .down {
   -moz-transform: rotate(90deg);
   -webkit-transform: rotate(90deg);
