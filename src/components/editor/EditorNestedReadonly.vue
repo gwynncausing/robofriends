@@ -5,7 +5,6 @@
       :id="'editor-' + editor.id"
       :key="editor.id"
       style="display: block"
-      class="editor-panels-wrapper"
     >
       <div class="parent">
         <v-btn
@@ -39,6 +38,15 @@
         >
           <EditorTableReadonly :editor-data="editor" />
         </div>
+        <div
+          v-else-if="editor.blockType === 'reference'"
+          class="editor-content-reference"
+        >
+          <EditorReferenceReadonly :editor-data="editor" />
+        </div>
+        <v-btn class="comment" icon @click="selectComment(editor.id)">
+          <v-icon> mdi-comment-text </v-icon>
+        </v-btn>
       </div>
     </div>
   </div>
@@ -48,6 +56,7 @@ import EditorTextReadonly from "@/components/editor/EditorTextReadonly.vue";
 import EditorImageReadonly from "@/components/editor/EditorImageReadonly.vue";
 import EditorHeadingReadonly from "@/components/editor/EditorHeadingReadonly.vue";
 import EditorTableReadonly from "@/components/editor/EditorTableReadonly.vue";
+import EditorReferenceReadonly from "@/components/editor/EditorReferenceReadonly.vue";
 export default {
   name: "EditorNestedReadOnly",
   components: {
@@ -55,6 +64,7 @@ export default {
     EditorImageReadonly,
     EditorHeadingReadonly,
     EditorTableReadonly,
+    EditorReferenceReadonly,
   },
   props: {
     list: {
@@ -62,12 +72,18 @@ export default {
       type: Array,
       default: () => [],
     },
+    commentList: {
+      required: true,
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
-      //
+      selectedComment: {},
     };
   },
+
   methods: {
     toggleChildren(id) {
       const parentIndex = this.list.findIndex((block) => block.id === id);
@@ -92,15 +108,20 @@ export default {
         }
       }
     },
+    selectComment(id) {
+      const index = this.commentList.findIndex(
+        (comment) => comment.blockId == id
+      );
+      this.selectedComment = this.commentList[index];
+      // console.log(this.selectedComment);
+      this.$emit("viewComments", this.selectedComment);
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
 .editor-nested {
   width: 100%;
-}
-.editor-panels-wrapper {
-  background-color: white;
 }
 
 .parent {
@@ -126,6 +147,14 @@ export default {
   .editor-content-text,
   .editor-content-image {
     margin-left: 36px;
+  }
+
+  .comment {
+    margin-left: 16px;
+    cursor: pointer;
+    &:hover {
+      color: $primary;
+    }
   }
 }
 
