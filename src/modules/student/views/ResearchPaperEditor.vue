@@ -47,7 +47,7 @@
         <Button v-if="!isCompleted">Save</Button>
         <Chip v-if="isCompleted" class="ml-auto">Completed</Chip>
       </div>
-      <div class="editor-list-wrapper">
+      <div v-if="hasLoadedFromIndexedDb" class="editor-list-wrapper">
         <div class="editor-list">
           <div class="editor-row">
             <EditorDraggable
@@ -103,10 +103,7 @@ import { fromUint8Array, toUint8Array } from "js-base64";
 import { ACM_FORMAT } from "@/utils/autoformatter/format-rules";
 import autoformat from "@/utils/autoformatter/autoformat";
 
-import { db } from "../../../vuefire-db";
-import { setDoc, doc, getDoc } from "firebase/firestore";
-
-import { generateBlockId } from "@/utils/helpers";
+import { generateBlockId, firestoreSet, firestoreGet } from "@/utils/helpers";
 
 export default {
   name: "ResearchPaperEditor",
@@ -148,6 +145,7 @@ export default {
       },
       backups: [],
       isReceivingUpdates: false,
+      hasLoadedFromIndexedDb: false,
       cannotUpdate: false,
       lastReceivedUpdate: +new Date(),
       hasApprovedProposal: false,
@@ -173,25 +171,15 @@ export default {
   },
 
   beforeMount() {
-    // TODO: if ydoc is empty, it should check firebase server for existing content when other peers are offline
     this.provider = new WebrtcProvider(this.documentCode, this.yDoc, {
       signaling: this.signalingServer,
       maxConns: 50,
       peerOpts: this.webrtcPeerOpts,
     });
+    this.firestoreGetDocument();
   },
 
   mounted() {
-    // TODO: should replace localStorage call with fetch data from rtdb
-    //! NOTE: the encoded base64 string can be very long and may be takeup significant space when saving large research paper content
-
-    this.firestoreGetBackup();
-
-    // console.log({
-    //   strLength: new Blob([fromUint8Array(Y.encodeStateAsUpdate(this.yDoc))])
-    //     .size,
-    // });
-
     const persistence = new IndexeddbPersistence(this.documentCode, this.yDoc);
 
     //*set to y-webrtc to see logs of webrtc connection for yjs
@@ -241,11 +229,13 @@ export default {
         this.isReceivingUpdates = false;
         this.lastReceivedUpdate = +new Date();
       });
+
+      this.hasLoadedFromIndexedDb = true;
     });
   },
 
   beforeDestroy() {
-    this.firestoreSave();
+    if (this.activeUsers.length <= 2) this.firestoreSaveDocument();
     this.yDoc.destroy();
     this.provider.destroy();
   },
@@ -255,25 +245,21 @@ export default {
       onFetchApprovedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_APPROVED_PROPOSAL}`,
       onFetchCurrentSchool: ROOT_ACTIONS.FETCH_CURRENT_SCHOOL,
     }),
-    firestoreSave() {
+    firestoreSaveDocument() {
       const document = {
         key: this.documentCode,
         content: fromUint8Array(Y.encodeStateAsUpdate(this.yDoc)),
         createdAt: new Date(),
       };
-      setDoc(doc(db, "backups", `${document.key}`), {
-        ...document,
-      });
+      firestoreSet(this.documentCode, document);
     },
-    async firestoreGetBackup() {
-      const docRef = doc(db, "backups", `${this.documentCode}`);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        console.log("Backup found!");
-        Y.applyUpdate(this.yDoc, toUint8Array(docSnap.data().content));
-      } else {
-        console.log("No backup found!");
-      }
+    async firestoreGetDocument() {
+      const document = await firestoreGet(this.documentCode);
+      console.log(document.createdAt.toDate());
+      if (document == null) return;
+
+      console.log("Backup found!");
+      Y.applyUpdate(this.yDoc, toUint8Array(document.content));
     },
     async setHasApprovedProposal() {
       try {
@@ -319,9 +305,11 @@ export default {
         console.log(error);
       }
     },
+
     getContent({ content, index }) {
       this.editors[index].content = content.content;
     },
+
     addEditor({ currentSelectedEditorIndex: index, blockType = "heading" }) {
       if (index === -1) return;
       let content = ``;
@@ -367,9 +355,6 @@ export default {
       editor.column = column;
     },
     afterDrag(newIndex, oldIndex, childrenCount) {
-      //TODO: when receiving update, show error and do not update, instead reset the editor back like this:
-      //TODO: show error also and reposition toolbar
-
       //* check if there are recent updates to prevent duplicate blocks
       let canUpdate = true;
       if (+new Date() - this.lastReceivedUpdate < 2000) {
