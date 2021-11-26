@@ -12,6 +12,8 @@
         <EditorTextWithTitle
           :editor-data="editor"
           :user-color="userColor"
+          :y-doc="yDoc"
+          :provider="provider"
           is-editable
           @input="getContent($event)"
           @updateUsers="updateUsers($event)"
@@ -46,6 +48,7 @@ import ActiveUsersList from "@/components/editor/ActiveUsersList.vue";
 import Snackbar from "@/components/Snackbar";
 
 import { isEmptyOrWhiteSpaces } from "@/utils/helpers";
+import { isObjectEmpty } from "@/utils/helpers";
 
 export default {
   name: "CreateNew",
@@ -66,6 +69,19 @@ export default {
       type: Boolean,
       default: false,
     },
+    provider: {
+      required: true,
+      type: Object,
+      default: null,
+    },
+    yDoc: {
+      type: Object,
+      default: () => {},
+    },
+    db: {
+      type: Object,
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -73,6 +89,7 @@ export default {
         id: "create-new",
         content: ``,
         users: [],
+        isSafeToSetContent: false,
       },
       activeUsers: [],
       isSubmittingProposal: false,
@@ -87,15 +104,23 @@ export default {
       return this.getRandomColor();
     },
   },
-
   beforeMount() {
-    console.log("I am here");
     // console.log(this.proposal);
-    this.editor.content = this.proposal;
+    this.editor.newContent = this.proposal;
     // console.log(this.editor.content);
     // console.log(this.proposal.content);
     // this.proposal.content ??= this.editor.content;
     // console.log(this.proposal.content);
+    // TODO: determine whether this needs an implicit backup wth firestore
+    this.db.on("synced", () => {
+      if (
+        !isObjectEmpty(this.proposal) &&
+        window.location.href.includes("action=revision")
+      ) {
+        this.editor.replaceContent();
+        this.$emit("reset");
+      }
+    });
   },
 
   methods: {
@@ -108,7 +133,7 @@ export default {
     },
     getContent(event) {
       this.editor.content = event;
-      console.log(event);
+      // console.log(event);
     },
     getRandomColor() {
       let letters = "0123456789ABCDEF";
@@ -125,6 +150,7 @@ export default {
           content: this.editor.content,
         };
         this.$emit("submit", payload);
+        this.editor.clearContent();
       } else {
         this.isSnackbarShown = true;
         this.snackbarMessage = "Your proposal must have a title.";

@@ -18,8 +18,6 @@ import Placeholder from "@tiptap/extension-placeholder";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
-import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
 
 import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
 
@@ -49,6 +47,15 @@ export default {
       type: String,
       default: "#FFF",
     },
+    provider: {
+      required: true,
+      type: Object,
+      default: null,
+    },
+    yDoc: {
+      type: Object,
+      default: () => {},
+    },
     isEditable: {
       required: true,
       type: Boolean,
@@ -76,14 +83,7 @@ export default {
   },
 
   mounted() {
-    const ydoc = new Y.Doc();
-
-    const documentId = this.editorData.id;
-
-    const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
-    let content = this.editorData.content;
-
-    const provider = new WebrtcProvider(documentId + "", ydoc);
+    const name = `${this.getUser.firstName}${this.getUser.lastName}`;
 
     this.editor = new Editor({
       extensions: [
@@ -106,17 +106,17 @@ export default {
           },
         }),
         Collaboration.configure({
-          document: ydoc,
+          document: this.yDoc,
+          field: this.editorData.id,
         }),
         CollaborationCursor.configure({
-          provider: provider,
+          provider: this.provider,
           user: {
             name,
             color: this.userColor,
           },
         }),
       ],
-      content: content,
       editable: this.isEditable,
       onUpdate: () => {
         this.$emit("input", this.editor.getJSON());
@@ -130,13 +130,8 @@ export default {
     });
   },
 
-  methods: {
-    //
-  },
-
-  beforeUnmount() {
+  beforeDestroy() {
     this.editor.destroy();
-    this.provider.destroy();
   },
 };
 </script>

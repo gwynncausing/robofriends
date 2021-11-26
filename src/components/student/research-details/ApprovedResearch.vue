@@ -23,6 +23,8 @@
           :editor-data="editor"
           :user-color="userColor"
           :is-editable="isEditable"
+          :y-doc="yDoc"
+          :provider="provider"
           @input="getContent($event)"
           @updateUsers="updateUsers($event)"
         />
@@ -57,6 +59,15 @@ export default {
     isCompleted: {
       type: Boolean,
       default: false,
+    },
+    provider: {
+      required: true,
+      type: Object,
+      default: null,
+    },
+    yDoc: {
+      type: Object,
+      default: () => {},
     },
   },
   data() {
@@ -93,6 +104,7 @@ export default {
         id: "approved-research",
         content: {},
         users: [],
+        isSafeToSetContent: false,
       },
       activeUsers: [],
     };
@@ -103,6 +115,18 @@ export default {
     },
   },
   watch: {
+    "editor.isSafeToSetContent": {
+      handler() {
+        //* prevent from being replaced when other peers connects to webrtc and approved research is being edited
+        const yxmlFragment = this.yDoc.getXmlFragment(this.editor.id);
+        const hasNoContent = yxmlFragment.firstChild === null;
+
+        if (this.editor.isSafeToSetContent && hasNoContent) {
+          console.log("trying to set content");
+          this.editor.replaceContent();
+        }
+      },
+    },
     approvedResearch: {
       immediate: true,
       handler() {
@@ -110,9 +134,9 @@ export default {
       },
     },
   },
-  // beforeMount() {
-  //   this.editor.content = this.approvedResearch.content;
-  // },
+  beforeMount() {
+    this.editor.newContent = this.approvedResearch.content;
+  },
   methods: {
     getTitle() {
       return this.editor.content?.content?.[0]?.content?.[0]?.text;
@@ -127,7 +151,6 @@ export default {
     },
     getContent(event) {
       this.editor.content = event;
-      console.log(event);
     },
     getRandomColor() {
       let letters = "0123456789ABCDEF";

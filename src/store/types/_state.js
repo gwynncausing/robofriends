@@ -7,4 +7,5 @@ export let rootInititalState = () => ({
     refresh: "",
   },
   schools: {},
+  currentSchool: {},
 });

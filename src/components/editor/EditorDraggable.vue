@@ -6,11 +6,13 @@
     tag="div"
     handle=".handle"
     @end="onEnd($event)"
+    @start="onStart($event)"
   >
     <div
       v-for="(editor, index) in list"
       :id="'editor-' + editor.id"
       :key="editor.id"
+      style="display: block"
       class="editor-panels-wrapper"
     >
       <div class="parent">
@@ -19,7 +21,7 @@
           v-if="editor.blockType === 'heading'"
           :id="'toggle-' + editor.id"
           icon
-          class="toggle"
+          class="toggle down"
           @click="toggleChildren(editor.id)"
         >
           <v-icon> mdi-chevron-right </v-icon>
@@ -28,6 +30,8 @@
           <EditorText
             :editor-data="editor"
             :user-color="userColor"
+            :provider="provider"
+            :y-doc="yDoc"
             :is-editable="isEditable"
             @input="input($event, index)"
             @updateUsers="$emit('updateUsers', $event)"
@@ -43,6 +47,8 @@
             :user-color="userColor"
             :is-editable="isEditable"
             :column="editor.column"
+            :provider="provider"
+            :y-doc="yDoc"
             @setColumn="
               $emit('setColumn', {
                 column: $event,
@@ -62,6 +68,8 @@
           <EditorHeading
             :editor-data="editor"
             :user-color="userColor"
+            :provider="provider"
+            :y-doc="yDoc"
             :is-editable="isEditable"
             @input="input($event, index)"
             @updateUsers="$emit('updateUsers', $event)"
@@ -77,6 +85,8 @@
             :user-color="userColor"
             :is-editable="isEditable"
             :column="editor.column"
+            :provider="provider"
+            :y-doc="yDoc"
             @setColumn="
               $emit('setColumn', {
                 column: $event,
@@ -88,15 +98,19 @@
             @selectBlock="$emit('selectBlock', $event)"
           />
         </div>
-      </div>
-
-      <div :id="'children-wrapper' + editor.id" class="children-wrapper">
         <div
-          v-show="editor.blockType === 'heading'"
-          :id="'children-' + editor.id"
-          class="children"
+          v-else-if="editor.blockType === 'reference'"
+          class="editor-content-reference"
         >
-          <EditorDraggable :list="editor.children" :is-editable="isEditable" />
+          <EditorReference
+            :editor-data="editor"
+            :user-color="userColor"
+            :provider="provider"
+            :y-doc="yDoc"
+            @input="input($event, index)"
+            @updateUsers="$emit('updateUsers', $event)"
+            @selectBlock="$emit('selectBlock', $event)"
+          />
         </div>
       </div>
     </div>
@@ -107,6 +121,7 @@ import EditorText from "@/components/editor/EditorText.vue";
 import EditorImage from "@/components/editor/EditorImage.vue";
 import EditorHeading from "@/components/editor/EditorHeading.vue";
 import EditorTable from "@/components/editor/EditorTable.vue";
+import EditorReference from "@/components/editor/EditorReference.vue";
 import draggable from "vuedraggable";
 export default {
   name: "EditorDraggable",
@@ -116,17 +131,24 @@ export default {
     EditorImage,
     EditorHeading,
     EditorTable,
+    EditorReference,
   },
   props: {
     list: {
-      required: true,
       type: Array,
       default: () => [],
     },
     userColor: {
-      required: false,
       type: String,
       default: null,
+    },
+    provider: {
+      type: Object,
+      default: () => {},
+    },
+    yDoc: {
+      type: Object,
+      default: () => {},
     },
     isEditable: {
       required: true,
@@ -143,32 +165,79 @@ export default {
         chosenClass: "chosen",
         dragClass: "drag",
         emptyInsertThreshold: 5,
+        childrenCount: 0,
       },
-      id: 123,
+      selectedBlockId: "",
     };
   },
+
   watch: {
-    list: function () {
-      console.log(this.list);
+    selectedBlockId(newValue, oldValue) {
+      let newBlockRef = "block-" + newValue;
+      let oldBlockRef = "block-" + oldValue;
+      this.$refs?.[oldBlockRef]?.[0]?.classList.remove("focused");
+      this.$refs?.[newBlockRef]?.[0]?.classList.add("focused");
     },
   },
   methods: {
+    onStart(event) {
+      this.childrenCount = 0;
+      const parentIndex = event.oldIndex;
+      const parentBlock = this.list[parentIndex];
+      if (
+        parentIndex !== this.list.length - 1 &&
+        parentBlock.blockType === "heading"
+      ) {
+        document
+          .getElementById("toggle-" + parentBlock.id)
+          .classList.remove("down");
+        for (let i = parentIndex + 1; i < this.list.length; i++) {
+          const block = this.list[i];
+          if (
+            block.blockType === "heading" &&
+            parentBlock.content[0].attrs.level >= block.content[0].attrs.level
+          ) {
+            break;
+          } else {
+            const element = document.getElementById("editor-" + block.id);
+            element.style.display = "none";
+            this.childrenCount++;
+          }
+        }
+      }
+    },
     onEnd(event) {
-      console.log(event.oldIndex);
-      this.$emit("dragElement");
+      this.$emit(
+        "dragElement",
+        event.newIndex,
+        event.oldIndex,
+        this.childrenCount
+      );
     },
     input(event, index) {
       this.$emit("getContent", { content: event, index: index });
     },
     toggleChildren(id) {
-      let children = document.getElementById("children-" + id);
-      let toggle = document.getElementById("toggle-" + id);
-      if (children.style.display === "block") {
-        children.style.display = "none";
-        toggle.classList.remove("down");
-      } else {
-        children.style.display = "block";
-        toggle.classList.add("down");
+      const parentIndex = this.list.findIndex((block) => block.id === id);
+      const toggleElement = document.getElementById("toggle-" + id);
+      toggleElement.classList.toggle("down");
+      const parentBlock = this.list[parentIndex];
+      if (parentIndex === this.list.length - 1) return;
+      for (let i = parentIndex + 1; i < this.list.length; i++) {
+        const block = this.list[i];
+        if (
+          block.blockType === "heading" &&
+          parentBlock.content[0].attrs.level >= block.content[0].attrs.level
+        ) {
+          break;
+        } else {
+          const element = document.getElementById("editor-" + block.id);
+          if (!toggleElement.classList.contains("down")) {
+            element.style.display = "none";
+          } else {
+            element.style.display = "block";
+          }
+        }
       }
     },
   },
@@ -182,7 +251,6 @@ export default {
 .editor-panels-wrapper {
   background-color: white;
 }
-
 .parent {
   display: flex;
   align-items: top;
@@ -205,10 +273,10 @@ export default {
     cursor: text;
     width: 100%;
   }
-
   .editor-content-table,
   .editor-content-text,
-  .editor-content-image {
+  .editor-content-image,
+  .editor-content-reference {
     margin-left: 36px;
   }
 }
@@ -224,7 +292,6 @@ export default {
     padding: 0.8rem;
   }
 }
-
 .down {
   -moz-transform: rotate(90deg);
   -webkit-transform: rotate(90deg);

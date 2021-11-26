@@ -10,16 +10,49 @@
   height: 0;
 }
 
+// Placeholder
+.editor-content-image,
+.editor-content-heading,
+.editor-content-table {
+  .ProseMirror {
+    h1::before,
+    h2::before,
+    h3::before,
+    h4::before,
+    p::before {
+      content: attr(data-placeholder);
+      float: left;
+      color: #ced4da;
+      pointer-events: none;
+      height: 0;
+    }
+    td {
+      p::before {
+        content: "";
+      }
+    }
+  }
+}
+
+.editor-content {
+  height: auto !important;
+}
+
 .ProseMirror {
-  min-height: 1rem;
-  height: 100%;
+  display: grid;
+  // min-height: 1rem;
+  // height: 100%;
 
   > * + * {
     margin-top: 0.75em;
   }
 
   p {
-    margin: 0;
+    margin: 0 !important;
+  }
+
+  a {
+    color: #68cef8;
   }
 
   ul,
@@ -34,6 +67,7 @@
   h5,
   h6 {
     line-height: 1.1;
+    margin: 0 !important;
   }
 
   h1 {
@@ -78,6 +112,12 @@
     }
   }
 
+  .tableWrapper {
+    img {
+      max-width: 100%;
+    }
+  }
+
   blockquote {
     padding-left: 1rem;
     border-left: 2px solid rgba(#0d0d0d, 0.1);
@@ -88,13 +128,13 @@
     border-top: 2px solid rgba(#0d0d0d, 0.1);
     margin: 2rem 0;
   }
-
+  //  Tiptap Cursor
   .collaboration-cursor__caret {
     position: relative;
     margin-left: -1px;
     margin-right: -1px;
-    border-left: 1px solid #0d0d0d;
-    border-right: 1px solid #0d0d0d;
+    border-left: 2px solid #0d0d0d;
+    // border-right: 1px solid #0d0d0d;
     word-break: normal;
 
     &::before {
@@ -118,6 +158,34 @@
 
     &:hover {
       .collaboration-cursor__label {
+        opacity: 1;
+      }
+    }
+  }
+
+  // Yjs Cursor
+  .ProseMirror-yjs-cursor.ProseMirror-widget {
+    position: relative;
+    margin-left: -1px;
+    margin-right: -1px;
+    border-left: 1px solid #0d0d0d;
+    border-right: 1px solid #0d0d0d;
+    word-break: normal;
+
+    div {
+      white-space: nowrap;
+      position: absolute;
+      top: -1.4em;
+      left: -1px;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 0.2rem;
+      opacity: 0;
+      line-height: normal;
+    }
+
+    &:hover {
+      div {
         opacity: 1;
       }
     }

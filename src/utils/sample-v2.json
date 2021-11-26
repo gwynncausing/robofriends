@@ -1,0 +1,12 @@
+{
+  "id": 125,
+  "content": [
+    {
+      "type": "heading",
+      "attrs": { "level": 1 },
+      "content": [{ "type": "text", "text": "INTRODUCTION" }]
+    }
+  ],
+  "blockType": "heading",
+  "users": []
+}

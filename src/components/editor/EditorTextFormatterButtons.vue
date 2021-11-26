@@ -1,21 +1,9 @@
 <template>
   <div v-if="editor" class="formatter-wrapper">
-    <span v-if="blockType === 'image'">
-      <input
-        ref="fileInput"
-        type="file"
-        accept="image/png, image/gif, image/jpeg"
-        hidden
-        @change="selectFiles"
-      />
-      <button title="Add Image" @click="addImage">
-        <v-icon>mdi-image-plus</v-icon>
-      </button>
-    </span>
-
     <span
-      v-else-if="
+      v-if="
         blockType === 'text' ||
+        blockType === 'reference' ||
         blockType === 'table' ||
         blockType === 'text-with-title'
       "
@@ -66,6 +54,7 @@
       <span class="formatter-section-end"></span>
 
       <button
+        v-if="blockType !== 'reference'"
         title="Bullet List"
         :class="{ 'is-active': editor.isActive('bulletList') }"
         @click="editor.chain().focus().toggleBulletList().run()"
@@ -80,6 +69,22 @@
         <v-icon>mdi-format-list-numbered</v-icon>
       </button>
     </span>
+
+    <span v-if="blockType === 'table'" class="formatter-section-end"></span>
+
+    <span v-if="blockType === 'image' || blockType === 'table'">
+      <input
+        ref="fileInput"
+        type="file"
+        accept="image/png, image/gif, image/jpeg"
+        hidden
+        @change="selectFiles"
+      />
+      <button title="Add Image" @click="addImage">
+        <v-icon>mdi-image-plus</v-icon>
+      </button>
+    </span>
+
     <span v-if="blockType === 'table'">
       <span class="formatter-section-end"></span>
 
@@ -115,6 +120,28 @@
       <span class="formatter-section-end"></span>
 
       <button
+        title="Add Table"
+        @click="
+          editor
+            .chain()
+            .focus()
+            .insertTable({ rows: 3, cols: 3, withHeaderRow: false })
+            .run()
+        "
+      >
+        <v-icon>mdi-table-plus</v-icon>
+      </button>
+
+      <button
+        title="Remove Table"
+        @click="editor.chain().focus().deleteTable().run()"
+      >
+        <v-icon>mdi-table-remove</v-icon>
+      </button>
+
+      <span class="formatter-section-end"></span>
+
+      <button
         title="Merge Cells"
         :disabled="!editor.can().mergeCells()"
         @click="editor.chain().focus().mergeCells().run()"
@@ -138,6 +165,10 @@
       >
         <v-icon>mdi-table-row-plus-before</v-icon>
       </button>
+    </span>
+    <span v-if="blockType === 'table'">
+      <span class="formatter-section-end"></span>
+
       <button
         title="Add Row After"
         :disabled="!editor.can().addRowAfter()"
@@ -224,14 +255,7 @@
       </button>
     </span>
 
-    <span
-      v-if="
-        blockType === 'text' ||
-        blockType === 'table' ||
-        blockType === 'heading' ||
-        blockType === 'text-with-title'
-      "
-    >
+    <span>
       <span class="formatter-section-end"></span>
 
       <button title="Redo" @click="editor.chain().focus().redo().run()">

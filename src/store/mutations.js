@@ -23,4 +23,7 @@ export default {
   [ROOT_MUTATIONS.SET_RESET_ROOT_STATE](state) {
     Object.assign(state, {}, rootInititalState());
   },
+  [ROOT_MUTATIONS.SET_CURRENT_SCHOOL](state, { school }) {
+    state.currentSchool = school;
+  },
 };

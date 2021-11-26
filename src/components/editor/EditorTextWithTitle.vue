@@ -25,11 +25,10 @@ import Heading from "@tiptap/extension-heading";
 import BulletList from "@tiptap/extension-bullet-list";
 import ListItem from "@tiptap/extension-list-item";
 import Placeholder from "@tiptap/extension-placeholder";
+import Link from "@tiptap/extension-link";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
-import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
 
 import EditorTextFormatterButtons from "@/components/editor/EditorTextFormatterButtons";
 
@@ -59,6 +58,15 @@ export default {
       type: Boolean,
       default: false,
     },
+    provider: {
+      required: true,
+      type: Object,
+      default: null,
+    },
+    yDoc: {
+      type: Object,
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -83,15 +91,7 @@ export default {
   },
 
   mounted() {
-    const ydoc = new Y.Doc();
-
-    const documentId = this.editorData.id;
-
-    const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
-    let content = this.editorData.content;
-
-    const provider = new WebrtcProvider(documentId, ydoc);
-
+    const name = `${this.getUser.firstName}${this.getUser.lastName}`;
     try {
       this.editor = new Editor({
         extensions: [
@@ -112,6 +112,9 @@ export default {
           Underline,
           Superscript,
           Subscript,
+          Link.configure({
+            openOnClick: true,
+          }),
           Placeholder.configure({
             placeholder: ({ node }) => {
               if (node.type.name === "heading") {
@@ -129,23 +132,33 @@ export default {
             },
           }),
           Collaboration.configure({
-            document: ydoc,
+            document: this.yDoc,
+            field: this.editorData.id,
           }),
           CollaborationCursor.configure({
-            provider: provider,
+            provider: this.provider,
             user: {
               name,
               color: this.userColor,
             },
           }),
         ],
-        content: content,
         autofocus: true,
         editable: this.isEditable,
         onUpdate: () => {
           this.$emit("input", this.editor.getJSON());
         },
       });
+      this.editorData.clearContent = () =>
+        this.editor.commands.clearContent(true);
+
+      this.editorData.replaceContent = () => {
+        this.editor.commands.setContent(
+          this.editorData.newContent.content,
+          true
+        );
+      };
+      this.editorData.isSafeToSetContent = true;
     } catch (e) {
       console.log(e);
     }

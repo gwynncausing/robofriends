@@ -23,45 +23,15 @@ import Subscript from "@tiptap/extension-subscript";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import ListItem from "@tiptap/extension-list-item";
-import Table from "@tiptap/extension-table";
-import TableRow from "@tiptap/extension-table-row";
-import TableCell from "@tiptap/extension-table-cell";
-import TableHeader from "@tiptap/extension-table-header";
+import Link from "@tiptap/extension-link";
 
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
-import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
 
 import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
 
 import { mapGetters } from "vuex";
 import { ROOT_GETTERS } from "@/store/types";
-
-// A new Y document
-// const ydoc = new Y.Doc();
-// Registered with a WebRTC provider
-// new WebrtcProvider("bud-test-1", ydoc);
-const CustomTableCell = TableCell.extend({
-  addAttributes() {
-    return {
-      // extend the existing attributes …
-      ...this.parent?.(),
-
-      // and add a new one …
-      backgroundColor: {
-        default: null,
-        parseHTML: (element) => element.getAttribute("data-background-color"),
-        renderHTML: (attributes) => {
-          return {
-            "data-background-color": attributes.backgroundColor,
-            style: `background-color: ${attributes.backgroundColor}`,
-          };
-        },
-      },
-    };
-  },
-});
 
 export default {
   components: {
@@ -77,6 +47,15 @@ export default {
     userColor: {
       type: String,
       default: "#FFF",
+    },
+    provider: {
+      required: true,
+      type: Object,
+      default: null,
+    },
+    yDoc: {
+      type: Object,
+      default: () => {},
     },
     isEditable: {
       required: true,
@@ -105,14 +84,7 @@ export default {
   },
 
   mounted() {
-    const ydoc = new Y.Doc();
-
-    const documentId = this.editorData.id;
-    const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
-    let content = this.editorData.content;
-
-    const provider = new WebrtcProvider(documentId + "", ydoc);
-
+    const name = `${this.getUser.firstName}${this.getUser.lastName}`;
     try {
       this.editor = new Editor({
         extensions: [
@@ -124,32 +96,26 @@ export default {
           Strike,
           Code,
           BulletList,
-          ListItem,
           OrderedList,
+          ListItem,
           Underline,
           Superscript,
           Subscript,
-          Image,
-          Table.configure({
-            resizable: true,
+          Link.configure({
+            openOnClick: true,
           }),
-          TableRow,
-          TableHeader,
-          CustomTableCell,
           Collaboration.configure({
-            document: ydoc,
+            document: this.yDoc,
+            field: this.editorData.id,
           }),
           CollaborationCursor.configure({
-            provider: provider,
+            provider: this.provider,
             user: {
               name,
               color: this.userColor,
             },
           }),
         ],
-        content: content,
-        editable: this.isEditable,
-
         onUpdate: () => {
           this.$emit("input", this.editor.getJSON());
         },
