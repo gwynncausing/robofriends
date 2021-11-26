@@ -106,6 +106,8 @@ import autoformat from "@/utils/autoformatter/autoformat";
 import { db } from "../../../vuefire-db";
 import { setDoc, doc, getDoc } from "firebase/firestore";
 
+import { generateBlockId } from "@/utils/helpers";
+
 export default {
   name: "ResearchPaperEditor",
   components: {
@@ -324,7 +326,7 @@ export default {
       let content = ``;
 
       let objToAdd = {
-        id: new Date().getTime() + blockType + this.documentCode,
+        id: `${blockType}-${generateBlockId()}`,
         content: content,
         blockType,
         column: "default",
