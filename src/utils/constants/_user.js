@@ -1,4 +1,4 @@
-const STATUSES = {
+const STATUS = {
   UNVERIFIED: "unverified",
   VERIFIED: "verified",
   BLOCKED: "blocked",
@@ -19,7 +19,7 @@ const STUDENT = {
 };
 
 export const USER = {
-  STATUSES,
+  STATUS,
   TYPES,
   STUDENT,
 };

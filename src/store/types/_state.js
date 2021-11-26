@@ -1,5 +1,6 @@
 export let rootInititalState = () => ({
   isLoggedIn: false,
+  userMeta: {},
   user: {},
   userType: "",
   tokens: {

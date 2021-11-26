@@ -71,6 +71,11 @@ const DELETE_USER = {
   id: Number,
 };
 
+const CREATE_USER_META = {
+  status: String,
+  email: String,
+};
+
 export const ROOT_PAYLOADS = {
   SIGNUP_USER,
   ONBOARD_USER,
@@ -83,4 +88,5 @@ export const ROOT_PAYLOADS = {
   VERIFY_ACCOUNT,
   RESEND_VERIFICATION_LINK,
   DELETE_USER,
+  CREATE_USER_META,
 };

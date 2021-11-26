@@ -67,10 +67,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getUser: ROOT_GETTERS.GET_USER,
+      getUserMeta: ROOT_GETTERS.GET_USER_META,
     }),
     email() {
-      return this.getUser.email;
+      return this.getUserMeta.email;
     },
   },
   created() {

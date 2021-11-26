@@ -1,7 +1,7 @@
 import { ROOT_ACTIONS, ROOT_MUTATIONS, ROOT_PAYLOADS } from "./types";
 import { STUDENT_MUTATIONS } from "@/modules/student/store/types";
 import { ADVISER_MUTATIONS } from "@/modules/adviser/store/types";
-import { MODULES } from "@/utils/constants";
+import { MODULES, USER } from "@/utils/constants";
 import Repository from "@/repositories/repository-factory";
 const AuthRepository = Repository.get("auth");
 const UserRepository = Repository.get("user");
@@ -14,11 +14,43 @@ export default {
   ) {
     const response = await AuthRepository.login(payload);
     const { user, token } = response.data;
+    // * start: To enable that only verified user can only login, remove/comment out these codes
     commit(ROOT_MUTATIONS.SET_USER, { user: user });
     commit(ROOT_MUTATIONS.SET_TOKEN_ACCESS, { access: token.access });
     commit(ROOT_MUTATIONS.SET_TOKEN_REFRESH, { refresh: token.refresh });
     commit(ROOT_MUTATIONS.SET_USER_TYPE, { type: user.type });
     commit(ROOT_MUTATIONS.SET_IS_LOGGED_IN, { isLoggedIn: true });
+    commit(ROOT_MUTATIONS.SET_USER_META, {
+      userMeta: { email: user.email, status: USER.STATUS.VERIFIED },
+    });
+    // * end:
+
+    // * start: To enable that only verified user can only login, uncomment these codes
+    // switch (user.verificationStatus) {
+    //   case USER.STATUS.VERIFIED:
+    //     commit(ROOT_MUTATIONS.SET_USER_META, {
+    //       userMeta: { email: user.email, status: user.verificationStatus },
+    //     });
+    //     commit(ROOT_MUTATIONS.SET_USER, { user: user });
+    //     commit(ROOT_MUTATIONS.SET_TOKEN_ACCESS, { access: token.access });
+    //     commit(ROOT_MUTATIONS.SET_TOKEN_REFRESH, { refresh: token.refresh });
+    //     commit(ROOT_MUTATIONS.SET_USER_TYPE, { type: user.type });
+    //     commit(ROOT_MUTATIONS.SET_IS_LOGGED_IN, { isLoggedIn: true });
+    //     break;
+    //   case USER.STATUS.UNVERIFIED:
+    //     commit(ROOT_MUTATIONS.SET_USER_META, {
+    //       userMeta: { email: user.email, status: user.verificationStatus },
+    //     });
+    //     break;
+    //   case USER.STATUS.BLOCK:
+    //     commit(ROOT_MUTATIONS.SET_USER_META, {
+    //       userMeta: { email: user.email, status: user.verificationStatus },
+    //     });
+    //     break;
+    //   default:
+    //     break;
+    // }
+    // * end:
   },
 
   async [ROOT_ACTIONS.SIGNUP_USER](

@@ -79,6 +79,7 @@ export default {
   computed: {
     ...mapGetters({
       getUser: ROOT_GETTERS.GET_USER,
+      getUserMeta: ROOT_GETTERS.GET_USER_META,
       getUserType: ROOT_GETTERS.GET_USER_TYPE,
       hasMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_HAS_MEMBERSHIPS}`,
       getMemberships: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_GETTERS.GET_MEMBERSHIPS}`,
@@ -94,7 +95,6 @@ export default {
       onFetchSelectedTeamDetails: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SELECTED_TEAM_DETAILS}`,
       onFetchSubmittedProposals: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_SUBMITTED_PROPOSALS}`,
       onFetchApprovedProposal: `${MODULES.STUDENT_MODULE_PATH}${STUDENT_ACTIONS.FETCH_APPROVED_PROPOSAL}`,
-      onLogoutUser: ROOT_ACTIONS.LOGOUT_USER,
     }),
 
     verifyEmailPassword() {
@@ -127,7 +127,10 @@ export default {
       try {
         let location;
         await this.onLogin(this.user);
-        if (this.getUser.deletedAt === null) {
+        if (
+          this.getUser?.deletedAt === null &&
+          this.getUserMeta.status === USER.STATUS.VERIFIED
+        ) {
           switch (this.getUserType) {
             case USER.TYPES.STUDENT:
               await this.onFetchMemberships();
@@ -169,8 +172,12 @@ export default {
               this.$router.replace({ name: "Onboarding" });
               break;
           }
-          // TODO: try to suggest to backend that if user is deleted, return an 401 error
-        } else this.handleErrors(STATUS_CODES.ERRORS.UNAUTHORIZED);
+        } else if (this.getUserMeta.status === USER.STATUS.UNVERIFIED) {
+          this.$router.replace({ name: "Email Verification" });
+        } else if (this.getUserMeta.status === USER.STATUS.BLOCKED) {
+          console.log("User is blocked");
+        } // TODO: try to suggest to backend that if user is deleted, return a bad request or instead of verificationStatus kay status with possible values [ unverified, verified, blocked, deleted ]
+        else this.handleErrors(STATUS_CODES.ERRORS.UNAUTHORIZED);
       } catch (error) {
         this.handleErrors(error?.response?.status);
         console.log(error);
