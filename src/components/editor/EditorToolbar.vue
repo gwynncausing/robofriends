@@ -86,9 +86,9 @@ export default {
   },
 
   watch: {
-    editorLength(newValue) {
-      console.log(newValue);
-    },
+    // editorLength(newValue) {
+    //   //console.log(newValue);
+    // },
   },
 
   methods: {

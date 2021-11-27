@@ -123,7 +123,7 @@ export default {
         },
       ],
       isCompleted: false,
-      documentCode: "MyT3@mN@m3Unique6661111" + "-proposals",
+      documentCode: null,
       yDoc: new Y.Doc(),
       db: null,
       provider: {},
@@ -169,6 +169,7 @@ export default {
     },
   },
   created() {
+    this.documentCode = this.getSelectedTeamDetails.documentCode + "-proposals";
     this.provider = new WebrtcProvider(this.documentCode, this.yDoc, {
       signaling: this.signalingServer,
       maxConns: 50,

@@ -141,7 +141,7 @@ export default {
       currentSelectedEditorIndex: 0,
       currentSelectedObjectId: "",
       yDoc: new Y.Doc(),
-      documentCode: "MyT3@mN@m3Unique6661111",
+      documentCode: null,
       provider: {},
       // TODO: should find a better way to store this like a realtime.config file
       signalingServers: ["ws://bud-api.southeastasia.cloudapp.azure.com:4444/"],
@@ -188,6 +188,7 @@ export default {
 
   created() {
     this.setHasApprovedProposal();
+    this.documentCode = this.getSelectedTeamDetails.documentCode;
   },
 
   beforeMount() {
@@ -277,7 +278,6 @@ export default {
     },
     async firestoreGetDocument() {
       const document = await firestoreGet(this.documentCode, "backups");
-      console.log(document.createdAt.toDate());
       if (document == null) return;
 
       console.log("Research paper backup found!");
@@ -320,8 +320,7 @@ export default {
         const editorID = "editor-" + id;
         const blockElement = document.getElementById(editorID);
         const rect = blockElement.getBoundingClientRect();
-
-        //* no idea why 185, maybe from space between first block and header bar?
+        //* no idea why 184, maybe from space between first block and header bar?
         this.currentToolbarPosition = rect.top + window.scrollY - 184;
       } catch (error) {
         console.log(error);
