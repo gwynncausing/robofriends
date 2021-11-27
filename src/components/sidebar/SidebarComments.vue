@@ -12,8 +12,8 @@
         </div>
       </div>
       <div class="input-comment">
-        <Textarea />
-        <Button text>
+        <Textarea v-model="message" />
+        <Button text @click="sendMessage(commend.id)">
           <v-icon>mdi-send</v-icon>
         </Button>
       </div>
@@ -36,6 +36,32 @@ export default {
       required: false,
       type: Array,
       default: () => [],
+    },
+    blockId: {
+      required: false,
+      type: String,
+      default: "",
+    },
+    user: {
+      required: false,
+      type: Object,
+      default: () => {},
+    },
+  },
+
+  data() {
+    return {
+      message: "",
+    };
+  },
+
+  methods: {
+    sendMessage() {
+      console.log({
+        blockId: this.blockId,
+        user: this.user,
+        message: this.message,
+      });
     },
   },
 };

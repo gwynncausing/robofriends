@@ -69,7 +69,6 @@
             :current-toolbar-position="currentToolbarPosition"
             :current-selected-editor-index="currentSelectedEditorIndex"
             :editor-length="editors.length"
-            :comment-list="commentList"
             @addEditor="addEditor($event)"
             @removeEditor="removeEditor($event)"
             @viewComments="viewComments"
@@ -78,7 +77,13 @@
       </div>
     </div>
     <!-- // TODO: add this prop :comments="selectedComment.comments" -->
-    <SidebarComments v-show="commentSidebar" @closed="commentSidebar = false" />
+    <SidebarComments
+      v-show="commentSidebar"
+      :user="user"
+      :block-id="currentSelectedObjectId"
+      :comments="commentList"
+      @closed="commentSidebar = false"
+    />
   </div>
 </template>
 
@@ -172,6 +177,9 @@ export default {
     }),
     userColor() {
       return this.getRandomColor();
+    },
+    user() {
+      return this.getUser;
     },
   },
 
@@ -288,6 +296,7 @@ export default {
     viewComments({ currentSelectedEditorIndex: index = -1 }) {
       if (index === -1) return;
       else this.selectedComment = this.commentList[index];
+      // TODO: load comments here
       this.commentSidebar = true;
       console.log(this.commentSidebar);
     },
