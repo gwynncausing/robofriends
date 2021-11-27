@@ -115,7 +115,7 @@ export default {
       try {
         await this.onFetchMemberships();
         this.setTeams();
-        if (isObjectEmpty(this.getSelectedTeamDetails))
+        if (isObjectEmpty(this.getSelectedTeamDetails) && this.hasMemberships)
           await this.setSelectedTeamDetails(this.teams[0] || {});
         this.selectedTeamDetails = this.getSelectedTeamDetails;
       } catch (error) {
