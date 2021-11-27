@@ -23,7 +23,7 @@
           <strong>join all teams</strong>
         </span>
         or
-        <router-link :to="{ name: 'Adviser Dashboard' }">
+        <router-link :to="{ name: 'Manage Teams' }">
           <span class="secondary--text pointer">
             <strong>leave it for now</strong>
           </span>
