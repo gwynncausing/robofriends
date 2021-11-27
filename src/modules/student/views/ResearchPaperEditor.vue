@@ -76,7 +76,6 @@
         </div>
       </div>
     </div>
-    <!-- // TODO: add this prop :comments="selectedComment.comments" -->
     <SidebarComments
       v-show="commentSidebar"
       :user="user"
@@ -162,7 +161,6 @@ export default {
       hasApprovedProposal: false,
       isCompleted: false,
       commentList: [],
-      selectedComment: {},
       commentSidebar: false,
     };
   },
@@ -295,8 +293,8 @@ export default {
     },
     viewComments({ currentSelectedEditorIndex: index = -1 }) {
       if (index === -1) return;
-      else this.selectedComment = this.commentList[index];
-      // TODO: load comments here
+      // TODO: fetch and parse comments from firestore
+      this.commentList = [];
       this.commentSidebar = true;
       console.log(this.commentSidebar);
     },
