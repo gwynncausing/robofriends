@@ -2,7 +2,11 @@
   <div id="research-editor-version-history">
     <div class="editor-wrapper">
       <div class="editor-heading">
-        <Button text class="back-button">
+        <Button
+          :to="{ name: 'Research Paper Editor' }"
+          text
+          class="back-button"
+        >
           <v-icon class="icon-left">mdi-arrow-left</v-icon>
           Back to Research Paper Editor
         </Button>

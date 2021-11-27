@@ -36,7 +36,12 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <Button v-if="!isCompleted" text class="neutral-800--text mr-auto">
+        <Button
+          v-if="!isCompleted"
+          :to="{ name: 'Research Paper Version History' }"
+          text
+          class="neutral-800--text mr-auto"
+        >
           Version History
         </Button>
         <ActiveUsersList
