@@ -24,7 +24,6 @@ export const loggedInGuard = (to, from, next) => {
   if (store.getters[ROOT_GETTERS.GET_IS_LOGGED_IN]) {
     if (
       to.name === "SignIn" ||
-      to.name === "Onboarding" ||
       to.name === "CreateAccount" ||
       to.name === "Email Verification" ||
       to.name === "Email Verification" ||
