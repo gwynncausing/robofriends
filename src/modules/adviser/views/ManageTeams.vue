@@ -510,7 +510,7 @@ export default {
         await this.fetchTeam(payload);
       }
 
-      this.selectTeam(0, this.teams[0].id);
+      if (this.memberships.length > 0) this.selectTeam(0, this.teams[0].id);
     },
 
     fetchMembership() {
