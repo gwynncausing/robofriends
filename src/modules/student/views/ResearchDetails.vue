@@ -330,11 +330,11 @@ export default {
         content: fromUint8Array(Y.encodeStateAsUpdate(this.yDoc)),
         createdAt: new Date(),
       };
-      firestoreSet(this.documentCode, document, "proposals-backup");
+      firestoreSet(this.documentCode, document, "proposal-backups");
     },
 
     async firestoreGetDocument() {
-      const document = await firestoreGet(this.documentCode, "proposals-backup");
+      const document = await firestoreGet(this.documentCode, "proposal-backups");
       if (document == null) return;
 
       console.log("Proposals backup found!");
