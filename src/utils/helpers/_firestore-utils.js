@@ -2,7 +2,6 @@ import { db } from "../../vuefire-db";
 import { setDoc, doc, getDoc } from "firebase/firestore";
 
 export const firestoreSet = (key, objToSave, collection) => {
-
   setDoc(doc(db, collection, `${key}`), objToSave);
 };
 

@@ -334,7 +334,10 @@ export default {
     },
 
     async firestoreGetDocument() {
-      const document = await firestoreGet(this.documentCode, "proposal-backups");
+      const document = await firestoreGet(
+        this.documentCode,
+        "proposal-backups"
+      );
       if (document == null) return;
 
       console.log("Proposals backup found!");
