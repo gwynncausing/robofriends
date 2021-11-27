@@ -262,10 +262,10 @@ export default {
         content: fromUint8Array(Y.encodeStateAsUpdate(this.yDoc)),
         createdAt: new Date(),
       };
-      firestoreSet(this.documentCode, document);
+      firestoreSet(this.documentCode, document, "backups");
     },
     async firestoreGetDocument() {
-      const document = await firestoreGet(this.documentCode);
+      const document = await firestoreGet(this.documentCode, "backups");
       console.log(document.createdAt.toDate());
       if (document == null) return;
 
