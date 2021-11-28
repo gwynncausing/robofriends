@@ -99,7 +99,7 @@ export default {
         Placeholder.configure({
           placeholder: ({ node }) => {
             if (node.type.name === "heading") {
-              return "What’s the title?";
+              return "What’s the chapter/section title?";
             }
 
             return "Text in this line will be neglected from exporting. Add an image instead";
