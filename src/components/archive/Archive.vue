@@ -177,9 +177,7 @@ export default {
 
   async mounted() {
     await this.fetchArchives();
-    console.log(await this.getArchives);
     this.archives = await this.getArchives;
-    console.log({ archive: this.archives });
     // this.categories.push("Artificial Intelligence");
     // this.categories.push("Data Analytics");
     // this.categories.push("Web Application");
