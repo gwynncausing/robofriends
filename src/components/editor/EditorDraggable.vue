@@ -28,8 +28,8 @@
         </v-btn>
         <div
           v-if="editor.blockType === 'text'"
-          class="editor-content-text"
           :ref="'block-' + editor.id"
+          class="editor-content-text"
         >
           <EditorText
             :editor-data="editor"
@@ -44,8 +44,8 @@
         </div>
         <div
           v-else-if="editor.blockType === 'image'"
-          class="editor-content-image"
           :ref="'block-' + editor.id"
+          class="editor-content-image"
         >
           <EditorImage
             :editor-data="editor"
@@ -68,8 +68,8 @@
 
         <div
           v-else-if="editor.blockType === 'heading'"
-          class="editor-content-heading"
           :ref="'block-' + editor.id"
+          class="editor-content-heading"
         >
           <EditorHeading
             :editor-data="editor"
@@ -84,8 +84,8 @@
         </div>
         <div
           v-else-if="editor.blockType === 'table'"
-          class="editor-content-table"
           :ref="'block-' + editor.id"
+          class="editor-content-table"
         >
           <EditorTable
             :editor-data="editor"
@@ -108,8 +108,8 @@
         </div>
         <div
           v-else-if="editor.blockType === 'reference'"
-          class="editor-content-reference"
           :ref="'block-' + editor.id"
+          class="editor-content-reference"
         >
           <EditorReference
             :editor-data="editor"
