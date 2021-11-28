@@ -26,7 +26,11 @@
         >
           <v-icon> mdi-chevron-right </v-icon>
         </v-btn>
-        <div v-if="editor.blockType === 'text'" class="editor-content-text">
+        <div
+          v-if="editor.blockType === 'text'"
+          class="editor-content-text"
+          :ref="'block-' + editor.id"
+        >
           <EditorText
             :editor-data="editor"
             :user-color="userColor"
@@ -35,12 +39,13 @@
             :is-editable="isEditable"
             @input="input($event, index)"
             @updateUsers="$emit('updateUsers', $event)"
-            @selectBlock="$emit('selectBlock', editor)"
+            @selectBlock="selectBlock(editor)"
           />
         </div>
         <div
           v-else-if="editor.blockType === 'image'"
           class="editor-content-image"
+          :ref="'block-' + editor.id"
         >
           <EditorImage
             :editor-data="editor"
@@ -57,13 +62,14 @@
             "
             @input="input($event, index)"
             @updateUsers="$emit('updateUsers', $event)"
-            @selectBlock="$emit('selectBlock', editor)"
+            @selectBlock="selectBlock(editor)"
           />
         </div>
 
         <div
           v-else-if="editor.blockType === 'heading'"
           class="editor-content-heading"
+          :ref="'block-' + editor.id"
         >
           <EditorHeading
             :editor-data="editor"
@@ -73,12 +79,13 @@
             :is-editable="isEditable"
             @input="input($event, index)"
             @updateUsers="$emit('updateUsers', $event)"
-            @selectBlock="$emit('selectBlock', editor)"
+            @selectBlock="selectBlock(editor)"
           />
         </div>
         <div
           v-else-if="editor.blockType === 'table'"
           class="editor-content-table"
+          :ref="'block-' + editor.id"
         >
           <EditorTable
             :editor-data="editor"
@@ -95,12 +102,14 @@
             "
             @input="input($event, index)"
             @updateUsers="$emit('updateUsers', $event)"
-            @selectBlock="$emit('selectBlock', editor)"
+            @selectBlock="selectBlock(editor)"
           />
+          <!-- $emit('selectBlock', editor) -->
         </div>
         <div
           v-else-if="editor.blockType === 'reference'"
           class="editor-content-reference"
+          :ref="'block-' + editor.id"
         >
           <EditorReference
             :editor-data="editor"
@@ -109,7 +118,7 @@
             :y-doc="yDoc"
             @input="input($event, index)"
             @updateUsers="$emit('updateUsers', $event)"
-            @selectBlock="$emit('selectBlock', editor)"
+            @selectBlock="selectBlock(editor)"
           />
         </div>
       </div>
@@ -180,6 +189,10 @@ export default {
     },
   },
   methods: {
+    selectBlock(editor) {
+      this.selectedBlockId = editor.id;
+      this.$emit("selectBlock", editor);
+    },
     onStart(event) {
       this.childrenCount = 0;
       const parentIndex = event.oldIndex;
@@ -291,5 +304,11 @@ export default {
 }
 .ghost {
   opacity: 50%;
+}
+.focused {
+  outline: 0.5px solid $blue-500;
+  box-shadow: 0px 0px 2px 1px $blue-500;
+  -webkit-box-shadow: 0px 0px 2px 1px $blue-500;
+  -moz-box-shadow: 0px 0px 2px 1px $blue-500;
 }
 </style>
