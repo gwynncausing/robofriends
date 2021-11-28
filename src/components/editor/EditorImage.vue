@@ -85,7 +85,7 @@ export default {
   },
 
   mounted() {
-    const name = `${this.getUser.firstName}${this.getUser.lastName}`;
+    const name = `${this.getUser.firstName} ${this.getUser.lastName}`;
     try {
       this.editor = new Editor({
         extensions: [
