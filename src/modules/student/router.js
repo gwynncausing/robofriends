@@ -61,12 +61,13 @@ const studentRoutes = [
         children: [
           {
             path: "",
-            component: () => import("@/views/Archive.vue"),
+            component: () => import("@/components/archive/Archive.vue"),
             name: "Student Archive",
           },
           {
             path: "research-paper/:id",
-            component: () => import("@/views/ResearchArchiveDetails.vue"),
+            component: () =>
+              import("@/components/archive/ArchiveResearchDetails.vue"),
             name: "Student Research Paper",
           },
         ],

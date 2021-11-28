@@ -33,12 +33,13 @@ const adviserRoutes = [
         children: [
           {
             path: "",
-            component: () => import("@/views/Archive.vue"),
+            component: () => import("@/components/archive/Archive.vue"),
             name: "Adviser Archive",
           },
           {
             path: "research-paper/:id",
-            component: () => import("@/views/ResearchArchiveDetails.vue"),
+            component: () =>
+              import("@/components/archive/ArchiveResearchDetails.vue"),
             name: "Adviser Research Paper",
           },
         ],
