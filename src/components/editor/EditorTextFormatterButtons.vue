@@ -322,9 +322,11 @@ export default {
     async selectFiles() {
       const files = this.$refs.fileInput.files;
       const filesUrl = await uploadFile(files);
-      filesUrl.forEach((url) => {
-        this.editor.chain().focus().setImage({ src: url }).run();
-      });
+      this.editor.chain().focus().setImage({ src: filesUrl[0] }).run();
+      // filesUrl.forEach((url) => {
+      //   console.log({ url });
+
+      // });
     },
   },
 };
