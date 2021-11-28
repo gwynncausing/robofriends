@@ -61,23 +61,23 @@
         <v-icon>mdi-format-clear</v-icon>
       </button>
 
-      <span class="formatter-section-end"></span>
-
-      <button
-        v-if="blockType !== 'reference'"
-        title="Bullet List"
-        :class="{ 'is-active': editor.isActive('bulletList') }"
-        @click="editor.chain().focus().toggleBulletList().run()"
-      >
-        <v-icon>mdi-format-list-bulleted</v-icon>
-      </button>
-      <button
-        title="Number List"
-        :class="{ 'is-active': editor.isActive('orderedList') }"
-        @click="editor.chain().focus().toggleOrderedList().run()"
-      >
-        <v-icon>mdi-format-list-numbered</v-icon>
-      </button>
+      <span v-if="blockType !== 'reference'">
+        <span class="formatter-section-end"></span>
+        <button
+          title="Bullet List"
+          :class="{ 'is-active': editor.isActive('bulletList') }"
+          @click="editor.chain().focus().toggleBulletList().run()"
+        >
+          <v-icon>mdi-format-list-bulleted</v-icon>
+        </button>
+        <button
+          title="Number List"
+          :class="{ 'is-active': editor.isActive('orderedList') }"
+          @click="editor.chain().focus().toggleOrderedList().run()"
+        >
+          <v-icon>mdi-format-list-numbered</v-icon>
+        </button>
+      </span>
     </span>
 
     <span v-if="blockType === 'table'" class="formatter-section-end"></span>
@@ -177,8 +177,6 @@
       </button>
     </span>
     <span v-if="blockType === 'table'">
-      <span class="formatter-section-end"></span>
-
       <button
         title="Add Row After"
         :disabled="!editor.can().addRowAfter()"
