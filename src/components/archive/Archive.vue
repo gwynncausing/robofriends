@@ -149,16 +149,20 @@ export default {
         archive.title.toLowerCase().includes(this.searchContent.toLowerCase())
       );
 
-      // const filteredFromStartDate = filteredFromSearch.filter((archive) => {
-      //   return new Date(archive.dateFinished) > new Date(this.startDate);
-      // });
+      const filteredFromStartDate = filteredFromSearch.filter((archive) => {
+        return new Date(archive?.paper?.completedAt) > new Date(this.startDate);
+      });
 
-      // const filteredFromEndDate = filteredFromStartDate.filter((archive) => {
-      //   return new Date(archive.dateFinished) < new Date(this.endDate);
-      // });
+      const filteredFromEndDate = filteredFromStartDate.filter((archive) => {
+        return (
+          new Date(archive?.paper?.completedAt).getMonth() <=
+            new Date(this.endDate).getMonth() &&
+          new Date(archive?.paper?.completedAt).getFullYear() <=
+            new Date(this.endDate).getFullYear()
+        );
+      });
 
-      // return filteredFromEndDate;
-      return filteredFromSearch;
+      return filteredFromEndDate;
     },
   },
 
