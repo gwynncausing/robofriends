@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-image">
+  <div class="editor-image" @paste="processPaste">
     <EditorTextFormatterButtons
       :editor="editor"
       :block-type="editorData.blockType"
@@ -24,6 +24,7 @@ import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 
 import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
+import { uploadFile } from "@/utils/helpers";
 
 import { mapGetters } from "vuex";
 import { ROOT_GETTERS } from "@/store/types";
@@ -134,6 +135,24 @@ export default {
   },
 
   methods: {
+    async processPaste() {
+      var items = (event.clipboardData || event.originalEvent.clipboardData)
+        .items;
+      for (let index in items) {
+        var item = items[index];
+        if (item.kind === "file") {
+          var blob = item.getAsFile();
+          const filesUrl = await uploadFile(blob);
+          this.setImage(filesUrl[0]);
+        }
+      }
+    },
+    setImage(url) {
+      const editorContent = this.editor.getJSON();
+      // *added due to bug that setImage wont work without addnig setContent
+      this.editor.commands.setContent(editorContent);
+      this.editor.chain().focus().setImage({ src: url }).run();
+    },
     getRandomColor() {
       let letters = "0123456789ABCDEF";
       let color = "#";

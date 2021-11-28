@@ -10,17 +10,22 @@ export const uploadFile = async (files) => {
 
     const containerName = process.env.VUE_APP_STORAGE_IMAGE_CONTAINER;
     const containerClient = blobServiceClient.getContainerClient(containerName);
-
-    for await (const file of files) {
-      const blockBlobClient = containerClient.getBlockBlobClient(file.name);
-      promises.push(blockBlobClient.uploadBrowserData(file));
-      await Promise.all(promises);
-
-      filesUrl.push(blockBlobClient.url);
+    if (files instanceof FileList) {
+      for await (const file of files) {
+        await upload(containerClient, promises, file, filesUrl);
+      }
+    } else {
+      await upload(containerClient, promises, files, filesUrl);
     }
-    console.log(filesUrl);
     return filesUrl;
   } catch (err) {
     console.log(err);
   }
+};
+
+const upload = async (containerClient, promises, file, filesUrl) => {
+  const blockBlobClient = containerClient.getBlockBlobClient(file.name);
+  promises.push(blockBlobClient.uploadBrowserData(file));
+  await Promise.all(promises);
+  filesUrl.push(blockBlobClient.url);
 };
