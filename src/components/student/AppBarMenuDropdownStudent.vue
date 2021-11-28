@@ -1,24 +1,14 @@
 <template>
   <v-list>
-    <v-list-item
-      class="text-right"
-      active="primary"
-      @click="goToAccountSettings"
-    >
-      <v-list-item-content
-        class="button-font neutral-600--text d-flex justify-end"
-        >Account Settings</v-list-item-content
-      >
+    <v-list-item active="primary" @click="goToAccountSettings">
+      <v-list-item-content class="button-font neutral-600--text">
+        Account Settings
+      </v-list-item-content>
     </v-list-item>
-    <v-list-item
-      v-if="!hasMoreThanOneTeam"
-      class="text-right"
-      @click="goToCreateTeam"
-    >
-      <v-list-item-content
-        class="button-font neutral-600--text d-flex justify-end"
-        >Create Team</v-list-item-content
-      >
+    <v-list-item v-if="!hasMoreThanOneTeam" @click="goToCreateTeam">
+      <v-list-item-content class="button-font neutral-600--text">
+        Create Team
+      </v-list-item-content>
     </v-list-item>
     <v-list-group v-else append-icon="" :value="isTeamActive">
       <template v-slot:activator>
@@ -36,28 +26,24 @@
             v-for="(team, index) in teams"
             :key="index"
             :value="team.id"
-            class="text-right"
           >
-            <v-list-item-content
-              class="button-font neutral-600--text d-flex justify-end"
-              >{{ team.name }}</v-list-item-content
-            >
+            <v-list-item-content class="button-font neutral-600--text">
+              {{ team.name }}
+            </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
-        <v-list-item class="text-right" @click="goToCreateTeam">
-          <v-list-item-content
-            class="button-font neutral-600--text d-flex justify-end"
-            >Create Team</v-list-item-content
-          >
+        <v-list-item @click="goToCreateTeam">
+          <v-list-item-content class="button-font neutral-600--text">
+            Create Team
+          </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-list-group>
     <v-divider></v-divider>
-    <v-list-item class="text-right" @click="logout">
-      <v-list-item-content
-        class="button-font neutral-600--text d-flex justify-end"
-        >Logout</v-list-item-content
-      >
+    <v-list-item @click="logout">
+      <v-list-item-content class="button-font neutral-600--text">
+        Logout
+      </v-list-item-content>
     </v-list-item>
   </v-list>
 </template>
