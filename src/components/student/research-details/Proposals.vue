@@ -92,7 +92,7 @@ export default {
   },
   computed: {
     adviserFeedback() {
-      const feedback = this.selectedProposal?.feedback?.text;
+      const feedback = this.selectedProposal?.feedback?.content;
       return feedback ?? "No feedback";
     },
   },
