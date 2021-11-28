@@ -9,4 +9,6 @@ export let rootInititalState = () => ({
   },
   schools: {},
   currentSchool: {},
+  archives: [],
+  currentArchive: {},
 });

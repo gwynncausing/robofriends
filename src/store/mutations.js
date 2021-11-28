@@ -37,4 +37,7 @@ export default {
   [ROOT_MUTATIONS.SET_CURRENT_SCHOOL](state, { school }) {
     state.currentSchool = school;
   },
+  [ROOT_MUTATIONS.SET_ARCHIVES](state, { archives }) {
+    state.archives = archives;
+  },
 };

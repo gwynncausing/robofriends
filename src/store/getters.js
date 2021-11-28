@@ -32,4 +32,7 @@ export default {
   [ROOT_GETTERS.GET_CURRENT_SCHOOL]({ currentSchool }) {
     return currentSchool;
   },
+  [ROOT_GETTERS.GET_ARCHIVES]({ archives }) {
+    return archives;
+  },
 };

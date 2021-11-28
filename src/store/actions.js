@@ -6,6 +6,7 @@ import Repository from "@/repositories/repository-factory";
 const AuthRepository = Repository.get("auth");
 const UserRepository = Repository.get("user");
 const SchoolRepository = Repository.get("school");
+const ArchiveRepository = Repository.get("research");
 
 export default {
   async [ROOT_ACTIONS.LOGIN_USER](
@@ -155,5 +156,12 @@ export default {
     const response = await SchoolRepository.getSchool(schoolId);
     const school = response.data;
     commit(ROOT_MUTATIONS.SET_CURRENT_SCHOOL, { school: school });
+  },
+  async [ROOT_ACTIONS.FETCH_ARCHIVES]({ commit }) {
+    const response = await ArchiveRepository.getArchiveAll();
+    const archives = response.data;
+    // eslint-disable-next-line
+    const newArchives = archives.map(({ content, ...archive }) => archive);
+    commit(ROOT_MUTATIONS.SET_ARCHIVES, { archives: newArchives });
   },
 };

@@ -23,11 +23,11 @@
         :key="index"
         size="30"
         color="secondary"
-        :title="`${researcher.firstName} ${researcher.lastName}`"
+        :title="`${researcher.user.firstName} ${researcher.user.lastName}`"
       >
-        <span class="white--text"
-          >{{ researcher.firstName[0] }}{{ researcher.lastName[0] }}</span
-        >
+        <span class="white--text">
+          {{ researcher.user.firstName[0] }}{{ researcher.user.lastName[0] }}
+        </span>
       </v-avatar>
     </footer>
   </v-card>
@@ -55,19 +55,22 @@ export default {
         isDefault: false,
         src: "",
       };
-      if (this.data?.imgSrc || this.data?.imgSrc !== "")
-        image.src = this.data?.imgSrc;
-      else {
-        image.isDefault = true;
-        image.src = require("@/assets/bud-flower-fade.svg");
-      }
+      // if (this.data?.imgSrc || this.data?.imgSrc !== "")
+      //   image.src = this.data?.imgSrc;
+      // else {
+      image.isDefault = true;
+      image.src = require("@/assets/bud-flower-fade.svg");
+      // }
       return image;
     },
     researchFinishYear() {
-      return new Date(this.data?.dateFinished).getFullYear() || "";
+      return new Date(this.data?.paper.completedAt).getFullYear() || "";
     },
     researchers() {
-      return this.data?.members || [];
+      const members = this.data.paper.team.members.filter((member) => {
+        if (member.baseRole !== "adviser") return member;
+      });
+      return members || [];
     },
   },
 

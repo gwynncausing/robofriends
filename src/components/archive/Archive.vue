@@ -83,8 +83,9 @@ import Modal from "@/components/modals/Modal.vue";
 import ArchiveDate from "@/components/archive/ArchiveDate.vue";
 import ArchiveCard from "@/components/archive/ArchiveCard.vue";
 
-import { mapGetters } from "vuex";
-import { ROOT_GETTERS } from "@/store/types";
+import { mapActions, mapGetters } from "vuex";
+import { ROOT_ACTIONS, ROOT_GETTERS } from "@/store/types";
+
 import { USER } from "@/utils/constants";
 import { capitalizeFirstLetter } from "@/utils/helpers";
 
@@ -127,69 +128,7 @@ export default {
       selectedCategory: [],
       startDate: "",
       endDate: "",
-      archives: [
-        {
-          title: "Capstone Management System with Prescriptive Analytics",
-          // imgSrc:
-          //   "https://th.bing.com/th/id/OIP.RDBwKq9LkMgzZJ3NKwglSgHaFL?pid=ImgDet&rs=1",
-          imgSrc: "",
-          members: [
-            {
-              firstName: "Juan",
-              lastName: "Cruz",
-            },
-            {
-              firstName: "Bin",
-              lastName: "Ladin",
-            },
-            {
-              firstName: "Oh",
-              lastName: "Ahhhhh",
-            },
-          ],
-          dateFinished: "December 15, 2020",
-        },
-        {
-          title: "Random Ramdom",
-          // imgSrc: "https://en.freejpg.com.ar/asset/900/f5/f5c2/F100011137.jpg",
-          imgSrc: "",
-          members: [
-            {
-              firstName: "Hey",
-              lastName: "Joe",
-            },
-            {
-              firstName: "Bin",
-              lastName: "Ladin",
-            },
-            {
-              firstName: "Oh",
-              lastName: "ahhhhh",
-            },
-          ],
-          dateFinished: "December 15, 2019",
-        },
-        {
-          title: "Mondar Mondar Mondar Mondar",
-          // imgSrc: "https://en.freejpg.com.ar/asset/900/f5/f5c2/F100011137.jpg",
-          imgSrc: "",
-          members: [
-            {
-              firstName: "Hey",
-              lastName: "Joe",
-            },
-            {
-              firstName: "Bin",
-              lastName: "Ladin",
-            },
-            {
-              firstName: "Oh",
-              lastName: "ahhhhh",
-            },
-          ],
-          dateFinished: "",
-        },
-      ],
+      archives: [],
       searchContent: "",
     };
   },
@@ -197,6 +136,7 @@ export default {
   computed: {
     ...mapGetters({
       getUserType: ROOT_GETTERS.GET_USER_TYPE,
+      getArchives: ROOT_GETTERS.GET_ARCHIVES,
     }),
     userInformation() {
       return {
@@ -209,15 +149,16 @@ export default {
         archive.title.toLowerCase().includes(this.searchContent.toLowerCase())
       );
 
-      const filteredFromStartDate = filteredFromSearch.filter((archive) => {
-        return new Date(archive.dateFinished) > new Date(this.startDate);
-      });
+      // const filteredFromStartDate = filteredFromSearch.filter((archive) => {
+      //   return new Date(archive.dateFinished) > new Date(this.startDate);
+      // });
 
-      const filteredFromEndDate = filteredFromStartDate.filter((archive) => {
-        return new Date(archive.dateFinished) < new Date(this.endDate);
-      });
+      // const filteredFromEndDate = filteredFromStartDate.filter((archive) => {
+      //   return new Date(archive.dateFinished) < new Date(this.endDate);
+      // });
 
-      return filteredFromEndDate;
+      // return filteredFromEndDate;
+      return filteredFromSearch;
     },
   },
 
@@ -234,13 +175,20 @@ export default {
     this.endDate = new Date().toISOString().substr(0, 7);
   },
 
-  mounted() {
+  async mounted() {
+    await this.fetchArchives();
+    console.log(await this.getArchives);
+    this.archives = await this.getArchives;
+    console.log({ archive: this.archives });
     // this.categories.push("Artificial Intelligence");
     // this.categories.push("Data Analytics");
     // this.categories.push("Web Application");
   },
 
   methods: {
+    ...mapActions({
+      fetchArchives: `${ROOT_ACTIONS.FETCH_ARCHIVES}`,
+    }),
     goToResearchPaper(id) {
       switch (this.getUserType) {
         case USER.TYPES.STUDENT:
