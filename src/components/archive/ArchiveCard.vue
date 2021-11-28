@@ -14,7 +14,7 @@
     <header>{{ data.title }}</header>
 
     <section v-if="researchFinishYear" class="content">
-      <v-chip label> {{ researchFinishYear }} </v-chip>
+      <v-chip label class="secondary"> {{ researchFinishYear }} </v-chip>
     </section>
 
     <footer>

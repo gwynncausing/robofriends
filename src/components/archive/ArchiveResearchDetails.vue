@@ -3,21 +3,23 @@
     <div id="research-details-info-wrapper">
       <v-row>
         <v-col cols="12">
-          <p class="font-semi-bold">Bud</p>
-          <p><Chip color="secondary">2021</Chip></p>
+          <p class="font-semi-bold">{{ researchTitle }}</p>
+          <p>
+            <Chip color="secondary">{{ researchFinishYear }}</Chip>
+          </p>
           <v-divider class="mt-7"></v-divider>
         </v-col>
-        <v-col cols="12">
+        <!-- <v-col cols="12">
           <p class="font-semi-bold">Files</p>
           <p v-for="(file, index) in files" :key="index" class="ellipsis">
             {{ file }}
           </p>
           <v-divider class="mt-7"></v-divider>
-        </v-col>
+        </v-col> -->
         <v-col cols="12">
           <p class="font-semi-bold">Adviser/s</p>
           <p v-for="(adviser, index) in advisers" :key="index" class="ellipsis">
-            {{ adviser }}
+            {{ adviser.user.firstName }} {{ adviser.user.lastName }}
           </p>
           <v-divider class="mt-7"></v-divider>
         </v-col>
@@ -28,7 +30,7 @@
             :key="index"
             class="ellipsis"
           >
-            {{ researcher }}
+            {{ researcher.user.firstName }} {{ researcher.user.lastName }}
           </p>
           <v-divider class="mt-7"></v-divider>
         </v-col>
@@ -36,6 +38,7 @@
     </div>
     <div id="research-details-editor-wrapper">
       <!-- TODO: Add Research Editor Blocks, added a temporary editor block -->
+      <!-- // TODO: pass the researchPaperContent to list -->
       <EditorNestedReadonly :list="blocks" />
     </div>
   </div>
@@ -45,6 +48,9 @@
 import Chip from "@/components/global/Chip.vue";
 import EditorNestedReadonly from "@/components/editor/EditorNestedReadonly";
 
+import { mapActions, mapGetters } from "vuex";
+import { ROOT_ACTIONS, ROOT_GETTERS } from "@/store/types";
+
 export default {
   name: "ResearchPaper",
   components: {
@@ -53,15 +59,16 @@ export default {
   },
   data() {
     return {
-      files: ["Bud_ResearchPaper.file", "Thumbnail.png", "Logo.png"],
-      researchers: [
-        "Legaspi, Cary",
-        "Bacalla, Rafale",
-        "Causing, Hyksos Gwynn",
-        "Lee, Wylen Joan",
-        "Rosalijos, Joshua",
-      ],
-      advisers: ["Barbaso, Leah", "Larmie, Feliscuzo"],
+      currentResearchPaper: {},
+      // files: ["Bud_ResearchPaper.file", "Thumbnail.png", "Logo.png"],
+      // researchers: [
+      //   "Legaspi, Cary",
+      //   "Bacalla, Rafale",
+      //   "Causing, Hyksos Gwynn",
+      //   "Lee, Wylen Joan",
+      //   "Rosalijos, Joshua",
+      // ],
+      // advisers: ["Barbaso, Leah", "Larmie, Feliscuzo"],
       blocks: [
         {
           id: "125",
@@ -202,12 +209,59 @@ export default {
           ],
         },
       ],
+      researchPaperContent: {},
     };
   },
+
+  computed: {
+    ...mapGetters({
+      getCurrentArchiveResearch: ROOT_GETTERS.GET_CURRENT_ARCHIVE_RESEARCH,
+    }),
+    researchers() {
+      const members = this.currentResearchPaper?.paper?.team?.members?.filter(
+        (member) => {
+          if (member.baseRole !== "adviser") return member;
+        }
+      );
+      return members || [];
+    },
+    advisers() {
+      const members = this.currentResearchPaper?.paper?.team?.members?.filter(
+        (member) => {
+          if (member.baseRole === "adviser") return member;
+        }
+      );
+      return members || [];
+    },
+    researchFinishYear() {
+      return (
+        new Date(this.currentResearchPaper?.paper?.completedAt).getFullYear() ||
+        ""
+      );
+    },
+    researchTitle() {
+      return this.currentResearchPaper.title ?? "";
+    },
+  },
+
   created() {
     this.initialize();
+    // console.log(this.getCurrentArchiveResearch);
   },
+
+  async mounted() {
+    console.log(this.$route.params.id);
+    await this.fetchOneArchiveResearch({ archiveId: this.$route.params.id });
+    this.currentResearchPaper = await this.getCurrentArchiveResearch;
+    // console.log(researchResponse);
+    // *add this to EditorNestedReadonly
+    this.researchPaperContent = this.currentResearchPaper.content;
+  },
+
   methods: {
+    ...mapActions({
+      fetchOneArchiveResearch: `${ROOT_ACTIONS.FETCH_ONE_ARCHIVE_RESEARCH}`,
+    }),
     initialize() {
       const id = this.$route.params?.id;
       console.log("Id", id);

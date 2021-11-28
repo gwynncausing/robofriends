@@ -35,4 +35,7 @@ export default {
   [ROOT_GETTERS.GET_ARCHIVES]({ archives }) {
     return archives;
   },
+  [ROOT_GETTERS.GET_CURRENT_ARCHIVE_RESEARCH]({ currentArchive }) {
+    return currentArchive;
+  },
 };

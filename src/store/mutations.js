@@ -40,4 +40,7 @@ export default {
   [ROOT_MUTATIONS.SET_ARCHIVES](state, { archives }) {
     state.archives = archives;
   },
+  [ROOT_MUTATIONS.SET_ONE_ARCHIVE_RESEARCH](state, { archives }) {
+    state.currentArchive = archives;
+  },
 };

@@ -164,4 +164,10 @@ export default {
     const newArchives = archives.map(({ content, ...archive }) => archive);
     commit(ROOT_MUTATIONS.SET_ARCHIVES, { archives: newArchives });
   },
+  async [ROOT_ACTIONS.FETCH_ONE_ARCHIVE_RESEARCH]({ commit }, { archiveId }) {
+    const response = await ArchiveRepository.getArchive(archiveId);
+    const archives = response.data;
+    // eslint-disable-next-line
+    commit(ROOT_MUTATIONS.SET_ONE_ARCHIVE_RESEARCH, { archives: archives });
+  },
 };

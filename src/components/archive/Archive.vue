@@ -67,7 +67,7 @@
       </aside>
       <section class="research-archive-wrapper">
         <div v-for="(archive, index) in filteredArchives" :key="index">
-          <ArchiveCard :data="archive" @click="goToResearchPaper(index)" />
+          <ArchiveCard :data="archive" @click="goToResearchPaper(archive.id)" />
         </div>
       </section>
     </div>
