@@ -54,6 +54,16 @@
       <span class="formatter-section-end"></span>
 
       <button
+        v-if="blockType !== 'heading' && blockType !== 'image'"
+        title="Clear Formatting"
+        @click="editor.chain().focus().unsetAllMarks().run()"
+      >
+        <v-icon>mdi-format-clear</v-icon>
+      </button>
+
+      <span class="formatter-section-end"></span>
+
+      <button
         v-if="blockType !== 'reference'"
         title="Bullet List"
         :class="{ 'is-active': editor.isActive('bulletList') }"
@@ -263,17 +273,6 @@
       </button>
       <button title="Undo" @click="editor.chain().focus().undo().run()">
         <v-icon>mdi-undo</v-icon>
-      </button>
-      <button
-        title="Clear Formatting"
-        @click="
-          {
-            editor.chain().focus().clearNodes().run(),
-              editor.chain().focus().unsetAllMarks().run();
-          }
-        "
-      >
-        <v-icon>mdi-cancel</v-icon>
       </button>
     </span>
   </div>
