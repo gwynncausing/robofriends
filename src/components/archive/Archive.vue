@@ -235,9 +235,9 @@ export default {
   },
 
   mounted() {
-    this.categories.push("Artificial Intelligence");
-    this.categories.push("Data Analytics");
-    this.categories.push("Web Application");
+    // this.categories.push("Artificial Intelligence");
+    // this.categories.push("Data Analytics");
+    // this.categories.push("Web Application");
   },
 
   methods: {
