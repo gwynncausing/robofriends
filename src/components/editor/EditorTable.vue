@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-table">
+  <div class="editor-table" @paste="processPaste">
     <EditorTextFormatterButtons
       :editor="editor"
       :block-type="editorData.blockType"
@@ -40,6 +40,7 @@ import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 
 import EditorTextFormatterButtons from "./EditorTextFormatterButtons";
+import { uploadFile } from "@/utils/helpers";
 
 import { mapGetters } from "vuex";
 import { ROOT_GETTERS } from "@/store/types";
@@ -189,6 +190,24 @@ export default {
     } catch (e) {
       console.log(e);
     }
+  },
+
+  methods: {
+    async processPaste() {
+      var items = (event.clipboardData || event.originalEvent.clipboardData)
+        .items;
+      for (let index in items) {
+        var item = items[index];
+        if (item.kind === "file") {
+          var blob = item.getAsFile();
+          const filesUrl = await uploadFile(blob);
+          this.setImage(filesUrl[0]);
+        }
+      }
+    },
+    setImage(url) {
+      this.editor.chain().focus().setImage({ src: url }).run();
+    },
   },
 
   beforeUnmount() {
